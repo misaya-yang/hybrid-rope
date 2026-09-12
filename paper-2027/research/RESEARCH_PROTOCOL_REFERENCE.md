@@ -11,7 +11,7 @@
   It replaces only the explanatory material formerly embedded in AGENTS.md;
   existing scientific owners are not superseded. Their exact protocols govern
   claims; [HANDOFF.md](../HANDOFF.md) governs live state.
-- **Use:** read the relevant section on demand through [INDEX.md](../../INDEX.md).
+- **Use:** read the relevant section on demand through [INDEX.md](../../index.md).
   Numeric gates and current-research descriptions below are the dated convention,
   not permanent agent instructions. Recheck the linked amended protocol before use.
   Backticked repository paths are relative to the repository root.

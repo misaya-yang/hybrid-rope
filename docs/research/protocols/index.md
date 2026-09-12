@@ -1,0 +1,18 @@
+# 协议与历史计划
+
+上级：[research/index.md](../index.md)。受代码/回执/历史hash引用的来源保持原路径；本目录index完成主题分类。普通独立叙述文档已移入对应目录。文件中的“当前”以原记录日期解释。
+
+- [ORACLE_FIRST_SHARED_ROUTING_PLAN_20260908.md](../ORACLE_FIRST_SHARED_ROUTING_PLAN_20260908.md) — 同预算路由能否保住位置关系：唯一候选主线与先行否证实验（来源路径保留）
+- [PARALLEL_NONGEOMETRIC_20X10_PLAN_20260910.md](../PARALLEL_NONGEOMETRIC_20X10_PLAN_20260910.md) — 并行轨道：非几何分配 20 候选 × 10 实验计划（v2，含 codex 首轮实验吸收）（来源路径保留）
+- [ROPE_BIAS_POSITION_PROTOCOL_20260908.md](../ROPE_BIAS_POSITION_PROTOCOL_20260908.md) — 固定学习bias位置项：构造、风险与第一轮（来源路径保留）
+- [ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md](../ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md) — 固定位置、同一可见集合的两个干预时点（来源路径保留）
+- [ROPE_FREQUENCY_PRO_PROMPT_20260907.md](../ROPE_FREQUENCY_PRO_PROMPT_20260907.md) — 给 Pro：构造贯穿三阶段的 RoPE 频率分配方法（来源路径保留）
+- [ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md](../ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md) — 从 MrRoPE 强基线推进频率分配：当前研究计划（来源路径保留）
+- [ROPE_GAP_CAPPED_PROTOCOL_20260908.md](../ROPE_GAP_CAPPED_PROTOCOL_20260908.md) — Gap-capped MrRoPE：由既有最大radix扩张约束推导最小原生改动（来源路径保留）
+- [ROPE_MRPRO_BM_PROTOCOL_20260908.md](../ROPE_MRPRO_BM_PROTOCOL_20260908.md) — MrPro-BM：首个准备完成的闭式候选（来源路径保留）
+- [ROPE_NATIVE_WINDOWS_PROTOCOL_20260908.md](../ROPE_NATIVE_WINDOWS_PROTOCOL_20260908.md) — 独立Native窗口形成与全局读取（来源路径保留）
+- [ROPE_OLMO_STAGE_TRANSFER_PROTOCOL_20260908.md](../ROPE_OLMO_STAGE_TRANSFER_PROTOCOL_20260908.md) — OLMo形成表×读取表：决定一个可部署候选是否值得运行（来源路径保留）
+- [ROPE_OVERNIGHT_RESEARCH_20260908.md](../ROPE_OVERNIGHT_RESEARCH_20260908.md) — 10小时零训练研究：从诊断走向实际收益（来源路径保留）
+- [ROPE_PRO_DECISION_REQUEST_20260907.md](../ROPE_PRO_DECISION_REQUEST_20260907.md) — 交给 Pro：结束 RoPE 猜想—失败循环，给出明天能落实的解决方案（来源路径保留）
+- [ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md](../ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md) — 第一步：从MrRoPE-Pro做零训练增量改进（来源路径保留）
+- [PC2_TEN_EXPERIMENTS_RESEARCH_PLAN.md](PC2_TEN_EXPERIMENTS_RESEARCH_PLAN.md) — PC2：十个不同方向的高价值实验与统一研究计划（已归类移动）

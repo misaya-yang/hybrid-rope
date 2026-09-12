@@ -1,7 +1,7 @@
 # Foundations
 
 This folder holds durable theory and causal-variable documents. It is not a
-second index or action queue: current routing remains in [`../../../INDEX.md`](../../../INDEX.md),
+second index or action queue: current routing remains in [`../../../INDEX.md`](../../../index.md),
 and live state remains in [`../../HANDOFF.md`](../../HANDOFF.md).
 
 | File | Role | Boundary |

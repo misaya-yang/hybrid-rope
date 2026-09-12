@@ -266,7 +266,7 @@ training identification or frozen mature pure-$z$ owners.
 ## 8. Provenance and decision links
 
 - Current protocol boundary and decision order:
-  [`INDEX.md`](../../../../../INDEX.md) §6.2–§6.3
+  [`INDEX.md`](../../../../../index.md) §6.2–§6.3
 - Missing identification bridge and decision readings:
   [`ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md`](../../../foundations/ATTENTION_AWARE_ALLOCATION_THEORY_STATE_20260826.md)
   §3–§5

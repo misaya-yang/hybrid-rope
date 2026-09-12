@@ -36,7 +36,7 @@ fi
 echo "=================== BUILD REPORT (engine: $ENGINE) ==================="
 FAIL=0
 
-# --- 1. main-body page limit (main text + statements must end on <= 9)
+# --- 1. Main-text page limit; official ICLR 2027 statements are exempt.
 BODYEND=$(grep -o 'newlabel{page:bodyend}{{[^}]*}{[0-9]*}' $MAIN.aux \
           | grep -o '{[0-9]*}$' | tr -d '{}' || echo "?")
 echo -n "main body ends on page : $BODYEND   "

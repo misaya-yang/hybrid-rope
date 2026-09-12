@@ -9,7 +9,7 @@ For current work, read first:
 1. [`../../AGENTS.md`](../../AGENTS.md)
 2. [`../../README.md`](../../README.md)
 3. [`../../paper-2027/HANDOFF.md`](../../paper-2027/HANDOFF.md)
-4. Search [`../../INDEX.md`](../../INDEX.md) only for the claim being checked.
+4. Search [`../../INDEX.md`](../../index.md) only for the claim being checked.
 5. [`../../paper-2027/NARRATIVE_GUIDE.md`](../../paper-2027/NARRATIVE_GUIDE.md)
    for manuscript work, then
    [`../../paper-2027/research/README.md`](../../paper-2027/research/README.md)

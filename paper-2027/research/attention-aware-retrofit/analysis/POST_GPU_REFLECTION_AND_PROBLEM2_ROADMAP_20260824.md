@@ -10,7 +10,7 @@ dense-natural controls, and full-200 2Wiki comparison are now owned by
 [`../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md`](../results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md).
 They empirically separate continued adaptation from the table's full/tail
 redistribution. This memo remains historical interpretation; current action
-priority is owned by repository [`../../../../INDEX.md`](../../../../INDEX.md)
+priority is owned by repository [`../../../../INDEX.md`](../../../../index.md)
 §6.
 
 必读 owner：

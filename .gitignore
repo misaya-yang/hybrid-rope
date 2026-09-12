@@ -37,6 +37,13 @@ artifacts/
 # Results are synced between machines via rsync, not git
 # To sync: rsync -avz --exclude='*.pt' --exclude='*.npy' results/ <remote>:results/
 results/
+# Track only the root results navigation; raw mirrors stay ignored.
+!/results/
+/results/**
+!/results/index.md
+# This thematic folder contains navigation, not raw experiment results.
+!/docs/research/results/
+!/docs/research/results/index.md
 # Exception: the retrofit research "results/" holds canonical markdown owners,
 # not rsync'd experiment artifacts, and must stay tracked.
 !paper-2027/research/attention-aware-retrofit/results/

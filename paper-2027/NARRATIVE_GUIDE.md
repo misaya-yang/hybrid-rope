@@ -27,3 +27,7 @@ The reference-paper lessons remain simple: MrRoPE supplies a focused question;
 Decoupling connects definitions to measurable behavior; Deconstructing orders
 experiments by competing explanations; RePo/PPE make the first visual concrete;
 GRAPE/Selective RoPE connect theory, method, and evidence around one object.
+
+## Field-map refinement, 2026-09-12
+
+Keep supplied positional basis and learned frequency usage distinct and connected. Introduce nearby research objects early, without claiming an exhaustive or disjoint literature taxonomy. Cosh chooses a basis for learning; native-relative construction adjusts scales around existing learned associations. Explain C2 and fixed-total controls together: compact descriptions can work while one displacement sum is insufficient. Retain complete-output evidence with its adapter and supervision identity. Range-dependent preferences are measured knowledge, not a general nonexistence theorem. A joint operating-point plot describes the designed configuration grid; it is not a population Pareto frontier.

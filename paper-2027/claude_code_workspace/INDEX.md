@@ -1,6 +1,6 @@
 # INDEX — claude_code_workspace 细目（2026-09-06 更新）
 
-> This is the historical Round10–12 inventory. Use [root INDEX](../../INDEX.md) and [current REVISION_BRIEF](../REVISION_BRIEF.md) for the current reconstruction; labels such as active or ready below do not authorize continuation.
+> This is the historical Round10–12 inventory. Use [root INDEX](../../index.md) and [current REVISION_BRIEF](../REVISION_BRIEF.md) for the current reconstruction; labels such as active or ready below do not authorize continuation.
 
 状态标记：**活跃** / 历史（仍被引用）/ 已取代（结论作废或被覆盖）/ 存档（只读留档）。
 

@@ -3,9 +3,8 @@
 \small
 \caption{\textbf{OLMo-2 Natural QA under static extension} ($s=4$, $L_0=4\text{K} \to 16\text{K}$, $g=1.1386$).
 Complete evaluation on \texttt{allenai/OLMo-2-0425-1B-Instruct} across $778$ frozen LongBench inputs (greedy decoding, untruncated prompts).
-Token F1 evaluates complete generated responses; EOS counts verify generation termination.
-\textbf{X2 Scope Note}: Boundary-Matched (BM, SHA-256 \texttt{c80626f8\dots}) outperforms MrRoPE-Pro (SHA-256 \texttt{ec9c5497\dots}) across all five extended tasks ($+3.82$ pp macro, $95\%$ bootstrap CI $[+1.32, +6.29]$) while preserving in-window accuracy ($+2.00$ pp).
-Comparison against official YaRN on this exact panel is registered as an ongoing baseline.}
+Token F1 evaluates complete generated responses; EOS counts record generation termination separately.
+Boundary-Matched (BM, SHA-256 \texttt{c80626f8\dots}) outperforms MrRoPE-Pro (SHA-256 \texttt{ec9c5497\dots}) across all five extended tasks ($+3.82$ pp macro, $95\%$ bootstrap CI $[+1.32, +6.29]$); the shorter-input stratum changes by $+2.00$ pp.}
 \label{tab:olmo-qa}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}llrrrrrc@{}}

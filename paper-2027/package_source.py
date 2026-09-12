@@ -34,9 +34,14 @@ def source_files() -> set[Path]:
 
     add(PAPER / "main.tex")
     for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py",
+                 "figs/make_m4_tradeoff.py", "figs/m4_tradeoff_inputs.json", "figs/m4_tradeoff_points.csv",
                  "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
                  "figs/make_exponent_revision_figures.py", "figs/figure_inputs.json",
-                 "figs/exponent_revision_source_receipt.json", "figs/llama_temporal_summary.json", "figs/recorded_runtime_identities.json"]:
+                 "figs/profile_diagnostic_inputs.json", "figs/verify_profile_diagnostics.py",
+                 "figs/make_story_figures.py", "figs/story_figure_inputs.json",
+                 "figs/finite_window_geometry.json", "figs/verify_recovered_assets.py",
+                 "figs/recovered_asset_inputs.json", "figs/verify_routing_schedule.py",
+                 "figs/routing_protocol_receipts.json", "figs/exponent_revision_source_receipt.json", "figs/llama_temporal_summary.json", "figs/recorded_runtime_identities.json"]:
         add(PAPER / name)
     for pattern in ["*.sty", "*.bst"]:
         for path in PAPER.glob(pattern):
@@ -61,15 +66,20 @@ def main() -> None:
             "This archive contains the complete active TeX source, bibliography,\n"
             "local style files, plotted figures, and compiled manuscript PDF.\n"
             "Unzip into an empty directory and run: bash compile.sh\n"
-            "Requirements: a TeX installation with pdflatex and bibtex.\n\n"
-            "Five revised figures and four result tables can be regenerated:\n"
+            "Requirements: pdflatex with bibtex, or Tectonic.\n\n"
+            "The recorded-result figures and tables can be regenerated:\n"
             "  python3 figs/make_exponent_revision_figures.py\n"
+            "  python3 figs/make_story_figures.py\n"
+            "  python3 figs/make_m4_tradeoff.py\n"
             "This uses the bundled figs/figure_inputs.json, with original-source\n"
             "SHA256 values and the 778 natural-QA row scores (no prompt/output text).\n"
             "Python requirements: NumPy and Matplotlib. Regeneration performs no\n"
             "model execution. The remaining historical figures are supplied as PDF.\n\n"
             "Verify the two explicit finite-frequency examples:\n"
-            "  python3 figs/verify_explicit_geometry.py\n\n"
+            "  python3 figs/verify_explicit_geometry.py\n"
+            "  python3 figs/verify_profile_diagnostics.py\n"
+            "  python3 figs/verify_recovered_assets.py\n"
+            "  python3 figs/verify_routing_schedule.py\n\n"
             "The appendix contains the mathematical derivations and experimental\n"
             "protocols. This is a manuscript source archive; model checkpoints\n"
             "and raw experiment streams are maintained separately.\n"

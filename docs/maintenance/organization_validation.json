@@ -1,0 +1,39 @@
+{
+  "managed_documents": 79,
+  "local_links_checked": 1249,
+  "assets": 28,
+  "source_occurrences_checked": 51,
+  "relocations": 5,
+  "local_source_occurrences": 1,
+  "mode": "git-portable",
+  "errors": [],
+  "model_execution": false,
+  "as_of": "2026-09-12",
+  "indexed_git_visible_files": 2369,
+  "independent_git_only_export_passed": true,
+  "export_has_ignored_raw_mirrors": false,
+  "all_navigation_repository_relative": true,
+  "pdf_sha256": "602073f3ab00e7ebdb3fae2fd4fc5bc1d034ff85944ac8306f75ec7c731f7c0d",
+  "zip_sha256": "6f900e566cca51d52b3dbcd1c9103c9357e0df89500d67946f08ae4bbb071e8c",
+  "current_recovery_path": "internal/local_snapshots/repo_organization_20260912_012317",
+  "pre_edit_downloads_backup": "not found after author cleanup; key historical entries retained in repo",
+  "models_launched": 0,
+  "remote_operations": 0,
+  "commits": 0,
+  "pushes": 0,
+  "local_evidence_check": {
+    "managed_documents": 79,
+    "local_links_checked": 1249,
+    "assets": 28,
+    "source_occurrences_checked": 52,
+    "relocations": 5,
+    "local_source_occurrences": 1,
+    "mode": "local-evidence",
+    "errors": [],
+    "model_execution": false
+  },
+  "git_case_renames_staged": [
+    "INDEX.md -> index.md",
+    "analysis/unify_20260910/INDEX.md -> analysis/unify_20260910/index.md"
+  ]
+}

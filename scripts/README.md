@@ -1,7 +1,7 @@
 # `scripts/` — implementation and tooling map
 
 Code is not evidence and no script is an automatic action queue. Before using a
-runner, resolve the current owner and authorization through [`../INDEX.md`](../INDEX.md)
+runner, resolve the current owner and authorization through [`../INDEX.md`](../index.md)
 and [`../paper-2027/HANDOFF.md`](../paper-2027/HANDOFF.md).
 
 ## Directory roles

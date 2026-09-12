@@ -1,6 +1,6 @@
 # Mature-checkpoint single-table program
 
-Enter here after [`../../../INDEX.md`](../../../INDEX.md) routes a mature-
+Enter here after [`../../../INDEX.md`](../../../index.md) routes a mature-
 checkpoint question. The root index routes claim owners; this directory contains the
 current method evidence and protocol history.
 

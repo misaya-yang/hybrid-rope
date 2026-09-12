@@ -494,7 +494,7 @@ S L205–212：一条可行路线 = 围绕相干参考的**耦合二次分配**�
 - `docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md`（143 行，全）
 - `docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md`（281 行，全）
 - `docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md`（63 行，全）
-- `docs/research/ROPE_ALLOCATION_PROGRESS_20260910.md`（128 行，全）
+- `docs/research/history/ROPE_ALLOCATION_PROGRESS_20260910.md`（128 行，全）
 
 **为核对而读（对照材料，非本任务范围）**：
 - `analysis/unify_20260910/INTEGRATION_20260910.md`（全 131 行）、`NEXT_DERIVATION_KKT_PROBLEM.md`（全 147 行）、`STARTING_POINT_YARN_VS_MRPRO.md`（全 116 行）

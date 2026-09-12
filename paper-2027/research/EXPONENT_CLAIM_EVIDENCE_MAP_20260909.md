@@ -1,3 +1,63 @@
+# Beyond the Base：当前论证与证据安放表
+
+更新：2026-09-12。当前主线：内部指数分配组织有限位置基，参与模型表征学习，并可通过具体构造改善长度泛化与上下文利用。历史映射保留在本文后半部分，仅用于追踪此前位置；当前稿件位置以下表为准。
+
+## 当前主张链
+
+| 认识 | 本项发现与作用 | 相邻成果的联系 | 当前稿件位置 |
+|---|---|---|---|
+| 研究对象 | x=a+Rz 分离端点与内部位置；pi 分离槽指派 | 为纯内部干预和冻结安装定义对象 | 主文 §2 |
+| C01 独立作用 | 151.9M 三 seed：只动 30 内点，OOD 三长度全同向 | 给几何分析一个实际需要解释的变量 | §3.1、Fig.1、App. exact-range |
+| C02 位置对象 | 完整 sin/cos 子空间、canonical overlap、rank 恒等式 | 把点位差异转成位置方向分配 | §3.2–3.3、Fig.2、App. A |
+| C03 有限窗结构 | 核心 b256 网格最慢8对 r2=2.11474 | 使位置基分析落到核心训练参数，非模型loss中介效应证明 | §3.3、Fig.2、App. finite-window-rank |
+| C04 学得兼容 | 两尺度 crossing、运行范围反转、同谱置换与补偿恒等式 | 将位置基与权重使用联系，动机转入成熟部署 | §4、Fig.1、完整交叉附图 |
+| C05 可构造性 | Cosh 明示密度目标、唯一解、逆CDF、端点锚定 | 从对象和设计偏好到一个可安装实例 | §5.1、App. A |
+| C06 多形状价值 | M4：7/12 reference、10/12 preassigned1.25、9/12 Exp | 主变量价值超出一条曲线；Cosh/Exp差异按区间呈现 | §5.2、App. B |
+| C07 旋转预算 | 432M MLA三seed，完整8/16/24/32K曲线与共享blend | 学习期构造在少pair架构的实际价值 | §5.3、Table1、App. MLA |
+| C08 继续学习 | 750M共享起点续训、完整长度PPL与40-case生成 | 学习已有模型的新分配可影响生成 | §5.3、App. larger-scale |
+| C09 适配与读出 | 8B PPL/来源使用、同adapter任务结果、独立516-step后续 | 区分学到长程来源使用与任务转换；保留整组证据 | §5.3、App. Llama、完整曲线 |
+| C10 成熟模型内点效应 | OLMo/Qwen同支持冻结干预 | 与学习期C01连接，扩展至固定权重和任务指标 | §6.1、Fig.3a、App. frozen |
+| C11 实际部署 | BM构造、同倍率确认、五任务自然QA | 从纯作用到一个有用分配实例 | §6.2–6.3、Fig.3b、App. BM |
+| C12 离散安装 | Gemma K128 index/direct gap +6.19 | 连续profile安装到有限网格仍是设计选择 | §6.3、App. placement |
+| C13 完整配置 | Qwen0.5B full13 +6.09，32K近等 | 频率表与振幅的实际系统收益 | §6.3、App. index |
+| C14 更广学习证据 | 454M、1.485B、selectiveQK、Video DiT | 各自补充组合、规模、适配及跨模态，不混合估计量 | §5末指针；各协议附录完整保留 |
+| C15 探索如何指导设计 | 12profile计数拟合及平台释放反例 | 静态描述须经模型及目标任务检验 | 冻结附录，phase几何与profile连续安放 |
+
+## 2026-09-12 二次回查：此前未充分使用的资产
+
+用户要求重新思考交接档中的高价值资产后，回读战役总账、foundations 报告、125M 压缩消融、C2 CPU/GPU owners、FullLagP2 JSON、完整答案EOS lineage、selective-QK metrics、C42 原始行、四方法 controls、gain 析因判决。结论不是复刻当前Top15排序。
+
+| 资产 | 新增价值与采用位置 | 直接来源 |
+|---|---|---|
+| 完整答案+EOS | 提升主文§5：从来源使用到成功读出，不能由旧750M固定长度探针替代 | rebuttal/rebuttal_0723/theory_results/evq_query_gap_realized_eos32_20260728/FINAL_METRICS_AND_LINEAGE.json |
+| selective-QK QA | 提升主文§5：独立适配支撑自然题的长度迁移；详细协议仍在成熟模型附录 | 同目录 olmo2_qk_phase_adaptation_20260729/metrics.json |
+| C2两参数 | 提升主文§6：有用分配可以有紧凑描述，跨checkpoint无重拟合保留长端行为 | attention-aware-retrofit/evidence/LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json；CPU_LOW_DIM_COUPLING_LAW与GPU_RESULT报告 |
+| C42受控对 | 提升主文§6：相同support、总位移和增量质心仍有形状信息；按dev面板呈现 | ds_workspace/recon_20260910/work/jsonl/olmo_c42/ 两个350行JSONL；code/coverage_theory_20260911.py两构造；HEADLINE §二 NLL报告 |
+| 四方法同场对照 | 主文§6增加Uni/officialYaRN；完整短长表入附录 | docs/research/ROPE_OLMO_BM_RESULT_20260908.json:experiments.existing_controls与seed_replication、bm_vs_existing_controls |
+| FullLagP2 | 新附录：把全sin/cos几何转成实际表的另一个正面例子，保留长端及迁移全分项 | docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json及candidate JSON |
+| 125M五架构压缩 | 新附录完整表：展示allocation在架构约束中的价值，不把非单调五配置说成压缩越多收益越大 | docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md（report-backed） |
+| gain 2×2 | 不采用跨350/180面板拼接；已有Qwen匹配小面板保留 | GAIN_TABLE_2x2_FINAL §五明确说明BM两gain未在180行测，故§二不能作同面板交互证据 |
+| base-only补偿 | 保留为共适应的额外解释材料：历史50M的scalar geometric fitting也能恢复部分compatibility；不借此混淆纯z训练 | foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md §6 |
+| 算子压缩旁线 | 查阅RECENT_RESULTS与EXPERIMENT_VALUE：改变operator和拟合目标，保留项目资产，不并入本稿内部指数主张 | experiments/rope_operator_family/ |
+
+重算：figs/verify_recovered_assets.py；source摘要和scores在figs/recovered_asset_inputs.json。未运行模型。新source可直接从上表定位，不受旧Top15是否列入约束。
+
+## 数字与来源规则
+
+C01/04/06/07/08/09/10/11/12/13/14 的 owner 沿用 PAPER_REVISION_HANDOFF_20260911.md §8 与下方历史数值索引；逐项追踪真实指标、训练seed或提示单位，不将PPL、官方部分分、完整字符串和EOS视作同一个指标。
+
+- C03 owner：research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md；复算脚本 figs/make_story_figures.py，结果 figs/finite_window_geometry.json；独立解析Gram与Gauss-Legendre求积相符。
+- C09 配对任务结果：rebuttal/EXPERIMENT_THEORY_REVIEW_20260720.md E5/E6/E7（report-backed）；正面概率与来源使用沿用 curated 两JSON，不把不同adapter合并。
+- C15 后续释放结果：ds_workspace/recon_20260910/theory/RELEASE_AXIS_20260911.md §六；连续NLL与原350-row任务拟合分列；不将跨仪器差异当成同指标比较。
+- 数字绘图输入：figs/story_figure_inputs.json 保留四个source完整精度与SHA；原五图绘制仍用 figs/figure_inputs.json。
+- 核心每项证据均保留或迁移；没有以KB或附录总页数作为删减目标。已知无效证据不作为正面论据恢复。
+
+## 当前章节连接
+
+§2 定义可干预对象 → §3 证明作用并刻画位置基 → §4 说明学得使用和安装关系 → §5 构造并展示学习收益 → §6 在成熟模型中利用同一设计自由度 → §8 汇总正面认识和可实践的设计方式。
+
+## 历史映射（2026-09-09，位置已由上文更新）
+
 # 指数分配稿：主张、公式、图表与引用对应表
 
 2026-09-09。内部审查表；不进入匿名稿件。实验优先级及逐项裁决见 [Top 15](EXPERIMENT_ASSETS_TOP15_20260909.md)，完整文件SHA256见 [source index](EXPONENT_REVISION_SOURCE_INDEX_20260909.json)。新图/表的直接输入及运行检查另见 [figure receipt](../figs/exponent_revision_source_receipt.json)。
@@ -52,3 +112,7 @@
 ## 复现与记录层级
 
 Figure builder重算分任务均值、样本数与部分记录一致性，并绑定原始输入hash；这不等于重新运行训练或生成。历史报告、curated summaries和raw-backed receipts按其实际层级使用。论文源包包含完整TeX、styles、bibliography、所有引用PDF图与成稿；模型checkpoint及原始流单独维护。
+
+## 2026-09-12 Pro领域分析完善
+
+新增Fig. m4-operating-points（附录B）：原M4的12配置×4非均匀主臂联合展示1×差值与weighted OOD差值，每点3seed。源为原factorial owner，派生输入/CSV/脚本在figs/m4_tradeoff*。完整采纳与纠正见[PRO_FIELD_MAP_REFINEMENT](PRO_FIELD_MAP_REFINEMENT_20260912.md)。主文更清楚区分supplied basis与learned usage，并把C2注册保留率门与长端正结果并置；原实验数字与证据身份不变。

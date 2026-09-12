@@ -1,0 +1,106 @@
+{
+  "correction": "实验纪律保留；候选集与论文判据重构。不建议原样执行 60 个。",
+  "required_fixes": [
+    {
+      "id": "F1",
+      "what": "PASS 判据必须要求同时赢 MR、YaRN、BM",
+      "why": "G_new>0 且 C_upgrade>=0 不蕴含 A(M)>A(YARN)。反例（精确算术）：A(YARN)=10, A(MR)=8, A(M)=9 给出 G_new=+1>0、C_upgrade=9-16+10=+3>=0，但 M 连 YaRN 都没打过。加入 BM 后这个洞更宽。原计划只在 H 里要求「报告」BM，没有把「超过 BM」写进方法 PASS。",
+      "fix": "binding gate = LCB[A(M) - max(A(MR),A(YARN),A(BM))] > 0",
+      "status": "implemented in upgrade_report.py contrast G_vs_best (kind=max_of) + test_baseline_hole"
+    },
+    {
+      "id": "F2",
+      "what": "Hero Result 门槛由 3pp 改为 5pp",
+      "why": "计划自算 S 合并 SE≈4.56pp、H256 仍≈2.8pp；3pp 真实效应需约 627 配对样本。主记录亦给出「频率轴效应 ≲5pp 已接近测量地板」。",
+      "fix": "3pp 记录为小改进；只有 >=5pp（对最好 baseline）才值得消耗 V/H 预算",
+      "status": "implemented: RECORD_GAIN=0.03, HERO_GAIN=0.05, report.hero_result"
+    }
+  ],
+  "phase_1_close_existing_theory": {
+    "rationale": "先执行 master 里已经完全就绪的闭环实验；它们有完整因果上下文，无论正负都能修改论文。不要让 Llama 60-way 搜索把它们挤掉。",
+    "items": [
+      {
+        "id": "A",
+        "name": "qwen4x_power 补 BM 臂",
+        "why": "一个臂回答「OLMo 的巨大 ramp-shape 排序到 Qwen 还有没有同号效应」。失败⟹frozen optimal allocation 是 checkpoint-specific，而非 universal geometric law。",
+        "blocker": "模型权重缺失：/root/autodl-tmp/qwen25_1p5b_32k 无 safetensors（全盘无副本，9/11 从归档恢复时静默丢失）。需先经镜像重下 Qwen/Qwen2.5-1.5B-Instruct（3.09GB，单文件）。"
+      },
+      {
+        "id": "B",
+        "name": "amp4x  m_p=1.13 / 1.30",
+        "why": "今晚理论价值最高：回答「过去所有 ramp 搜索是不是被错误封死在 m<=1 盒子里」。若成立可把方法分解为 m_j = a*r_j（amplitude x profile）；若失败则 T3 必须降级、理论转向 reach-resolution tradeoff。"
+      },
+      {
+        "id": "C",
+        "name": "scale8x_wide (m=1.5)",
+        "why": "若 8x 恢复 ⟹ 8x 失败来自 amplitude box；若仍 0 ⟹ 覆盖理论强解释被打掉，限制来自 pretrained channel usage / attention dynamics / decoding co-adaptation。能杀理论。"
+      },
+      {
+        "id": "D",
+        "name": "官方 YaRN same-panel",
+        "why": "便宜且必须跑。fresh72 已见 YaRN≈MrPro≪BM；同 panel 复现可堵死 reviewer 最自然的质疑（BM improvement 是否只是 checkpoint mismatch）。"
+      },
+      {
+        "id": "E",
+        "name": "g2x2 的 MR/b3 两列补完",
+        "why": "表×gain 交互目前主要依赖 native/BM。若在 MR/BM/b3 上同向，才能写「attention scaling 是频率分配的独立普遍交互轴」；若只有 BM 强交互，则 gain 并非普适救援。"
+      }
+    ]
+  },
+  "phase_2_llama3": {
+    "note": "Llama-3-8B 的 5 控制 + 16 候选",
+    "controls": [
+      "Native",
+      "OfficialYaRN",
+      "MR",
+      "BM",
+      "ResonanceYaRN"
+    ],
+    "candidates": [
+      "D01a",
+      "D03a",
+      "D03b",
+      "D04a",
+      "D05a",
+      "D05b",
+      "D05c",
+      "D06a",
+      "D06b",
+      "D06c",
+      "D07a",
+      "D07b",
+      "D07c",
+      "D13a",
+      "D13b",
+      "D13c"
+    ],
+    "n_arms": 21,
+    "questions_answered": [
+      "integer resonance 是否正交有效？",
+      "频率集合还是 channel assignment 重要？",
+      "有向 phase/sin 项重要吗？",
+      "慢尾是不是 content-like？",
+      "partial ramp 还是 binary scale specialization？",
+      "gain 应该 global、frequency-specific 还是 length-dependent？"
+    ]
+  },
+  "phase_3": "剩余 GPU 才扩展 60 库",
+  "failure_narrative_if_all_negative": {
+    "statement": "frequency allocation is causal, but its frozen optimum is not geometry-only",
+    "expanded": "RoPE frequency allocation 是真正的计算自由度，但 pretrained weights 会与 frequency-channel assignment 共适应。因此 frozen deployment 下，仅由频率几何、覆盖、Fisher、NLL 或无权 Fourier 结构推导 universal table，本质上是不充分的；而 training/adaptation 可以重新协调这种 co-adaptation。",
+    "explains": [
+      "scratch/LoRA 的 EVQ/Cosh 能工作 ⟹ W -> W*(m)，权重可重新适应新频率表",
+      "frozen OLMo 上 BM 爆炸提升 ⟹ 碰巧更匹配该 checkpoint 的有效 positional subspace",
+      "Qwen 排序消失甚至反向 ⟹ m*_OLMo != m*_Qwen",
+      "NLL proxy 选错 ⟹ NLL 奖励平滑/局部统计匹配，retrieval 需要 positional discrimination（实测 NLL -0.023 同时任务 -10.6pp）",
+      "gain 解析得较好 ⟹ gain 是 attention competition 的低维全局控制变量，ramp shape 则深入碰 pretrained channel-specific computation"
+    ],
+    "axes": [
+      "support",
+      "compression amplitude",
+      "allocation shape",
+      "attention scaling",
+      "checkpoint co-adaptation"
+    ]
+  }
+}

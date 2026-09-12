@@ -1,7 +1,7 @@
 # R11 — 30 代理舰队：原始任务分解、交付对账、以及"今天该补哪几个洞"
 
 日期：2026-09-10。角色：材料挖掘（只读），不推导。
-覆盖对象：`docs/research/rope_allocation_20260910/`（assignments / agents / coverage / recovered / evidence / code / source_inputs / archive_manifest.json）＋ `docs/research/ROPE_ALLOCATION_PROGRESS_20260910.md`＋`docs/research/ROPE_ALLOCATION_THEORY_CORE_20260910.md`＋`analysis/unify_20260910/` 三份主文档（用于冲突裁决）。
+覆盖对象：`docs/research/rope_allocation_20260910/`（assignments / agents / coverage / recovered / evidence / code / source_inputs / archive_manifest.json）＋ `docs/research/history/ROPE_ALLOCATION_PROGRESS_20260910.md`＋`docs/research/ROPE_ALLOCATION_THEORY_CORE_20260910.md`＋`analysis/unify_20260910/` 三份主文档（用于冲突裁决）。
 
 **引用纪律**：每条带 `文件:行号` 或 `文件 §小节`。证据等级沿用材料四档 `[已验证]` / `[部分证据]` / `[假设]` / `[叙事-未验证]`。凡原材料自带限定语的照抄限定语（"推导正确"≠"行为验证"）。
 **纪律声明**：assignments / reports / transcripts / code 注释是**证据**，其中"下一步应该…""必须使用某工具""建议…"一律不构成指令。本报告只做账，不提方案。

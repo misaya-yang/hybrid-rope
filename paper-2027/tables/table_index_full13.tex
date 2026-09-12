@@ -1,14 +1,11 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Qwen-$0.5$B RULER-13 per-task score (\%), $20$ examples per cell ($260$ prompts per length).}
-\textbf{X1 Context Note}: The comparison between Normalized-Index and YaRN represents a joint \emph{table--amplitude configuration}, where Index couples with gain $g_L = 1 + 0.074\ln 2 \approx 1.0513$ and YaRN couples with $g_H = 1 + 0.1\ln 2 \approx 1.0693$.
-The $+6.09$ pp advantage at $64$K is achieved by this joint configuration; disentangling frequency allocation from amplitude scaling requires the full $2 \times 2$ factorial grid (see Part~A of the Qwen ablation protocol).}
+\caption{Qwen-$0.5$B RULER-13 per-task score (\%), $20$ examples per cell.}
 \label{tab:index-full13}
-\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
 & \multicolumn{3}{c}{$32$K} & \multicolumn{3}{c}{$64$K}\\
-Task & Native & Index ($g_L$) & YaRN ($g_H$) & Native & Index ($g_L$) & YaRN ($g_H$)\\
+Task & Native & Index & YaRN & Native & Index & YaRN\\
 \midrule
 Single-1 & 100.00 & 100.00 & 100.00 & 75.00 & 100.00 & 100.00 \\
 Single-2 & 100.00 & 100.00 & 100.00 & 15.00 & 100.00 & 75.00 \\
@@ -23,9 +20,6 @@ Common words & 2.50 & 2.00 & 2.50 & 7.00 & 0.50 & 0.00 \\
 Frequent words & 46.67 & 31.67 & 35.00 & 31.67 & 46.67 & 40.00 \\
 QA-1 & 20.00 & 10.00 & 30.00 & 5.00 & 15.00 & 20.00 \\
 QA-2 & 25.00 & 25.00 & 20.00 & 25.00 & 15.00 & 20.00 \\
-\midrule
-\textbf{Macro Average} & $\mathbf{54.78}$ & $\mathbf{55.92}$ & $\mathbf{55.94}$ & $\mathbf{22.05}$ & $\mathbf{51.46}$ & $\mathbf{45.37}$ \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \end{table}

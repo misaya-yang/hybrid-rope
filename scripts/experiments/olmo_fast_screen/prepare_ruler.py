@@ -166,6 +166,8 @@ def main():
                if path.is_file() and path.suffix in ('.py', '.yaml')}
     source_assets = {name: sha_file(upstream/'scripts/data/synthetic/json'/name)
                      for name in ('PaulGrahamEssays.json', 'english_words.json', 'squad.json')}
+    candidate_ids=[item['id'] for item in json.loads((out/'queue.json').read_text())['ordered_candidates']
+                   if item['eligible']]
     manifest.update(benchmark='ruler_mixed_v1', status='PREPARED_GPU_NOT_RUN',
         physical_caps=[cap for cap, _ in cells], tasks=tasks, families=families,
         use_stock_generation=True,
@@ -180,7 +182,8 @@ def main():
         qualification='No self-made Native gate. Report MrPro floor/ceiling cells and all selected tasks without outcome-based removal.',
         selection=f'Primary: {args.long_cap}-token-cap six-task macro gain; report {args.short_cap}-token cap separately. Positive long gain with nonnegative short change is a development win; short loss is a tradeoff.',
         scope=f'RULER {len(tasks)}-task panel, {len(tasks)*args.short_count} rows at {args.short_cap}-token cap and {len(tasks)*args.long_count} at {args.long_cap}-token cap. Sample scope and confirmation role are declared in the experiment protocol.',
-        gpu_execution='NOT_RUN; one MrPro baseline and one MrProBM comparison',
+        gpu_execution=('NOT_RUN; one MrPro baseline and fixed candidates '
+                       + ','.join(candidate_ids)),
         code_files={name:sha_file(root/name) for name in dependencies})
     manifest['prepared_files'] = {name:sha_file(out/name) for name in
         ('screen.jsonl','qualification.jsonl','tables.json','generation_config.json','queue.json','prompts.jsonl')}

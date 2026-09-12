@@ -1,0 +1,48 @@
+\subsection{Reconstructing the twelve-profile response analysis}
+\label{sec:profile-diagnostic-audit}
+
+\paragraph{Statistic and evaluation unit.}
+For OLMo-2-0425-1B-Instruct, $K=64$, $b=500{,}000$, native window $4096$, and test distance $D=16384$, define
+\begin{equation}
+T_j(D;m)=\frac{D}{2\pi}b^{-j/K}4^{-m_j},\qquad
+N(m)=\sum_{j=0}^{63}\mathbf1\{0.25\le T_j(D;m)\le16\}.
+\label{eq:profile-count}
+\end{equation}
+This is a band-count statistic. The thresholds are exploratory choices examined on the same twelve profiles, not calibrated-readout boundaries. All arms use $g=1+0.1\ln4=1.1386294$, $350$ shared row identities, seven equally sized RULER task groups, and $16$K inputs. The score is the mean saved task score in $[0,1]$, including partial credit; EOS is recorded separately. The $350$ inputs estimate each profile's task score, whereas the configuration-level analysis has twelve profiles. MrPro and BM use archived endpoint outputs; the other ten arms have separate saved outputs.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{All twelve profiles used for exploratory response fitting.} Scores are recomputed from saved row-level outputs. SHA prefixes identify reconstructed little-endian float32 frequency tensors; these are reconstruction digests, not recovered runtime tensor attestations. All twelve profiles participate in the fit.}
+\label{tab:profile-diagnostic}
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Profile & $N$ & Score sum & Mean (\%) & EOS / 350 & SHA-256 prefix \\
+\midrule
+MrPro & 15 & 24.80 & 7.09 & 197 & \texttt{505d1fb2dce3} \\
+beta\_b0p25 & 16 & 50.65 & 14.47 & 181 & \texttt{a8313cac3ee8} \\
+turns\_a0p5b32 & 16 & 56.15 & 16.04 & 169 & \texttt{25721495d712} \\
+beta\_b0p5 & 16 & 81.20 & 23.20 & 150 & \texttt{4b0b97569a3a} \\
+turns\_a1b16 & 16 & 92.80 & 26.51 & 167 & \texttt{a24e3329fc49} \\
+knife\_both & 17 & 134.60 & 38.46 & 173 & \texttt{4c9d6fa7684b} \\
+knife\_taper & 17 & 137.80 & 39.37 & 146 & \texttt{a3b8138d159e} \\
+knife\_leak & 17 & 138.90 & 39.69 & 120 & \texttt{8f92ffecc376} \\
+MrProBM & 17 & 145.85 & 41.67 & 119 & \texttt{0ed902cba69b} \\
+beta\_b2 & 17 & 175.05 & 50.01 & 119 & \texttt{1188a7d3c34c} \\
+turns\_a2b32 & 17 & 178.50 & 51.00 & 129 & \texttt{cbd8c451c0bb} \\
+turns\_a1b64 & 17 & 188.45 & 53.84 & 130 & \texttt{7aedd80ef093} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Fit and scope.}
+Unweighted least squares of the logit-transformed mean score on $N$ gives
+$\operatorname{logit}(\bar r)=-20.45+1.19N$. Among $66$ profile pairs, $39$ have different counts and concordant scores, $0$ have different counts and discordant scores, and $27$ tie in count. The count therefore describes between-group ordering and does not resolve within-group differences. This is a descriptive fit to fractional scores, not a binomial success model or an independent predictive test. Threshold choices and coefficients were analyzed using these same profiles. 
+
+\paragraph{Reconstruction and provenance.}
+The accompanying \path{figs/profile_diagnostic_inputs.json} records every $m_j$, full reconstruction digest, row-output digest, score sum, and fit coefficient. The common row-identity digest is \texttt{14736f284ac30c0c}. Matching row identities checks panel alignment in the saved outputs; the available records do not supply a new prompt-byte comparison for the archived endpoints. The analysis therefore reports the response of the recorded profiles.
+
+
+\paragraph{Testing the interpretation beyond the fitted family.}
+A subsequent matched continuous-text evaluation at $16$K on $16$ documents increased the count from $N=17$ for BM to $22$--$26$ by releasing slow-end interpolation. BM had NLL $2.8627$; the five modified tables gave $2.8971$, $2.8674$, $2.8697$, $2.8878$, and $3.0372$. Every modification increased the count while worsening this likelihood endpoint. The task-score fit above and this independent likelihood instrument measure different outcomes; together they show why the geometric count alone is insufficient to select a deployed table. Positional coverage remains a computable description, and its usefulness must be established through the learned model and the target task.
+
+The archived BM endpoint is also not an exact text-replay target: a later same-name rerun differed on $24/350$ row scores and $210/350$ generated texts despite tiny reconstructed tensor differences. Table~\ref{tab:profile-diagnostic} reports the saved archived outputs; it does not pool them with reruns.

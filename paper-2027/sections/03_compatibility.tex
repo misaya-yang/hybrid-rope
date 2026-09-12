@@ -1,0 +1,27 @@
+\section{How a Model Learns and Uses an Allocation}
+\label{sec:compatibility}
+
+A positional basis enters attention through learned Q/K projections. We separate two aspects of its use: the range at which it operates and the association between frequencies and trained coordinates.
+
+\subsection{The learned length response depends on runtime range}
+\label{sec:range-interaction}
+
+Return to the paired models of \S\ref{sec:exp-identify}. Instead of retaining their training support, retarget the log-frequency span to each evaluation length, preserving each allocation's normalized $z$. Cosh-minus-geometric NLL becomes $+0.060/+0.227/+0.460$ at $512/1024/2048$ tokens: all three seeds now favor the geometric allocation (Fig.~\ref{fig:spectral-budget-overview}c). The same trained pair produces opposite orderings under the two range policies. Allocation and range are separately controllable, but their effects interact in the learned model.
+
+\subsection{Crossing weights with their frequency tables}
+\label{sec:coadaptation-finding}
+
+To isolate learned compatibility, hold each weight set fixed and cross the runtime tables. In a $50$M pair, Geo and Cosh achieve matched PPLs of $7.14$ and $7.16$. Installing the Cosh table into Geo-trained weights raises PPL to $76.20$; the reverse swap gives $23.05$. A $151.9$M crossing repeats the preference across two training seeds using factor-four tables derived from each training allocation (Fig.~\ref{fig:spectral-budget-overview}d). The two seed-specific interaction contrasts are $3.400$ and $3.251$ tail NLL. These crossed comparisons expose the learned association: both allocations support competent models, and each model learns to use its own basis (full crossings in Fig.~\ref{fig:weight-table-crossing}).
+
+\subsection{Frequency identity and slot identity}
+\label{sec:non-identifiability}
+
+The distinction becomes sharper when the frequency multiset itself is preserved. For a block permutation $P$ corresponding to a frequency permutation $\pi$,
+\begin{equation}
+\mathcal R_{\pi\Omega}(\Delta)=P\mathcal R_\Omega(\Delta)P^\top,
+\qquad (Pq)^\top\mathcal R_{\pi\Omega}(\Delta)(Pk)=q^\top\mathcal R_\Omega(\Delta)k.
+\label{eq:slot-permutation}
+\end{equation}
+Thus permuting Q/K blocks together with frequencies exactly preserves the attention kernel. With weights fixed, however, permuting only internal frequency assignments raises OLMo tail NLL from $3.10423$ to $6.86493$ and lowers Qwen $64$K task macro from $0.7000$ to $0.0000$. The model uses an ordered association between coordinate subspaces and frequencies.
+
+For genuinely different frequency multisets, position-independent invertible Q/K maps cannot equate the rotation kernels over an interval containing zero (Theorem~\ref{thm:obstruction}). Allocation changes the supplied basis; assignment changes its association with learned coordinates. The experimental counterparts establish why a design can be valuable during learning yet require a different installation strategy on a mature checkpoint. We now use this distinction to construct and evaluate allocations in both settings.

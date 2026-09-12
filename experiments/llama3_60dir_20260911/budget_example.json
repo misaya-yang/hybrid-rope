@@ -1,0 +1,80 @@
+{
+  "n_candidates": 60,
+  "taus": {
+    "t8": 1.2,
+    "t16": 2.5,
+    "t32": 4.7
+  },
+  "minutes_per_s_candidate": 6.992,
+  "minutes_per_v_table": 9.568,
+  "minutes_per_h_table": 19.136,
+  "items": [
+    {
+      "item": "S candidates",
+      "count": 60,
+      "minutes": 419.52
+    },
+    {
+      "item": "S controls",
+      "count": 4,
+      "minutes": 27.968
+    },
+    {
+      "item": "V tables",
+      "count": 4,
+      "minutes": 38.272
+    },
+    {
+      "item": "H tables",
+      "count": 4,
+      "minutes": 76.544
+    },
+    {
+      "item": "native short reference",
+      "count": 112,
+      "minutes": 2.5759999999999996
+    },
+    {
+      "item": "gain probes (new low-g cells)",
+      "count": 2,
+      "minutes": 7.359999999999999
+    },
+    {
+      "item": "operator parity / overhead reserve",
+      "count": null,
+      "minutes": 7.64
+    },
+    {
+      "item": "model preflight + pilot",
+      "count": null,
+      "minutes": 12.0
+    },
+    {
+      "item": "exception reserve",
+      "count": null,
+      "minutes": 8.0
+    }
+  ],
+  "total_minutes": 599.88,
+  "budget_minutes": 600.0,
+  "fits": true,
+  "slack_minutes": 0.12000000000000455,
+  "counts": {
+    "s_long": 96,
+    "s_short": 16,
+    "v_long": 128,
+    "v_short": 32,
+    "h_long": 256,
+    "h_short": 64,
+    "n_controls": 4,
+    "n_v_tables": 4,
+    "n_h_tables": 4,
+    "native_short": 112,
+    "gain_probes": 2,
+    "gain_probe_long": 48,
+    "gain_probe_short": 16,
+    "parity_reserve": 7.64,
+    "pilot_reserve": 12.0,
+    "exception_reserve": 8.0
+  }
+}

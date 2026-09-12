@@ -1,9 +1,6 @@
 \section{Mature-scale protocols}
 \label{sec:mature-details}
 
-\input{tables/table_ruler}
-
-\FloatBarrier
 \subsection{OLMo-2 \texorpdfstring{$1.485$B}{1.485B}}
 \label{sec:olmo2-1b}
 
@@ -31,6 +28,39 @@ with maximum observed position ID $16{,}257$. Evaluation uses real contiguous
 prompts from the same numeric NIAH family and greedy decoding.
 The endpoint requires the complete expected answer string followed by
 observed terminal EOS, measured from generated token IDs.
+
+
+\paragraph{Stage identities and supervision.}
+The starting artifacts are the two $300$-step counterfactual-routing parents (rank-$64$, alpha-$128$ Q/K/V/O LoRA). Their SHA-256 prefixes are \texttt{6570ab94aec6} (Native) and \texttt{95ceeb70117c} (Cosh); the later stages continue each arm's own parent. Table~\ref{tab:routing-stages} specifies the two matched follow-ups. Both use fused AdamW with $(\beta_1,\beta_2)=(0.9,0.95)$, zero weight decay, gradient clipping $1$, BF16, and cosine decay to $0.1$ of peak LR after linear warmup. Global batch $8$ uses microbatch $4$ and accumulation $2$. The trainable Q/K/V/O adapters contain $16{,}777{,}216$ parameters; the base checkpoint is frozen.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{The matched continuation producing complete-answer outcomes.} Training seed $20260728$. Each cycle contains two counterfactual-routing updates and one natural-text update. Counts include both variants of a routing pair.}
+\label{tab:routing-stages}
+\begin{tabular}{@{}lrrp{.39\linewidth}@{}}
+\toprule
+Stage & Steps & Peak LR / warmup & Supervision and position policy \\
+\midrule
+Query-gap & 100 & $5\times10^{-5}$ / 20 & Answer CE plus counterfactual margin; semantic query-block offsets through $16$K. \\
+Answer + EOS & 32 & $10^{-5}$ / 4 & Answer CE, immediate EOS CE (weight 1), same counterfactual margin; realized source-to-answer gap curriculum. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Routing examples contain eight key--value blocks and one query. The two variants replace the queried source value while preserving the surrounding context; the answer changes accordingly. The training set has $1024$ paired examples, the separate calibration set $128$, with seeds $20293725$ and $20304725$ and different query templates. The final stage reuses the raw training rows with rebuilt answer-plus-EOS labels, covering three answer tokens and EOS; padding and other prompt tokens carry no answer loss. The counterfactual term uses margin $1$ and weight $0.5$, comparing the correct and swapped answer where their tokens differ. Natural replay uses ordinary next-token loss. The $100$-step stage contains $67$ routing/$33$ natural updates; the final stage contains $22/10$.
+
+\paragraph{Position-ID construction.}
+Let $q$ be the semantic query-block start, $a$ the answer start, $h$ the end-exclusive source span, and $n$ the active sequence length. Context positions before $q$ remain contiguous. Both counterfactual variants share the position array:
+\[
+p_i=i+o\,\mathbf1\{i\ge q\}.
+\]
+In the $100$-step stage, each routing update uses four pair offsets: a low offset alternating between $0$ and $[1,4096]$, one from $[4097,8192]$, and two from $[8193,12289]$. Values traverse each band by a seed-derived coprime modular stride, with a deterministic per-update permutation. In the final stage, the stream instead specifies realized gap targets: the low target alternates between contiguous and $[4096,8191]$, one target lies in $[8192,12287]$, and two in $[12288,16079]$. For a noncontiguous target $g$, set
+\[
+o=\min\{g-(a-h),\ 12289,\ 16384-\min(n,4095)\}.
+\]
+The implementation requires the resulting gap to remain in the target band and all active position IDs below $16384$. Natural replay remains contiguous. The exact two deterministic schedules are included in \path{figs/verify_routing_schedule.py}; recomputation matches the run-record hashes for all $268$ query offsets and all $88$ final-stage gap targets. This procedure exposes target-range phases during training while keeping physical sequences at most $4096$ tokens.
+
+The evaluation uses separately generated, real contiguous numeric-NIAH prompts, $100$ per length, with greedy decoding and complete-string-plus-EOS scoring. Training uses custom counterfactual query templates rather than the official evaluation template. The source receipts and full parent/final adapter hashes are included in \path{figs/routing_protocol_receipts.json} and \path{figs/recovered_asset_inputs.json}.
 
 \begin{table}[ht]
 \centering\small
@@ -81,6 +111,9 @@ per-example predictions gives \evq{}-minus-Native official-scorer macro differen
 of $-29.75$ points at $4$K (95\% CI $[-34.42,-24.85]$), $+29.61$ at $8$K
 ($[26.54,32.74]$), and $+4.65$ at $16$K ($[3.17,6.38]$). These intervals
 quantify evaluation-row variation for the trained pair.
+
+\input{tables/table_ruler}
+\FloatBarrier
 
 \paragraph{From initialisation.}
 Starting from the public step-$0$ initialisation, the same-recipe Geo/\evq{}
@@ -134,6 +167,18 @@ sin/cos pair is projected onto all other pairs over Native separations weighted
 by their causal pair count, $p(\Delta)\propto L-\Delta$; it sets
 $w_k=(1-\widetilde U_k)^2$ in the frequency blend of Eq.~\eqref{eq:adjustment-families}, so less unique
 pairs move farther.
+
+
+\paragraph{Numerical construction of the fixed-support controls.}
+The following specifies the derived arm independently of the later FullLagP2 construction. Use the checkpoint's actual float32 native tensor promoted to float64, with $L=4096$ for OLMo and $32768$ for Qwen. Start from integer separations $d=0,\ldots,L-1$ and weights $L-d$. Group consecutive separations in blocks of two, retain each block's rounded weighted-centroid separation, and sum its weights; normalize the weights to unit mass. This gives $2048$ and $16384$ weighted support points, respectively.
+
+Build $X$ with columns $\sqrt{w_d}\cos(d\omega_k)$ and $\sqrt{w_d}\sin(d\omega_k)$ in float64. For each two-column block $X_k$, solve $B_k=\arg\min_B\|X_k-X_{-k}B\|_F$ with singular-value cutoff \texttt{rcond}$=10^{-10}$, and compute
+\[
+U_k=\operatorname{clip}\!\left(\frac{\|X_k-X_{-k}B_k\|_F^2}{\|X_k\|_F^2},0,1\right).
+\]
+If the marginal energy is zero, set $U_k=0$. Min--max normalize the $U_k$ values; if their span is zero, use the zero vector. Then $w_k=(1-\widetilde U_k)^2$ and $\omega'_k=\omega_k(1-w_k)+\omega_kw_k/4$. Cast to float32, overwrite the first frequency with the exact native first entry and the last with the float32 native last entry divided by four, and require strict positivity and decreasing order. The resulting tensor SHA-256 prefixes are \texttt{a435d7544144} (OLMo) and \texttt{3512335e408c} (Qwen).
+
+The uniform control is log-linear between the same endpoints. The coarse control enumerates all integer ramp bounds $0\le l<h<K$, minimizes mean squared distance to $w_k$ in movement space, and breaks ties lexicographically in $(l,h)$. It uses the same frequency blend and endpoint overwrite. The selected bounds are $(20,22)$ for OLMo and $(28,31)$ for Qwen. FullLagP2 in Appendix~\ref{sec:full-lag-profile} instead uses every integer separation and installs a log-frequency shift; its measurements are a separate experiment.
 
 \begin{table}[ht]
 \centering
@@ -311,6 +356,10 @@ These are matched teacher-forced probability
 and position-preserving causal-routing measurements; autoregressive task
 accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
 $6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths.
+
+
+\paragraph{Generation and natural-QA outcomes of the same adapters.}
+The source interventions reveal how remote evidence affects answer probabilities. Task evaluation measures whether those probabilities produce the required output. In the seed-$42$ capability evaluation, Cosh passkey exact is $100/0/0\%$ at $8/16/32$K, and single-needle top-1 is $56.67/3.33/0\%$. The registered three-arm QA comparison gives task-macro F1 $0.2309$ for the base model, $0.2110$ for Native-LoRA, and $0.1126$ for Cosh-LoRA; the paired Cosh-minus-Native difference is $-0.0984$, with $95\%$ bootstrap interval $[-0.1297,-0.0697]$. The deficit is concentrated in inputs of at most $8$K; on the longer subset all arms are near the floor. Forced-gold inclusion changes NLL by $-0.034$, and the sparse readout pilot does not improve conversion. These report-backed outcomes accompany the probability and source-use measurements of the same $300$-step adapters. They motivate distinguishing access to a distant source from successful task readout.
 
 \paragraph{RULER-family continuation.}
 A separate seed-$20420726$ continuation uses $516$ steps, rank-$64$/alpha-$128$

@@ -349,7 +349,7 @@ support training or mature pure-$z$ owners.
 - Matched-content phase 2x2 bridge invoked only in Stage 2:
   [`MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md`](../causal-mechanism/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md)
 - Current agenda and method-entry order:
-  [`INDEX.md`](../../../../../INDEX.md) §6.2–§6.3
+  [`INDEX.md`](../../../../../index.md) §6.2–§6.3
 
 This document records a separate protocol only. It contains no experiment
 result, launch receipt, or authorization to use GPU, remote, or paid compute.

@@ -1,0 +1,504 @@
+{
+  "geometry": {
+    "theta": 500000.0,
+    "window": 8192,
+    "scale": 4.0,
+    "target": 32768,
+    "K": 64,
+    "head_dim": 128,
+    "low": 18,
+    "high": 35,
+    "n": 17,
+    "gain": 1.138629436111989,
+    "native_inv_freq_source": "analytic theta**(-j/K)"
+  },
+  "reference_dtype": "float64",
+  "gpu_path_note": "phases cast to compute dtype; model BF16, cos/sin computed in FP32",
+  "approved_scopes": [],
+  "exported": [],
+  "not_exported_scope_not_approved": [
+    "D01a",
+    "D01b",
+    "D01c",
+    "D02a",
+    "D02b",
+    "D02c",
+    "D03a",
+    "D03b",
+    "D03c",
+    "D04a",
+    "D04b",
+    "D04c",
+    "D05a",
+    "D05b",
+    "D05c",
+    "D06a",
+    "D06b",
+    "D06c",
+    "D07a",
+    "D07b",
+    "D07c",
+    "D08a",
+    "D08b",
+    "D08c",
+    "D09a",
+    "D09b",
+    "D09c",
+    "D10a",
+    "D10b",
+    "D10c",
+    "D11a",
+    "D11b",
+    "D11c",
+    "D12a",
+    "D12b",
+    "D12c",
+    "D13a",
+    "D13b",
+    "D13c",
+    "D14a",
+    "D14b",
+    "D14c",
+    "D15a",
+    "D15b",
+    "D15c",
+    "D16a",
+    "D16b",
+    "D16c",
+    "D17a",
+    "D17b",
+    "D17c",
+    "D18a",
+    "D18b",
+    "D18c",
+    "D19a",
+    "D19b",
+    "D19c",
+    "D20a",
+    "D20b",
+    "D20c"
+  ],
+  "catalogue": [
+    {
+      "config": "D01a",
+      "direction": "D01",
+      "scope": "frequency",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D01b",
+      "direction": "D01",
+      "scope": "frequency",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D01c",
+      "direction": "D01",
+      "scope": "frequency",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D02a",
+      "direction": "D02",
+      "scope": "frequency",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D02b",
+      "direction": "D02",
+      "scope": "frequency",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D02c",
+      "direction": "D02",
+      "scope": "frequency",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D03a",
+      "direction": "D03",
+      "scope": "frequency_assignment",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D03b",
+      "direction": "D03",
+      "scope": "frequency_assignment",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D03c",
+      "direction": "D03",
+      "scope": "frequency_assignment",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D04a",
+      "direction": "D04",
+      "scope": "signed_frequency",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D04b",
+      "direction": "D04",
+      "scope": "signed_frequency",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D04c",
+      "direction": "D04",
+      "scope": "signed_frequency",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D05a",
+      "direction": "D05",
+      "scope": "dc_frequency",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D05b",
+      "direction": "D05",
+      "scope": "dc_frequency",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D05c",
+      "direction": "D05",
+      "scope": "dc_frequency",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D06a",
+      "direction": "D06",
+      "scope": "frequency_assignment",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D06b",
+      "direction": "D06",
+      "scope": "frequency_assignment",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D06c",
+      "direction": "D06",
+      "scope": "frequency_assignment",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D07a",
+      "direction": "D07",
+      "scope": "spectral_amplitude",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D07b",
+      "direction": "D07",
+      "scope": "spectral_amplitude",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D07c",
+      "direction": "D07",
+      "scope": "spectral_amplitude",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D08a",
+      "direction": "D08",
+      "scope": "spectral_amplitude",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D08b",
+      "direction": "D08",
+      "scope": "spectral_amplitude",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D08c",
+      "direction": "D08",
+      "scope": "spectral_amplitude",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D09a",
+      "direction": "D09",
+      "scope": "spectral_amplitude",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D09b",
+      "direction": "D09",
+      "scope": "spectral_amplitude",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D09c",
+      "direction": "D09",
+      "scope": "spectral_amplitude",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D10a",
+      "direction": "D10",
+      "scope": "qk_phase_bias",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D10b",
+      "direction": "D10",
+      "scope": "qk_phase_bias",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D10c",
+      "direction": "D10",
+      "scope": "qk_phase_bias",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D11a",
+      "direction": "D11",
+      "scope": "qk_pair_metric",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D11b",
+      "direction": "D11",
+      "scope": "qk_pair_metric",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D11c",
+      "direction": "D11",
+      "scope": "qk_pair_metric",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D12a",
+      "direction": "D12",
+      "scope": "position_amplitude",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D12b",
+      "direction": "D12",
+      "scope": "position_amplitude",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D12c",
+      "direction": "D12",
+      "scope": "position_amplitude",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D13a",
+      "direction": "D13",
+      "scope": "position_amplitude",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D13b",
+      "direction": "D13",
+      "scope": "position_amplitude",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D13c",
+      "direction": "D13",
+      "scope": "position_amplitude",
+      "priority": 1,
+      "execution_authorized": false
+    },
+    {
+      "config": "D14a",
+      "direction": "D14",
+      "scope": "position_phase",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D14b",
+      "direction": "D14",
+      "scope": "position_phase",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D14c",
+      "direction": "D14",
+      "scope": "position_phase",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D15a",
+      "direction": "D15",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D15b",
+      "direction": "D15",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D15c",
+      "direction": "D15",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D16a",
+      "direction": "D16",
+      "scope": "position_phase",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D16b",
+      "direction": "D16",
+      "scope": "position_phase",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D16c",
+      "direction": "D16",
+      "scope": "position_phase",
+      "priority": 2,
+      "execution_authorized": false
+    },
+    {
+      "config": "D17a",
+      "direction": "D17",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D17b",
+      "direction": "D17",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D17c",
+      "direction": "D17",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D18a",
+      "direction": "D18",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D18b",
+      "direction": "D18",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D18c",
+      "direction": "D18",
+      "scope": "position_phase",
+      "priority": 3,
+      "execution_authorized": false
+    },
+    {
+      "config": "D19a",
+      "direction": "D19",
+      "scope": "position_phase",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D19b",
+      "direction": "D19",
+      "scope": "position_phase",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D19c",
+      "direction": "D19",
+      "scope": "position_phase",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D20a",
+      "direction": "D20",
+      "scope": "position_phase",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D20b",
+      "direction": "D20",
+      "scope": "position_phase",
+      "priority": 4,
+      "execution_authorized": false
+    },
+    {
+      "config": "D20c",
+      "direction": "D20",
+      "scope": "position_phase",
+      "priority": 4,
+      "execution_authorized": false
+    }
+  ],
+  "note": "configurations absent from `exported` must not be run and must not be substituted by the MR table; `reference/` holds analytically generated arrays, not stock-aligned deployment artefacts"
+}

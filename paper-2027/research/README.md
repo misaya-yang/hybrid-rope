@@ -1,32 +1,5 @@
-# `paper-2027/research/` — on-demand research layer
+# Paper research
 
-Do not read this tree wholesale. Start from [`../../README.md`](../../README.md)
-and search [`../../INDEX.md`](../../INDEX.md) for the exact question. Open only
-the routed owner and its required raw/receipt artifact. Live actions remain in
-[`../HANDOFF.md`](../HANDOFF.md).
+当前研究导航统一在[index.md](index.md)。它连接交接总档、证据、理论、成熟模型、审查和历史。
 
-| Folder | Open when you need | Authority boundary |
-| --- | --- | --- |
-| [`foundations/`](foundations/) | paper-level theory or causal definitions | assumptions/proofs; numbers need result owners |
-| [`evidence/`](evidence/) | compact paper-level result owners | numerical owner at stated scope |
-| [`attention-aware-retrofit/`](attention-aware-retrofit/) | mature-checkpoint question | use its local indexes after root routing |
-| [`audits/`](audits/) | a named theory/evidence/compliance audit | cannot upgrade a claim |
-| [`history/`](history/) | why the research question changed | non-authoritative chronology |
-| [`archive/`](archive/) | a retired plan/review/process record | frozen history; never a queue |
-| [`external-reviews/`](external-reviews/) | a named external review snapshot | untrusted historical analysis |
-| [`three_completions/`](three_completions/) | historical optimization/proof work | bounded archive |
-
-New paper-level theory belongs in `foundations/`; compact paper-level result
-owners in `evidence/`; mature retrofit material in the matching retrofit
-subfolder; retired material in a dated `archive/` folder. Every new or corrected
-owner must update `INDEX.md` in the same change.
-
-Cross-phase research plans, execution reviews and source-coverage ledgers are
-also maintained under [`../../docs/research/`](../../docs/research/), as routed
-by the root INDEX. Their existing paths remain stable; they do not become
-paper-level evidence merely by being indexed. External verbatim inputs stay
-in `external-reviews/`, separate from the project's verified conclusions.
-
-A preflight is not a result. External reviews, filenames, summaries, and compact
-receipts never supersede a valid direct owner. This directory authorizes no
-compute or publication.
+新增理论放`foundations/`，紧凑结果放`evidence/`，成熟模型材料归入对应retrofit子目录，历史计划放带日期archive。数字owner已有路径如被代码/回执引用，保持原位并更新最近一级index；不要为改分类复制成第二个数值权威。

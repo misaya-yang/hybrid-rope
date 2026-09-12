@@ -89,13 +89,13 @@
 \input{sections/01_intro}
 \input{sections/02_exponents}
 \input{sections/03_findings}
-\input{sections/03_theory}
-\FloatBarrier
+\input{sections/03_compatibility}
 \input{sections/04_experiments}
 \input{sections/04_mature}
-\input{sections/05_threeband}
 \input{sections/02_related}
 \input{sections/05_discussion}
+
+\label{page:bodyend}
 
 \subsubsection*{Ethics statement}
 \input{sections/06_ethics}
@@ -106,8 +106,8 @@
 \subsubsection*{AI use statement}
 \input{sections/08_ai_use}
 
-%% ---- main text and exempt statements end here ----
-\label{page:bodyend}
+%% ---- exempt statements end here ----
+\label{page:statementend}
 \clearpage
 
 \label{page:bibstart}
@@ -117,11 +117,15 @@
 \newpage
 \appendix
 
+\input{appendix/a0_guide}
 \input{appendix/a1_proofs}
-\input{appendix/a2_experiment_details}
 \input{appendix/a5_identification}
+\input{appendix/a2_experiment_details}
+\input{appendix/a3_supporting_results}
 \input{appendix/a6_mature_scale}
 \input{appendix/a7_exponent_adjustments}
-\input{appendix/a3_supporting_results}
+\input{appendix/a9_recovered_design_evidence}
+\input{sections/05_threeband}
+\input{appendix/a8_profile_diagnostics}
 
 \end{document}

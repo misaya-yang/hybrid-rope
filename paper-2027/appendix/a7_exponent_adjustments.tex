@@ -10,6 +10,17 @@ checkpoint, tokenizer, and evaluator identities. The index/placement studies
 use RULER commit \texttt{c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a}.
 
 \FloatBarrier
+For the native-relative displacement in~\eqref{eq:movement-allocation}, the three installation laws are
+\begin{equation}
+d_k=\begin{cases}
+-\log(1-w_k+w_k/s),&\text{frequency blend},\\
+m_k\log s,&\text{log-frequency shift},\\
+\sum_{j<k}\log\lambda_j,&\text{mixed-radix conversion}.
+\end{cases}
+\label{eq:adjustment-families}
+\end{equation}
+The blend weight $w_k$ and log-shift profile $m_k$ have different meanings; the first line is the exact conversion between them.
+
 \subsection{Normalized-index profile}
 \label{sec:index-adjustment}
 

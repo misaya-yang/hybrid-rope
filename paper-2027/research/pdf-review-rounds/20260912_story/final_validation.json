@@ -1,0 +1,10 @@
+{
+  "pdf_sha256": "602073f3ab00e7ebdb3fae2fd4fc5bc1d034ff85944ac8306f75ec7c731f7c0d",
+  "zip_sha256": "6f900e566cca51d52b3dbcd1c9103c9357e0df89500d67946f08ae4bbb071e8c",
+  "pages": 48,
+  "main_text_pages": 9,
+  "independent_source_build": true,
+  "independent_build_text_and_pagination_identical": true,
+  "model_execution": false,
+  "review_rounds": 2
+}

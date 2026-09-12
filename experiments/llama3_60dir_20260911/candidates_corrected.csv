@@ -1,0 +1,61 @@
+config,direction,policy,scope,plan_priority,tier,decision,rationale,execution_authorized
+D01a,D01,Q(T)=floor(T+1/2),frequency,1,baseline_or_orthogonal,RUN,值得跑，但当 baseline/orthogonal enhancement；integer-period 与 ramp 正交可叠加。失败价值中等（只说明 frozen MR 上该组合无收益）。只跑 a（最近周期），b/c 的舍入方向只作登记,false
+D01b,D01,Q(T)=floor(T),frequency,1,baseline_or_orthogonal,HOLD,值得跑，但当 baseline/orthogonal enhancement；integer-period 与 ramp 正交可叠加。失败价值中等（只说明 frozen MR 上该组合无收益）。只跑 a（最近周期），b/c 的舍入方向只作登记,false
+D01c,D01,Q(T)=ceil(T),frequency,1,baseline_or_orthogonal,HOLD,值得跑，但当 baseline/orthogonal enhancement；integer-period 与 ramp 正交可叠加。失败价值中等（只说明 frozen MR 上该组合无收益）。只跑 a（最近周期），b/c 的舍入方向只作登记,false
+D02a,D02,A=W,frequency,2,dont_run,DROP,低优先级；三个 anchor 失败几乎不能推广,false
+D02b,D02,A=2W,frequency,2,dont_run,DROP,低优先级；三个 anchor 失败几乎不能推广,false
+D02c,D02,A=4W,frequency,2,dont_run,DROP,低优先级；三个 anchor 失败几乎不能推广,false
+D03a,D03,中段19–34两两相邻交换,frequency_assignment,3,core_mechanism,RUN,非常值得，机制实验。失败反而支持「频率集合层面」解释 ⟹ 失败价值非常高,false
+D03b,D03,平台35–37与38–40两个三槽块交换,frequency_assignment,3,core_mechanism,RUN,非常值得，机制实验。失败反而支持「频率集合层面」解释 ⟹ 失败价值非常高,false
+D03c,D03,中段整体循环hop=round(log(s)/(logθ/K))，本模型hop=7,frequency_assignment,3,core_mechanism,HOLD,非常值得，机制实验。失败反而支持「频率集合层面」解释 ⟹ 失败价值非常高,false
+D04a,D04,B={1≤r_j<s},signed_frequency,4,mechanism_probe,RUN,值得做少量机制 probe，不适合作为主部署方法,false
+D04b,D04,B={r_j<1},signed_frequency,4,mechanism_probe,HOLD,值得做少量机制 probe，不适合作为主部署方法,false
+D04c,D04,B={s≤r_j<32},signed_frequency,4,mechanism_probe,HOLD,值得做少量机制 probe，不适合作为主部署方法,false
+D05a,D05,θcut=π/2,dc_frequency,1,core_mechanism,RUN,值得跑；失败说明慢频仍被 pretrained weights 实质性利用,false
+D05b,D05,θcut=π,dc_frequency,1,core_mechanism,RUN,值得跑；失败说明慢频仍被 pretrained weights 实质性利用,false
+D05c,D05,θcut=2π,dc_frequency,1,core_mechanism,RUN,值得跑；失败说明慢频仍被 pretrained weights 实质性利用,false
+D06a,D06,Q(c)=floor(c),frequency_assignment,2,core_mechanism,RUN,非常值得跑；可直接约束 ramp 理论,false
+D06b,D06,Q(c)=floor(c+1/2),frequency_assignment,2,core_mechanism,RUN,非常值得跑；可直接约束 ramp 理论,false
+D06c,D06,反向扫描后floor，再反转回槽序,frequency_assignment,2,core_mechanism,RUN,非常值得跑；可直接约束 ramp 理论,false
+D07a,D07,h=m,spectral_amplitude,1,core_mechanism,RUN,今晚最高优先级之一；若失败反而支持 global gain 是主要自由度,false
+D07b,D07,h=1−m,spectral_amplitude,1,core_mechanism,RUN,今晚最高优先级之一；若失败反而支持 global gain 是主要自由度,false
+D07c,D07,h=4m(1−m),spectral_amplitude,1,core_mechanism,RUN,今晚最高优先级之一；若失败反而支持 global gain 是主要自由度,false
+D08a,D08,w∝J,spectral_amplitude,4,dont_run,DROP,不建议今晚；只能说明一个 quadrature heuristic 有效，失败价值很低,false
+D08b,D08,w∝1/J,spectral_amplitude,4,dont_run,DROP,不建议今晚；只能说明一个 quadrature heuristic 有效，失败价值很低,false
+D08c,D08,w∝sqrt(J),spectral_amplitude,4,dont_run,DROP,不建议今晚；只能说明一个 quadrature heuristic 有效，失败价值很低,false
+D09a,D09,三角特征函数sinc²(x/2),spectral_amplitude,4,dont_run,DROP,不建议；失败不能否定任何重要假说,false
+D09b,D09,高斯exp(−x²/12),spectral_amplitude,4,dont_run,DROP,不建议；失败不能否定任何重要假说,false
+D09c,D09,拉普拉斯1/(1+x²/12),spectral_amplitude,4,dont_run,DROP,不建议；失败不能否定任何重要假说,false
+D10a,D10,d0=−W/4,qk_phase_bias,3,medium,DROP,中低优先；anchor 太任意,false
+D10b,D10,d0=−W/2,qk_phase_bias,3,medium,DROP,中低优先；anchor 太任意,false
+D10c,D10,d0=−W,qk_phase_bias,3,medium,DROP,中低优先；anchor 太任意,false
+D11a,D11,h=m,qk_pair_metric,3,removed,DROP,从核心实验移除；已偏到另一个算子问题,false
+D11b,D11,h=−m,qk_pair_metric,3,removed,DROP,从核心实验移除；已偏到另一个算子问题,false
+D11c,D11,h=(2m−1)·4m(1−m),qk_pair_metric,3,removed,DROP,从核心实验移除；已偏到另一个算子问题,false
+D12a,D12,h=m,position_amplitude,2,baseline_or_orthogonal,RUN,baseline/探索项；已有 XPos precedent，成功也不是 ramp 理论,false
+D12b,D12,h=1−m,position_amplitude,2,baseline_or_orthogonal,RUN,baseline/探索项；已有 XPos precedent，成功也不是 ramp 理论,false
+D12c,D12,h=4m(1−m),position_amplitude,2,baseline_or_orthogonal,RUN,baseline/探索项；已有 XPos precedent，成功也不是 ramp 理论,false
+D13a,D13,t=ln(u)/lnW,position_amplitude,1,core_mechanism,RUN,高优先级；直接对应当前 gain 最大主效应,false
+D13b,D13,t=sqrt(ln(u)/lnW),position_amplitude,1,core_mechanism,RUN,高优先级；直接对应当前 gain 最大主效应,false
+D13c,D13,t=[1+0.1ln(u/W)]²,position_amplitude,1,core_mechanism,RUN,高优先级；直接对应当前 gain 最大主效应,false
+D14a,D14,a=W/4,position_phase,2,removed,DROP,从核心移出；成功后已是另一个方法故事,false
+D14b,D14,a=W/2,position_phase,2,removed,DROP,从核心移出；成功后已是另一个方法故事,false
+D14c,D14,a=W,position_phase,2,removed,DROP,从核心移出；成功后已是另一个方法故事,false
+D15a,D15,h=W/8,position_phase,3,removed,DROP,移出,false
+D15b,D15,h=W/4,position_phase,3,removed,DROP,移出,false
+D15c,D15,h=W/2,position_phase,3,removed,DROP,移出,false
+D16a,D16,C=W/4,position_phase,2,separate_line,DROP,可另开探索线；与已有分块位置路线相近,false
+D16b,D16,C=W/2,position_phase,2,separate_line,DROP,可另开探索线；与已有分块位置路线相近,false
+D16c,D16,C=W,position_phase,2,separate_line,DROP,可另开探索线；与已有分块位置路线相近,false
+D17a,D17,o_j=Cj/K,position_phase,3,dont_run,DROP,不跑；失败价值很低,false
+D17b,D17,o_j=C·bitreverse(j)/2^ceil(log2 K),position_phase,3,dont_run,DROP,不跑；失败价值很低,false
+D17c,D17,o_j=C(j mod4)/4,position_phase,3,dont_run,DROP,不跑；失败价值很低,false
+D18a,D18,M=1,position_phase,3,dont_run,DROP,不跑今晚；参数族仍然巨大,false
+D18b,D18,M=2,position_phase,3,dont_run,DROP,不跑今晚；参数族仍然巨大,false
+D18c,D18,M=4,position_phase,3,dont_run,DROP,不跑今晚；参数族仍然巨大,false
+D19a,D19,φ=z mod Θ,position_phase,4,dont_run,DROP,不建议；三个 policy 太人为,false
+D19b,D19,φ=Θ−|((z mod2Θ)−Θ)|,position_phase,4,dont_run,DROP,不建议；三个 policy 太人为,false
+D19c,D19,"φ=min(z,Θ)",position_phase,4,dont_run,DROP,不建议；三个 policy 太人为,false
+D20a,D20,Q=floor(x),position_phase,4,dont_run,DROP,低优先；预计效应小且机制很窄,false
+D20b,D20,Q=floor(x+1/2),position_phase,4,dont_run,DROP,低优先；预计效应小且机制很窄,false
+D20c,D20,Q_j=floor(x+j/K),position_phase,4,dont_run,DROP,低优先；预计效应小且机制很窄,false

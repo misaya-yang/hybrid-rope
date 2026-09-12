@@ -8,7 +8,7 @@
 - **Role:** durable theory continuation owner, not a parallel experiment plan
 - **Not:** a manuscript claim, experiment result, action queue, or compute
   authorization
-- **Agenda authority:** [`../../../INDEX.md`](../../../INDEX.md) §5
+- **Agenda authority:** [`../../../INDEX.md`](../../../index.md) §5
 - **Live state:** [`../../HANDOFF.md`](../../HANDOFF.md)
 
 This document answers what the paper established and what later research ruled
@@ -154,7 +154,7 @@ This is a protocol design only. No GPU run is authorized by this document.
    `kappa_att` ordering, LeRoPE `w^(1/3)` oracle, direct distance mapping,
    coverage residual, phase-risk, two-document direct-`z`, or the two failed
    analytic static tables. The complete anti-repeat ledger is
-   [`../../../INDEX.md`](../../../INDEX.md) §3.1.
+   [`../../../INDEX.md`](../../../index.md) §3.1.
 
 ## 6. Static-rank diagnostics: retained scope
 

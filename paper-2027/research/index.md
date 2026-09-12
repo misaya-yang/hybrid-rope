@@ -1,0 +1,21 @@
+# 当前论文研究索引
+
+先读[交接总档](PAPER_REVISION_HANDOFF_20260911.md)，按其中A01–A28查具体来源。重要性与证据强度分开，目录不自动赋予结论权威。
+
+| 入口 | 回答什么 |
+|---|---|
+| [evidence/index.md](evidence/index.md) | 当前论文逐项资产与source availability |
+| [EXPONENT_CLAIM_EVIDENCE_MAP](EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) | claim、公式、图表、实验的对应 |
+| [foundations/index.md](foundations/index.md) | full-pair、共适应与分配理论 |
+| [attention-aware-retrofit/index.md](attention-aware-retrofit/index.md) | 成熟同支持、适配、C2、placement与表关系 |
+| [audits/index.md](audits/index.md) | 数学、引用、来源与规范审查 |
+| [pdf-review-rounds/index.md](pdf-review-rounds/index.md) | 不同日期评审系列，计划与完成记录分开 |
+| [external-reviews/index.md](external-reviews/index.md) | 外部原文与Pro指导，属于参考输入 |
+| [history/index.md](history/index.md) | 四阶段详账、旧状态与来源恢复 |
+| [archive/index.md](archive/index.md) | 退役过程件与旧报告 |
+| [下一阶段计划](../../docs/research/next_stage_20260912/index.md) | 三方审查与综合研究安排 |
+| [当前重构交付](STORY_RESTRUCTURE_20260912.md) | 当前PDF、两轮修改、验收与剩余缺口 |
+
+原[Top15](EXPERIMENT_ASSETS_TOP15_20260909.md)是旧选材快照，不是当前价值排名上限。C2、C42、EOS、完整压缩消融与FullLagP2已在当前交接登记。
+
+- [本轮Pro领域分析：采纳、纠正和图表](PRO_FIELD_MAP_REFINEMENT_20260912.md)

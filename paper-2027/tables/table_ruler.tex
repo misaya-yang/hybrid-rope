@@ -5,9 +5,7 @@
 \renewcommand{\arraystretch}{0.91}
 \caption{\textbf{RULER $13$-family scores (\%).}
 Within each protocol, continuation data and evaluation are matched and one seed is used per arm; evaluation uses $20$ examples per family and length.
-OLMo Q/K-only freezes inherited V/O LoRA and trains only the tensors RoPE acts on; LLaMA uses matched Q/K/V/O LoRA ($300$ optimizer steps, rank-$64$, physical length $8192$, seed 42).
-\textbf{X3 Tradeoff Note}: In LLaMA-3-8B, EVQ represents a capacity reallocation tradeoff rather than a universal hero method: it trades in-window $8$K perplexity ($6.82 \to 10.07$, $+47.6\%$) for extrapolation at $16$K ($108.96 \to 24.07$) and $32$K ($991.48 \to 127.91$).
-Gold-block deletion ($\Delta\text{NLL} = +1.5055$ vs $-0.0095$ nats, $4.504\times$ likelihood drop) confirms genuine causal reliance on remote source tokens.}
+OLMo Q/K-only freezes inherited V/O LoRA and trains only the tensors RoPE acts on. The Llama rows use the separate RULER-family continuation: $516$ steps, rank-$64$ Q/K/V/O LoRA, length $8192$, seed $20420726$. The $300$-step LongAlpaca adaptation supplies the temporal-PPL and gold-block results, not these RULER scores.}
 \label{tab:ruler}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}llccc@{}}

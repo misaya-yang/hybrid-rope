@@ -1,16 +1,6 @@
-\section{Controlled Effects of Exponent Allocation}
+\section{How Allocation Organizes the Positional Basis}
 \label{sec:controlled-findings}
 
-We begin with interventions that distinguish exponent shape, sampled range,
-and the weights learned under an allocation. The Cosh quantiles used here
-are constructed in \S\ref{sec:construction}, with endpoint anchoring keeping
-their range fixed; an exponential deformation supplies a second family.
-
+We first establish that interior placement has a measurable learning effect, then examine the positional functions whose placement is changing.
 \input{sections/02_identification}
-
-\subsection{Weight compatibility and table crossings}
-\label{sec:coadaptation-finding}
-
-The frequency table defines a basis in which query and key projections are learned. In a $50$M pair with perplexities near $7$, installing Cosh frequencies into Geo-trained weights raises PPL to $76.20$ and the reverse swap to $23.05$ (Fig.~\ref{fig:weight-table-crossing}). A separate crossing at $151.9$M repeats the effect across two training seeds using derived factor-four runtime tables: each frozen weight set strictly prefers the table derived from its own training allocation. This distinguishes learned compatibility from static basis geometry, without claiming that frequency modifications are universally harmful.
-
-
+\input{sections/03_theory}

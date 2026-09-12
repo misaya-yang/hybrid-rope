@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "as_of": "2026-09-12",
+  "main_pages": 9,
+  "total_pages": 49,
+  "pdf_sha256": "4e5895a43b2040b60225c6b6e5429b9caead8b0e34570639dd30a70596a875d2",
+  "zip_sha256": "708cd4b225b4f805bda2b64e93ea137e6e554238431ea8e8fd3f2e1c3720e7de",
+  "source_files": 78,
+  "independent_source_build": true,
+  "independent_text_and_pagination_match": true,
+  "m4_points": 48,
+  "m4_structural_configs": 12,
+  "paired_seeds_per_point": 3,
+  "undefined_references": 0,
+  "overfull_pt": 0,
+  "model_execution": false,
+  "new_independent_review_rounds": 0,
+  "final_visual_review": "all pages rendered and reviewed; last comparator prose change page 29 re-rendered",
+  "git_relative_navigation_passed": true,
+  "source_identity_updates": "mathematical exposition sources refreshed; experimental owners unchanged"
+}

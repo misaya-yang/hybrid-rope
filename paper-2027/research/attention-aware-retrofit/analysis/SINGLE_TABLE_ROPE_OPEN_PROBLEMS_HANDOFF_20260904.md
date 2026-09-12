@@ -525,7 +525,7 @@ Start here:
 - [`AGENTS.md`](../../../../AGENTS.md) — repository/evidence rules
 - [`README.md`](../../../../README.md) — paper identity and current direction
 - [`paper-2027/HANDOFF.md`](../../../HANDOFF.md) — live Git/machine state
-- [`INDEX.md`](../../../../INDEX.md) — canonical claim routing
+- [`INDEX.md`](../../../../index.md) — canonical claim routing
 
 Current zero-training owners:
 

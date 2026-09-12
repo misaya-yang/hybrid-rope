@@ -1,0 +1,825 @@
+姐夫，我这次把两类材料放在一起重新审视了：
+
+1. **ICLR 2026 已接收的同类 PE/RoPE 论文**：FMRoPE、Frequency Entropy、MrRoPE、Selective RoPE、Deconstructing Positional Information、Decoupling Positional/Symbolic Attention、GRAPE；
+2. **2026 年 ICLR 之后的新进展**：LeRoPE、AdaRoPE、How Data Shapes RoPE Frequency Usage、CoPE、Möbius RoPE、RePo、Jet-Long，以及 RoPE 的长上下文不可能性分析。
+
+我的核心判断是：
+
+> **当前稿件没有落后于 2026 年的位置编码研究，反而已经踩中这个领域正在形成的主问题：频率表不是一个 base，而是由 support、allocation、assignment、learned usage 和 deployment policy 共同决定。**
+
+现在最需要做的，不是继续发明新曲线或者再增加十个实验，而是把论文明确写成：
+
+$$
+\boxed{
+\text{a design-coordinate identification paper}
+}
+$$
+
+而不是：
+
+$$
+\boxed{
+\text{another Cosh schedule paper}
+}
+$$
+
+或：
+
+$$
+\boxed{
+\text{another context-extension method paper}.
+}
+$$
+
+---
+
+# 一、2026 年 PE 领域实际发生了什么变化？
+
+## 1. 从“选一个 base”转向“分析模型到底使用哪些频率”
+
+FMRoPE 发现训练后的模型会形成一个高范数 frequency band；band 的位置受 RoPE base 和训练长度共同决定，而且把 band 以下的部分替换成 NoPE，性能几乎不变。它进一步发现，令 base 接近训练长度更利于 extrapolation，而增加 base 更利于 interpolation，形成明确 trade-off。([ICLR 会议论文集][1])
+
+Frequency Entropy 则把问题推进到 per-frequency usage：它构造 FE 指标测量每个 rotary pair 的实际利用情况，并在 Llama-4 的 RoPE/NoPE 层中观察频谱能量、周期性和冗余。([ICLR 会议论文集][2])
+
+Decoupling Positional and Symbolic Attention 更进一步，正式定义“positional head”和“symbolic head”，证明纯 positional 与纯 symbolic 行为除均匀注意力外相互排斥，并发现高低频使用与 head 功能存在系统对应关系。([arXiv][3])
+
+**这个方向对你们的启示是：**
+
+频率表的价值不能仅用一张静态表的几何指标描述，必须区分：
+
+$$
+\text{supplied frequency basis}
+$$
+
+和
+
+$$
+\text{learned frequency usage}.
+$$
+
+当前论文的完整 sin/cos subspace 描述前者，crossing、slot permutation 和 learned weights 描述后者，这与 2026 年领域走向是高度一致的。你们现在明确把 allocation、runtime range 和 slot assignment 分开，已经比“看哪个频率范数大”更接近一个完整的因果分解。
+
+---
+
+## 2. 从“统一频率表”转向“频率由数据、head 和输入条件决定”
+
+LeRoPE 直接为每个频率学习一个 scalar，并在 52M–2.5B 的模型阶梯上稳定超过标准 RoPE 和 partial RoPE。它还观察到训练中形成高范数 positional band。([arXiv][4])
+
+AdaRoPE 则认为统一 schedule 本身就是不充分的：不同 attention heads 承担不同功能，因此应分别学习 frequency range 和 attention scaling。([arXiv][5])
+
+How Data Shapes RoPE Frequency Usage 给出了更直接的数据机制：模型偏好的频率取决于训练数据中的 relative-distance dependency profile；若依赖宽度为 \(W\)，适合的频率尺度约为 \(1/W\)。它还指出，test-time scaling 只有在长上下文依赖近似为训练依赖的 dilation 时才有效，否则会失败。([arXiv][6])
+
+Selective RoPE 和 RePo 则进一步把位置编码变成输入依赖对象：Selective RoPE 学习 input-dependent rotations，RePo 直接让模型根据上下文依赖重新分配 token positions。([arXiv][7])
+
+**这意味着一件很重要的事：**
+
+2026 年以后，“找到一个 universal static frequency table”越来越不像正确主问题。
+
+你们现在的 range reversal：
+
+$$
+\text{fixed support：Cosh 胜}
+$$
+
+$$
+\text{retargeted support：Geo 胜}
+$$
+
+以及 BM 在 OLMo 赢、Qwen 128K 上反转，实际上正好符合这个领域判断：**allocation 的价值是 range、checkpoint、训练数据和 learned usage 条件化的。** 
+
+所以这些 mixed results 不应该被写成“我们的方法不够 universal”，而应当上升成：
+
+> **There is no context-free notion of a universally optimal RoPE table.**
+
+这是一个与 2026 年领域前沿高度一致的科学结论。
+
+---
+
+## 3. 从修改频率，扩展到修改整个 positional operator
+
+GRAPE 把乘法旋转和 additive bias 统一为 group action：RoPE 是 \(\mathrm{SO}(d)\) 中的旋转作用，ALiBi/FoX 则可以写成一般线性群中的 unipotent action。它强调 exact relative law、closed-form exponential 和 cacheability，而不是只讨论某个 frequency schedule。([arXiv][8])
+
+Selective RoPE 将固定旋转扩展为 input-dependent rotation，同时与 decay gate 结合。
+
+CoPE 修改低频分量的作用方式，通过 soft clipping 同时处理 OOD 和 semantic modeling。([arXiv][9])
+
+Möbius RoPE 则改变 boundary condition，使用 anti-periodic harmonic ladder，并通过 table swap 证明训练后的权重依赖这种位置几何。([arXiv][10])
+
+这要求你们在 Related Work 中再把自己的边界说得更锋利：
+
+> **本文固定标准 RoPE rotation operator，只研究这个 operator 的有限频率采样表。**
+
+这样 GRAPE、Selective、CoPE、Möbius 就不是 novelty 威胁，而是另一层设计对象。
+
+当前 Related Work 已经把 operator-changing work 单列出来，这是正确的；建议把 GRAPE 和 Selective RoPE 直接点名，而不是只写成泛泛的“group actions”和“input-dependent rotations”。
+
+---
+
+## 4. Context extension 正从固定倍率转向动态、分区和整段运行
+
+MrRoPE 把各种 extension 方法写成 mixed-radix conversion，并把自己的创新明确限定在 intermediate dimensions 的转换策略。其论文的核心写法非常直接：
+
+> Is linear interpolation used for middle dimensions truly the best choice?
+
+随后一张 Figure 1 完成 prior methods → unified coordinate → progressive rule 的全部叙事。
+
+Jet-Long 则直接面对固定倍率的问题：大倍率破坏短上下文，小倍率在长上下文失效，因此它保留 local RoPE，并对 remote context 按当前长度动态映射，原生范围内精确恢复 base model。([Hugging Face][11])
+
+这说明我们刚讨论的 Agent-range 方向是对的，但也说明：
+
+> **它不能再塞入当前论文成为第四条主线。**
+
+当前论文已经有：
+
+* learning-time allocation；
+* geometry；
+* co-adaptation；
+* frozen deployment。
+
+如果再加入整段 Agent deployment，论文又会恢复成“几篇论文绑在一起”。
+
+Agent-range 应当继续作为后续独立实验线，不进入当前 ICLR 主稿，最多在 Discussion 中用一句未来工作承接。
+
+---
+
+## 5. 2026 年开始正视 RoPE 的结构性边界
+
+How Data Shapes RoPE 已经指出，frequency scaling 是否有效取决于 test-time dependencies 是否与训练依赖具有 scale similarity。([arXiv][6])
+
+RoPE Distinguishes Neither Positions Nor Tokens in Long Contexts 则从另一角度证明：随着长度增长，RoPE 的 locality bias 和 token relevance consistency 都会恶化，单纯调大 base 还会引入 position/token discrimination trade-off。([Hugging Face][12])
+
+这再次说明：
+
+* 不要再宣称 allocation 能解决所有长上下文问题；
+* 不要把 RoPE table 的改进写成“完整 long-context solution”；
+* 只需要证明 allocation 是一个独立而 consequential 的设计轴。
+
+当前论文最后已经将 scope 限制在 positional、LM 和 task endpoints，没有扩张成 factual reliability 或完整 deployment claim，这个边界应当保留。
+
+---
+
+# 二、ICLR 2026 同类论文真正值得学习的写法
+
+## 1. MrRoPE：一个问题、一张框架图、一个简单规则
+
+MrRoPE 的理论并没有严格推出“progressive arithmetic allocation 是真实 LM objective 的最优解”。
+
+它做的是：
+
+1. mixed-radix 统一视角；
+2. 发现 YaRN intermediate band 可以被重新描述；
+3. 提出 uniform 和 progressive 两个简单规则；
+4. 用实验证明 progressive 在其协议上强。
+
+它在方法部分甚至明确写成：
+
+> “Based on empirical evidence, we conjecture…”
+
+然后假设 \(\epsilon_j\) 是 arithmetic progression。
+
+所以不要再因为 EVQ-Cosh 不是真实 LM-loss theorem 就认为理论不够。
+
+你们现在拥有：
+
+* exact full-pair geometry；
+* exact effective-rank identity；
+* slow-frequency limit；
+* fixed-support causal intervention；
+* range reversal；
+* weight-table crossing；
+* 一个严格凸 surrogate 的唯一解。
+
+**理论强度已经不低于同类 ICLR 2026 方法论文。**
+
+真正需要学 MrRoPE 的，是它的叙事单纯性，而不是其理论深度。
+
+---
+
+## 2. FMRoPE 和 Frequency Entropy：诊断性发现本身可以成为论文
+
+FMRoPE 没有提出一个复杂新 architecture，它的主贡献是：
+
+* 发现 frequency band；
+* 识别 base/training-length 对 band 的影响；
+* 给出 interpolation–extrapolation trade-off；
+* 提供可证伪 practical guidance。([ICLR 会议论文集][1])
+
+Frequency Entropy 也是类似结构：
+
+* 定义一个 measurement；
+* 用它解释过去互相冲突的高低频观察；
+* 做 inference intervention；
+* 得到 redundancy 结论。([ICLR 会议论文集][2])
+
+这对你们非常关键：
+
+> **“识别 exponent allocation 这一独立变量”本身已经是论文贡献，不需要被包装成一个 universal SOTA schedule 才成立。**
+
+你们的 paired fixed-support experiment 比一般 observational frequency-band analysis 更接近 causal identification。只有 30 个 interior exponents 改变，其余训练条件完全配对，三个 seed 在所有 OOD 长度同方向。
+
+因此论文应该更自信地当作：
+
+> **an identification and mechanism paper with constructive consequences.**
+
+而不是处处证明 EVQ-Cosh 是最终答案。
+
+---
+
+## 3. Deconstructing：理论—合成实验—真实偏差形成一条线
+
+Deconstructing Positional Information 的 Figure 1 非常值得学习。
+
+它用一张图把：
+
+$$
+\text{attention-logit decomposition}
+$$
+
+连接到：
+
+$$
+\text{synthetic positional-semantic task}
+$$
+
+再连接到：
+
+$$
+\text{single-head deposit bias}.
+$$
+
+理论不是为了显得复杂，而是直接决定后续实验。
+
+你们当前 Figure 1 已经具备类似结构：
+
+$$
+\text{same support, different }z
+$$
+
+$$
+\downarrow
+$$
+
+$$
+\text{fixed-support effect}
+$$
+
+$$
+\downarrow
+$$
+
+$$
+\text{range reversal + crossing}.
+$$
+
+
+
+因此 Figure 1 不需要重做，但建议把 panel label 再概念化一点：
+
+* `(a) support fixed, allocation changes`
+* `(b) causal learning effect`
+* `(c) range interaction`
+* `(d) learned compatibility`
+
+这样 reviewer 一眼看到的不是四个实验，而是四个科学对象。
+
+---
+
+## 4. Selective RoPE：一句能让读者记住的中心命题
+
+Selective RoPE 在 Introduction 里直接加粗：
+
+> **Our view: recall needs rotation and decay.**
+
+然后贡献按：
+
+* unifying view；
+* theory；
+* method；
+* empirics；
+
+一一展开。
+
+你们现在需要一个同样可记忆的句子。
+
+我建议是：
+
+> **A RoPE table chooses not only which scales are available, but how a finite rotary budget is allocated among them.**
+
+再压缩一点：
+
+> **Range determines where the spectrum lies; allocation determines how the finite rotary budget is spent.**
+
+这句话应该出现在：
+
+* Abstract 第一段；
+* Introduction 第一页；
+* Figure 1 caption；
+* Conclusion。
+
+当前论文已经表达了这个意思，但还没有把它变成一个像 slogan 一样的中心句。
+
+---
+
+## 5. GRAPE：越大的理论框架，越需要明确 exact special cases
+
+GRAPE 的理论框架很大，但它一直强调：
+
+* exact relative law；
+* RoPE 是 exact special case；
+* ALiBi/FoX 是 exact special cases；
+* closed-form implementation；
+* preserved cacheability。
+
+你们现在的理论也应该持续保持这种写法：
+
+* exact geometry 是 exact；
+* \(C_{\rm app}\) 的 optimum 是 surrogate 内 exact；
+* \(\tau\) operating rule 是 heuristic/reference；
+* downstream gains 是 measured。
+
+Appendix Table 21 已经把这四层分得很好。
+
+我建议把这个 epistemic hierarchy 在正文 §5.1 压成一句话，而不是只让认真读 appendix 的 reviewer 看见。
+
+---
+
+# 三、当前论文在 2026 版图中的真正位置
+
+现在最准确的定位是：
+
+$$
+\boxed{
+\text{FMR/FE/Data Shapes：模型如何使用频率}
+}
+$$
+
+$$
+\boxed{
+\text{LeRoPE/AdaRoPE：如何学习频率}
+}
+$$
+
+$$
+\boxed{
+\text{MrRoPE/Jet-Long：如何在部署时变换频率}
+}
+$$
+
+$$
+\boxed{
+\text{GRAPE/Selective/Möbius/CoPE：如何改变位置算子}
+}
+$$
+
+而你们研究：
+
+$$
+\boxed{
+\text{固定标准 RoPE operator 和 sampled support 后，有限频率应该怎样分配}
+}
+$$
+
+这条位置是独立的，而且非常干净。
+
+当前 Introduction 和 Related Work 已经完成了大约 80% 的定位工作。它已经区分了：
+
+* support/range；
+* allocation；
+* learned-frequency methods；
+* frequency-use studies；
+* operator-changing methods。
+
+所以不要再大改主线。
+
+真正可优化的是让这个 field map 在第一页就显性出现，而不是等到 Related Work。
+
+---
+
+# 四、我认为真正有建设性的修改
+
+## 优先级 A：不需要新实验，应该立即做
+
+### A1. 在 Introduction 加一段“2026 设计对象地图”
+
+建议在当前第二段后加入下面这段：
+
+> Recent work has separated several aspects of rotary frequency design. Frequency-band and entropy studies characterize where trained models use a spectrum; learned-frequency methods optimize that spectrum globally or per head; context-extension methods transform a native spectrum for a target length; and group-, boundary-, or input-dependent methods alter the positional operator itself. We keep the standard rotary operator and sampled endpoints fixed, and isolate a different object: how a finite number of ordered frequency samples populate that support.
+
+这一段的价值是让 reviewer 在第一页就知道：
+
+* 你们知道 LeRoPE；
+* 你们知道 AdaRoPE；
+* 你们知道 MrRoPE；
+* 你们知道 GRAPE/Selective；
+* 你们不是重复其中任意一个。
+
+这是目前**最高 ROI 的文字修改**。
+
+---
+
+### A2. 把 §5.1 改名为“One Analytic Allocation Prior”
+
+现在标题是：
+
+> An Analytic Allocation Construction
+
+我建议改成：
+
+> **One Analytic Allocation Prior**
+
+或者：
+
+> **A Minimal Convex Prior for Allocation**
+
+然后开头改成：
+
+> The exact geometry above shows that log-uniform spacing need not allocate positional directions uniformly, but it does not uniquely determine a task-optimal density. We therefore introduce one minimal convex design prior: a local concentration penalty together with a cumulative slow-tail energy.
+
+这句话非常重要，因为它明确告诉 reviewer：
+
+$$
+\text{geometry motivates the problem}
+\neq
+\text{geometry uniquely derives Cosh}.
+$$
+
+你们现在的文字已经接近这个意思，但还可以更直接。
+
+还可以加一句准确数学分类：
+
+> The min kernel is the Dirichlet–Neumann Green kernel of \(-d^2/d\phi^2\), so the criterion combines an \(L^2\) concentration penalty with an \(H^{-1}\)-type cumulative-tail energy.
+
+这个结论在 Appendix 的完整证明中已经具备。
+
+同时把 theorem 名字由：
+
+> Cosh allocation
+
+改成：
+
+> **Unique minimizer of the tail-energy prior**
+
+这样 theorem 证明的对象一眼就清楚。
+
+---
+
+### A3. 把 §5.3 压缩成一条证据链
+
+目前 §5.3 仍然稍微像：
+
+> 432M、750M、8B、1.485B、selective Q/K、454M、Video DiT、GQA/MLA……
+
+这在资产层面很强，在写作层面会稀释中心。
+
+正文建议只保留四级：
+
+$$
+\boxed{
+151.9M\ \text{causal identification}
+}
+$$
+
+$$
+\boxed{
+50.9M\ \text{cross-configuration breadth}
+}
+$$
+
+$$
+\boxed{
+432M\ \text{MLA hero result}
+}
+$$
+
+$$
+\boxed{
+750M\ \text{full-parameter continuation}
+}
+$$
+
+8B 和 1.485B 只留一段：
+
+> Larger matched adaptation and continuation studies show that allocation can substantially improve long-range access, but also expose short-context and readout trade-offs.
+
+然后把其余完整结果放 appendix。
+
+这种写法比继续增加数字更接近 ICLR 2026 mechanism papers 的证据结构。
+
+---
+
+### A4. 在 \(b=256\) 出现的地方立即挡住 reviewer
+
+核心 paired experiment 使用 FMRoPE 的：
+
+$$
+b=L_{\rm train}=256.
+$$
+
+
+
+建议紧接着加：
+
+> This exact paired study adopts the FMRoPE training-range rule to make the support intervention maximally controlled; §5.2 independently repeats fixed-endpoint allocation comparisons across twelve configurations with bases \(500K\) and \(1M\).
+
+这样 reviewer 不会先形成：
+
+> “这只是 toy base 现象。”
+
+然后到五页以后才看到 realistic-base factorial。
+
+---
+
+### A5. 把 compact-profile gate failure 放回正文，或者整段移 appendix
+
+正文强调 compact clipped-affine profile 可以 transport 到 Qwen。
+
+但 Appendix 已经说明：
+
+* registered retention floor 是 0.875；
+* 实测 0.870971；
+* single-table deployment gate failed。
+
+最好的处理不是隐藏，而是写：
+
+> The compact profile preserves the measured long-end behavior, but misses the pre-registered native-retention gate; we therefore treat it as a low-dimensional representation result rather than a successful deployment policy.
+
+或者把整段移 appendix。
+
+这样会显著提升可信度。
+
+---
+
+### A6. 把“不存在 universal table”上升成 Discussion 结论
+
+建议加一小段：
+
+> Recent work increasingly finds rotary frequency use to be data-, head-, and input-dependent. Our range reversal and checkpoint-dependent deployment preferences provide a complementary table-level manifestation: allocation is a real design coordinate, but its preferred value is conditional on the support and learned model. We therefore do not claim a universally optimal table.
+
+这不是防御性写作。
+
+它是把：
+
+* range reversal；
+* weight-table compatibility；
+* OLMo/Qwen reversal；
+
+整合成一个科学结论。
+
+---
+
+## 优先级 B：如果只补一个新实验，就做这个
+
+### 固定 support 的 learnable-\(z\)
+
+2026 年最接近你们的真正文献压力不是 MrRoPE，而是：
+
+* LeRoPE；
+* AdaRoPE；
+* data-dependent frequency use。
+
+当前 Appendix C 已经有 learned inv-frequency comparator，但它直接学习 realized frequencies，support 也可能漂移。
+
+最干净的新实验是：
+
+$$
+z_0=0,\qquad z_{K-1}=1,
+$$
+
+定义正 gaps：
+
+$$
+g_i=\operatorname{softplus}(u_i)+\epsilon,
+$$
+
+再令：
+
+$$
+z_k=
+\frac{\sum_{i<k}g_i}
+{\sum_i g_i}.
+$$
+
+这样：
+
+* endpoints 永远固定；
+* 顺序永远单调；
+* support 完全不变；
+* 只学习 \(K-2\) 个 interior-allocation degrees of freedom。
+
+三臂即可：
+
+$$
+\text{Geo}
+\quad\text{vs}\quad
+\text{EVQ-Cosh}
+\quad\text{vs}\quad
+\text{fixed-support learnable-}z.
+$$
+
+最好复用当前 125M comparator 或 50.9M protocol，三 seed。
+
+这个实验的价值不是一定要求 EVQ 赢。
+
+无论结果怎样都能强化论文：
+
+* learnable-\(z\) 赢：allocation 是一个值得优化的新空间，EVQ 是 analytic no-search baseline；
+* EVQ 持平：简单解析 prior 已捕捉主要收益；
+* learnable-\(z\) 不稳定：task-loss-driven allocation 在有限预算下不容易优化；
+* 不同 seed/config 学出不同形状：进一步支持 allocation condition dependence。
+
+这是我认为**唯一可能实质性提高 7 分概率的新实验**。
+
+但如果时间不够，它不应阻塞投稿。当前 fixed-support paired evidence 已足以支持主 novelty。
+
+---
+
+## 优先级 C：可利用现有数据做的增强
+
+### 画一张 allocation Pareto 图
+
+2026 年文献非常强调 trade-off：
+
+* FMR：interpolation vs extrapolation；
+* Data Shapes：field vs resolution；
+* AdaRoPE：short retention vs extension；
+* Jet-Long：短长度 fidelity vs long reach。([ICLR 会议论文集][1])
+
+你们 50.9M factorial 已经有：
+
+* Geo；
+* Cosh 0.75×；
+* Cosh 1×；
+* Cosh 1.25×；
+* matched exponential；
+* 1×/2×/4×/8× 数据。
+
+可以画：
+
+$$
+x=\Delta\text{NLL at }1\times
+$$
+
+$$
+y=\text{weighted OOD }\Delta\text{NLL}.
+$$
+
+每个方法显示 configuration-level distribution 或 bootstrap ellipse。
+
+这张图能非常直观地证明：
+
+* allocation 是连续设计轴；
+* 不同 strength 位于不同 operating point；
+* Cosh 与 exponential 可能沿同一主方向；
+* 论文不是“一条 Cosh 曲线打败 Geo”。
+
+如果数据图形清楚，它比 compact-profile 那段更值得占正文空间。
+
+如果图形很乱，则不要硬加。
+
+---
+
+# 五、Related Work 建议改成一个非常明确的对象矩阵
+
+Appendix 可以增加一张表：
+
+| 工作                | 主要对象                           | support 是否固定 |                       是否学习 |               是否 head/input 条件化 | 是否改 operator |
+| ----------------- | ------------------------------ | -----------: | -------------------------: | ------------------------------: | -----------: |
+| FMRoPE            | support / band                 |            否 |                         间接 |                               否 |            否 |
+| Frequency Entropy | learned usage                  |          不干预 |                          否 |                            模型依赖 |            否 |
+| LeRoPE            | realized frequencies           |            否 |                          是 |                               否 |            否 |
+| AdaRoPE           | per-head frequency/scale       |            否 |                          是 |                            head |            否 |
+| MrRoPE            | target-\(s\) displacement      |            否 |                          否 |                   target length |            否 |
+| Selective RoPE    | rotation                       |            — |                          是 |                           input |            是 |
+| GRAPE             | group action                   |            — |                         可选 |                              可选 |            是 |
+| Möbius RoPE       | boundary condition / ladder    |            否 |                          否 |                     head subset |            是 |
+| **Ours**          | normalized interior allocation |        **是** | paired training / analytic | checkpoint interaction measured |        **否** |
+
+主文不必放完整表，只要保留一句核心判词：
+
+> Prior work studies where the frequency range lies, which frequencies a model learns to use, or how the positional operator should change. We isolate how a finite ordered table populates a fixed range.
+
+---
+
+# 六、哪些事情现在不要做
+
+## 不要再增加另一套大理论
+
+你们已经有：
+
+* exact geometry；
+* exact rank identity；
+* exact slow limit；
+* exact variational optimum；
+* finite quantization bounds；
+* post-hoc transplant obstruction；
+* slot-assignment result。
+
+够了。
+
+再增加水床、碰撞、NUDFT condition number、Slepian 或 Agent-range theory，只会稀释主线。
+
+这些可以作为后续论文或 discussion，不能再进入当前中心。
+
+---
+
+## 不要把 Agent-range 项目塞进当前稿件
+
+Jet-Long 已经表明 Agent 轨迹、动态 factor、局部/远程双路径是一个完整独立问题。([alphaXiv][13])
+
+你们的 static full-range RIBB 路线也足以成为单独一篇完整工作。
+
+当前稿最多写一句：
+
+> Extending allocation design from endpoint evaluation to range-integrated agent trajectories is an important deployment direction.
+
+不要加实验、方法或新 claim。
+
+---
+
+## 不要再追一个 universal SOTA table
+
+2026 年整个领域正在说明：
+
+$$
+\text{frequency preference}
+=
+f(\text{data, head, task, support, checkpoint, input}).
+$$
+
+继续追 universal schedule，会让你们违背自己最强的 range reversal 和 crossing 证据。
+
+---
+
+# 七、最终我建议实际执行的改动
+
+按优先级：
+
+### 必做，预计半天内完成
+
+1. Introduction 加 2026 field-map 段落；
+2. \(b=256\) 后立即链接 500K/1M factorial；
+3. §5.1 改成“one analytic prior”，明确 geometry 不唯一推出 Cosh；
+4. §5.3 压缩 evidence hierarchy；
+5. compact-profile gate failure 同步披露或移 appendix；
+6. Discussion 将 conditional optimality 写成结论；
+7. Related Work 直接点名 GRAPE、Selective，并指向 Appendix C learned-frequency comparator。
+
+### 有算力和 1–2 天余量时做
+
+8. fixed-support learnable-\(z\)，三 seed。
+
+### 只有图形确实清晰时做
+
+9. 1× cost–OOD gain Pareto 图。
+
+### 不做
+
+10. 新 Agent-range 方法；
+11. 新 universal frequency schedule；
+12. 新长上下文 benchmark zoo；
+13. 将 \(C_{\rm app}\) 包装成真实 LM-loss theory。
+
+---
+
+# 八、对论文分数的实际影响
+
+当前版本本身仍然是：
+
+$$
+\boxed{\text{中心评分 }6/10}
+$$
+
+这些无训练修改的价值主要是：
+
+* 降低 reviewer 把它误读为 Cosh heuristic paper 的概率；
+* 降低 reviewer 把 frozen deployment 看成第二篇论文的概率；
+* 降低 reviewer 用 LeRoPE/AdaRoPE 一句话否定 novelty 的概率；
+* 提高 reviewer 把 mixed results 视为机制发现而不是方法不稳定的概率。
+
+完成这些后，我会把评分分布理解为：
+
+* 5 的概率明显下降；
+* 6 更稳定；
+* 7 的概率上升。
+
+而 fixed-support learnable-\(z\) 是唯一可能真正改变科学说服力、而不仅是改进表达的新实验。
+
+最核心的一句话是：
+
+> **2026 年的 PE 研究正在从“选一个位置编码公式”转向“分解位置表示由哪些对象决定”。你们这篇论文最有价值的地方，恰好不是 Cosh，而是第一次把 fixed-support interior allocation 变成了一个可定义、可干预、可测量、会与权重共适应的设计坐标。**
+
+这就是最终应该讲得最响的故事。
+
+[1]: https://proceedings.iclr.cc/paper_files/paper/2026/hash/993dbaec0418a6449090f1debbcb8844-Abstract-Conference.html "Frequency Bands in RoPE: Base Frequency and Context Length Shape the Interpolation–Extrapolation Trade-off"
+[2]: https://proceedings.iclr.cc/paper_files/paper/2026/hash/0aee38a6fe9fffc8b658cfb1d872c1d5-Abstract-Conference.html?utm_source=chatgpt.com "Probing Rotary Position Embeddings through Frequency Entropy"
+[3]: https://arxiv.org/abs/2511.11579?utm_source=chatgpt.com "Decoupling Positional and Symbolic Attention Behavior in Transformers"
+[4]: https://arxiv.org/abs/2607.10134?utm_source=chatgpt.com "LeRoPE: Learnable RoPE Frequencies Improve Language Modeling"
+[5]: https://arxiv.org/abs/2607.19363?utm_source=chatgpt.com "AdaRoPE: Not All Attention Heads Should Rotate and Scale Equally"
+[6]: https://arxiv.org/abs/2607.07678?utm_source=chatgpt.com "How Data Shapes RoPE Frequency Usage: From Positional Scale Matching to Length Generalization"
+[7]: https://arxiv.org/abs/2511.17388?utm_source=chatgpt.com "Selective Rotary Position Embedding"
+[8]: https://arxiv.org/pdf/2512.07805?utm_source=chatgpt.com "[PDF] Group Representational Position Encoding - arXiv"
+[9]: https://arxiv.org/html/2602.05258v1?utm_source=chatgpt.com "Clipped RoPE as A Scalable Free Lunch for Long Context LLMs"
+[10]: https://arxiv.org/abs/2607.21405?utm_source=chatgpt.com "Anti-Periodic Positional Encoding: Möbius Boundary Conditions Make In-Context Retrieval Reliable"
+[11]: https://huggingface.co/papers/2607.07740?utm_source=chatgpt.com "Paper page - Jet-Long: Efficient Long-Context Extension with Dynamic Bifocal RoPE"
+[12]: https://huggingface.co/papers/2605.15514?utm_source=chatgpt.com "Paper page - RoPE Distinguishes Neither Positions Nor Tokens in Long Contexts, Provably"
+[13]: https://www.alphaxiv.org/abs/2607.07740?utm_source=chatgpt.com "Jet-Long: Efficient Long-Context Extension with Dynamic Bifocal RoPE | alphaXiv"

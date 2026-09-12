@@ -17,6 +17,11 @@ At $16$K, Geo PPL is
 $141.1/132.5/142.8$ for seeds $42/43/88$, whereas \evq{} is
 $93.7/92.7/100.3$; all three paired directions agree.
 
+\paragraph{Evaluation corpus and aggregation.}
+The archived evaluator reads the shared cached FineWeb-Edu stream \texttt{val\_fineweb-edu\_5000000.pt}, nominally five million GPT-2 tokens. For each method and seed it resets NumPy RandomState to $9999$, iterates through lengths $8192$, $16384$, $20480$, $24576$, $28672$, and $32768$, and draws eight distinct start offsets per length. Every chunk scores all $L-1$ next-token targets, with full-sequence cross-entropy and no tail restriction. Its per-model PPL is the exponential of the mean chunk NLL; the table then takes the arithmetic mean and sample standard deviation of the three per-seed PPLs. Thus the requested targets per model are $8(L-1)$ at each length; starts are sampled without replacement, but overlapping windows are possible. The same offsets are reused across methods.
+
+The distributed preparation code tokenizes concatenated document text without added separators and prepares its evaluation stream from the FineWeb-Edu \texttt{sample-10BT} training split using shuffle seed $99999$ and a $10{,}000$-document buffer. This preparation rule does not certify document disjointness from training. The original cache's upstream revision and token-array hash are not retained in the portable result snapshot; the reported experiment is therefore a shared-corpus length stress test. The recorded evaluator JSON is hash-bound, and its complete per-seed PPL values are provided in the source archive.
+
 For the supporting overlay, let $\lambda_k=2\pi/\omega_k$ and
 $t_k=\operatorname{clip}((\lambda_k-L_{\mathrm{train}})/(31L_{\mathrm{train}}),0,1)$.
 The MLA wavelength-blend operator sets
@@ -53,20 +58,32 @@ also composes with this wavelength-dependent extension.
 \FloatBarrier
 
 
-\subsection{Figures and tables relocated from the main text}
+\subsection{Additional model comparisons}
 \label{sec:relocated-floats}
-The following floats support statements made in the main text; each is
-summarised there with its numbers, and is reproduced here in full.
+The following comparisons provide protocol-level detail for the main results.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.92\linewidth]{fig_bm_natural_qa.pdf}
-  \caption{\textbf{Intermediate-band redistribution improves OLMo natural QA.}
-  Complete-output token F1 on untruncated long inputs ($s=4$); sample counts shown by task, final row averages task means.}
-  \label{fig:bm-natural-qa}
-\end{figure}
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\caption{\textbf{Table and amplitude separated on the Qwen-$2.5$-$3$B $36$-row panel (\%).}
+Matching the coefficient across tables makes the table contrast comparable; the
+last row varies amplitude alone at a fixed table.}
+\label{tab:gain-factorial}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Table & Coefficient $c$ in $g=1+c\ln s$ & $32$K & $128$K \\
+\midrule
+MrRoPE-Pro & $0.1$   & 87.22 & 78.13 \\
+BM         & $0.1$   & 91.67 & 70.83 \\
+MrRoPE-Pro & $0.074$ & 98.33 & 75.35 \\
+BM         & $0.074$ & 100.00 & 70.00 \\
+BM         & $g=1$   & 89.58 & 58.82 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
@@ -85,7 +102,7 @@ Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.80\linewidth]{fig_8b_length_curve.pdf}
   \caption{\textbf{Cosh allocation improves extrapolation under matched adaptation.} PPL is the exponential of equal-domain mean NLL.}
@@ -93,7 +110,7 @@ Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
 \end{figure}
 
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \small
 \caption{\textbf{Frozen-model RULER scores (\%) at matched exponent range.}
@@ -111,7 +128,7 @@ Residual-guided & 60.47 & \textbf{66.50} \\
 \end{tabular}
 \end{table}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \small
 \caption{\textbf{Static extension across native and extended windows.}
@@ -129,7 +146,7 @@ Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
 \end{table}
 
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \small
 \setlength{\tabcolsep}{3.5pt}
@@ -143,15 +160,15 @@ Tier & Component & Object & Epistemic Status \\
 \midrule
 1 & Positional Basis & Subspace overlap $c_{\omega\nu}$, rank $r_2$, limit $V_0$ & Exact operator geometry (Prop.~\ref{prop:collapse}) \\
 2 & Surrogate Functional & Variational objective $\mathcal{C}_{\mathrm{app}}[\rho]$ in \eqref{eq:Capp} & Explicit design prior; not downstream $\mathcal{L}_{\mathrm{CE}}$ \\
-3 & Operating Rule & Cosh density $\rho_\tau$ and finite quantile grid & Closed-form heuristic family; fixed $K$ grid \\
-4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Not predicted by static surrogates (Thm.~\ref{thm:non-identifiability}) \\
+3 & Operating Rule & Cosh density $\rho_\tau$ and finite quantile grid & Unique density optimum; specified finite grid \\
+4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Measured under declared model and protocol \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\linewidth]{fig_weight_table_crossing.pdf}
 \caption{\textbf{Weights co-adapt to their exponent allocation.}
@@ -163,3 +180,5 @@ training range; shading shows the NLL increase relative to the matched
 diagonal cell.}
 \label{fig:weight-table-crossing}
 \end{figure}
+
+\FloatBarrier

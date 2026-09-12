@@ -1,84 +1,48 @@
-\section{Adjusting Exponents in Frozen Models}
+\section{Reallocating Frequencies in Mature Models}
 \label{sec:mature-adjustments}
 \label{sec:exp-frozen-support}
 \label{sec:exp-zero-training-system}
 \label{sec:coordinate}
 
-The crossings in \S\ref{sec:coadaptation-finding} show that trained weights are co-adapted to their exponent basis, motivating adjustments defined relative to native exponents.
+The learned associations in \S\ref{sec:compatibility} make a checkpoint's native table the natural reference for frozen deployment. We first isolate an allocation effect at fixed support, then construct an intermediate-band adjustment and evaluate its practical use.
 
-\subsection{A common coordinate for exponent adjustments}
+\subsection{The allocation effect survives with frozen weights}
+
+On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, fix the checkpoint, both sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The endpoints span the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents achieve $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$ (Fig.~\ref{fig:frozen-application}a). Qwen's four-task development comparison gives $57.75/64.00/66.50\%$. Thus the allocation effect extends from paired learning to existing checkpoints and task-level generation. The coarse control also shows that much of the effect is captured by the overall profile (Appendix~\ref{sec:frozen-fixed-support}).
+
+Writing $\omega_k^\prime=\omega_k4^{-m_k}$, a finer control fixes the band, terminal shift, and total displacement $\sum_km_k=42$, while changing the interior profile. On the $350$-row OLMo development panel, the two profiles score $43.67/54.40\%$; a separate $16$-document instrument gives NLL $2.9417/2.8309$. Interior structure therefore carries information beyond the total displacement (Appendix~\ref{sec:fixed-total-profile}).
+
+\subsection{Constructing an adjustment relative to the native table}
+\label{sec:bm-main}
 
 For native frequencies $\omega_k^N$ and installed frequencies $\omega'_k$, define
 \begin{equation}
 d_k=\log\frac{\omega_k^N}{\omega'_k},\qquad
-\omega'_k=\omega_k^N e^{-d_k},\qquad
-\phi'_k-\phi_k^N=\frac{d_k}{\log b}.
+\omega'_k=\omega_k^Ne^{-d_k},\qquad \phi'_k-\phi_k^N=\frac{d_k}{\log b}.
 \label{eq:movement-allocation}
 \end{equation}
+Frequency blending, log-frequency shifts, and mixed-radix conversion all admit this coordinate (Appendix~\ref{sec:adjustment-details}). Here $s$ is the configured extension factor; at $s=1$ the scaled profiles recover the native frequencies. Tables are installed before prefill and retained through decoding. The amplitude $g=1+c\ln s$ scales both cosine and sine and therefore contributes $g^2$ to attention logits. Each frequency comparison fixes $g$; joint table--amplitude configurations are reported separately.
+
+MrRoPE-Pro allocates a cumulative shift across an intermediate band \citep{tian2026mrrope}. With $N=h-l$ and $q=\operatorname{clip}(k-l,0,N)$, its profile and our boundary-matched (BM) construction are
 \begin{equation}
-d_k=
-\begin{cases}
--\log(1-w_k+w_k/s), & \text{frequency blend},\\
-m_k\log s, & \text{log-frequency shift},\\
-\sum_{j<k}\log\lambda_j, & \text{mixed-radix conversion}.
-\end{cases}
-\label{eq:adjustment-families}
-\end{equation}
-Static tables are installed before prefill and retained through decoding, with a single amplitude $g$ scaling both tables, so it enters the attention logits as $g^2$ (Appendix~\ref{sec:adjustment-details}). Throughout, $g$ takes the form $1+c\ln s$, with $c=0.1$ (YaRN's default) and $c=0.074$ (the low-gain arm) as settings of one parameter rather than two conventions.
-
-\subsection{Fixed-range and single-table comparisons}
-
-\paragraph{Frozen fixed-support control.}
-On frozen OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B we hold endpoints, $64$ pairs, attention amplitude, inputs, and decoder fixed. Both structured profiles produce large gains over uniform exponents (OLMo $16$K RULER: $0.56\%$ to $61.04\%$), with coarse controls capturing the bulk of the effect (Table~\ref{tab:frozen-exponent-main}; Appendix~\ref{sec:frozen-fixed-support}).
-
-
-
-\paragraph{One static configuration across lengths.}
-A normalized-index profile transfers a reference displacement curve onto the target grid ($\omega'_k=\omega_k^N s^{-m_k}$). On Qwen-$2.5$-$0.5$B, the same factor-two table is evaluated at $32$K and $64$K across full RULER-13 ($20$ rows per task). At the reported fixed amplitudes it improves $64$K macro over YaRN by $6.09$ points ($95\%$ bootstrap interval $[2.76, 9.58]$), while $32$K scores are near-equal (Table~\ref{tab:static-index-main}); the gain is attributed to the complete static configuration (table $\times$ amplitude; Appendix~\ref{sec:index-adjustment}).
-
-
-
-\paragraph{Finite-grid placement.}
-Comparing normalized-index interpolation against direct-gap evaluation on Gemma-$1.1$-$2$B ($128$ pairs; \citealt{gemmateam2024gemma}) yields $79.00\%$ versus $72.81\%$ at $16$K ($+6.19$ points, $[2.81, 9.63]$), making placement an important implementation choice (Appendix~\ref{sec:coordinate-confirmation}).
-
-\subsection{Redistributing the intermediate-band shift}
-\label{sec:bm-main}
-
-MrRoPE-Pro progressively distributes the cumulative exponent shift across an intermediate band $k\in[l,h]$ with $N=h-l$ and $q=\operatorname{clip}(k-l,0,N)$:
-\begin{equation}
-m_q^{\rm Pro}=\frac{q(q+1)}{N(N+1)},
-\qquad
+m_q^{\rm Pro}=\frac{q(q+1)}{N(N+1)},\qquad
 m_q^{\rm BM}=\frac{q(q+1)(3N+2-2q)}{N(N+1)(N+2)}.
 \label{eq:bm-formula}
 \end{equation}
-Boundary matching (BM) minimizes quadratic difference energy, smoothing radix transitions toward unmodified outer bands (Appendix~\ref{sec:bm-construction}).
+BM minimizes quadratic difference energy in the radix increments, matching smoothly to the unmodified outer bands. Both profiles retain the band boundaries and terminal extension; their interior cumulative shifts differ (Appendix~\ref{sec:bm-construction}). Cosh chooses a basis for learning; BM redistributes extension relative to a basis the weights already use. Both turn interior placement into a concrete design.
 
-
-
-In the OLMo-$1$B confirmation, BM reaches $51.32\%$ at $16$K against $2.78\%$ for MrRoPE-Pro (Table~\ref{tab:bm-models}), and across $631$ untruncated LongBench prompts exceeding $4$K tokens over five tasks it raises task-equal complete-output token F1 from $21.62\%$ to $25.44\%$ (Fig.~\ref{fig:bm-natural-qa}; $95\%$ bootstrap interval $[1.32, 6.29]$, all task differences positive).
-
-
-
-Preferences differ across models (Table~\ref{tab:bm-models}): OLMo favors BM, the two Qwen arms favor MrRoPE-Pro at $128$K, but as an exploratory contrast only ($24$ and $12$ long-prompt rows; archived $36$-row tally $6$W/$4$L at paired SE $\approx13$ points, which does not separate them). The same panel separates the two factors (Table~\ref{tab:gain-factorial}): at matched amplitude the table contrast is $+1.67$ points at $32$K and $-5.35$ at $128$K, while lowering BM's amplitude alone to $g=1$ costs $12.01$ points at $128$K and improves its NLL. Short- and long-range ordering are thus carried by different factors.
-
-\begin{table}[t]
+\begin{figure}[t]
 \centering
-\small
-\setlength{\tabcolsep}{5pt}
-\caption{\textbf{Table and amplitude separated on the Qwen-$2.5$-$3$B $36$-row panel (\%).}
-Matching the coefficient across tables makes the table contrast comparable; the
-last row varies amplitude alone at a fixed table.}
-\label{tab:gain-factorial}
-\begin{tabular}{@{}llrr@{}}
-\toprule
-Table & Coefficient $c$ in $g=1+c\ln s$ & $32$K & $128$K \\
-\midrule
-MrRoPE-Pro & $0.1$   & 87.22 & 78.13 \\
-BM         & $0.1$   & 91.67 & 70.83 \\
-MrRoPE-Pro & $0.074$ & 98.33 & 75.35 \\
-BM         & $0.074$ & 100.00 & 70.00 \\
-BM         & $g=1$   & 89.58 & 58.82 \\
-\bottomrule
-\end{tabular}
-\end{table}
- With endpoints and total scale fixed, intermediate profile preferences are checkpoint- and length-dependent (Appendix~\ref{sec:bm-model-comparison}).
+\includegraphics[width=\linewidth]{fig_frozen_application.pdf}
+\caption{\textbf{From a controlled allocation effect to natural-question-answering gains.} (a) Frozen OLMo $16$K RULER on nine held-out tasks, $20$ rows/task; sampled endpoints, amplitude, weights and inputs are shared. (b) A separate matched $s=4$ BM/MrRoPE-Pro comparison on five LongBench tasks: whole-response token F1 on $631$ untruncated inputs longer than $4$K. Responses reaching the generation cap are included in F1; EOS rates are reported in Appendix~\ref{sec:bm-natural}. Each panel answers a different question: allocation's effect at fixed support, and the usefulness of a concrete redistribution.}
+\label{fig:frozen-application}
+\label{fig:bm-natural-qa}
+\end{figure}
+
+\subsection{Natural tasks and placement on finite grids}
+
+On the matched OLMo six-task panel ($48$ long prompts), BM($4$) reaches $51.32\%$ at $16$K; MrRoPE-Uni($4$), official YaRN($4$), and MrRoPE-Pro($4$) score $32.12\%$, $6.94\%$, and $2.78\%$ (Appendix~\ref{sec:four-method-control}). Across five natural-QA tasks, it increases task-equal F1 from $21.62\%$ to $25.44\%$ ($95\%$ interval for the difference $[1.32,6.29]$ points); every task mean improves (Fig.~\ref{fig:frozen-application}b). The complete three-model comparison retains the small Qwen panels, where $128$K means favor MrRoPE-Pro: $78.13/70.83\%$ on $3$B and $84.44/71.11\%$ on $7$B (Table~\ref{tab:bm-models}).
+
+Useful profiles can also have compact descriptions. A two-parameter clipped-affine law fitted to an OLMo $64$-point profile and transported without Qwen refitting achieves $67.75/57.25\%$ at Qwen $64/128$K, compared with $67.25/54.50\%$ for the full transported profile. Qwen $32$K performance drops from $82.00\%$ to $71.25\%$; OLMo PPL retention $0.870971$ also misses the registered $0.875$ deployment threshold (Appendix~\ref{sec:compact-coupling}). The result establishes a compact representation of measured long-end behavior. Together with the fixed-total control, it shows that useful structure can be low-dimensional while exceeding a single displacement sum.
+
+Placement is itself a finite-allocation choice. On Gemma-$1.1$-$2$B with $128$ pairs \citep{gemmateam2024gemma}, normalized-index interpolation of a reference displacement profile achieves $79.00\%$ at $16$K versus $72.81\%$ for direct-gap placement, a $6.19$-point gain ($[2.81,9.63]$). A Qwen-$0.5$B static table--amplitude configuration improves $64$K RULER-13 by $6.09$ points over the evaluated YaRN($2$) configuration while retaining near-equal $32$K scores. Apps.~\ref{sec:index-adjustment}--\ref{sec:coordinate-confirmation} give the paired placement and joint-configuration comparisons; Table~\ref{tab:gain-factorial} separates table and amplitude contrasts on the small Qwen-$3$B panel. These results extend allocation design from continuous profiles to their installation on real model grids.

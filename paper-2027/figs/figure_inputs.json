@@ -145,6 +145,96 @@
           "equivalent_ppl_ratio": 0.864404,
           "equivalent_ppl_change_percent": -13.56
         }
+      },
+      "target_matched_range": {
+        "256": {
+          "seed_values": {
+            "42": 0.032759063,
+            "137": 0.029025115,
+            "256": 0.016798005
+          },
+          "anchor_win_rates": {
+            "42": 0.3125,
+            "137": 0.34375,
+            "256": 0.40625
+          },
+          "mean_nll_difference": 0.026194061,
+          "stdev_across_training_seeds": 0.008348652,
+          "paired_t_95_ci": [
+            0.005454858,
+            0.046933263
+          ],
+          "cosh_favoring_training_seeds": 0,
+          "training_seed_count": 3,
+          "equivalent_ppl_ratio": 1.02654,
+          "equivalent_ppl_change_percent": 2.654
+        },
+        "512": {
+          "seed_values": {
+            "42": 0.06109041,
+            "137": 0.052570835,
+            "256": 0.067289382
+          },
+          "anchor_win_rates": {
+            "42": 0.15625,
+            "137": 0.3125,
+            "256": 0.21875
+          },
+          "mean_nll_difference": 0.060316876,
+          "stdev_across_training_seeds": 0.007389701,
+          "paired_t_95_ci": [
+            0.041959841,
+            0.07867391
+          ],
+          "cosh_favoring_training_seeds": 0,
+          "training_seed_count": 3,
+          "equivalent_ppl_ratio": 1.062173,
+          "equivalent_ppl_change_percent": 6.217
+        },
+        "1024": {
+          "seed_values": {
+            "42": 0.181823365,
+            "137": 0.155599415,
+            "256": 0.344166435
+          },
+          "anchor_win_rates": {
+            "42": 0.03125,
+            "137": 0.0,
+            "256": 0.0
+          },
+          "mean_nll_difference": 0.227196405,
+          "stdev_across_training_seeds": 0.102144089,
+          "paired_t_95_ci": [
+            -0.026543577,
+            0.480936388
+          ],
+          "cosh_favoring_training_seeds": 0,
+          "training_seed_count": 3,
+          "equivalent_ppl_ratio": 1.255076,
+          "equivalent_ppl_change_percent": 25.508
+        },
+        "2048": {
+          "seed_values": {
+            "42": 0.278573841,
+            "137": 0.39924413,
+            "256": 0.700963058
+          },
+          "anchor_win_rates": {
+            "42": 0.0625,
+            "137": 0.0,
+            "256": 0.0
+          },
+          "mean_nll_difference": 0.459593676,
+          "stdev_across_training_seeds": 0.217565423,
+          "paired_t_95_ci": [
+            -0.080868797,
+            1.000056149
+          ],
+          "cosh_favoring_training_seeds": 0,
+          "training_seed_count": 3,
+          "equivalent_ppl_ratio": 1.58343,
+          "equivalent_ppl_change_percent": 58.343
+        }
       }
     },
     "llama": {

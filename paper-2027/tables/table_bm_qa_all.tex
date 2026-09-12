@@ -1,31 +1,21 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{OLMo-2 Natural QA under static extension} ($s=4$, $4\text{K} \to 16\text{K}$, $g=1.1386$).
-Evaluation on \texttt{allenai/OLMo-2-0425-1B-Instruct} across $778$ frozen LongBench inputs (greedy decoding, whole response token F1).
-\textbf{X2 Baseline Scope}: Boundary Matching (BM) is compared directly against MrRoPE-Pro on this exact panel, improving extended macro F1 by $+3.82$ pp ($95\%$ bootstrap CI $[+1.32, +6.29]$) and winning all five tasks; comparison against official YaRN is registered as a planned baseline.}
+\caption{Natural QA under static $s=4$. Token F1 uses the whole generated response; EOS counts are recorded separately.}
 \label{tab:bm-qa-complete}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}llrrrrrc@{}}
+\begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Context Stratum & Task & $n$ & MrPro F1 (\%) & BM F1 (\%) & $\Delta$ (pp) & MrPro EOS & BM EOS \\
+Input length & Task & $n$ & MrPro F1 (\%) & BM F1 (\%) & MrPro EOS & BM EOS\\
 \midrule
-\multirow{6}{*}{Extended ($4\text{K}$--$16$K)}
-  & HotpotQA & 166 & 28.63 & $\mathbf{33.54}$ & $\mathbf{+4.91}$ & 160 & 163 \\
-  & 2WikiMQA & 173 & 21.55 & $\mathbf{25.43}$ & $\mathbf{+3.88}$ & 169 & 171 \\
-  & Qasper & 119 & 13.94 & $\mathbf{19.06}$ & $\mathbf{+5.11}$ & 119 & 119 \\
-  & NarrativeQA & 61 & 9.51 & $\mathbf{11.48}$ & $\mathbf{+1.96}$ & 61 & 61 \\
-  & MultiFieldQA & 112 & 34.49 & $\mathbf{37.72}$ & $\mathbf{+3.23}$ & 72 & 72 \\
-  \cmidrule(lr){2-8}
-  & \textbf{Task-Equal Macro} & \textbf{631} & 21.62 & $\mathbf{25.44}$ & $\mathbf{+3.82}$ & \textbf{581} & \textbf{586} \\
+$4$K--$16$K & HotpotQA & 166 & 28.63 & 33.54 & 160 & 163 \\
+ & 2WikiMQA & 173 & 21.55 & 25.43 & 169 & 171 \\
+ & Qasper & 119 & 13.94 & 19.06 & 119 & 119 \\
+ & NarrativeQA & 61 & 9.51 & 11.48 & 61 & 61 \\
+ & MultiFieldQA & 112 & 34.49 & 37.72 & 72 & 72 \\
 \midrule
-\multirow{5}{*}{In-Window ($\le 4\text{K}$)}
-  & HotpotQA & 5 & $\mathbf{58.33}$ & 51.67 & $-6.67$ & 5 & 5 \\
-  & 2WikiMQA & 26 & 34.62 & $\mathbf{44.98}$ & $\mathbf{+10.37}$ & 26 & 26 \\
-  & Qasper & 78 & 26.16 & $\mathbf{28.14}$ & $\mathbf{+1.98}$ & 78 & 78 \\
-  & MultiFieldQA & 38 & 50.94 & $\mathbf{53.27}$ & $\mathbf{+2.34}$ & 35 & 33 \\
-  \cmidrule(lr){2-8}
-  & \textbf{Task-Equal Macro} & \textbf{147} & 42.51 & $\mathbf{44.51}$ & $\mathbf{+2.00}$ & \textbf{144} & \textbf{142} \\
+$\le4$K & HotpotQA & 5 & 58.33 & 51.67 & 5 & 5 \\
+ & 2WikiMQA & 26 & 34.62 & 44.98 & 26 & 26 \\
+ & Qasper & 78 & 26.16 & 28.14 & 78 & 78 \\
+ & MultiFieldQA & 38 & 50.94 & 53.27 & 35 & 33 \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \end{table}

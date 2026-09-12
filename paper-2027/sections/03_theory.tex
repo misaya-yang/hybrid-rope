@@ -1,79 +1,41 @@
-\section{Positional Geometry of Exponent Distributions}
+\subsection{Complete rotary pairs and positional overlap}
 \label{sec:theory}
-
-\subsection{Full-pair geometry and effective rank identity}
 \label{sec:subspaces}
 \label{sec:budget}
 
-For a fixed content pair, a rotary channel contributes $C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where $\Delta$ is relative token separation. Its positional object is therefore the two-dimensional function space
+For a fixed content pair, one rotary channel contributes $C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where $\Delta$ is relative token separation. Both coefficients depend on content; its positional object is the full function space
 \begin{equation}
 V_\omega=\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}.
 \label{eq:subspace}
 \end{equation}
-Let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$, and define self- and cross-Gram matrices $S_\omega=\mathbb E[x_\omega^\top x_\omega]$ and $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular $S_\omega,S_\nu$, the singular values of whitened cross-Gram $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations of the two spaces. Their average squared value,
+Comparing only cosine curves would privilege one content phase. Instead, let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$ and define $S_\omega=\mathbb E[x_\omega^\top x_\omega]$, $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular self-Grams, the singular values of $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations of the two spaces. Their mean square,
 \begin{equation}
 c_{\omega\nu}=\tfrac12\|Q_{\omega\nu}\|_F^2\in[0,1],
 \label{eq:collision}
 \end{equation}
-is invariant under invertible basis changes within either pair, measuring how much of the positional basis the frequencies share. Stacking all block-whitened pairs into $\Gamma$ (with identity diagonal blocks), if $\bar c$ is the mean pairwise squared canonical overlap, its R\'enyi-$2$ effective rank satisfies
+measures shared positional directions and is invariant to invertible basis changes within either pair. Let $\Gamma$ be the Gram matrix of the concatenated block-whitened pairs, with diagonal blocks $I_2$. The average pairwise overlap $\bar c$ gives the exact R\'enyi-$2$ effective-rank identity
 \begin{equation}
-r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}=\frac{2K}{1+(K-1)\bar c}.
+r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
+=\frac{2K}{1+(K-1)\bar c}.
 \label{eq:budget-identity}
 \end{equation}
-This is an exact identity for the specified positional design matrix, not a downstream model accuracy bound.
+This connects pairwise overlap to the number of effective directions supplied by the entire positional design matrix: increasing overlap concentrates the same $2K$ coordinates into fewer directions.
 
-\subsection{Shared slow-frequency limit}
+\subsection{Finite-window concentration of slow directions}
 \label{sec:slow-limit}
 
 \begin{proposition}[Shared slow-frequency subspace]
 \label{prop:collapse}
-Under uniform measure on $[0,L]$, let $x=\omega L$. As $x\to0$, $\cos(xt)\to 1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For frequencies with $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal{O}(\epsilon^4)$.
+Under uniform measure on $[0,L]$, with $t=\Delta/L$, as $x=\omega L\to0$, $\cos(xt)\to1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal O(\epsilon^4)$.
 \end{proposition}
 
-In standard grids ($b=500{,}000, K=64, L=4096$), the $23$ pairs with $\omega L\le1$ supply $46$ coordinate dimensions but a block-whitened rank $r_2=2.00013$. In raw unwhitened coordinates, the weak eigenvalue scales as $\lambda_-(S_\omega)\approx (\omega L)^2/12$. This motivates studying how tables distribute positional directions, though static rank does not guarantee downstream extrapolation.
+Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened rank $2.00013$. The finite-window calculation also reaches the core experiment: at $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have rank $2.11$ (Fig.~\ref{fig:allocation-basis}). Their overlap is substantial even though every frequency has $\omega L>1$.
 
-\subsection{What a schedule-only summary can see}
-\label{sec:non-identifiability}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_allocation_basis.pdf}
+\caption{\textbf{Log-frequency spacing and positional directions are different objects.} Uniform separation measure on $[0,L]$. (a) Canonical overlap of full sine--cosine pairs on the actual $b=256$, $K=32$, $L=256$ identification grid. The eight slowest pairs share most of their positional space. (b) Effective rank as progressively faster pairs enter that slow subset: eight pairs give $16$ coordinates but $r_2=2.11$. Values are closed-form Gram calculations checked by independent quadrature.}
+\label{fig:allocation-basis}
+\end{figure}
 
-
-
-The separation between basis geometry and downstream performance is formal:
-
-\begin{theorem}[Static surrogates cannot rank allocations]
-\label{thm:non-identifiability}
-Let $\Phi(\Omega)$ depend only on the frequency schedule and let $\mathcal{R}$ be measured downstream capability.
-\emph{(i) Permutation-invariant $\Phi$ cannot separate the two most behaviourally distant tables we can construct.} For any non-trivial permutation $\pi$, invariance gives $\Phi(\pi\Omega)=\Phi(\Omega)$. Theorem~\ref{thm:obstruction} says the only position-independent equivalence of the rotation operator is sign and permutation, and that equivalence is realised precisely by permuting the coordinate blocks. It is therefore an equivalence of the \emph{operator}, not one available to a fixed checkpoint: a trained model's projections are tied to specific blocks, and realising the map would mean permuting its weight columns. On the evaluated checkpoints the measured risk gap is correspondingly large: $1\times$ tail NLL rises from $3.10423$ to $6.86493$ and $64$K macro accuracy falls from $0.7000$ to $0.0000$. So no such $\Phi$ is a standalone predictor of $\mathcal{R}$.
-\emph{(ii) The remaining schedule-only surrogates fail on named witnesses.} A discrete scale-orbit count shifts by $\Delta q=58$ under $1$-ULP jitter with $\Delta\mathrm{NLL}=+10^{-5}$; and curvature ill-conditioning ($\kappa(F_N)\gg10^4$) concentrates sensitivity at knee slot $19$, so an $\mathrm{MAE}=0.0012$ coordinate error fails pre-registered retention gates.
-\end{theorem}
-\begin{remark}
-Part (i) is structural, not anecdotal, and this is why it is coupled to Theorem~\ref{thm:obstruction}. A summary $\Phi$ must be invariant to something, and the only invariance a schedule offers is permutation. That invariance is real at the operator level---a block permutation maps one rotation operator to the other exactly---but it is unavailable to a fixed checkpoint, whose learned projections are bound to specific blocks. The only equivalence the schedule supplies is thus precisely the one a trained model cannot use. We do \emph{not} claim non-identifiability for every schedule-dependent $\Phi$---$\Phi(\Omega)=\Omega$ is injective---which is precisely why the useful question is not ``which metric is best'' but ``what can a schedule-only summary see at all''.
-\end{remark}
-Table~\ref{tab:epistemic-map} summarizes these boundaries, isolating what the geometric theory proves from what requires downstream empirical validation.
-
-\subsection{An analytic allocation construction}
-\label{sec:construction}
-
-To allocate samples over normalized exponent space $[0,1]$, let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider the convex design criterion
-\begin{equation}
-\Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
-\qquad \text{s.t. } \int_0^1\rho=1,\ \rho\ge0.
-\label{eq:Capp}
-\end{equation}
-The first term penalizes concentration; the second penalizes cumulative mass beyond slow-end thresholds. These are explicit design preferences; we do not identify this functional with complete trained-model loss.
-
-\begin{theorem}[Cosh allocation]
-\label{thm:ode}
-For $\alpha>0$ and $\beta\ge0$, the unique minimizer of \eqref{eq:Capp} over positive $\rho\in C^2([0,1])$ with unit integral is
-\begin{equation}
-\rho_\tau(\phi)=\frac{\tau\cosh[\tau(1-\phi)]}{\sinh\tau},
-\qquad \tau=\sqrt{\beta/\alpha},
-\label{eq:rho-tau}
-\end{equation}
-recovering uniform density as $\tau\to0$. Inverting the CDF yields the explicit quantile map
-\begin{equation}
-\phi_k(\tau)=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
-\qquad u_k=\frac{k+1/2}{K}.
-\label{eq:warp}
-\end{equation}
-\end{theorem}
-We call this construction \evq{}. It is an analytic allocation family, not a claim of universal optimality. Once $\tau$, grid, and endpoint anchoring are specified, installation evaluates the table once without changing the rotary operator or trainable parameter count.
+The geometry explains why allocating frequencies uniformly in log space need not spread positional directions uniformly over a finite window. It supplies a concrete object for design: where samples are placed changes which scales and directions are represented. Model behavior then depends on the content coefficients learned on this basis. The next interventions examine that learned use directly; complete geometric proofs and cross-length ordering examples appear in Appendix~\ref{sec:geometry-proofs}--\ref{sec:static-counterexamples}.

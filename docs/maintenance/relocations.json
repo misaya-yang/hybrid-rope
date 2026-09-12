@@ -1,0 +1,512 @@
+{
+  "schema": "doc_relocations_v1",
+  "as_of": "2026-09-12",
+  "moves": [
+    {
+      "old": "docs/research/PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md",
+      "new": "docs/research/reviews/PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md",
+      "sha256_before": "61905957082958a7a3a86bc43269bc846295f40ad7c951d80a249416cbc56a7a",
+      "reason": "独立叙述文档，未发现代码/JSON/TeX路径依赖"
+    },
+    {
+      "old": "docs/research/PC2_TEN_EXPERIMENTS_RESEARCH_PLAN.md",
+      "new": "docs/research/protocols/PC2_TEN_EXPERIMENTS_RESEARCH_PLAN.md",
+      "sha256_before": "a925c17ab7d982700442c9673ff2237cd88a8883b92fd4d2a177ff55e6c54840",
+      "reason": "独立叙述文档，未发现代码/JSON/TeX路径依赖"
+    },
+    {
+      "old": "docs/research/ROPE_ALLOCATION_PROGRESS_20260910.md",
+      "new": "docs/research/history/ROPE_ALLOCATION_PROGRESS_20260910.md",
+      "sha256_before": "cda0f6b2b96453247d7c4c52d335795d962e30cf296e4e764ff4f93dad83a49e",
+      "reason": "独立叙述文档，未发现代码/JSON/TeX路径依赖"
+    },
+    {
+      "old": "INDEX.md",
+      "new": "index.md",
+      "reason": "核心入口统一小写；原文另存导航快照"
+    },
+    {
+      "old": "analysis/unify_20260910/INDEX.md",
+      "new": "analysis/unify_20260910/index.md",
+      "sha256_before": "e7c7e77ea4722445caea1d2e1db90b71c21c62f9c08df896a9a654b09ae0a5c9",
+      "reason": "分类入口统一小写，内容不变"
+    }
+  ],
+  "retained_sources": [
+    {
+      "old": "docs/research/BRANCH_09_09_BRIEF_20260909.md",
+      "new": "docs/research/history/BRANCH_09_09_BRIEF_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol14_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/COMPRESSED_POSITION_INDEPENDENT_20260909.md",
+      "new": "docs/research/theory/COMPRESSED_POSITION_INDEPENDENT_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/COSH_REDESIGN_EVIDENCE_REVIEW.md",
+      "new": "docs/research/reviews/COSH_REDESIGN_EVIDENCE_REVIEW.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/DYNAMIC_POSITION_CACHE_SEMANTICS_20260909.md",
+      "new": "docs/research/theory/DYNAMIC_POSITION_CACHE_SEMANTICS_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md",
+      "new": "docs/research/theory/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra02_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol01_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol02_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/NONGEOMETRIC_MECHANISM_TRANSFER_20260910.md",
+      "new": "docs/research/theory/NONGEOMETRIC_MECHANISM_TRANSFER_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/NORMALIZED_REFERENCE_COMPOSITION_20260909.md",
+      "new": "docs/research/theory/NORMALIZED_REFERENCE_COMPOSITION_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ORACLE_FIRST_SHARED_ROUTING_PLAN_20260908.md",
+      "new": "docs/research/protocols/ORACLE_FIRST_SHARED_ROUTING_PLAN_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/OVERNIGHT_FAILURE_POSTMORTEM_20260909.md",
+      "new": "docs/research/reviews/OVERNIGHT_FAILURE_POSTMORTEM_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/PARALLEL_NONGEOMETRIC_20X10_AUDIT_20260910.md",
+      "new": "docs/research/reviews/PARALLEL_NONGEOMETRIC_20X10_AUDIT_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/PARALLEL_NONGEOMETRIC_20X10_PLAN_20260910.md",
+      "new": "docs/research/protocols/PARALLEL_NONGEOMETRIC_20X10_PLAN_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/PC2_PM_FAILURE_QUESTION_AUDIT_20260910.md",
+      "new": "docs/research/reviews/PC2_PM_FAILURE_QUESTION_AUDIT_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol11_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/POSITION_AFTER_SPARSE_RESEARCH_20260908.md",
+      "new": "docs/research/theory/POSITION_AFTER_SPARSE_RESEARCH_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/PROJECT_DIRECTION_SYNTHESIS_20260909.md",
+      "new": "docs/research/history/PROJECT_DIRECTION_SYNTHESIS_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol12_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/REFCARRY_INTERFACE_AUDIT_20260909.md",
+      "new": "docs/research/reviews/REFCARRY_INTERFACE_AUDIT_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol11_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md",
+      "new": "docs/research/theory/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra02_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/astra03_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/astra05_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/astra06_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_ALLOCATION_THEORY_CORE_20260910.md",
+      "new": "docs/research/theory/ROPE_ALLOCATION_THEORY_CORE_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/archive_manifest.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_BIAS_POSITION_PROTOCOL_20260908.md",
+      "new": "docs/research/protocols/ROPE_BIAS_POSITION_PROTOCOL_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_BM_128K_DIAGNOSIS_20260908.md",
+      "new": "docs/research/reviews/ROPE_BM_128K_DIAGNOSIS_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol14_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_BM_CROSS_CACHE_20260908.md",
+      "new": "docs/research/theory/ROPE_BM_CROSS_CACHE_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol12_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_BM_SCALE_CAP_20260908.md",
+      "new": "docs/research/theory/ROPE_BM_SCALE_CAP_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol14_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_BM_SELECTIVE_GAIN_20260908.md",
+      "new": "docs/research/theory/ROPE_BM_SELECTIVE_GAIN_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol11_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_BM_TRANSFER_20260908.md",
+      "new": "docs/research/theory/ROPE_BM_TRANSFER_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_CARRIER_REMOVAL_PILOT_20260907.md",
+      "new": "docs/research/theory/ROPE_CARRIER_REMOVAL_PILOT_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra05_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_EXTRAPOLATION_FAILURE_AND_LIMITS_20260910.md",
+      "new": "docs/research/reviews/ROPE_EXTRAPOLATION_FAILURE_AND_LIMITS_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra03_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md",
+      "new": "docs/research/protocols/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md",
+      "new": "docs/research/theory/ROPE_FREQUENCY_LUNA_ROI_20260907.md",
+      "protected_by": [
+        "docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json",
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md",
+      "new": "docs/research/protocols/ROPE_FREQUENCY_PRO_PROMPT_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol11_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md",
+      "new": "docs/research/protocols/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md",
+      "protected_by": [
+        "docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_GAP_CAPPED_PROTOCOL_20260908.md",
+      "new": "docs/research/protocols/ROPE_GAP_CAPPED_PROTOCOL_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md",
+      "new": "docs/research/theory/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md",
+      "new": "docs/research/reviews/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md",
+      "protected_by": [
+        "analysis/unify_20260910/tables/ground_truth_tables.json",
+        "analysis/unify_20260910/tables/rebuild_ground_truth_tables.py",
+        "docs/research/rope_allocation_20260910/coverage/sol05_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol17_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md",
+      "new": "docs/research/reviews/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_MRPRO_BM_PROTOCOL_20260908.md",
+      "new": "docs/research/protocols/ROPE_MRPRO_BM_PROTOCOL_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra01_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_NATIVE_SECTOR_CARRIER_20260907.md",
+      "new": "docs/research/theory/ROPE_NATIVE_SECTOR_CARRIER_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol14_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_NATIVE_WINDOWS_PROTOCOL_20260908.md",
+      "new": "docs/research/protocols/ROPE_NATIVE_WINDOWS_PROTOCOL_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_OLMO_FAST_SCREEN_20260908.md",
+      "new": "docs/research/theory/ROPE_OLMO_FAST_SCREEN_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_OLMO_STAGE_TRANSFER_PROTOCOL_20260908.md",
+      "new": "docs/research/protocols/ROPE_OLMO_STAGE_TRANSFER_PROTOCOL_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md",
+      "new": "docs/research/reviews/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md",
+      "protected_by": [
+        "docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_OVERNIGHT_RESEARCH_20260908.md",
+      "new": "docs/research/protocols/ROPE_OVERNIGHT_RESEARCH_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md",
+      "new": "docs/research/protocols/ROPE_PRO_DECISION_REQUEST_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md",
+      "new": "docs/research/theory/ROPE_QWEN15_MINIMAL_MECHANISM_20260907.md",
+      "protected_by": [
+        "docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json",
+        "docs/research/rope_allocation_20260910/coverage/sol11_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_QWEN7_BM_TRANSFER_20260908.md",
+      "new": "docs/research/theory/ROPE_QWEN7_BM_TRANSFER_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol12_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md",
+      "new": "docs/research/reviews/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json",
+        "experiments/joint_kkt_20260910/joint_grad.py"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md",
+      "new": "docs/research/theory/ROPE_SCALE_TRANSPORT_PILOT_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md",
+      "new": "docs/research/reviews/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol12_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_SOFTMAX_MIXED_FREQUENCY_DERIVATION_20260910.md",
+      "new": "docs/research/theory/ROPE_SOFTMAX_MIXED_FREQUENCY_DERIVATION_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra05_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md",
+      "new": "docs/research/protocols/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/SELECTOR_AUXILIARY_REVIEW_20260908.md",
+      "new": "docs/research/reviews/SELECTOR_AUXILIARY_REVIEW_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol14_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md",
+      "new": "docs/research/theory/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol12_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/SPARSE_POSITION_CLAIM_DISCUSSION_20260909.md",
+      "new": "docs/research/theory/SPARSE_POSITION_CLAIM_DISCUSSION_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol14_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/SPARSE_POSITION_EVALUATION_LITERATURE_20260909.md",
+      "new": "docs/research/theory/SPARSE_POSITION_EVALUATION_LITERATURE_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/THREE_PARTY_RESEARCH_HANDOFF_20260910.md",
+      "new": "docs/research/history/THREE_PARTY_RESEARCH_HANDOFF_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/TWO_CORE_ONE_HOUR_DECISION_20260909.md",
+      "new": "docs/research/reviews/TWO_CORE_ONE_HOUR_DECISION_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/TWO_CORE_ROUTE_EVALUATION_20260909.md",
+      "new": "docs/research/reviews/TWO_CORE_ROUTE_EVALUATION_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra09_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/astra09_pages.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/TWO_CORE_SOL_HANDOFF_20260909.md",
+      "new": "docs/research/history/TWO_CORE_SOL_HANDOFF_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md",
+      "new": "docs/research/theory/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/astra03_coverage.json",
+        "docs/research/rope_allocation_20260910/coverage/sol06_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json",
+        "experiments/curvature_20260910/driver.sh"
+      ]
+    },
+    {
+      "old": "docs/research/USER_INTENT_GUIDE_20260909.md",
+      "new": "docs/research/history/USER_INTENT_GUIDE_20260909.md",
+      "protected_by": [
+        "docs/research/rope_allocation_20260910/coverage/sol09_coverage.json",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    },
+    {
+      "old": "docs/research/USER_PROMPT_TRANSCRIPT_20260909.md",
+      "new": "docs/research/history/USER_PROMPT_TRANSCRIPT_20260909.md",
+      "protected_by": [
+        "analysis/unify_20260910/tables/ground_truth_tables.json",
+        "analysis/unify_20260910/tables/rebuild_ground_truth_tables.py",
+        "docs/research/rope_allocation_20260910/evidence/project_fulltext_inventory.json"
+      ]
+    }
+  ]
+}

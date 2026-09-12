@@ -1,0 +1,689 @@
+{
+  "source": "LLAMA3_ROPE_20_DIRECTIONS_60_CONFIGS_REVIEW_PLAN_20260911.md section 4",
+  "note": "parsed mechanically from the review plan; prose fields are verbatim fragments, they are metadata for the executor, not executable spec",
+  "n_directions": 20,
+  "n_configs": 60,
+  "execution_authorized_default": false,
+  "directions": [
+    {
+      "id": "D01",
+      "title": "整数周期组合：Resonance × MrRoPE",
+      "scope": "frequency",
+      "evidence_grade": "A：已有文献机制＋精确周期性质",
+      "execution_priority": 1,
+      "question": "RoPE使用整数token位置，但通常每槽的旋转周期不是整数。将非整数周期改为整数，改变的是离散位置上的轨道重复性质，不是再次调m的凸度。",
+      "construction": "对 j>ℓ，T_j=2π/ν_j^MR，令 ν'_j=2π/Q(T_j)；j≤ℓ保持MR。",
+      "guarantee": "在实数运算下，R(ν′_j(p+Q(T_j)))=R(ν′_jp)。这是逐槽周期重复，不是64槽同时周期重复，也不是“不发生位置混淆”。",
+      "gap": "周期内的离散相位状态复现，可能比非整数轨道减少冻结模型对未见相位点的敏感性。是否重要必须在实际生成中检验。Resonance论文不是对本组合的实测背书。",
+      "configs": [
+        {
+          "id": "D01a",
+          "policy": "Q(T)=floor(T+1/2)",
+          "why": "双向最近周期：最小化单槽周期舍入幅度，不优化任务代理。"
+        },
+        {
+          "id": "D01b",
+          "policy": "Q(T)=floor(T)",
+          "why": "周期只缩短：与c分开观察舍入的系统方向。"
+        },
+        {
+          "id": "D01c",
+          "policy": "Q(T)=ceil(T)",
+          "why": "周期只加长：避免最近舍入混合两个方向。"
+        }
+      ],
+      "must_compare": "每臂对MR；另登记b−c。若三个政策不同方向，不能只把“整数”作为充分解释。",
+      "fail_scope": "独立H排除≥3pp且无可接受Native，则否定该舍入政策的实用改进；三项均如此，仅排除本局部组合，不否定Resonance训练结果。",
+      "key_risk": "可能仅是小扰动；高/低频边界与1/s端点会略有偏移。不能在事后强行clip回旧表后仍称同一候选。",
+      "transfer_rule": "只按新模型νMR计算周期，舍入政策不变。",
+      "refs": "P3。",
+      "history_dedup": "E1/E2未记录此组合的已完成生成结果。旧整数量化/正交格点反例不是该局部周期舍入算子；不把整个频谱改成一个均匀DFT格点。历史早期未汇总脚本仍需执行者核查。"
+    },
+    {
+      "id": "D02",
+      "title": "相位绕圈分支选择：匹配原生缩放锚点",
+      "scope": "frequency",
+      "evidence_grade": "B：精确旋转约束",
+      "execution_priority": 2,
+      "question": "相位定义在圆上，同一锚点旋转可由不同绕圈数达到；直接在频率实轴上平滑插值没有显式处理这个离散分支。",
+      "construction": "ν'_j=ω_j/s+2πk_j/A；k_j取使 |ν'_j−ν_j^MR| 最小的整数，并满足 ω_j/s≤ν'_j≤ω_j。只改j>ℓ。",
+      "guarantee": "被修改的槽满足exp(iAν′_j)=exp(iAω_j/s)，频率仍位于原生与PI之间。只在±A处匹配；其余距离不受此恒等式保证。A=D是cap理论端点，实际两token最大距离D−1，不假装已直接观测端点。",
+      "gap": "保持一个已知原生相位锚点，可能减少完全未训练的相位组合；但一个锚点正确可能牺牲别处，因此必须同时测两个长度、四种深度。",
+      "configs": [
+        {
+          "id": "D02a",
+          "policy": "A=W",
+          "why": "锁定部署的四分之一位置，检验早期相位匹配。"
+        },
+        {
+          "id": "D02b",
+          "policy": "A=2W",
+          "why": "锁定16K尺度；不能只凭16K高分宣称32K也改善。"
+        },
+        {
+          "id": "D02c",
+          "policy": "A=4W",
+          "why": "锁定32K端点；显式检验端点优化是否损害中间深度。"
+        }
+      ],
+      "must_compare": "三锚点分别对MR；效应按证据距离而不是输入cap alone分层。",
+      "fail_scope": "某锚点只在对应深度好而其他深度差，通用改进命题FAIL；独立H区间宽则UNDERPOWERED。",
+      "key_risk": "这是约束分支选择，不是相位最优证明；可能产生非单调频率。保持实际数组，不排序修复。",
+      "transfer_rule": "A/W保持1、2、4；不跨模型重新选锚点。",
+      "refs": "P1＋本计划的旋转代数。",
+      "history_dedup": "不做余弦核最大化或effective-rank优化；不采用历史失败的NLL/Fisher代理。与Resonance不同：D01使单槽周期成为整数，D02使统一锚点的旋转匹配native/s。"
+    },
+    {
+      "id": "D03",
+      "title": "频谱不变的通道重分配",
+      "scope": "frequency_assignment",
+      "evidence_grade": "B：严格同谱反事实",
+      "execution_priority": 3,
+      "question": "谱节点和谱系数是一一配对的。YaRN/MrRoPE改变节点却保留通道身份；频率集合相同不代表有相同的有权Fourier合成。",
+      "construction": "ν'_j=ν^MR_{π(j)}，Q/K通道及权重不置换。全层全头使用同一π。",
+      "guarantee": "频率多重集合、无权核Σexp(iνd)、任何只依赖无序节点集合的量严格不变；一般Σc_jexp(iν_{π(j)}d)会改变。",
+      "gap": "冻结模型中相邻频率槽的功能并不必然严格按索引排序，可能存在更合适的分配；反过来，强共适应也可能使所有置换变差。",
+      "configs": [
+        {
+          "id": "D03a",
+          "policy": "中段19–34两两相邻交换",
+          "why": "局部身份改变，保持每两个槽的频率集合。"
+        },
+        {
+          "id": "D03b",
+          "policy": "平台35–37与38–40两个三槽块交换",
+          "why": "保留每块内部顺序，测试较慢尺度整体错配。"
+        },
+        {
+          "id": "D03c",
+          "policy": "中段整体循环hop=round(log(s)/(logθ/K))，本模型hop=7",
+          "why": "检验一个扩展尺度对应的通道重新分配，不在hop上扫描。"
+        }
+      ],
+      "must_compare": "每臂对MR；不得用“置换退化”充当改进成功，但它可否定无权节点几何的充分性。",
+      "fail_scope": "独立H无正收益则该π不是升级；若负差CI排除0，同谱充分性命题FAIL。",
+      "key_risk": "先验包含显著退化可能；非单调inv_freq是有意的。joint permutation of frequencies and Q/K会成为重命名，本轮不做。",
+      "transfer_rule": "以相对频带与由log(s)/a给出的hop迁移，不抄Llama槽号。",
+      "refs": "E3:G；E2共适应证据；P1。",
+      "history_dedup": "旧54/30计划G组已提出但材料未给本组实测；因此是“未执行轴的不同干预”，不是首次提出新轴。新三臂不复用原来的三槽正/逆循环。"
+    },
+    {
+      "id": "D04",
+      "title": "旋转方向：保留cos项，改变有向sin项",
+      "scope": "signed_frequency",
+      "evidence_grade": "B：奇偶分解精确",
+      "execution_priority": 4,
+      "question": "RoPE得分有a_j cos(νd)+b_j sin(νd)两部分。无权cosine几何看不见方向信息，冻结Q/K却能使用它。",
+      "construction": "对指定集合B置ν′_j=−ν_j^MR；其余不变。三臂B分别为1≤r<s、r<1、s≤r<32。",
+      "guarantee": "cos项逐位不变，sin项逐位反号；二维旋转仍正交，位置加法表示仍成立。不是将整个序列倒序。",
+      "gap": "扩展时有向相位项可能产生错误的远程偏置；翻转特定物理区间可能消除一部分，但可能同时毁掉有用的顺序绑定。",
+      "configs": [
+        {
+          "id": "D04a",
+          "policy": "B={1≤r_j<s}",
+          "why": "在原生1–4圈区域检验有向长程偏置。"
+        },
+        {
+          "id": "D04b",
+          "policy": "B={r_j<1}",
+          "why": "检验真正慢尾部的有向项；DC方向另由D05区分。"
+        },
+        {
+          "id": "D04c",
+          "policy": "B={s≤r_j<32}",
+          "why": "检验中高频顺序作用，风险较高但不与慢尾混用。"
+        }
+      ],
+      "must_compare": "对MR；按检索、VT有序传播与QA分别看符号，不挑有利子任务重定义总分。",
+      "fail_scope": "性能下降支持这些sin项在本模型不可随意翻转；不能写成“所有相位修正都无效”。升级判决仍需H。",
+      "key_risk": "这是低先验的机制/方法候选，不能诚实地称已有强实证支持；signed-frequency scope必须显式审查。",
+      "transfer_rule": "按原生转数集合迁移；不是按经验找到的三个槽。",
+      "refs": "P1；E2:T1/T7约束。",
+      "history_dedup": "历史无权核/谱密度、step、ENV均不能产生“绝对频率不变而sin反号”的操作；材料未记录该已执行算子。负频率超出旧正频率约束。"
+    },
+    {
+      "id": "D05",
+      "title": "保留内容、撤去慢频旋转：DC retrofit",
+      "scope": "dc_frequency",
+      "evidence_grade": "A/B：已有FoPE先例",
+      "execution_priority": 1,
+      "question": "ν=0使R=I，保留q·k内容项，不等于删除该通道。它避免把极慢频的未见相位外推成内容错配。",
+      "construction": "ν′_j=0 if Wω_j<θcut；否则ν′_j=ν_j^MR。θcut∈{π/2,π,2π}。",
+      "guarantee": "被改槽在任意位置都是恒等旋转；该槽内容内积保留。没有“低频softmax自动抵消”的假设。",
+      "gap": "极慢频可能更像语义通道而不是有效位置通道，保持其内容方向可能优于任意缩放；但冻结模型也可能确实需要这些弱相位。",
+      "configs": [
+        {
+          "id": "D05a",
+          "policy": "θcut=π/2",
+          "why": "只处理原生最大相位不足四分之一圈的尾部。"
+        },
+        {
+          "id": "D05b",
+          "policy": "θcut=π",
+          "why": "扩到半圈未覆盖区域。"
+        },
+        {
+          "id": "D05c",
+          "policy": "θcut=2π",
+          "why": "沿用一圈覆盖界；不把该阈值称数学最优。"
+        }
+      ],
+      "must_compare": "每臂对MR；与D04慢尾区分“取消旋转”和“反转旋转”。",
+      "fail_scope": "若DC导致独立任务损失，否定本冻结模型的“该慢区可改成纯内容”处方，不否定训练时FoPE。",
+      "key_risk": "零频率/改变支持集需审查；不是完整FoPE复现。旧训练论文不能替代新零训练证据。",
+      "transfer_rule": "θcut固定为相同弧度，不按各模型成绩改阈值。",
+      "refs": "P4；E2旧NoPE范围未复核；E6低频内容警示。",
+      "history_dedup": "FoPE和部分RoPE不是新概念。本项目当前实测总览没有该精确frozen retrofit；更早NoPE/sparse轨道未完整审计，开跑前必须做同构查重，不能将“材料没写”说成全项目从未试过。"
+    },
+    {
+      "id": "D06",
+      "title": "交错双尺度：用离散分配替代每槽部分压缩",
+      "scope": "frequency_assignment",
+      "evidence_grade": "B：双尺度协变与计数误差界精确",
+      "execution_priority": 2,
+      "question": "一个槽部分压缩会改变其全部距离尺度。将中段槽分为原生与完整s倍两类，让每个槽严格保留一个尺度，是不同于连续ramp和单一step边界的配置。",
+      "construction": "中段x_j=m_j^MR，c_j=Σ_{k≤j}x_k；b_j=Q(c_j)−Q(c_{j−1})∈{0,1}，ν′_j=ω_js^{−b_j}。",
+      "guarantee": "每个被改槽严格满足native或native/s；前缀总分配误差由舍入误差约束在1以内。该计数界不是检索覆盖定理。",
+      "gap": "不同子空间可能更适合明确的local/global角色，而不是同槽折中；但交错频率与预训练有序共适应可能冲突。",
+      "configs": [
+        {
+          "id": "D06a",
+          "policy": "Q(c)=floor(c)",
+          "why": "前向误差累积，保持分配不超额。"
+        },
+        {
+          "id": "D06b",
+          "policy": "Q(c)=floor(c+1/2)",
+          "why": "最近整数，减小全带计数偏差。"
+        },
+        {
+          "id": "D06c",
+          "policy": "反向扫描后floor，再反转回槽序",
+          "why": "相同类型的计数约束，改变离散槽身份；不随机选seed。"
+        }
+      ],
+      "must_compare": "各臂对MR；b与a的总分配数可能不同，不能宣称只隔离排列；记录每个实际b和Σb。",
+      "fail_scope": "若单个开发集成功而V/H归零，按选择效应FAIL；不改称“离散分工已证”。",
+      "key_risk": "通常打破物理频序；禁止isotonic或排序“修复”。不是旧hard-step最优理论复活。",
+      "transfer_rule": "由新模型mMR构造；舍入政策固定。",
+      "refs": "P1；E2:E-step/E-s42h反例约束。",
+      "history_dedup": "与旧step/H不同：没有一个单调边界或三段连续bank，m可交错。与旧B相似性仅在“尺度分配”动机；不保持m方差、不优化静态泛函。"
+    },
+    {
+      "id": "D07",
+      "title": "选择性频谱增益：把统一温度拆成位置子带权重",
+      "scope": "spectral_amplitude",
+      "evidence_grade": "A/B：历史gain强，子带分配未证实",
+      "execution_priority": 1,
+      "question": "YaRN同时改变频率和振幅；历史全局gain是最大轴。相同logit能量预算下，将增益分配到不同频谱部分，比再扫global gain是新的操作。",
+      "construction": "h∈{m,1−m,4m(1−m)}，f_j=1+(gY²−1)h_j；w_j=gY² f_j/RMS(f)，Q/K每槽各乘sqrt(w_j)。ν保持MR。",
+      "guarantee": "Σw_j²=K gY⁴；所以在独立、等方差的槽贡献假设下，logit方差与MR相同。真实槽相关/不等方差时不保证。",
+      "gap": "相位被压缩的通道与未改高频可能不应得到同等放大；在相同整体标定下，任务需要的信号可以被重新加权。",
+      "configs": [
+        {
+          "id": "D07a",
+          "policy": "h=m",
+          "why": "将相对增益倾向扩展通道。"
+        },
+        {
+          "id": "D07b",
+          "policy": "h=1−m",
+          "why": "倾向保留原生局部计算。"
+        },
+        {
+          "id": "D07c",
+          "policy": "h=4m(1−m)",
+          "why": "倾向过渡区而不继续放大两端。"
+        }
+      ],
+      "must_compare": "对MR@gY；同时报告实际logit方差变化，不能把假设下等方差称实测已匹配。",
+      "fail_scope": "独立H无实用增益，则对应增益分配处方FAIL；不是global gain的重要性被否定。",
+      "key_risk": "幅度profile是工作假说，不是模型角色标签。超出仅64频率＋单一gain的旧范围。",
+      "transfer_rule": "使用同一归一化和新模型mMR；不看任务再拟合通道幅度。",
+      "refs": "E2:E-gain/E-g2x2；P2-code。",
+      "history_dedup": "不是已经跑过的全局gsweep，也不改变频率。E2 gain结果支持检查幅度轴，不支持这三种频谱分配已有效。"
+    },
+    {
+      "id": "D08",
+      "title": "谱测度补偿：节点变换与振幅权重分离",
+      "scope": "spectral_amplitude",
+      "evidence_grade": "C：条件理论",
+      "execution_priority": 4,
+      "question": "若Fourier分量近似某连续谱的离散积分，改变节点密度而保持系数不变相当于改变积分测度。但RoPE的c_j是学到的通道值，不必是求积样本。",
+      "construction": "J_j=(局部MR log-gap)/(局部native log-gap)>0；w∝J、J⁻¹、sqrt(J)，各自RMS归一化到gY²；频率固定MR。",
+      "guarantee": "这是改变谱权重的真实算子，三臂均保持Σw²；不以任何J泛函给候选排序。求积解释仅在c是谱密度采样时成立。",
+      "gap": "频率warp可能需要相应谱权重修正；反向政策区分测度补偿和过渡区降权两种相反解释。",
+      "configs": [
+        {
+          "id": "D08a",
+          "policy": "w∝J",
+          "why": "补偿被拉稀区域代表的谱质量。"
+        },
+        {
+          "id": "D08b",
+          "policy": "w∝1/J",
+          "why": "对稀疏不稳定区域降权的相反解释。"
+        },
+        {
+          "id": "D08c",
+          "policy": "w∝sqrt(J)",
+          "why": "能量/振幅测度之间的中间规则。"
+        }
+      ],
+      "must_compare": "三臂分别对MR；若某一规则赢，必须由真实任务而不是“求积正确”决定。",
+      "fail_scope": "三项独立均无价值收益，则这三种无需权重适配的测度补偿FAIL；不再添加J幂指数。",
+      "key_risk": "不能把条件求积模型说成RoPE本质已证明；若审查要求每方向都有模型级证据，此方向应被拒，而不能换名填位。",
+      "transfer_rule": "按新网格差分计算J，归一化相同。",
+      "refs": "P1；E2:T7/T8/NO_STATIC。",
+      "history_dedup": "12个静态泛函失败禁止“密度指标更好→任务更好”。这里直接干预幅度而非用密度选表，但仍与旧频谱叙事相关，不能声称强实证先验。"
+    },
+    {
+      "id": "D09",
+      "title": "相位不确定性的解析边缘化：静态振幅滤波",
+      "scope": "spectral_amplitude",
+      "evidence_grade": "C：概率恒等式",
+      "execution_priority": 4,
+      "question": "固定相位误差的分布，其平均复旋子为特征函数乘原旋子。可以不选新频率，而降低对不可靠相位的依赖。",
+      "construction": "x_j=W(ω_j−ν_j^MR)；h_j为sinc²(x_j/2)、exp(−x_j²/12)、1/(1+x_j²/12)；w=gY² h/RMS(h)。",
+      "guarantee": "三函数分别为均值零三角分布[-1,1]、方差1/6高斯、方差1/6拉普拉斯的特征函数；在“误差=x_j U”模型下，E exp(i(φ+xU))=h exp(iφ)。",
+      "gap": "相位变形大小可作为不确定性尺度的粗近似，解析边缘化可能比单一错误相位稳健。但历史没有证明该不确定性分布或尺度正确。",
+      "configs": [
+        {
+          "id": "D09a",
+          "policy": "三角特征函数sinc²(x/2)",
+          "why": "有限误差范围，会留下不同的谱零点结构。"
+        },
+        {
+          "id": "D09b",
+          "policy": "高斯exp(−x²/12)",
+          "why": "快速抑制大形变分量。"
+        },
+        {
+          "id": "D09c",
+          "policy": "拉普拉斯1/(1+x²/12)",
+          "why": "重尾假设，保留更多大形变通道贡献。"
+        }
+      ],
+      "must_compare": "三种同方差分布分别对MR；无标签固定规则，不依据S挑新的分布族。",
+      "fail_scope": "即使经验无效，特征函数恒等式仍成立；失败对象是“这些相位不确定性处方带来收益”，不能混淆两者。",
+      "key_risk": "这正是可能被用户审查否决的假设层，不应被称为已识别的物理噪声。",
+      "transfer_rule": "按W(ω−ν)无量纲量迁移，分布与方差固定。",
+      "refs": "概率特征函数推导；E2代理失败约束。",
+      "history_dedup": "无NLL、Fisher、频率校准或几何目标优化；直接施加振幅。它可能在效果上类似屏蔽中段，必须与D07/08实际算子去重，不能靠故事名称判新。"
+    },
+    {
+      "id": "D10",
+      "title": "Q/K相对相位偏置：固定因果距离的旋转校正",
+      "scope": "qk_phase_bias",
+      "evidence_grade": "B：直接约束真实双线性旋转",
+      "execution_priority": 3,
+      "question": "给Q/K加同一个常相位会抵消；给两侧相反偏置才是有效干预。它改变相对旋转的相位截距，不改变频率斜率。",
+      "construction": "d=t_key−p_query≤0，d0∈{−W/4,−W/2,−W}；δ_j=(ω_j−ν_j^MR)d0；φQ=pν−δ/2，φK=tν+δ/2。",
+      "guarantee": "当因果距离d=d0<0时，R(νd+δ)=R(ωd)，精确匹配原生相对旋转。仍是只依赖相对距离的核，但零距离旋转一般不再是I。",
+      "gap": "某个原生依赖尺度可能比“固定零相位截距”更值得保护，长程检索由此可能获益；其他距离可能变差。",
+      "configs": [
+        {
+          "id": "D10a",
+          "policy": "d0=−W/4",
+          "why": "匹配较短原生依赖。"
+        },
+        {
+          "id": "D10b",
+          "policy": "d0=−W/2",
+          "why": "匹配中位原生依赖。"
+        },
+        {
+          "id": "D10c",
+          "policy": "d0=−W",
+          "why": "匹配原生跨度末端；最容易牺牲局部，因此Native守门必要。"
+        }
+      ],
+      "must_compare": "对MR；按实际query–evidence距离分层，不能只看cap。",
+      "fail_scope": "只在锚点附近赢而整体H/Native不过，则通用改进FAIL；不能把该锚点局部等式推广全域。",
+      "key_risk": "必须Q/K使用不同cos/sin；这超出普通同表RoPE模块。符号要按实际rotation convention做CPU/短GPU parity。",
+      "transfer_rule": "固定d0/W；不跨模型调锚点。",
+      "refs": "P1旋转代数；E2 LongBridge用于区分而非背书。",
+      "history_dedup": "与LongBridge不同：LongBridge改频率，修正量∝d；这里改相对常相位。与D02不同：不是绕圈分支，也没有改ν。两侧同偏置的无效臂已排除。"
+    },
+    {
+      "id": "D11",
+      "title": "同特征频率、不同旋转度量：双侧互逆椭圆预条件",
+      "scope": "qk_pair_metric",
+      "evidence_grade": "B：谱与零距离内积精确保留",
+      "execution_priority": 3,
+      "question": "同一组旋转特征值不决定所用通道度量。改变生成元的相似变换而保持其特征值，是与频率节点修改正交的轴。",
+      "construction": "D_j=diag(e^{η_j},e^{−η_j})；Q′=gY R(νp)D_j Q，K′=gY R(νt)D_j⁻¹ K。η=(ln s)/8·h。",
+      "guarantee": "相对核为gY² D_j R(νd)D_j⁻¹；d=0与MR一致，旋转生成元特征值仍为±iν。不是单位正交变换，Q/K各自范数会变。",
+      "gap": "扩展后同槽两个正交分量可能需要不同的强度分配；不变的频谱与zero-distance dot并不足以固定远距读出。",
+      "configs": [
+        {
+          "id": "D11a",
+          "policy": "h=m",
+          "why": "对压缩区增强第一分量、相应削弱第二分量。"
+        },
+        {
+          "id": "D11b",
+          "policy": "h=−m",
+          "why": "相反轴向；区别通道取向假设。"
+        },
+        {
+          "id": "D11c",
+          "policy": "h=(2m−1)·4m(1−m)",
+          "why": "过渡内异向匹配，两端不改度量。"
+        }
+      ],
+      "must_compare": "每臂对MR；同时验zero-distance kernel与same-spectrum，不把范数变化混同频率收益。",
+      "fail_scope": "独立无正收益则本互逆度量处方FAIL；不能说同频谱就一定任务等价。",
+      "key_risk": "可能改变模型共适应且明显退化。需要general pair transformation，不可伪装成一个公共cos/sin gain。",
+      "transfer_rule": "h由mMR给出；η尺度固定ln(s)/8，不针对模型拟合。",
+      "refs": "P1相似变换；E6移植约束。",
+      "history_dedup": "不是旧head-dilation/Fisher求表，不训练QK权重；但对Q/K施加位置前的互逆双线性变换，严格超过“只换inv_freq”边界，必须单独审查。"
+    },
+    {
+      "id": "D12",
+      "title": "互逆位置幅度：给MR加入相对距离包络",
+      "scope": "position_amplitude",
+      "evidence_grade": "A/B：XPos机制",
+      "execution_priority": 2,
+      "question": "纯RoPE只转角，不控制远距振幅；在Q/K两侧施加相反位置指数，可让点积得到只依赖相对距离的衰减。",
+      "construction": "λ_j=ln(gY²)h_j，h∈{m,1−m,4m(1−m)}；aQ=gY exp[−λ_j(p−D/2)/D]；aK=gY exp[+λ_j(t−D/2)/D]。",
+      "guarantee": "因果距离d=p−t≥0时，乘积=gY² exp(−λ_jd/D)。中心平移只为数值稳定；没有引入绝对位置幅度偏差。",
+      "gap": "抑制不可靠远距通道可能降低干扰，同时保留其他频谱的远程读出；但任何衰减也可能直接损害远针。",
+      "configs": [
+        {
+          "id": "D12a",
+          "policy": "h=m",
+          "why": "压缩区的相对衰减。"
+        },
+        {
+          "id": "D12b",
+          "policy": "h=1−m",
+          "why": "未压缩高频的远距衰减，保留慢区远程信号。"
+        },
+        {
+          "id": "D12c",
+          "policy": "h=4m(1−m)",
+          "why": "只压制色散过渡区的远距贡献。"
+        }
+      ],
+      "must_compare": "对MR；检查前/中/后针位置及recall，尤其不能让单针尾部收益掩盖远距下降。",
+      "fail_scope": "所有长深度均无收益或远距确认损害，则本包络处方FAIL；不用平均NLL好转挽救。",
+      "key_risk": "需分开的Q/K幅度；不引入blockwise causal attention，那是XPos原论文的另一设计，不在本轮。",
+      "transfer_rule": "使用相同λ与D=sW归一化；不改每头。",
+      "refs": "P5 XPos；E2 NLL与检索反向。",
+      "history_dedup": "继承XPos指数结构，不声称首次发明；原论文包含训练和其他设计，不能据此保证本零训练组合。历史gsweep是统一常数，不是相对距离包络。"
+    },
+    {
+      "id": "D13",
+      "title": "仅Query的长度温度：保持旧K缓存不动",
+      "scope": "position_amplitude",
+      "evidence_grade": "A/B：softmax竞争数学明确，规则是假设",
+      "execution_priority": 1,
+      "question": "固定Q/K时，全局正温度不改变key排序，但上下文增长使同样margin面对更多竞争者。只在query端改变尺度可避免重算旧K。",
+      "construction": "n=p+1，u=max(n,W)；t_a=ln(u)/ln(W)，t_b=sqrt(t_a)，t_c=[1+0.1ln(u/W)]²；aQ=t/gY,aK=gY。",
+      "guarantee": "该行的总score multiplier为t，不是t·gY²；n≤W时为1。固定Q/K下rank不变，softmax熵对正inverse-temperature单调不增。",
+      "gap": "两种竞争/极值近似与一种YaRN已见长度校正规则，可能比固定gY²更适合8K–32K共用部署。并非认为某个理论精确描述真实logit分布。",
+      "configs": [
+        {
+          "id": "D13a",
+          "policy": "t=ln(u)/lnW",
+          "why": "同质干扰数量的对数增长模型。"
+        },
+        {
+          "id": "D13b",
+          "policy": "t=sqrt(ln(u)/lnW)",
+          "why": "高斯极值近似的平方根对数尺度。"
+        },
+        {
+          "id": "D13c",
+          "policy": "t=[1+0.1ln(u/W)]²",
+          "why": "沿用YaRN经验倍率公式，只把目标倍率改成当前已见位置倍率；不拟合0.1。"
+        }
+      ],
+      "must_compare": "对MR；8K用真实native/g1；另做V的统一外部gain2×2，核心位置规则保持不变。",
+      "fail_scope": "若排序本已错误，温度可能放大错误；H无改善即处方FAIL，不声称“熵更好就是成功”。",
+      "key_risk": "本身是位置相关幅度，而非64静态频率；仅Query一侧加温度。",
+      "transfer_rule": "只替换原生W；三种公式完全固定。",
+      "refs": "P2 YaRN scaling；softmax熵导数；E2 gain实证。",
+      "history_dedup": "不是旧global gain的1.05/1.10/1.20扫描；规则按query已有位置确定，不按答案、当前排行或最终prompt长度路由。"
+    },
+    {
+      "id": "D14",
+      "title": "原生前缀精确、后缀扩展：锚定的分段位置相位",
+      "scope": "position_phase",
+      "evidence_grade": "B：分段协变精确",
+      "execution_priority": 2,
+      "question": "单一线性频率不能同时完整保留全部短距离旋转与放慢全域位置。分段相位可以保证某一绝对位置区域内的原生关系，但代价是跨区域非平移不变。",
+      "construction": "φ_j(p)=ω_j min(p,a)+ν_j^MR max(p−a,0)，a∈{W/4,W/2,W}。",
+      "guarantee": "两token都在前缀p,t≤a时，相对旋转完全native；都在后区时相对斜率为MR。只保证旋转，gY≠1使完整native得分不相同。",
+      "gap": "保住文档/指令开头的局部组合，可能减少冻结扩展对native功能的侵蚀；中后文跨边界关系可能受损。",
+      "configs": [
+        {
+          "id": "D14a",
+          "policy": "a=W/4",
+          "why": "较小原生前缀，保留多数扩展域。"
+        },
+        {
+          "id": "D14b",
+          "policy": "a=W/2",
+          "why": "原生前缀/扩展域折中。"
+        },
+        {
+          "id": "D14c",
+          "policy": "a=W",
+          "why": "整个原生位置区间旋转不变；不是保证所有长序列内8K局部窗口都不变。"
+        }
+      ],
+      "must_compare": "对MR；按证据是否跨前缀边界统计；另外记录全体position_ids平移后的敏感性，不能隐藏绝对位置依赖。",
+      "fail_scope": "H或Native无实用改进则处方FAIL；只有某种prompt布局有效不能称通用升级。",
+      "key_risk": "打破全局相对平移不变性；KV必须按绝对位置固定编译，不随生成长度改变旧相位。",
+      "transfer_rule": "a/W固定；新模型按W构造，不改任务布局。",
+      "refs": "P1位置表示；E2旧表权衡。",
+      "history_dedup": "不是旧频率边界扫描：边界在位置p轴而非槽j轴。没有更改attention mask，也不把它叫静态频率表。旧position实验未全部审计，保留HISTORY_UNRESOLVED标签。"
+    },
+    {
+      "id": "D15",
+      "title": "双端局部保护：固定部署区间的两端原生斜率",
+      "scope": "position_phase",
+      "evidence_grade": "B：两端局部性质精确",
+      "execution_priority": 3,
+      "question": "前缀与最终问答位置都可能依赖局部原生相位。保护两端而让中间承担扩展，是位置轴而非频率轴上的预算分配。",
+      "construction": "D=4W，u(p)=min(p,h)+max(p−(D−h),0)；φ=pνMR+(ω−νMR)u(p)，h∈{W/8,W/4,W/2}。",
+      "guarantee": "各端保护区内φ差分的斜率为ω，中间为νMR。两端跨区关系不等于native；中间相位保持连续。",
+      "gap": "32K末端生成的局部结构可能被保护，从而降低格式/EOS退化；但16K没有落在固定32K末端，必须承认这一不对称。",
+      "configs": [
+        {
+          "id": "D15a",
+          "policy": "h=W/8",
+          "why": "最短双端保护。"
+        },
+        {
+          "id": "D15b",
+          "policy": "h=W/4",
+          "why": "扩大末端局部上下文。"
+        },
+        {
+          "id": "D15c",
+          "policy": "h=W/2",
+          "why": "更强局部保护，跨区失配风险更高。"
+        }
+      ],
+      "must_compare": "16K/32K分开报告；不得只报32K优点。比较format和strict，不以输出变长代替答对。",
+      "fail_scope": "仅32K格式改善但主合并/QA不通过，统一方法命题FAIL。",
+      "key_risk": "绝对位置依赖；对不同总长度不等效。不能把它宣传成“所有局部窗口都native”。",
+      "transfer_rule": "D=sW,h/W固定，不按任务改锚点。",
+      "refs": "P1；E2格式与部分召回警示。",
+      "history_dedup": "与D14不同：两个保护区且保护的是固定目标D末端；不按当前输入长度动态移动末端。与BM没有同一算子。"
+    },
+    {
+      "id": "D16",
+      "title": "块内原生、块间压缩：商余位置分解",
+      "scope": "position_phase",
+      "evidence_grade": "B：块内精确",
+      "execution_priority": 2,
+      "question": "将绝对位置p写成块编号和块内余数，对二者分别用MR与native斜率，可把局部精细度和远距块尺度分开。",
+      "construction": "p=bC+r，φ_j(p)=ν_j^MR·bC+ω_j·r，C∈{W/4,W/2,W}。",
+      "guarantee": "同块token的相对旋转是native；不同块的相位含块差与余数差。块边界存在跳变，不能等同精确的pairwise local/global attention方法。",
+      "gap": "原生块内绑定可能保留，远块距离被压缩；是否能跨块正确关联需要真实多跳和多查询检验。",
+      "configs": [
+        {
+          "id": "D16a",
+          "policy": "C=W/4",
+          "why": "较多小块，局部保护更窄。"
+        },
+        {
+          "id": "D16b",
+          "policy": "C=W/2",
+          "why": "中等块尺度。"
+        },
+        {
+          "id": "D16c",
+          "policy": "C=W",
+          "why": "整块原生窗口尺度，跨块接缝较少但强。"
+        }
+      ],
+      "must_compare": "对MR；预注册“跨块证据链”子层不另加样本，依据原面板实际位置分层。",
+      "fail_scope": "同块提升、跨块损失导致总体失败时，处方FAIL；不换成只测同块的benchmark。",
+      "key_risk": "接缝会制造邻近token相位突变；编译缓存固定，不修改已生成K。",
+      "transfer_rule": "C/W固定，沿用同一位置映射。",
+      "refs": "P1；P8 SelfExtend仅作区别；E2层替换先例。",
+      "history_dedup": "历史layer替换、step频率表不能生成该位置商余算子。SelfExtend/分块位置思想有公开先例，不能把整个思想叫首次提出；本方案不改mask或进行两次attention。"
+    },
+    {
+      "id": "D17",
+      "title": "错开接缝：频率槽之间的不同块起点",
+      "scope": "position_phase",
+      "evidence_grade": "B：减少同步接缝是结构属性，不是收益定理",
+      "execution_priority": 3,
+      "question": "D16所有频率在同一token边界跳变，可能使联合相位同时失配。错开每槽的固定块起点可分散这个事件。",
+      "construction": "C=W/2，φ_j(p)=ν_jp+(ω_j−ν_j)[((p+o_j) mod C)−o_j]。",
+      "guarantee": "φ_j(0)=0；在每槽自身不跨接缝的区间，该槽的局部斜率为native。不同槽跨缝时间不同，所以整个向量未必同时处于native关系。",
+      "gap": "不同频率的边界错误若不同时出现，模型可能更能恢复跨块读出；反之，全局相位一致性也可能变差。",
+      "configs": [
+        {
+          "id": "D17a",
+          "policy": "o_j=Cj/K",
+          "why": "均匀错开接缝。"
+        },
+        {
+          "id": "D17b",
+          "policy": "o_j=C·bitreverse(j)/2^ceil(log2 K)",
+          "why": "在相邻频率间去除接缝位置的单调关联。"
+        },
+        {
+          "id": "D17c",
+          "policy": "o_j=C(j mod4)/4",
+          "why": "四组共享接缝，减少完全分散的复杂性。"
+        }
+      ],
+      "must_compare": "分别对MR，也对D16b；D16b是固定父对照，不以本组分数重新选择C。",
+      "fail_scope": "本组三政策不能独立优于父对照/满足升级守门，则同步接缝修复处方FAIL。",
+      "key_risk": "非平移不变；一些槽的块相位负值合法，不可abs或mod任意周期改算子。",
+      "transfer_rule": "接缝位置按C与K标准化，位反转规则固定。",
+      "refs": "P1；D16父算子。",
+      "history_dedup": "不是F组对频率的随机微扰；频率集合未重新优化，干预是位置接缝布局。三种布局均确定，不抽多个seed挑冠军。"
+    },
+    {
+      "id": "D18",
+      "title": "光滑周期残差：用相位调频替代硬接缝",
+      "scope": "position_phase",
+      "evidence_grade": "B：边带与局部导数性质精确",
+      "execution_priority": 3,
+      "question": "保持平均MR斜率，同时加一个周期为C的有界位置残差；单槽不再是单一Fourier原子，而是确定的调频边带。",
+      "construction": "C=W/2，H_M=Σ1/k；r_M(p)=C/(2πH_M)Σ_{k=1}^M sin(2πkp/C)/k²；φ=νMRp+(ω−νMR)r_M(p)。",
+      "guarantee": "r_M在每个C端点为0，r′_M(0)=1；故边界瞬时相位导数为native，平均斜率为MR。exp(iφ)模长恒1，可由Fourier边带展开。不是增加显式attention维数。",
+      "gap": "用连续而非硬跳变的局部原生校正，可能改善块边缘绑定；但它也引入绝对位置调制和额外边带，不能假设自动消除谱损伤。",
+      "configs": [
+        {
+          "id": "D18a",
+          "policy": "M=1",
+          "why": "最低阶正弦残差。"
+        },
+        {
+          "id": "D18b",
+          "policy": "M=2",
+          "why": "增加第二谐波，检验局部形状而非随机抖动。"
+        },
+        {
+          "id": "D18c",
+          "policy": "M=4",
+          "why": "增加近边界细节；不继续扫M直到出现正数。"
+        }
+      ],
+      "must_compare": "对MR与固定D16b；检查上游相位更平滑是否真正增加strict，不以平滑度评估方法。",
+      "fail_scope": "独立无升级时，三个谐波阶数处方FAIL；不称频谱理论被证明也不发明新核目标。",
+      "key_risk": "光滑不等于单调φ，局部斜率可能变号；必须记录，不偷偷clip导数。",
+      "transfer_rule": "C/W与M固定，在其他模型重新计算ω−ν。",
+      "refs": "P4多频先例；Fourier调频恒等式。",
+      "history_dedup": "不是ENV差频匹配，不保持复包络；与FoPE有多频概念交集，区别是单位模长的确定相位调制且不训练谐波权重。"
+    },
+    {
+      "id": "D19",
+      "title": "限制在原生慢频弧段：回绕、反射、饱和",
+      "scope": "position_phase",
+      "evidence_grade": "B/C：范围性质精确",
+      "execution_priority": 4,
+      "question": "极慢频只见过有限相位弧段。与继续线性外推不同，可以让慢槽的相位停留在已见弧段，但必须承担多个位置重合的代价。",
+      "construction": "对r_j<1，z=ω_jp，Θ_j=ω_jW；φ_j分别为 z mod Θ、Θ−|(z mod2Θ)−Θ|、min(z,Θ)。其余φ=pνMR。",
+      "guarantee": "三者都满足0≤φ≤Θ；第一种回绕有跳跃，第二种连续但反转局部顺序，第三种后续全部位置相同。必须使用z=ωp，而非z=νMR p，否则4×窗口内会退化成未触发的MR。",
+      "gap": "对于主要承载内容的极慢槽，避免未训练弧段可能比保留细弱的长距位置信号更有利；其他频段需承担位置区分。",
+      "configs": [
+        {
+          "id": "D19a",
+          "policy": "φ=z mod Θ",
+          "why": "循环重用训练弧段。"
+        },
+        {
+          "id": "D19b",
+          "policy": "φ=Θ−|((z mod2Θ)−Θ)|",
+          "why": "反射重用，避免跳跃但引入方向翻转。"
+        },
+        {
+          "id": "D19c",
+          "policy": "φ=min(z,Θ)",
+          "why": "不再回绕，转为尾端内容稳态。"
+        }
+      ],
+      "must_compare": "分别对MR与固定D05c；若只是末尾所有位置不可分，不能把召回偶然上升当通用好处。",
+      "fail_scope": "H在不同针深度出现明显混淆且无总体升级，处方FAIL；有界相位本身不计有效性。",
+      "key_risk": "这是高风险、低先验方向；不以“训练域内”推导模型必定泛化。",
+      "transfer_rule": "按原生Θ与W重新编译，回绕政策固定。",
+      "refs": "P1；P4慢频条件；E2 coverage非充分。",
+      "history_dedup": "与D05不同：前W内这些慢槽仍保留native相位；与“相位mod2π”不同，后者是完全无效的重写，本轮排除。旧position轨道缺完整记录，需历史核查。"
+    },
+    {
+      "id": "D20",
+      "title": "离散原生相位轨道：有效位置量化",
+      "scope": "position_phase",
+      "evidence_grade": "B：轨道归属与舍入界精确",
+      "execution_priority": 4,
+      "question": "频率缩放把整数位置变成每槽不同的分数有效位置；直接量化有效位置，可以让每槽重新落在原生整数相位轨道上。",
+      "construction": "x_j(p)=pν_j^MR/ω_j，φ_j(p)=ω_j Q_j(x_j(p))。",
+      "guarantee": "每槽相位来自ω_j乘一个整数；最近舍入的误差≤ω_j/2。整数不保证该整数≤W，也不保证多个槽对应同一个原生位置。",
+      "gap": "若冻结模型对离散相位格点而非连续相位更敏感，量化可能有益；若主要是连续尺度问题，它只增加量化噪声。",
+      "configs": [
+        {
+          "id": "D20a",
+          "policy": "Q=floor(x)",
+          "why": "只向较近原生有效位置回退。"
+        },
+        {
+          "id": "D20b",
+          "policy": "Q=floor(x+1/2)",
+          "why": "最近原生相位节点。"
+        },
+        {
+          "id": "D20c",
+          "policy": "Q_j=floor(x+j/K)",
+          "why": "各槽固定错开量化阈值，避免全部同时跳变。"
+        }
+      ],
+      "must_compare": "对MR与D01a；不把两个量化机制统称同一个“整数原理”。",
+      "fail_scope": "区间窄且无收益，排除三种原生有效位置量化；区间宽则UNDERPOWERED。",
+      "key_risk": "中慢频的单步相位误差可能非常小，因此低效应先验；不能用CPU看见差异声称值得10分钟。",
+      "transfer_rule": "按新模型ν/ω构造，政策不变。",
+      "refs": "P1；P3作为相关而非同一算子。",
+      "history_dedup": "不同于Resonance周期量化：D01仍是单一线性频率，D20相位随位置有阶梯；不是2π alias的无效频率重写。"
+    }
+  ]
+}

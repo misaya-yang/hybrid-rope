@@ -1,6 +1,6 @@
 # Mature-checkpoint result router
 
-Use the root [`INDEX.md`](../../../../INDEX.md) for current claim status. This
+Use the root [`INDEX.md`](../../../../index.md) for current claim status. This
 local index is ordered by scientific role, not date; do not read every report.
 
 ## Directory layout

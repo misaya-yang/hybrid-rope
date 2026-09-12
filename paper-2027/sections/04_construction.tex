@@ -1,0 +1,36 @@
+\subsection{An analytic construction from a tail-energy prior}
+\label{sec:construction}
+
+The overlap analysis motivates spreading a finite budget across useful scales while controlling concentration toward the slow end. We express this geometric motivation as a tractable density-design prior, using a density over normalized exponent space $[0,1]$. Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider the convex design criterion
+\begin{equation}
+\Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
+\qquad \text{s.t. } \int_0^1\rho=1,\ \rho\ge0.
+\label{eq:Capp}
+\end{equation}
+The first term penalizes concentration; the second penalizes cumulative slow-tail mass. Their balance selects how density shifts toward smaller exponents. Geometry defines the supplied basis; this prior selects a tractable allocation family, whose reference strengths and model gains are evaluated separately. The tail term is the quadratic form of the Dirichlet--Neumann Green kernel $\min(\phi,\psi)$ (Appendix~\ref{sec:proofs}).
+
+\begin{theorem}[Unique minimizer of the tail-energy prior]
+\label{thm:ode}
+For $\alpha>0$ and $\beta\ge0$, the unique minimizer of \eqref{eq:Capp} over positive $\rho\in C^2([0,1])$ with unit integral is
+\begin{equation}
+\rho_\tau(\phi)=\frac{\tau\cosh[\tau(1-\phi)]}{\sinh\tau},
+\qquad \tau=\sqrt{\beta/\alpha},
+\label{eq:rho-tau}
+\end{equation}
+recovering uniform density as $\tau\to0$. Inverting the CDF yields the explicit quantile map
+\begin{equation}
+\phi_k(\tau)=1-\frac{1}{\tau}\operatorname{arcsinh}\!\left((1-u_k)\sinh\tau\right),
+\qquad u_k=\frac{k+1/2}{K}.
+\label{eq:warp}
+\end{equation}
+\end{theorem}
+The density uniquely minimizes \eqref{eq:Capp}; \evq{} converts it into a finite table through \eqref{eq:warp}. For $\tau>0$, $\rho_\tau$ is decreasing, so its inverse CDF $Q_\tau$ is convex. For equally spaced nodes $u_k$, affine endpoint anchoring therefore gives
+\begin{equation}
+z_{\tau,k}=\frac{Q_\tau(u_k)-Q_\tau(u_0)}{Q_\tau(u_{K-1})-Q_\tau(u_0)}
+\le \frac{k}{K-1},\qquad
+\omega_{\tau,k}\ge\omega_{\mathrm{Geo},k}
+\label{eq:anchored-cosh-order}
+\end{equation}
+at fixed $(a,R)$: convexity places each quantile below the chord between the extreme nodes. Interior pairs move toward faster frequencies while endpoints remain fixed (Fig.~\ref{fig:spectral-budget-overview}a). Once $\tau$, grid, and endpoint anchoring are specified, installation evaluates the table once without changing the rotary operator or trainable parameter count.
+
+The strength $\tau$ sets this trade-off. We use declared reference settings and compare neighboring strengths and a second analytic family below; Appendix~\ref{sec:tau-scaling} gives the operating rules and their empirical basis.

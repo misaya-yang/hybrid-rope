@@ -1,0 +1,382 @@
+{
+  "n_pass": 75,
+  "n_tests": 75,
+  "tests": [
+    {
+      "test": "SE at S combined N=96 is 4.56pp (plan section 6.6)",
+      "pass": true,
+      "detail": "0.0456"
+    },
+    {
+      "test": "SE at S per-length N=48 is 6.45pp",
+      "pass": true,
+      "detail": "0.0645"
+    },
+    {
+      "test": "SE at H combined N=256 is 2.80pp",
+      "pass": true,
+      "detail": "0.0280"
+    },
+    {
+      "test": "SE at H per-length N=128 is 3.95pp",
+      "pass": true,
+      "detail": "0.0395"
+    },
+    {
+      "test": "the 95% MDE is 1.96x the SE, kept as a separate field",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "~627 independent pairs for 5pp at 80% power",
+      "pass": true,
+      "detail": "628"
+    },
+    {
+      "test": "per-candidate S = 6.992 min",
+      "pass": true,
+      "detail": "6.9920"
+    },
+    {
+      "test": "60-candidate total = 599.880",
+      "pass": true,
+      "detail": "599.8800"
+    },
+    {
+      "test": "line item S candidates = 419.52",
+      "pass": true,
+      "detail": "419.5200"
+    },
+    {
+      "test": "line item S controls = 27.968",
+      "pass": true,
+      "detail": "27.9680"
+    },
+    {
+      "test": "line item V tables = 38.272",
+      "pass": true,
+      "detail": "38.2720"
+    },
+    {
+      "test": "line item H tables = 76.544",
+      "pass": true,
+      "detail": "76.5440"
+    },
+    {
+      "test": "line item native short reference = 2.576",
+      "pass": true,
+      "detail": "2.5760"
+    },
+    {
+      "test": "line item gain probes (new low-g cells) = 7.36",
+      "pass": true,
+      "detail": "7.3600"
+    },
+    {
+      "test": "line item operator parity / overhead reserve = 7.64",
+      "pass": true,
+      "detail": "7.6400"
+    },
+    {
+      "test": "line item model preflight + pilot = 12.0",
+      "pass": true,
+      "detail": "12.0000"
+    },
+    {
+      "test": "line item exception reserve = 8.0",
+      "pass": true,
+      "detail": "8.0000"
+    },
+    {
+      "test": "fit at 6.992 min/candidate gives 60 candidates",
+      "pass": true,
+      "detail": "got 60"
+    },
+    {
+      "test": "fit at 8.0 min/candidate gives 49 candidates",
+      "pass": true,
+      "detail": "got 49"
+    },
+    {
+      "test": "fit at 9.0 min/candidate gives 41 candidates",
+      "pass": true,
+      "detail": "got 41"
+    },
+    {
+      "test": "fit at 10.0 min/candidate gives 35 candidates",
+      "pass": true,
+      "detail": "got 35"
+    },
+    {
+      "test": "an infeasible budget reports fewer than the 40 floor",
+      "pass": true,
+      "detail": "max=0"
+    },
+    {
+      "test": "misaligned row ids are refused",
+      "pass": true,
+      "detail": "refused: ValueError"
+    },
+    {
+      "test": "an extra row is refused",
+      "pass": true,
+      "detail": "refused: ValueError"
+    },
+    {
+      "test": "a partial panel is refused against the frozen index",
+      "pass": true,
+      "detail": "refused: ValueError"
+    },
+    {
+      "test": "a duplicated row is refused",
+      "pass": true,
+      "detail": "refused: ValueError"
+    },
+    {
+      "test": "an exactly aligned pair is accepted",
+      "pass": true,
+      "detail": "n=16"
+    },
+    {
+      "test": "identical arms give delta 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "a strictly better arm gives delta > 0",
+      "pass": true,
+      "detail": "0.1250"
+    },
+    {
+      "test": "paired SE is finite and positive",
+      "pass": true,
+      "detail": "0.0827"
+    },
+    {
+      "test": "n_pairs counts every matched row",
+      "pass": true,
+      "detail": "16"
+    },
+    {
+      "test": "the counterexample run completes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "beats-MR and C_upgrade>0 does NOT yield PASS",
+      "pass": true,
+      "detail": "UNDERPOWERED"
+    },
+    {
+      "test": "the recorded reason is that it loses to YaRN",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "G_new is positive (the old test would have been fooled)",
+      "pass": true,
+      "detail": "0.0100"
+    },
+    {
+      "test": "C_upgrade is positive (the old test would have been fooled)",
+      "pass": true,
+      "detail": "0.0300"
+    },
+    {
+      "test": "G_vs_best turns negative, which is the binding gate",
+      "pass": true,
+      "detail": "-0.0100"
+    },
+    {
+      "test": "hero_result is False",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "identical arms give a zero point estimate for every contrast",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "bootstrap reports a rejection fraction",
+      "pass": true,
+      "detail": "0.043"
+    },
+    {
+      "test": "identical arms give a pointwise-zero interval",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "a noisy arm gets a non-degenerate interval",
+      "pass": true,
+      "detail": "0.1502"
+    },
+    {
+      "test": "upgrade_report runs on an aligned panel",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "a dominant candidate without measured guards is NOT reported as PASS",
+      "pass": true,
+      "detail": "INCOMPLETE_GUARDS"
+    },
+    {
+      "test": "it is labelled INCOMPLETE_GUARDS and names what is missing",
+      "pass": true,
+      "detail": "INCOMPLETE_GUARDS ['retention_8K', 'strict', 'qa']"
+    },
+    {
+      "test": "the plan gap is stated rather than hidden",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "missing guards are recorded as caveats",
+      "pass": true,
+      "detail": "['no --native rows supplied, so the 8K retention gate was not evaluated; the plan does not let it default to pass', 'no "
+    },
+    {
+      "test": "C_upgrade is around +0.30 for the graded fixture",
+      "pass": true,
+      "detail": "0.3000"
+    },
+    {
+      "test": "the guarded run completes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "with every guard measured and passing the verdict is PASS",
+      "pass": true,
+      "detail": "PASS []"
+    },
+    {
+      "test": "a partial candidate panel is refused (exit 2)",
+      "pass": true,
+      "detail": "rc=2"
+    },
+    {
+      "test": "the refusal says REFUSING",
+      "pass": true,
+      "detail": " \"M\", \"n_missing\": 80, \"n_extra\": 0, \"missing_examples\": [\"h_1_16384_0\", \"h_1_16384_1\", \"h_1_16384_10\", \"h_1_16384_11\", \"h_1_16384_12\"], \"extra_examples\": []}]\n"
+    },
+    {
+      "test": "an arm missing a whole length is refused",
+      "pass": true,
+      "detail": "rc=2"
+    },
+    {
+      "test": "all algebraic identity checks pass",
+      "pass": true,
+      "detail": "108/108"
+    },
+    {
+      "test": "four section 1.1 pseudo-methods are identified",
+      "pass": true,
+      "detail": "4"
+    },
+    {
+      "test": "60 configurations compile",
+      "pass": true,
+      "detail": "60"
+    },
+    {
+      "test": "band is derived as (18, 35)",
+      "pass": true,
+      "detail": "(18, 35)"
+    },
+    {
+      "test": "a mismatched stock inv_freq is refused",
+      "pass": true,
+      "detail": "refused: ValueError"
+    },
+    {
+      "test": "rotation (half) matches the complex reference",
+      "pass": true,
+      "detail": "4.44e-16"
+    },
+    {
+      "test": "rotation (adjacent) matches the complex reference",
+      "pass": true,
+      "detail": "4.44e-16"
+    },
+    {
+      "test": "zero phase is the identity",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "a whole 2*pi turn is the identity",
+      "pass": true,
+      "detail": "8.93e-16"
+    },
+    {
+      "test": "pair layout changes the operator (not cosmetic)",
+      "pass": true,
+      "detail": "4.7350"
+    },
+    {
+      "test": "amplitude scales the rotated pairs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "pair metric is applied before the rotation",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "D01a: pure-frequency operator is relative-position only",
+      "pass": true,
+      "detail": "max drift 9.38e-13 over p0 and t-p"
+    },
+    {
+      "test": "D03a: pure-frequency operator is relative-position only",
+      "pass": true,
+      "detail": "max drift 1.18e-12 over p0 and t-p"
+    },
+    {
+      "test": "D06a: pure-frequency operator is relative-position only",
+      "pass": true,
+      "detail": "max drift 1.47e-12 over p0 and t-p"
+    },
+    {
+      "test": "a clean panel splits",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "stages are disjoint by source",
+      "pass": true,
+      "detail": "800 placements, 800 sources"
+    },
+    {
+      "test": "the manifest carries a sha per stage",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "test": "a source at two lengths is refused",
+      "pass": true,
+      "detail": "rc=2"
+    },
+    {
+      "test": "a source used by two tasks is refused",
+      "pass": true,
+      "detail": "rc=2"
+    },
+    {
+      "test": "the refusal names the source and both stages",
+      "pass": true,
+      "detail": "384_10', 'first': ['fwe', 16384, 'H'], 'again': ['vt', 16384, 'S']}\n  {'source': 'doc_fwe_16384_29', 'first': ['fwe', 16384, 'S'], 'again': ['vt', 16384, 'V']}\n"
+    },
+    {
+      "test": "a cell too thin to fill S is refused",
+      "pass": true,
+      "detail": "rc=2"
+    }
+  ],
+  "nature": "artificial fixtures; none of these numbers is a model result"
+}

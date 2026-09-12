@@ -13,7 +13,7 @@
   checkpoint? If not, what single mathematical object is missing, and what
   exact equations become available once it is supplied?
 - **Inputs:** current routed theory, experiments, failures, and corrections in
-  [`INDEX.md`](../../../INDEX.md); the historical
+  [`INDEX.md`](../../../index.md); the historical
   [true-objective audit](../../../rebuttal/rebuttal_0723/theory_results/EVQ_TRUE_OBJECTIVE_ULTRA_AUDIT.md);
   and the primary sources listed in Section 9.
 - **Execution boundary:** source reading, proof checking, primary-literature

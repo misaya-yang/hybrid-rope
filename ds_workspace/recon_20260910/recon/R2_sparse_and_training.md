@@ -174,7 +174,7 @@ Inputs: 4 arms × 499,974,144 tok = 1,999,896,576 tokens (from `protocol.yaml` /
 
 **Shutdown is part of the run, not after it.**
 - `experiments/curvature_20260910/RUNBOOK.md:237-242` records it as *"a **standing end-of-run duty**, quoted from the user's own standing instruction"*: *"按照项目规范写好实验报告和相应文档，提交并推送代码，**同时检查 autoDL 是否成功关机**，先服务器命令关机，不行的话，用 chrome control"*.
-- Four procedural rules (RUNBOOK.md:250-279), load-bearing two: *"**Never power off a machine that is not ours**"* (check `nvidia-smi`/worker log; *"if there is work here that this package did not start, stop and ask"*) and *"A shutdown command returning success is not evidence the instance stopped billing. Verify the instance actually reaches a stopped state in the AutoDL console"*. `docs/research/PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md:9`: *"尚未成功发出关机命令，不能以断连推断已关机。"*
+- Four procedural rules (RUNBOOK.md:250-279), load-bearing two: *"**Never power off a machine that is not ours**"* (check `nvidia-smi`/worker log; *"if there is work here that this package did not start, stop and ask"*) and *"A shutdown command returning success is not evidence the instance stopped billing. Verify the instance actually reaches a stopped state in the AutoDL console"*. `docs/research/reviews/PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md:9`: *"尚未成功发出关机命令，不能以断连推断已关机。"*
 - Data retention: `docs/overview/SERVER_STORAGE_CLEANUP_20260907.md:4-5`: *"retain one or two small base models and reconstruction-critical assets."*
 
 **Ban on re-running failed routes.**

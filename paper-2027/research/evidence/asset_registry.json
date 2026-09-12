@@ -1,0 +1,595 @@
+{
+  "schema": "paper_asset_registry_v1",
+  "as_of": "2026-09-12",
+  "scope": "current manuscript assets; local availability snapshot, no model execution",
+  "assets": [
+    {
+      "id": "A01",
+      "name": "固定支持三seed识别",
+      "priority": "P0",
+      "question": "只动内部指数能否改变学习与外推",
+      "evidence_grade": "三seed配对；带raw hash摘要",
+      "manuscript_location": "§3.1 / a5",
+      "interpretation": "绝对四格NLL尚未追回，配对差已确认",
+      "sources": [
+        {
+          "path": "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json",
+          "availability": "tracked",
+          "sha256": "4f0066d9652d92497dbda669788e60d9efca96d98506c560384ac279d198db07"
+        }
+      ]
+    },
+    {
+      "id": "A02",
+      "name": "M4多形状factorial",
+      "priority": "P0",
+      "question": "设计价值是否超出一条曲线",
+      "evidence_grade": "12配置×3seed；摘要",
+      "manuscript_location": "§5.2 / a5",
+      "interpretation": "128步；reference7/12，1.25×10/12，Exp9/12",
+      "sources": [
+        {
+          "path": "rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json",
+          "availability": "tracked",
+          "sha256": "858710ff52488a0b1d1e0a9a35af9f7658ed974d1b59ff59cc9c89fa2ce9abda"
+        },
+        {
+          "path": "paper-2027/figs/make_m4_tradeoff.py",
+          "availability": "local-untracked",
+          "sha256": "ed9f5720529adc9f5945f49b0a635e42e2a9a2f1a6c466e699e8f80011f529f9",
+          "role": "derived joint operating-point display; original M4 owner unchanged"
+        },
+        {
+          "path": "paper-2027/figs/m4_tradeoff_inputs.json",
+          "availability": "local-untracked",
+          "sha256": "0950b1c2aa32ba455b14a7ac8f9dfb9daf2a01b9317ad8a4700d6a59bfc5f937",
+          "role": "derived joint operating-point display; original M4 owner unchanged"
+        },
+        {
+          "path": "paper-2027/figs/m4_tradeoff_points.csv",
+          "availability": "local-untracked",
+          "sha256": "21f476c21a7d77f12d2bffdff3fa98a382192bb80168956adca451d797be86b1",
+          "role": "derived joint operating-point display; original M4 owner unchanged"
+        }
+      ]
+    },
+    {
+      "id": "A03",
+      "name": "完整位置基几何",
+      "priority": "P0",
+      "question": "有限坐标提供哪些位置方向",
+      "evidence_grade": "证明和独立数值核验",
+      "manuscript_location": "§3.2 / a1",
+      "interpretation": "block whitening对象，不是模型loss预测器",
+      "sources": [
+        {
+          "path": "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+          "availability": "tracked",
+          "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91"
+        },
+        {
+          "path": "paper-2027/figs/verify_explicit_geometry.py",
+          "availability": "tracked",
+          "sha256": "ee19aa3ded4d84963a23a374cf2f945f085c04364aef22387f6469f91fe68c53"
+        }
+      ]
+    },
+    {
+      "id": "A04",
+      "name": "实际配置有限窗结构",
+      "priority": "P0",
+      "question": "慢频几何怎样落到核心参数",
+      "evidence_grade": "有限矩阵与独立求积",
+      "manuscript_location": "§3.3 / Fig2",
+      "interpretation": "b256不能直接套ωL≪1",
+      "sources": [
+        {
+          "path": "paper-2027/research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md",
+          "availability": "local-untracked",
+          "sha256": "e9b55d6c017561c2abb03ab391e4b7b08a37069b43453d37901f657b385990a3"
+        },
+        {
+          "path": "paper-2027/figs/finite_window_geometry.json",
+          "availability": "local-untracked",
+          "sha256": "fedd90ce853b03f474856cfbc7745b08c7d2fe215b876a3ce220bf2c46e20556"
+        }
+      ]
+    },
+    {
+      "id": "A05",
+      "name": "运行范围与权重交叉",
+      "priority": "P0",
+      "question": "权重如何学得使用分配",
+      "evidence_grade": "50M报告、151M两seed摘要",
+      "manuscript_location": "§4.1–4.2",
+      "interpretation": "50M/151M指标不同；range差值不是四格绝对排序",
+      "sources": [
+        {
+          "path": "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+          "availability": "tracked",
+          "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91"
+        },
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
+          "availability": "tracked",
+          "sha256": "13e81612564eb4780266a72abb567bd968b76ccf450fe38236dde3f687c8a9cb"
+        }
+      ]
+    },
+    {
+      "id": "A06",
+      "name": "同谱槽位与精确补偿",
+      "priority": "P0",
+      "question": "频率集与安装方式是否不同",
+      "evidence_grade": "置换定理、冻结干预报告",
+      "manuscript_location": "§4.3 / a1",
+      "interpretation": "固定权重置换与同步Q/K补偿分开",
+      "sources": [
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
+          "availability": "tracked",
+          "sha256": "cf03ed974502a0bc1068c23b254d51a0794a18d5294c427ed354428f22f49a1d"
+        },
+        {
+          "path": "paper-2027/sections/03_compatibility.tex",
+          "availability": "local-untracked",
+          "sha256": "91e6b92ebda17e4714123567548f79a24d775c12df431adf87ec20c2d0da0369"
+        }
+      ]
+    },
+    {
+      "id": "A07",
+      "name": "Cosh解析构造",
+      "priority": "P0",
+      "question": "怎样系统构造有限分配",
+      "evidence_grade": "显式凸目标推导",
+      "manuscript_location": "§5.1 / a1",
+      "interpretation": "唯一性相对stated functional；τ为参考工作点",
+      "sources": [
+        {
+          "path": "paper-2027/appendix/a1_proofs.tex",
+          "availability": "tracked",
+          "sha256": "64905f886f417c96c0a7a6be95a6af6c8202a26aea108f23abd3f6c6e342e6f8",
+          "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
+        },
+        {
+          "path": "paper-2027/sections/04_construction.tex",
+          "availability": "local-untracked",
+          "sha256": "665c561652f2a10e3018950b5144048422f65bf55090f29a2e96ee60635012c3",
+          "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
+        }
+      ]
+    },
+    {
+      "id": "A08",
+      "name": "成熟同支持冻结识别",
+      "priority": "P0",
+      "question": "已有权重下变量是否仍有效",
+      "evidence_grade": "held-out与curated摘要",
+      "manuscript_location": "§6.1 / a6",
+      "interpretation": "与BM改变范围的应用对比分开",
+      "sources": [
+        {
+          "path": "data/curated/frozen_fixed_support_mature_20260823.json",
+          "availability": "tracked",
+          "sha256": "475bf89c8514300b69d09e4f6e7244d26129445e371e285bd70529161731d357"
+        },
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
+          "availability": "tracked",
+          "sha256": "13e81612564eb4780266a72abb567bd968b76ccf450fe38236dde3f687c8a9cb"
+        }
+      ]
+    },
+    {
+      "id": "A09",
+      "name": "432M MLA三seed",
+      "priority": "P1",
+      "question": "有限旋转通道中的实用价值",
+      "evidence_grade": "三seed曲线摘要",
+      "manuscript_location": "§5.3 / a3",
+      "interpretation": "历史cache不能认证文档独立holdout",
+      "sources": [
+        {
+          "path": "data/curated/table18_mla_3seed_aggregate.json",
+          "availability": "tracked",
+          "sha256": "ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d"
+        },
+        {
+          "path": "results/eval_3seeds_full_results.json",
+          "availability": "local-ignored",
+          "sha256": "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953"
+        }
+      ]
+    },
+    {
+      "id": "A10",
+      "name": "750M继续学习",
+      "priority": "P1",
+      "question": "继续学习能否利用新分配",
+      "evidence_grade": "单seed配对摘要",
+      "manuscript_location": "§5.3 / a2",
+      "interpretation": "answer-token exact不含终止EOS要求",
+      "sources": [
+        {
+          "path": "data/curated/phase15_750m_continue_result_20260306.json",
+          "availability": "tracked",
+          "sha256": "1f93a07d15c2f933273f584a9222b9565f300cbeb57bb44acd77454e57565fc6"
+        }
+      ]
+    },
+    {
+      "id": "A11",
+      "name": "8B适配及来源使用",
+      "priority": "P1",
+      "question": "长程来源如何进入表征",
+      "evidence_grade": "单适配pair；curated与报告",
+      "manuscript_location": "§5.3 / a6",
+      "interpretation": "native-endpoint vs midpoint conversion；同adapter任务负结果保留",
+      "sources": [
+        {
+          "path": "data/curated/lora_longalpaca_temporal_s42_20260712.json",
+          "availability": "tracked",
+          "sha256": "0335415a2245e1fb31149705342e975a016ddddb557a79c364fc4a98c3f89001"
+        },
+        {
+          "path": "data/curated/llama8b_causal_source_use_s42_20260714.json",
+          "availability": "tracked",
+          "sha256": "a5f67f1c74d8e5a2d8ba15ea31846c2dd832a4f35b003b3a22c1ba0cc5ada3d6"
+        },
+        {
+          "path": "rebuttal/EXPERIMENT_THEORY_REVIEW_20260720.md",
+          "availability": "tracked",
+          "sha256": "8d738096ac69d4b46d750a203eff0351125c56dd64888fb98a7be9ae02533f6b"
+        }
+      ]
+    },
+    {
+      "id": "A12",
+      "name": "完整答案加终止EOS",
+      "priority": "P1",
+      "question": "能否成功读出远处答案",
+      "evidence_grade": "raw-hash lineage；100提示/长度",
+      "manuscript_location": "§5.3 / a6",
+      "interpretation": "单seed；物理≤4K而训练暴露长目标相位",
+      "sources": [
+        {
+          "path": "rebuttal/rebuttal_0723/theory_results/evq_query_gap_realized_eos32_20260728/FINAL_METRICS_AND_LINEAGE.json",
+          "availability": "tracked",
+          "sha256": "650cad33082396f4082f6a2b85b46dc3bc4b78912d712a41e7e4601f7f6f2e14"
+        },
+        {
+          "path": "paper-2027/figs/routing_protocol_receipts.json",
+          "availability": "local-untracked",
+          "sha256": "605fd1431b86023cbbae0e3b844622c6f5d6eddcbc9d434a7ac406259cc6dfcc"
+        }
+      ]
+    },
+    {
+      "id": "A13",
+      "name": "selective-QK自然QA",
+      "priority": "P1",
+      "question": "位置相关适配能否改善自然输出",
+      "evidence_grade": "匹配独立适配摘要",
+      "manuscript_location": "§5.3 / a6",
+      "interpretation": "与EOS/8B不同adapter和协议",
+      "sources": [
+        {
+          "path": "rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/metrics.json",
+          "availability": "tracked",
+          "sha256": "e83f8616adb867ab36a9a20dfba051cafa0992b419f2c3aff4d60fec7db37a1c"
+        }
+      ]
+    },
+    {
+      "id": "A14",
+      "name": "BM自然QA及四方法匹配",
+      "priority": "P1",
+      "question": "成熟构造的任务价值",
+      "evidence_grade": "QA逐行重算；匹配摘要",
+      "manuscript_location": "§6.2–6.3 / a7,a9",
+      "interpretation": "自然QA631长层与48长RULER提示不混；F1含触顶响应",
+      "sources": [
+        {
+          "path": "docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json",
+          "availability": "tracked",
+          "sha256": "48232e004655dfe255071a88661c6907d05b14caac4263fe7539e4c3eeae7337"
+        },
+        {
+          "path": "docs/research/ROPE_OLMO_BM_RESULT_20260908.json",
+          "availability": "tracked",
+          "sha256": "4a362ffd2bcbb12afc28056b1c290fe2d583ccbaf2bcc11f2b401c2d367e5b7e"
+        },
+        {
+          "path": "docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json",
+          "availability": "tracked",
+          "sha256": "98bc7b1d99a3d5cda627e83f4f4298989a6834629301f6a6519dc812ca5f1b2f"
+        }
+      ]
+    },
+    {
+      "id": "A15",
+      "name": "C2紧凑profile迁移",
+      "priority": "P1",
+      "question": "有效配置能否用低维结构描述",
+      "evidence_grade": "CPU构造和GPU回执",
+      "manuscript_location": "§6.3 / a9",
+      "interpretation": "无Qwen重拟合；native窗口代价保留",
+      "sources": [
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json",
+          "availability": "tracked",
+          "sha256": "f6e0897ca575ddbc0c3acce4e0c5442a23eeb8416fd0180c65e630e1256ed84f"
+        }
+      ]
+    },
+    {
+      "id": "A16",
+      "name": "C42同总量形状对",
+      "priority": "P1",
+      "question": "相同总位移与质心是否仍有结构",
+      "evidence_grade": "350开发raw rows；另16文档NLL",
+      "manuscript_location": "§6.1 / a9",
+      "interpretation": "开发发现，不等于独立泛化确认",
+      "sources": [
+        {
+          "path": "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42.jsonl",
+          "availability": "tracked",
+          "sha256": "6108c03f6ff39d8c829990b43aa4aaac0a6ba5a18ada7dedce7674d81177b278"
+        },
+        {
+          "path": "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42V24.jsonl",
+          "availability": "tracked",
+          "sha256": "1430b9eb65ac09d9c3d30a7d51259564eb0d8df76fd9b02e37d4385d10b18d9c"
+        },
+        {
+          "path": "ds_workspace/recon_20260910/code/coverage_theory_20260911.py",
+          "availability": "tracked",
+          "sha256": "f1e48fd6578a3fc574238d3b696036a98622d997ba83cd573775dd24d96a1129"
+        },
+        {
+          "path": "ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md",
+          "availability": "tracked",
+          "sha256": "5eadf9bb7a6cbde7bc4b4435da165b50f8e2e7c865136bb73e767e15d2a29d2d"
+        }
+      ]
+    },
+    {
+      "id": "A17",
+      "name": "有限网格placement",
+      "priority": "P1",
+      "question": "连续profile如何安装到不同K",
+      "evidence_grade": "预注册确认回执",
+      "manuscript_location": "§6.3 / a7",
+      "interpretation": "K与checkpoint共变；full13为table×amplitude联合收益",
+      "sources": [
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json",
+          "availability": "tracked",
+          "sha256": "715f67d95f4bc7fe0c0c92104516c6681441c0b9a575753b35f01645bdfb4942"
+        },
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json",
+          "availability": "tracked",
+          "sha256": "c158eabb43d2eb026453e7f25b277f21352f9da2938d840e4d059567a103babf"
+        }
+      ]
+    },
+    {
+      "id": "A18",
+      "name": "454M四臂组合",
+      "priority": "P2",
+      "question": "分配与部署算子怎样组合",
+      "evidence_grade": "三seed表摘要",
+      "manuscript_location": "a2",
+      "interpretation": "repo fixed-ramp不是officialYaRN；PK为teacher-forced",
+      "sources": [
+        {
+          "path": "data/curated/table2_evq_yarn_454m_passkey_10pct.json",
+          "availability": "tracked",
+          "sha256": "d2c37769a0a166830d022778bf517c0973eb2ea80a9a87aea3bbadf597cee4ac"
+        }
+      ]
+    },
+    {
+      "id": "A19",
+      "name": "1.485B released与from-init",
+      "priority": "P2",
+      "question": "更大模型中的分配后果",
+      "evidence_grade": "报告与文档配对",
+      "manuscript_location": "a6",
+      "interpretation": "from-init trainer差异与released配对分开",
+      "sources": [
+        {
+          "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md",
+          "availability": "tracked",
+          "sha256": "b6fe645332683cc30e96d9143484c3f2f93ae427502b240c389f35cc9d67b4bc"
+        }
+      ]
+    },
+    {
+      "id": "A20",
+      "name": "五架构GQA/MLA消融",
+      "priority": "P2",
+      "question": "架构与旋转预算的关系",
+      "evidence_grade": "历史report-backed",
+      "manuscript_location": "a2",
+      "interpretation": "完整五配置非单调",
+      "sources": [
+        {
+          "path": "docs/exp/2026-03/2026-03-20_gqa_mla_125m_compression_ablation.md",
+          "availability": "tracked",
+          "sha256": "172410717da122b366991a619b864ae59eb46a933456fd96cdfce6ae5e2c3cd5"
+        }
+      ]
+    },
+    {
+      "id": "A21",
+      "name": "Video DiT跨模态",
+      "priority": "P2",
+      "question": "分配在另一模态有何后果",
+      "evidence_grade": "单seed结果报告",
+      "manuscript_location": "a3",
+      "interpretation": "MSE和文本生成端点不同",
+      "sources": [
+        {
+          "path": "paper-2027/research/evidence/VIDEO_DIT_HEAD_TO_HEAD_SEED42_RESULT_20260826.md",
+          "availability": "tracked",
+          "sha256": "79232cad8b9a86055e3612e3975df6bc523d23e882f24f1696875abc979a8f99"
+        }
+      ]
+    },
+    {
+      "id": "A22",
+      "name": "8B后续516步RULER适配",
+      "priority": "P2",
+      "question": "进一步学习后的任务输出",
+      "evidence_grade": "独立适配pair摘要",
+      "manuscript_location": "a6",
+      "interpretation": "与300步A11不可拼接",
+      "sources": [
+        {
+          "path": "rebuttal/rebuttal_0723/theory_results/llama8b_matched_ruler_mix_20260726.json",
+          "availability": "tracked",
+          "sha256": "4df2bfd639a6adf4b1f98070d51087144e85470b4a4001a7f51dfc3846730c59"
+        }
+      ]
+    },
+    {
+      "id": "A23",
+      "name": "FullLagP2与迁移",
+      "priority": "P2",
+      "question": "full-pair几何能否引出其他构造",
+      "evidence_grade": "小面板结果JSON",
+      "manuscript_location": "a9",
+      "interpretation": "全任务与迁移负格保留",
+      "sources": [
+        {
+          "path": "docs/research/ROPE_QWEN15_FULL_LAG_P2_CANDIDATE_20260907.json",
+          "availability": "tracked",
+          "sha256": "f5680e2f417db2791cee9c7fe5facaacd6701b0f42d35651be3e5f02f5651ce1"
+        },
+        {
+          "path": "docs/research/ROPE_QWEN15_FULL_LAG_P2_RESULT_20260907.json",
+          "availability": "tracked",
+          "sha256": "11ba16b8770bac1ec9cc5d47635629d67273006ac5a3e8ac9a3faad89b7f60cb"
+        }
+      ]
+    },
+    {
+      "id": "A24",
+      "name": "scalar-base近似兼容恢复",
+      "priority": "P2",
+      "question": "不等谱关系能否近似补偿",
+      "evidence_grade": "历史报告",
+      "manuscript_location": "a1",
+      "interpretation": "冻结近似恢复不能代替训练期纯z归因",
+      "sources": [
+        {
+          "path": "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
+          "availability": "tracked",
+          "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91"
+        }
+      ]
+    },
+    {
+      "id": "A25",
+      "name": "profile计数及释放反例",
+      "priority": "P2",
+      "question": "静态结构是否预测能力",
+      "evidence_grade": "12表重建与后续报告",
+      "manuscript_location": "a8,a9",
+      "interpretation": "拟合与预测验证分开",
+      "sources": [
+        {
+          "path": "paper-2027/figs/profile_diagnostic_inputs.json",
+          "availability": "local-untracked",
+          "sha256": "4a3d6c1f522a9798b6b6495a664b6238fa6692afa394370f20f19156767af764"
+        },
+        {
+          "path": "ds_workspace/recon_20260910/theory/RELEASE_AXIS_20260911.md",
+          "availability": "tracked",
+          "sha256": "d3cb66cd32c357e0915930d696eba2b65582607d9ac3ff648dc528e2d36e381f"
+        }
+      ]
+    },
+    {
+      "id": "A26",
+      "name": "BM跨模型完整对照",
+      "priority": "P2",
+      "question": "配置作用怎样依赖checkpoint",
+      "evidence_grade": "小面板配对摘要",
+      "manuscript_location": "a3,a7",
+      "interpretation": "区间与样本量，不将不显著格称确定反转",
+      "sources": [
+        {
+          "path": "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json",
+          "availability": "tracked",
+          "sha256": "acbb9fdffa28f3ecb10d0a657996852bc9228842e428878bf0459f1ac33e457f"
+        },
+        {
+          "path": "docs/research/ROPE_QWEN7_BM_RESULT_20260908.json",
+          "availability": "tracked",
+          "sha256": "8e356b57186c10ab8ec17003a46552585352264d9588d116974d1b3d8147ba69"
+        }
+      ]
+    },
+    {
+      "id": "A27",
+      "name": "NLL任务分离与选择效应",
+      "priority": "P2",
+      "question": "简化选型解释怎样被检验",
+      "evidence_grade": "报告和部分raw",
+      "manuscript_location": "讨论/历史判决",
+      "interpretation": "350/180不可拼接交互；局部反例非普遍定律",
+      "sources": [
+        {
+          "path": "ds_workspace/recon_20260910/verdicts/NLL_VS_TASK_20260911.md",
+          "availability": "tracked",
+          "sha256": "c79f7a1876da3be528a0604bd1cd433a105231726b16a898f1207ac763e471bb"
+        },
+        {
+          "path": "ds_workspace/recon_20260910/verdicts/GAIN_TABLE_2x2_FINAL_20260911.md",
+          "availability": "tracked",
+          "sha256": "d0768dc396344df079708e997fccf6ed57e4e0cf408d2286b1f8cd95680732fb"
+        },
+        {
+          "path": "ds_workspace/recon_20260910/verdicts/STEP42_RESULT_20260911.md",
+          "availability": "tracked",
+          "sha256": "02db28fb2f9abb85f8a08c32ca2a4dca995973861e59e8188125a966cc740d77"
+        }
+      ]
+    },
+    {
+      "id": "A28",
+      "name": "成熟full-z与Q/K联合学习历史",
+      "priority": "P2",
+      "question": "直接学习分配已有何种证据与反例",
+      "evidence_grade": "本地报告/compact回执/实现",
+      "manuscript_location": "后续研究背景，尚未提升当前正文",
+      "interpretation": "成熟phase-shell oracle非scratch matched比较；门失败与后续recovery分开",
+      "sources": [
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/COADAPTIVE_ALLOCATION_ORACLE_RESULTS_20260825.json",
+          "availability": "tracked",
+          "sha256": "5282ba1ba89c47bf459b2524971279affdb502b9043326990a7ad534f91d57c7"
+        },
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/results/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_RESULT_20260825.md",
+          "availability": "tracked",
+          "sha256": "ec424ccfcaa14924bb95e9540132af3aee266a9c65ff1c3c11125c306ce540b3"
+        },
+        {
+          "path": "paper-2027/research/attention-aware-retrofit/evidence/DIRECT_Z_FIXED_SUPPORT_PILOT_20260824.json",
+          "availability": "tracked",
+          "sha256": "9477672372decf974f889c63d1b75abd65caa53e2d77095d677cc3a03b7f6f8e"
+        },
+        {
+          "path": "scripts/lib/rope/fixed_support_z.py",
+          "availability": "tracked",
+          "sha256": "7506d534ac9f6489513f76c52d124ead272ad6a250298700a1702d188c695666"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,15 @@
-\begin{thebibliography}{43}
+\begin{thebibliography}{46}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bae(2026)]{bae2026mobius}
+Ji~Ho Bae.
+\newblock Anti-periodic positional encoding: {M\"obius} boundary conditions
+  make in-context retrieval reliable.
+\newblock \emph{arXiv preprint arXiv:2607.21405}, 2026.
 
 \bibitem[Bai et~al.(2024)Bai, Lv, Zhang, Lyu, Tang, Huang, Du, Liu, Zeng, Hou,
   Dong, Tang, and Li]{bai2024longbench}
@@ -148,6 +154,15 @@ Xanh Ho, Anh-Khoa Duong~Nguyen, Saku Sugawara, and Akiko Aizawa.
   Computational Linguistics}, pp.\  6609--6625, 2020.
 \newblock \doi{10.18653/v1/2020.coling-main.580}.
 \newblock URL \url{https://aclanthology.org/2020.coling-main.580/}.
+
+\bibitem[Hsieh et~al.(2024)Hsieh, Sun, Kriman, Acharya, Rekesh, Jia, Zhang, and
+  Ginsburg]{hsieh2024ruler}
+Cheng-Ping Hsieh, Simeng Sun, Samuel Kriman, Shantanu Acharya, Dima Rekesh, Fei
+  Jia, Yang Zhang, and Boris Ginsburg.
+\newblock {RULER}: What's the real context size of your long-context language
+  models?
+\newblock In \emph{First Conference on Language Modeling}, 2024.
+\newblock URL \url{https://openreview.net/forum?id=kIoBbc76Sy}.
 
 \bibitem[Hu et~al.(2022)Hu, Shen, Wallis, Allen-Zhu, Li, Wang, Wang, and
   Chen]{hu2022lora}
@@ -330,6 +345,16 @@ Shaowen Wang, Yuke Zheng, Tansheng Zhu, Shuang Chen, Shaofan Liu, Suncong
   Learning}, 2026.
 \newblock URL \url{https://icml.cc/virtual/2026/poster/60704}.
 \newblock arXiv:2607.19363.
+
+\bibitem[Wang et~al.(2024)Wang, Kobyzev, Lu, Rezagholizadeh, and
+  Liu]{wang2024resonance}
+Suyuchen Wang, Ivan Kobyzev, Peng Lu, Mehdi Rezagholizadeh, and Bang Liu.
+\newblock Resonance {RoPE}: Improving context length generalization of large
+  language models.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  ACL 2024}, pp.\  586--598, 2024.
+\newblock \doi{10.18653/v1/2024.findings-acl.32}.
+\newblock URL \url{https://aclanthology.org/2024.findings-acl.32/}.
 
 \bibitem[Wei et~al.(2025)Wei, Liu, Zang, Dong, Zhang, Cao, Tong, Duan, Guo,
   Wang, Qiu, and Lin]{videorope2025}

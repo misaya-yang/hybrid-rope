@@ -1,0 +1,63 @@
+# nosa_position：分类索引
+
+本地实现和记录入口。论文结论只从登记结果owner读取；此index不提升证据强度、不重述实时GPU状态。
+
+总入口：[index.md](../../index.md)
+
+- [__init__.py](__init__.py) — __init__.py
+- [analyze_cascade_failures.py](analyze_cascade_failures.py) — analyze_cascade_failures.py
+- [binding_audit.py](binding_audit.py) — binding_audit.py
+- [binding_phase_cross.py](binding_phase_cross.py) — binding_phase_cross.py
+- [bounded_int8.py](bounded_int8.py) — bounded_int8.py
+- [cached_covariance_run.py](cached_covariance_run.py) — cached_covariance_run.py
+- [cached_full_covariance.py](cached_full_covariance.py) — cached_full_covariance.py
+- [calibrate_key_frames.py](calibrate_key_frames.py) — calibrate_key_frames.py
+- [calibrate_queries.py](calibrate_queries.py) — calibrate_queries.py
+- [candidate_refinement.py](candidate_refinement.py) — candidate_refinement.py
+- [cascade.py](cascade.py) — cascade.py
+- [cascade_probe.py](cascade_probe.py) — cascade_probe.py
+- [causal_probe.py](causal_probe.py) — causal_probe.py
+- [covariance_tail.py](covariance_tail.py) — covariance_tail.py
+- [cutoff_state_capture.py](cutoff_state_capture.py) — cutoff_state_capture.py
+- [exact_probe.py](exact_probe.py) — exact_probe.py
+- [export_ten_results.py](export_ten_results.py) — export_ten_results.py
+- [full_covariance_probe.py](full_covariance_probe.py) — full_covariance_probe.py
+- [gqa_margin_bounds.py](gqa_margin_bounds.py) — gqa_margin_bounds.py
+- [group_budget.py](group_budget.py) — group_budget.py
+- [hour_bridge.py](hour_bridge.py) — hour_bridge.py
+- [learned_cutoff.py](learned_cutoff.py) — learned_cutoff.py
+- [nonlinear_gqa.py](nonlinear_gqa.py) — nonlinear_gqa.py
+- [prepare.py](prepare.py) — prepare.py
+- [prepare_ten_panel.py](prepare_ten_panel.py) — prepare_ten_panel.py
+- [probe_chunks.py](probe_chunks.py) — probe_chunks.py
+- [projected_distribution.py](projected_distribution.py) — projected_distribution.py
+- [question_phase_full.py](question_phase_full.py) — question_phase_full.py
+- [qwen_transfer.py](qwen_transfer.py) — qwen_transfer.py
+- [residual_sampling.py](residual_sampling.py) — residual_sampling.py
+- [run.py](run.py) — run.py
+- [runtime.py](runtime.py) — runtime.py
+- [selector_controls.py](selector_controls.py) — selector_controls.py
+- [tail_pair.py](tail_pair.py) — tail_pair.py
+- [tail_value.py](tail_value.py) — tail_value.py
+- [temporal_response.py](temporal_response.py) — temporal_response.py
+- [ten_follow.py](ten_follow.py) — ten_follow.py
+- [ten_run.py](ten_run.py) — ten_run.py
+- [tensorcore_full_covariance.py](tensorcore_full_covariance.py) — tensorcore_full_covariance.py
+- [test_binding_audit.py](test_binding_audit.py) — test_binding_audit.py
+- [test_binding_phase_cross.py](test_binding_phase_cross.py) — test_binding_phase_cross.py
+- [test_cached_full_covariance.py](test_cached_full_covariance.py) — test_cached_full_covariance.py
+- [test_candidate_refinement.py](test_candidate_refinement.py) — test_candidate_refinement.py
+- [test_cascade.py](test_cascade.py) — test_cascade.py
+- [test_causal_probe.py](test_causal_probe.py) — test_causal_probe.py
+- [test_covariance_tail.py](test_covariance_tail.py) — test_covariance_tail.py
+- [test_data.py](test_data.py) — test_data.py
+- [test_exact_probe.py](test_exact_probe.py) — test_exact_probe.py
+- [test_full_covariance_probe.py](test_full_covariance_probe.py) — test_full_covariance_probe.py
+- [test_nonlinear_gqa.py](test_nonlinear_gqa.py) — test_nonlinear_gqa.py
+- [test_question_phase_full.py](test_question_phase_full.py) — test_question_phase_full.py
+- [test_qwen_transfer.py](test_qwen_transfer.py) — test_qwen_transfer.py
+- [test_runtime.py](test_runtime.py) — test_runtime.py
+- [test_selectors.py](test_selectors.py) — test_selectors.py
+- [test_tail_pair.py](test_tail_pair.py) — test_tail_pair.py
+- [test_tensorcore_full_covariance.py](test_tensorcore_full_covariance.py) — test_tensorcore_full_covariance.py
+- [two_component.py](two_component.py) — two_component.py

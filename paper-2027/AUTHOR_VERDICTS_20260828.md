@@ -36,7 +36,7 @@ owners:
   coordinate-identification manuscript strategy: lead with the result, keep
   necessary scope beside the governed claim, and do not import a method-tournament
   or confession framing.
-- [`../INDEX.md`](../INDEX.md) owns current evidence routing, closed research
+- [`../INDEX.md`](../index.md) owns current evidence routing, closed research
   routes, and the post-submission agenda.
 - [`HANDOFF.md`](HANDOFF.md) is the only live state and current action queue.
 - [`REVISION_BRIEF.md`](REVISION_BRIEF.md) defines the new September iteration

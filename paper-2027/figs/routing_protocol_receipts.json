@@ -1,0 +1,288 @@
+{
+  "origin": "archived run receipts; no model execution",
+  "runs": {
+    "query_gap_100": {
+      "source_sha256": "1c196e3b7d773bce621debb22a34ace48f39e9dd028439beef1a9fd3683e9ab6",
+      "trainer_sha256": "8b3b45330f1ecd1abe7e897436ad542ffbe03280a5b2d0f50542e77c801167e7",
+      "protocol": {
+        "alpha": 128.0,
+        "compile_mode": "max-autotune-no-cudagraphs",
+        "counterfactual_margin": 1.0,
+        "counterfactual_margin_weight": 0.5,
+        "family_pattern": [
+          "routing",
+          "routing",
+          "natural"
+        ],
+        "frequency": "native",
+        "gradient_accumulation_steps": 2,
+        "hard_maximum_training_length": 4096,
+        "hard_maximum_training_position_id": 16383,
+        "learning_rate": 5e-05,
+        "micro_batch_size": 4,
+        "position_policy": "semantic_query_block_continuous_gap",
+        "rank": 64,
+        "steps": 100,
+        "virtual_bucket_weights": [
+          1,
+          1,
+          2
+        ],
+        "virtual_target_length": 16384,
+        "warmup_steps": 20
+      },
+      "training": {
+        "compile_mode": "max-autotune-no-cudagraphs",
+        "counterfactual_margin": 1.0,
+        "counterfactual_margin_weight": 0.5,
+        "elapsed_seconds": 120.51478178985417,
+        "family_pattern": [
+          "routing",
+          "routing",
+          "natural"
+        ],
+        "family_steps": {
+          "natural": 33,
+          "routing": 67
+        },
+        "global_batch_size": 8,
+        "gradient_accumulation_steps": 2,
+        "learning_rate": 5e-05,
+        "micro_batch_size": 4,
+        "natural_loss_backend": "liger_fused_linear_cross_entropy",
+        "optimizer": "fused_adamw",
+        "peak_memory_allocated_bytes": 22464764416,
+        "peak_memory_reserved_bytes": 22661824512,
+        "position_bucket_counts": {
+          "contiguous": 34,
+          "far": 134,
+          "middle": 67,
+          "transition": 33
+        },
+        "position_policy": "semantic_query_block_continuous_gap",
+        "precision": "bf16_autocast",
+        "processed_input_tokens": 3276000,
+        "query_offset_stream_sha256": "1b1a42992948378f4f51b3a8f26d92320cf6fdbcefc2608ff45a82b33df76087",
+        "realized_exposure_stream_sha256": "130823bfdce1e0234931c30aea69c8eaa9d77533b274163749ee89f4cb512e6c",
+        "realized_position_stream_sha256": "f5a9d39bc3e67e57aac058a5b6c2c17caf868dcfefa816ae925f5a62fd283726",
+        "steps": 100,
+        "supervised_tokens": {
+          "natural": 1081080,
+          "routing": 1608
+        },
+        "tokens_per_second": 27183.387393195266,
+        "trainable_parameters": 16777216,
+        "virtual_bucket_weights": [
+          1,
+          1,
+          2
+        ],
+        "virtual_gap_far_max": 15532,
+        "virtual_gap_near_min": 53,
+        "virtual_target_length": 16384,
+        "warmup_steps": 20
+      },
+      "adapter_sha256": "c140874fe00849fb9a51a8528dcf6f55215cc28f9e22f6bdf3f649f2ce421dbb",
+      "parent_adapter_sha256": "6570ab94aec68431dd4e261eb3ef342ef72253357aa65a0d37b0a018df2f3f8d"
+    },
+    "answer_eos_32": {
+      "source_sha256": "5bb38d21bb45e20c8f351f9c1b80b5ea2d58a3e47518571c7e599619189ff747",
+      "trainer_sha256": "515aacf9b4a28d0c7343f67490675f9c2de549cf628ad34d8d0054b9138ec955",
+      "protocol": {
+        "alpha": 128.0,
+        "compile_mode": "max-autotune-no-cudagraphs",
+        "counterfactual_margin": 1.0,
+        "counterfactual_margin_scope": "answer_tokens_where_gold_differs",
+        "counterfactual_margin_weight": 0.5,
+        "eos_token_id": 100257,
+        "family_pattern": [
+          "routing",
+          "routing",
+          "natural"
+        ],
+        "final_eos_supervised": true,
+        "frequency": "native",
+        "gap_target_stream_sha256": "92f4c3f504a3065a3cd78db580992fad22ee838c5f3b97998bf72302497f83cb",
+        "global_batch_size": 8,
+        "gradient_accumulation_steps": 2,
+        "hard_maximum_training_length": 4096,
+        "learning_rate": 1e-05,
+        "maximum_allowed_position_id": 16383,
+        "maximum_physical_token_index": 4095,
+        "maximum_physical_training_sequence_length": 4096,
+        "maximum_realized_position_id": 16383,
+        "micro_batch_size": 4,
+        "natural_eval_rows": 16,
+        "natural_retention_baseline": "same_loaded_parent_before_any_repair_step",
+        "natural_retention_lengths": [
+          4096
+        ],
+        "natural_retention_tail_tokens": 1024,
+        "position_policy": "semantic_query_block_realized_gap_curriculum",
+        "rank": 64,
+        "routing_data_format_version": 2,
+        "routing_optimizer_steps": 22,
+        "routing_pair_exposures": 88,
+        "seed": 20260728,
+        "steps": 32,
+        "supervision": "answer_ce_plus_weighted_immediate_eos_ce",
+        "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+        "termination_weight": 1.0,
+        "virtual_bucket_weights": [
+          1,
+          1,
+          2
+        ],
+        "virtual_target_length": 16384,
+        "warmup_steps": 4
+      },
+      "training": {
+        "actual_steps": 32,
+        "calibration_rows_during_training": 8,
+        "checkpoint_selection_passed": null,
+        "checkpoint_selection_required": false,
+        "checkpoint_steps": [],
+        "compile_mode": "max-autotune-no-cudagraphs",
+        "consumed_gap_target_prefix_sha256": "92f4c3f504a3065a3cd78db580992fad22ee838c5f3b97998bf72302497f83cb",
+        "consumed_gap_target_values": 88,
+        "counterfactual_margin": 1.0,
+        "counterfactual_margin_weight": 0.5,
+        "elapsed_seconds": 48.063583217561245,
+        "family_pattern": [
+          "routing",
+          "routing",
+          "natural"
+        ],
+        "family_steps": {
+          "natural": 10,
+          "routing": 22
+        },
+        "gap_target_stream_sha256": "92f4c3f504a3065a3cd78db580992fad22ee838c5f3b97998bf72302497f83cb",
+        "global_batch_size": 8,
+        "gradient_accumulation_steps": 2,
+        "learning_rate": 1e-05,
+        "maximum_observed_position_id": 16257,
+        "maximum_steps": 32,
+        "micro_batch_size": 4,
+        "natural_loss_backend": "liger_fused_linear_cross_entropy",
+        "optimizer": "fused_adamw",
+        "peak_memory_allocated_bytes": 22436943360,
+        "peak_memory_reserved_bytes": 22661824512,
+        "position_bucket_counts": {
+          "contiguous": 11,
+          "far": 44,
+          "middle": 22,
+          "transition": 11
+        },
+        "position_policy": "semantic_query_block_realized_gap_curriculum",
+        "precision": "bf16_autocast",
+        "processed_input_tokens": 1048320,
+        "realized_exposure_stream_sha256": "59e7b7a0c6db2cfc7b33bb8c2409a5e18bebfeb894490ab65dbd23f358635cb7",
+        "realized_position_stream_sha256": "7dcb78bdbd22e6ff94885384fe76bd913821b2b80038c2c3698991f2b0848618",
+        "selected_step": null,
+        "steps": 32,
+        "stopped_early": false,
+        "supervised_tokens": {
+          "natural": 327600,
+          "routing": 704
+        },
+        "termination_weight": 1.0,
+        "tokens_per_second": 21811.107907929963,
+        "trainable_parameters": 16777216,
+        "virtual_bucket_weights": [
+          1,
+          1,
+          2
+        ],
+        "virtual_gap_far_max": 14272,
+        "virtual_gap_near_min": 271,
+        "virtual_target_length": 16384,
+        "warmup_steps": 4
+      },
+      "adapter_sha256": "8b8ffc577b09a146a8bff5699a81cd550a96f275c2ffc9d556f9a24ec6f6a929",
+      "parent_adapter_sha256": "c140874fe00849fb9a51a8528dcf6f55215cc28f9e22f6bdf3f649f2ce421dbb"
+    }
+  },
+  "training_data": {
+    "source_sha256": "3b0b0eff9a61e65d84ad4431b3fd556585d54761f06d226a4f90b12d72a31408",
+    "manifest": {
+      "answer_and_eos_only": true,
+      "answer_string_tokenizer_roundtrip_exact": true,
+      "counterfactual_value_swap": true,
+      "eos_token_id": 100257,
+      "files": {
+        "input_ids.npy": "86a99e58d4c5c6df339f3b310dd0230977db2a2d8fefdfabc7a621e624fd5a97",
+        "labels.npy": "0499b13126727bd4a3a071b4fad020f15aa620587e9467cde9379790a1ccbd8e",
+        "rows.jsonl": "41e8d111c9f4ac9e5ad35c852f78be2ccd1e71e4068fa83187113193aeedf5e9"
+      },
+      "final_eos_supervised": true,
+      "format_version": 2,
+      "key_value_blocks_per_sequence": 8,
+      "labels_only_cover_answer_and_final_eos": true,
+      "maximum_answer_tokens": 3,
+      "maximum_prompt_tokens": 3968,
+      "maximum_training_length": 4096,
+      "maximum_training_position_id": 4095,
+      "minimum_answer_tokens": 3,
+      "minimum_prompt_tokens": 3353,
+      "purpose": "counterfactual_routing_training",
+      "queries_per_sequence": 1,
+      "seed": 20293725,
+      "shape": [
+        1024,
+        2,
+        4096
+      ],
+      "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED_V2",
+      "supervised_answer_and_eos_tokens": 8192,
+      "supervised_answer_tokens": 6144,
+      "supervised_eos_tokens": 2048,
+      "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+      "variant_names": [
+        "sourced",
+        "value_swapped"
+      ]
+    }
+  },
+  "calibration_data": {
+    "source_sha256": "16b13d9d1717c2fba053963726744a7641bd9093bd09019a6e690df596c9809e",
+    "manifest": {
+      "answer_and_eos_only": true,
+      "answer_string_tokenizer_roundtrip_exact": true,
+      "counterfactual_value_swap": true,
+      "eos_token_id": 100257,
+      "files": {
+        "input_ids.npy": "506322c12fb07a6c0bc233da152a20d9727b5961865c5741868af4e396b344d8",
+        "labels.npy": "c1e28d53a5c8589f2e0e68ea8ff3a75c6ea9cb1d6f4440b683fd4bf698770aca",
+        "rows.jsonl": "15ce2bb934f3edc41440ba776fb560c2b97e383bc05b50e86e6bdd3d9d03d7f1"
+      },
+      "final_eos_supervised": true,
+      "format_version": 2,
+      "key_value_blocks_per_sequence": 8,
+      "labels_only_cover_answer_and_final_eos": true,
+      "maximum_answer_tokens": 3,
+      "maximum_prompt_tokens": 3966,
+      "maximum_training_length": 4096,
+      "maximum_training_position_id": 4095,
+      "minimum_answer_tokens": 3,
+      "minimum_prompt_tokens": 3945,
+      "purpose": "counterfactual_routing_calibration",
+      "queries_per_sequence": 1,
+      "seed": 20304725,
+      "shape": [
+        128,
+        2,
+        4096
+      ],
+      "status": "OLMO2_4K_COUNTERFACTUAL_ROUTING_SET_PREPARED_V2",
+      "supervised_answer_and_eos_tokens": 1024,
+      "supervised_answer_tokens": 768,
+      "supervised_eos_tokens": 256,
+      "supervision_contract": "numeric_answer_plus_immediate_eos_v1",
+      "variant_names": [
+        "sourced",
+        "value_swapped"
+      ]
+    }
+  }
+}

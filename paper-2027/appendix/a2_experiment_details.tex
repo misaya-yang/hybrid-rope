@@ -79,9 +79,7 @@ Training tokens & 500M \\
 \end{tabular}
 \end{table}
 
-Within each text comparison, the architecture, optimizer, data order, and
-training loop are fixed, and the only intervention is the initialized
-inverse-frequency table. The scratch-text experiments use base
+Within the scratch and continuation comparisons specified in this section, the architecture, optimizer, data order, and training loop are fixed, and the intervention is the initialized inverse-frequency table. The released-checkpoint $1.485$B comparison in Appendix~\ref{sec:olmo2-1b} uses separate trainer implementations, as detailed there. The scratch-text experiments use base
 $b{=}500\mathrm{K}$ unless stated otherwise.
 
 \FloatBarrier
@@ -124,7 +122,7 @@ Table~\ref{tab:evq-repo-ramp} reports the three-seed comparison.
 The \(750\mathrm{M}\) `continue@4K' experiment starts both arms from the same
 2K Geo checkpoint and applies a 500M-token continuation with either the Geo or
 \evq{} table (seed 42). At 16K, PPL is \(45.1\) versus \(24.4\); on
-40 passkey trials at 8K, strict autoregressive exact match is \(0\%\) versus
+40 passkey trials at 8K, fixed-length autoregressive answer-token exact match is \(0\%\) versus
 \(77.5\%\). The \evq{} continuation uses $\tau=1.5$, $K=32$, and the
 endpoint-inclusive quantiles $u_k=k/(K-1)$. Writing $q_\tau$ for the
 inverse CDF in Eq.~\eqref{eq:warp}, the installed frequencies are
@@ -133,7 +131,7 @@ inverse CDF in Eq.~\eqref{eq:warp}, the installed frequencies are
 q_{1.5}\!\left(\frac{k}{K-1}\right)\right],\qquad b=500{,}000.
 \]
 This retains the Geo endpoints. Both arms are full-parameter continuations
-from the shared checkpoint.
+from the shared checkpoint. The autoregressive probe generates exactly the tokenized passkey plus its closing marker and compares every generated token ID with that expected sequence. It does not test a subsequent terminal EOS; the EOS-complete endpoint is the separate OLMo study in Table~\ref{tab:complete-answer-eos}.
 
 \input{tables/table6_750m_continue_supporting}
 
@@ -203,3 +201,28 @@ the training-scale band. The exact-range experiments measure the corresponding
 trained allocation effect, and
 Table~\ref{tab:coadapt} separately measures incompatibility after a frozen
 post-hoc swap.
+
+\subsection{Allocation under GQA and MLA compression}
+\label{sec:compression-ablation}
+
+A seed-$42$ $125$M study compares five attention configurations, each trained for $100$M FineWeb-Edu tokens at length $2048$ with $2\%$ passkey mix. Within each configuration Geo and Cosh ($\tau=1.414$) use the matched training recipe. Table~\ref{tab:compression-ablation} preserves the complete configuration comparison from the recorded experiment report.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Allocation effects across attention configurations.} Paired Geo/Cosh PPL at each length; the last column is the reported teacher-forced passkey retrieval aggregate, not autoregressive exact. One training seed per arm.}
+\label{tab:compression-ablation}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Configuration ($K$) & $2$K & $4$K & $8$K & $16$K & Retrieval (\%) \\
+\midrule
+MHA (32) & 44.24/43.62 & 61.75/58.09 & 124.0/106.2 & 213.5/185.3 & 62.0/64.7 \\
+GQA-4 (32) & 49.37/50.76 & 59.67/60.73 & 112.6/101.0 & 191.0/162.6 & 55.3/52.7 \\
+GQA-2 (32) & 50.56/50.56 & 67.98/57.45 & 130.5/99.3 & 220.2/172.9 & 62.0/51.3 \\
+MLA-32 (16) & 65.47/65.59 & 98.53/104.0 & 240.1/225.1 & 400.2/363.7 & 57.3/50.0 \\
+MLA-16 (8) & 67.13/65.92 & 68.07/69.84 & 245.5/128.2 & 653.4/340.4 & 48.7/51.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All five configurations improve long PPL, with the largest relative effect in the eight-pair MLA setting. The ordering across architectures is nonmonotone: KV sharing, latent compression, and rotary-pair count jointly define the setting. This supports studying allocation within architectural constraints, complementing the three-seed $432$M experiment rather than establishing a one-variable scaling law for pair count.
+\FloatBarrier

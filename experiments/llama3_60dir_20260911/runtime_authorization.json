@@ -1,0 +1,23 @@
+{
+  "status": "AUTHORIZED",
+  "authorized_on": "2026-09-11",
+  "authority": "User explicitly enabled the GPU and delegated rapid Llama-3 Plan B execution, monitoring, and ordinary repairs; ds_workspace/TONIGHT_EXPERIMENT_RULES_20260911.md freezes the scope.",
+  "model": "Meta-Llama-3-8B-Instruct",
+  "approved_scopes": [
+    "frequency",
+    "frequency_assignment",
+    "signed_frequency",
+    "dc_frequency",
+    "spectral_amplitude",
+    "position_amplitude"
+  ],
+  "approved_stages": ["P", "S", "C-dev", "V", "H", "M-dev", "M-H"],
+  "forbidden_tonight": ["OLMo", "Qwen"],
+  "qwen_llama2_condition": "Only after a Llama-3 method is locked as successful",
+  "does_not_authorize": [
+    "new GPU rental",
+    "deletion",
+    "git commit or push",
+    "instance shutdown"
+  ]
+}

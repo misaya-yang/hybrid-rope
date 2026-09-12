@@ -5,6 +5,7 @@ This performs no model evaluation. Run from any directory:
 """
 from __future__ import annotations
 import hashlib
+from decimal import Decimal, ROUND_HALF_UP
 import json
 from pathlib import Path
 
@@ -84,7 +85,7 @@ def write_portable_inputs(data):
         return
     keep = lambda value, keys: {k: value[k] for k in keys}
     compact = {
-        "range": keep(data["range"], ["fixed_training_range"]),
+        "range": keep(data["range"], ["fixed_training_range", "target_matched_range"]),
         "llama": data["llama"],
         "index": keep(data["index"], ["tasks", "scores"]),
         "qa": keep(data["qa"], ["by_stratum", "task_equal_macro"]),
@@ -177,56 +178,57 @@ def axis_style(ax):
     ax.set_axisbelow(True)
 
 def build_overview(data):
-    fig, axes = plt.subplots(1, 2, figsize=(7.25, 2.7),
-                             gridspec_kw={"width_ratios": [1, 1.1]})
+    fig, axes = plt.subplots(2, 2, figsize=(7.25, 4.45))
+    axes = axes.ravel()
     ax = axes[0]
     k, K, tau = np.arange(32), 32, 4.
     u = (k + .5) / K
     q = 1 - np.arcsinh((1-u)*np.sinh(tau))/tau
     z = (q-q[0])/(q[-1]-q[0])
     geom = k/(K-1)
-    assert np.all(np.diff(z) > 0) and z[0] == 0 and z[-1] == 1
-    ax.hlines([.67, .28], 0, 1, color=GRID, lw=1)
-    for i in range(3, 30, 4):
-        ax.plot([geom[i], z[i]], [.65, .30], color="#CCD1D5", lw=.8)
-    for xs, y, color, marker in [(geom,.67,BLUE,"o"),(z,.28,ORANGE,"D")]:
-        ax.scatter(xs, np.full(K,y), color=color, s=16, marker=marker,
-                   edgecolor="white", linewidth=.35, zorder=3)
-        ax.scatter([0,1],[y,y],s=35,facecolor="white",edgecolor=INK,zorder=4)
-    ax.annotate("", (1,.96),(0,.96), arrowprops={"arrowstyle":"<->","lw":.8})
-    ax.text(.5,1.04,"Same endpoints and 32 rotary pairs",ha="center",fontsize=9)
-    ax.text(.03,.79,"Uniform exponent spacing",color=BLUE,fontsize=10)
-    ax.text(.03,.40,"EVQ-Cosh reallocation",color=ORANGE,fontsize=10,
-            bbox={"facecolor":"white","edgecolor":"none","pad":.2})
-    ax.set(xlim=(-.04,1.04),ylim=(.05,1.19),xlabel=r"Normalized exponent $z_k$")
+    assert np.all(z <= geom+1e-12)
+    for xs, y, color, marker in [(geom,.7,BLUE,"o"),(z,.25,ORANGE,"D")]:
+        ax.hlines(y,0,1,color=GRID,lw=1)
+        ax.scatter(xs,np.full(K,y),color=color,s=12,marker=marker,zorder=3)
+        ax.scatter([0,1],[y,y],s=30,facecolor="white",edgecolor=INK,zorder=4)
+    ax.text(.03,.82,"Geometric",color=BLUE,fontsize=10)
+    ax.text(.03,.37,"Anchored Cosh",color=ORANGE,fontsize=10)
+    ax.set(xlim=(-.04,1.04),ylim=(0,1),xlabel="Normalized exponent",xticks=[0,.5,1])
     ax.set_yticks([])
-    ax.set_xticks([0,.25,.5,.75,1])
     ax.spines[["left","right","top"]].set_visible(False)
-    ax.set_title("(a) Same range, different allocation",loc="left",pad=13)
-    ax = axes[1]
-    lengths = [256,512,1024,2048]
-    x = np.arange(4)
-    fixed = data["range"]["fixed_training_range"]
-    seeds = sorted(fixed["256"]["seed_values"],key=int)
-    vals = np.array([[fixed[str(L)]["seed_values"][s] for L in lengths] for s in seeds])
-    means = vals.mean(0)
-    assert np.all(vals[:,1:] < 0)
-    ax.axhspan(-.55,0,color="#FAF0EB",zorder=0)
-    ax.axhline(0,color=INK,lw=.8)
-    for v in vals:
-        ax.plot(x,v,color="#A6ADB3",lw=.9,marker="o",ms=2.5)
-    ax.plot(x,means,color=ORANGE,lw=1.8,marker="D",ms=4.5,zorder=5)
-    for i,v in enumerate(means):
-        offset = (0,8) if i == 0 else (0,-15)
-        ax.annotate(f"{v:+.3f}",(i,v),xytext=offset,textcoords="offset points",
-                    ha="center",fontsize=8.5,color=ORANGE)
-    ax.set(ylim=(-.55,.10),xticks=x,xticklabels=["256\n1x","512\n2x","1K\n4x","2K\n8x"],
-           xlabel="Evaluation length / training length",
-           ylabel="NLL difference\n(Cosh minus geometric)")
-    ax.set_title("(b) All 9 OOD comparisons improve",loc="left",pad=13)
-    ax.text(2.0,-.48,"9 / 9 seed–length comparisons",ha="center",fontsize=8.5,color=INK)
-    axis_style(ax)
-    fig.subplots_adjust(left=.04,right=.985,bottom=.24,top=.85,wspace=.46)
+    ax.set_title("(a) Interior allocation",loc="left")
+    lengths=[512,1024,2048]
+    for ax,key,title,color in [(axes[1],"fixed_training_range","(b) Paired learning effect",ORANGE),
+                               (axes[2],"target_matched_range","(c) Range interaction",BLUE)]:
+        block=data["range"][key]
+        vals=np.array([[block[str(L)]["seed_values"][str(seed)] for L in lengths]
+                       for seed in [42,137,256]])
+        means=vals.mean(0)
+        assert np.all(vals < 0) if key=="fixed_training_range" else np.all(vals > 0)
+        ax.axhline(0,color=INK,lw=.8)
+        for v in vals: ax.plot(range(3),v,color="#B9BFC4",lw=1,marker="o",ms=3)
+        ax.plot(range(3),means,color=color,lw=2,marker="D",ms=4)
+        ax.set(xticks=range(3),xticklabels=["2x","4x","8x"],ylim=(-.57,.83),
+               xlabel="Eval. / train length")
+        ax.set_title(title,loc="left")
+        axis_style(ax)
+    axes[1].set_ylabel("Cosh minus Geo NLL")
+    axes[2].set_ylabel("Cosh minus Geo NLL")
+    ax=axes[3]
+    rows=data["coadapt151"]["small_model_crossing"]["mean_tail_nll_two_seed_length1024"]
+    vals=np.array([[rows[w][t] for t in ["fmrope_derived","cosh_derived"]]
+                  for w in ["fmrope_weights","anchored_cosh_weights"]])
+    penalties=vals-np.diag(vals)[:,None]
+    ax.imshow(penalties,cmap="Oranges",vmin=0,vmax=2.5)
+    for i in range(2):
+        for j in range(2): ax.text(j,i,f"{vals[i,j]:.3f}",ha="center",va="center",fontsize=11,
+                                   color="white" if penalties[i,j]>1.5 else INK)
+    ax.set(xticks=[0,1],xticklabels=["Geo","Cosh"],yticks=[0,1],
+           yticklabels=["Geo","Cosh"],xlabel="Derived runtime table",ylabel="Trained weights")
+    ax.set_title("(d) Learned compatibility",loc="left",pad=12)
+    ax.tick_params(length=0)
+    for sp in ax.spines.values(): sp.set_visible(False)
+    fig.subplots_adjust(left=.10,right=.97,bottom=.12,top=.93,wspace=.48,hspace=.82)
     finish(fig,"fig_evidence_overview")
 
 def build_llama(data):
@@ -278,7 +280,7 @@ def build_qa(data):
                     ha="left",va="center",color=ORANGE,fontsize=8.5)
     ax.axhline(4.5,color=GRID,lw=.8)
     ax.set(yticks=y,yticklabels=labels,xlim=(5,44),ylim=(5.5,-.6),
-           xlabel="Complete-output token F1 (%)")
+           xlabel="Whole-response token F1 (%)")
     ax.spines[["top","right","left"]].set_visible(False)
     ax.tick_params(axis="y",length=0)
     ax.grid(axis="x",color=GRID,lw=.45)
@@ -381,11 +383,13 @@ def write_tables(data):
            r"\caption{Independent-input placement comparisons, $80$ examples per task and four tasks per panel. Intervals are for index minus direct-gap, in percentage points: $97.5\%$ for each Qwen length (Bonferroni over two lengths), $95\%$ for Gemma.}",
            r"\label{tab:coordinate-confirmation}",r"\begin{tabular}{@{}llrrl@{}}",r"\toprule",
            r"Model & Length & Direct-gap (\%) & Index (\%) & Difference interval\\",r"\midrule"]
+    def signed_display(value):
+        return format(Decimal(str(round(value, 10))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP), "+.2f")
     for model,L,scores,ci in entries:
         for values in scores.values():
             assert abs(np.mean(list(values["per_task"].values()))-values["macro"])<1e-12
         a,b=[100*scores[k]["macro"] for k in ["physical_x","normalized_index"]]
-        lines.append(f"{model} & {L} & {a:.2f} & {b:.2f} & $[{ci[0]:+.2f},{ci[1]:+.2f}]$"+r" \\")
+        lines.append(f"{model} & {L} & {a:.2f} & {b:.2f} & $[{signed_display(ci[0])},{signed_display(ci[1])}]$"+r" \\")
     lines.extend([r"\bottomrule",r"\end{tabular}",r"\end{table}"])
     (PAPER/"tables/table_coordinate_confirmation.tex").write_text("\n".join(lines)+"\n")
 

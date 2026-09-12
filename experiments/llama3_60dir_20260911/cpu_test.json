@@ -1,0 +1,695 @@
+{
+  "geometry": {
+    "theta": 500000.0,
+    "window": 8192,
+    "scale": 4.0,
+    "K": 64,
+    "head_dim": 128,
+    "low": 18,
+    "high": 35,
+    "n": 17,
+    "gain": 1.138629436111989,
+    "target": 32768
+  },
+  "checks": [
+    {
+      "check": "band edges reproduce find_correction_range",
+      "pass": true,
+      "residual": 0.0,
+      "note": "low=18 high=35 n=17"
+    },
+    {
+      "check": "m^MR is 0 at l and 1 at h",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "m^MR monotone non-decreasing",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D01a: period is an integer",
+      "pass": true,
+      "residual": 2.3283064365386963e-10,
+      "note": ""
+    },
+    {
+      "check": "D01a: m=0 outside the modified range",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D01b: period is an integer",
+      "pass": true,
+      "residual": 9.313225746154785e-10,
+      "note": ""
+    },
+    {
+      "check": "D01b: m=0 outside the modified range",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D01c: period is an integer",
+      "pass": true,
+      "residual": 9.313225746154785e-10,
+      "note": ""
+    },
+    {
+      "check": "D01c: m=0 outside the modified range",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D02a: exp(iA nu')=exp(iA omega/s) at the anchor",
+      "pass": true,
+      "residual": 1.1776740121916977e-14,
+      "note": ""
+    },
+    {
+      "check": "D02a: nu' stays in [omega/s, omega]",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D02b: exp(iA nu')=exp(iA omega/s) at the anchor",
+      "pass": true,
+      "residual": 4.508175392366464e-14,
+      "note": ""
+    },
+    {
+      "check": "D02b: nu' stays in [omega/s, omega]",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D02c: exp(iA nu')=exp(iA omega/s) at the anchor",
+      "pass": true,
+      "residual": 1.9100031173005602e-14,
+      "note": ""
+    },
+    {
+      "check": "D02c: nu' stays in [omega/s, omega]",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D03a: nu' is a permutation of nu^MR",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D03a: unweighted kernel sum invariant",
+      "pass": true,
+      "residual": 7.105427357601002e-15,
+      "note": ""
+    },
+    {
+      "check": "D03b: nu' is a permutation of nu^MR",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D03b: unweighted kernel sum invariant",
+      "pass": true,
+      "residual": 7.105427357601002e-15,
+      "note": ""
+    },
+    {
+      "check": "D03c: nu' is a permutation of nu^MR",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D03c: unweighted kernel sum invariant",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04a: |nu'| = nu^MR",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04a: sign flipped exactly on the selected band",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04a: cos unchanged / sin negated",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04b: |nu'| = nu^MR",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04b: sign flipped exactly on the selected band",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04b: cos unchanged / sin negated",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04c: |nu'| = nu^MR",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04c: sign flipped exactly on the selected band",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D04c: cos unchanged / sin negated",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D05a: zeroed slots are exactly the slow tail",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D05a: zeroed slots rotate by identity at every position",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D05b: zeroed slots are exactly the slow tail",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D05b: zeroed slots rotate by identity at every position",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D05c: zeroed slots are exactly the slow tail",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D05c: zeroed slots rotate by identity at every position",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D06a: b_j in (0, 1)",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D06a: nu' per slot is native or native/s",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D06b: b_j in (0, 1)",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D06b: nu' per slot is native or native/s",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D06c: b_j in (0, 1)",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D06c: nu' per slot is native or native/s",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D07a: sum w^2 = K gY^4",
+      "pass": true,
+      "residual": 2.842170943040401e-14,
+      "note": ""
+    },
+    {
+      "check": "D07b: sum w^2 = K gY^4",
+      "pass": true,
+      "residual": 2.842170943040401e-14,
+      "note": ""
+    },
+    {
+      "check": "D07c: sum w^2 = K gY^4",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D08a: sum w^2 = K gY^4",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D08b: sum w^2 = K gY^4",
+      "pass": true,
+      "residual": 2.842170943040401e-14,
+      "note": ""
+    },
+    {
+      "check": "D08c: sum w^2 = K gY^4",
+      "pass": true,
+      "residual": 2.842170943040401e-14,
+      "note": ""
+    },
+    {
+      "check": "D09a: RMS(w) = gY^2",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D09b: RMS(w) = gY^2",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D09c: RMS(w) = gY^2",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D09a: character function integrates to the declared mean-1 form",
+      "pass": true,
+      "residual": 0.9069757623207154,
+      "note": "density-weighted mean of the characteristic function"
+    },
+    {
+      "check": "D09b: character function integrates to the declared mean-1 form",
+      "pass": true,
+      "residual": 0.9072590884620908,
+      "note": "density-weighted mean of the characteristic function"
+    },
+    {
+      "check": "D09c: character function integrates to the declared mean-1 form",
+      "pass": true,
+      "residual": 0.846532276946133,
+      "note": "density-weighted mean of the characteristic function"
+    },
+    {
+      "check": "D10a: at d=d0 the relative rotation equals native",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D10b: at d=d0 the relative rotation equals native",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D10c: at d=d0 the relative rotation equals native",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D11a: q_diag * k_diag = 1 (reciprocal)",
+      "pass": true,
+      "residual": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "check": "D11a: metric is not the identity (a real intervention)",
+      "pass": true,
+      "residual": 0.18920711500272103,
+      "note": ""
+    },
+    {
+      "check": "D11b: q_diag * k_diag = 1 (reciprocal)",
+      "pass": true,
+      "residual": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "check": "D11b: metric is not the identity (a real intervention)",
+      "pass": true,
+      "residual": 0.18920711500272103,
+      "note": ""
+    },
+    {
+      "check": "D11c: q_diag * k_diag = 1 (reciprocal)",
+      "pass": true,
+      "residual": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "check": "D11c: metric is not the identity (a real intervention)",
+      "pass": true,
+      "residual": 0.06894843747096702,
+      "note": ""
+    },
+    {
+      "check": "D12a: product = gY^2 exp(-lambda d/D) for causal d",
+      "pass": true,
+      "residual": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "check": "D12b: product = gY^2 exp(-lambda d/D) for causal d",
+      "pass": true,
+      "residual": 4.440892098500626e-16,
+      "note": ""
+    },
+    {
+      "check": "D12c: product = gY^2 exp(-lambda d/D) for causal d",
+      "pass": true,
+      "residual": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "check": "D13a: total score multiplier is 1 at n<=W",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D13a: multiplier is not 1 beyond the window",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D13b: total score multiplier is 1 at n<=W",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D13b: multiplier is not 1 beyond the window",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D13c: total score multiplier is 1 at n<=W",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D13c: multiplier is not 1 beyond the window",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D14a: relative rotation is native inside the prefix",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D14a: prefix is a multiple of W",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D14b: relative rotation is native inside the prefix",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D14b: prefix is a multiple of W",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D14c: relative rotation is native inside the prefix",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D14c: prefix is a multiple of W",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D15a: leading protected zone has native slope",
+      "pass": true,
+      "residual": 2.170486013142181e-14,
+      "note": ""
+    },
+    {
+      "check": "D15a: trailing protected zone has native slope",
+      "pass": true,
+      "residual": 1.2683187833317788e-12,
+      "note": ""
+    },
+    {
+      "check": "D15b: leading protected zone has native slope",
+      "pass": true,
+      "residual": 9.781064846947629e-14,
+      "note": ""
+    },
+    {
+      "check": "D15b: trailing protected zone has native slope",
+      "pass": true,
+      "residual": 1.2683187833317788e-12,
+      "note": ""
+    },
+    {
+      "check": "D15c: leading protected zone has native slope",
+      "pass": true,
+      "residual": 1.2956302697375577e-13,
+      "note": ""
+    },
+    {
+      "check": "D15c: trailing protected zone has native slope",
+      "pass": true,
+      "residual": 1.2683187833317788e-12,
+      "note": ""
+    },
+    {
+      "check": "D16a: same-block relative rotation is native",
+      "pass": true,
+      "residual": 2.170486013142181e-14,
+      "note": ""
+    },
+    {
+      "check": "D16b: same-block relative rotation is native",
+      "pass": true,
+      "residual": 9.781064846947629e-14,
+      "note": ""
+    },
+    {
+      "check": "D16c: same-block relative rotation is native",
+      "pass": true,
+      "residual": 1.2956302697375577e-13,
+      "note": ""
+    },
+    {
+      "check": "D17a: phi_j(0) = 0",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D17a: offsets lie in [0, C)",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D17b: phi_j(0) = 0",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D17b: offsets lie in [0, C)",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D17c: phi_j(0) = 0",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D17c: offsets lie in [0, C)",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D18a: residual vanishes at the block ends",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D18a: phi has MR average slope across a block",
+      "pass": true,
+      "residual": 5.421010862427522e-20,
+      "note": ""
+    },
+    {
+      "check": "D18a: instantaneous slope at 0 is native",
+      "pass": true,
+      "residual": 3.469446951953614e-18,
+      "note": ""
+    },
+    {
+      "check": "D18b: residual vanishes at the block ends",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D18b: phi has MR average slope across a block",
+      "pass": true,
+      "residual": 5.421010862427522e-20,
+      "note": ""
+    },
+    {
+      "check": "D18b: instantaneous slope at 0 is native",
+      "pass": true,
+      "residual": 3.469446951953614e-18,
+      "note": ""
+    },
+    {
+      "check": "D18c: residual vanishes at the block ends",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D18c: phi has MR average slope across a block",
+      "pass": true,
+      "residual": 5.421010862427522e-20,
+      "note": ""
+    },
+    {
+      "check": "D18c: instantaneous slope at 0 is native",
+      "pass": true,
+      "residual": 3.469446951953614e-18,
+      "note": ""
+    },
+    {
+      "check": "D19a: bounded in [0, Theta]",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D19b: bounded in [0, Theta]",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D19c: bounded in [0, Theta]",
+      "pass": true,
+      "residual": 0.0,
+      "note": ""
+    },
+    {
+      "check": "D20a: phase is omega_j times an integer",
+      "pass": true,
+      "residual": 4.547473508864641e-13,
+      "note": ""
+    },
+    {
+      "check": "D20b: phase is omega_j times an integer",
+      "pass": true,
+      "residual": 4.547473508864641e-13,
+      "note": ""
+    },
+    {
+      "check": "D20c: phase is omega_j times an integer",
+      "pass": true,
+      "residual": 4.547473508864641e-13,
+      "note": ""
+    }
+  ],
+  "n_checks": 108,
+  "n_pass": 108,
+  "pseudo_methods": [
+    {
+      "pseudo": "common constant phase on Q and K",
+      "identified_as_non_method": true,
+      "residual": 7.150387920919873e-15,
+      "why": "a constant phase common to both sides cancels in the relative rotation"
+    },
+    {
+      "pseudo": "nu -> nu + 2 pi n on integer positions",
+      "identified_as_non_method": true,
+      "residual": 2.4341922155833487e-13,
+      "why": "an integer multiple of 2 pi per token is invisible at integer positions"
+    },
+    {
+      "pseudo": "Q*a, K*(1/a) uniform",
+      "identified_as_non_method": true,
+      "residual": 6.217248937900877e-15,
+      "why": "a uniform reciprocal rescaling leaves the bilinear form unchanged"
+    },
+    {
+      "pseudo": "two-stage identical scaling",
+      "identified_as_non_method": true,
+      "residual": 1.734723475976807e-18,
+      "why": "s^-m . s^-m = s^-2m, so two stages are one multiplier and do not revive C42"
+    }
+  ],
+  "n_pseudo_identified": 4,
+  "all_pass": true,
+  "nature": "exact algebraic identity tests on the CPU reference compiler; not a performance result"
+}

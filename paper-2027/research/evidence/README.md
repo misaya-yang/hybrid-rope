@@ -2,7 +2,7 @@
 
 This folder contains compact paper-level result owners that do not belong to
 the mature-checkpoint retrofit programme. Facts defer to the files themselves;
-current claim routing is in [`../../../INDEX.md`](../../../INDEX.md).
+current claim routing is in [`../../../INDEX.md`](../../../index.md).
 
 | Owner | Establishes | Does not establish |
 | --- | --- | --- |

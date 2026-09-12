@@ -1,7 +1,7 @@
 # `docs/exp/` — historical experiment reports by month
 
 This is the NeurIPS-era report archive. It is chronological, not authoritative:
-current claim ownership and evidence ceilings are in [`../../INDEX.md`](../../INDEX.md).
+current claim ownership and evidence ceilings are in [`../../INDEX.md`](../../index.md).
 Nearby scripts/checkpoints do not upgrade a report's provenance tier.
 
 ## Month folders
