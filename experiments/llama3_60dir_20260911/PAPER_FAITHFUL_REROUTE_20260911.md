@@ -623,6 +623,33 @@ This rules out a general statement that the bridge itself fails on Qwen, but it
 does not provide a long-context gain over MR or identify native window length
 as the cause of the Llama/Qwen difference.  It remains a development
 model-by-profile interaction: the reused panel has already been observed and
-still lacks an untouched Native arm.  The queued current-runner 48K Llama
-MR/BM identity audit has now started; the profile-by-gain endpoint supervisor
-will proceed only if that audit reproduces the frozen rows and scores.
+still lacks an untouched Native arm.
+
+The current-runner 48K Llama MR/BM identity audit is complete.  It reproduced
+all 32 rows per arm and the frozen partial-score sums exactly: MR `17.65`
+(`.5515625`) and BM `14.95` (`.4671875`), despite the intended runner SHA
+change from `7062acd...` to `e9ad2ee...`.  The scorer, scoring contract,
+checkpoint manifest, panel, and operator identities also match the locked
+audit contract.  The supervisor therefore opened the final S6 development
+cell: MR and BM frequency tables with unit gain at 8K and 48K.  This endpoint
+factorial is the end of the current static branch, not permission to resume a
+shape grid; after it reports, the main compute priority returns to the
+fixed-support 151.9M Geo/Cosh/full-z training contract in
+`docs/research/next_stage_20260912/` once that path passes its differentiable
+allocation qualification.
+
+The endpoint factorial is complete and closes this S6 development branch.
+At 8K, unit gain leaves task-equal partial nearly unchanged for both tables:
+MR `.732812` versus `.732812` at g6, and BM `.803125` versus `.806250`.
+At 48K, MR(g1) falls to `.480208` from `.551562`; BM(g1) collapses to zero
+partial and zero strict from BM(g6) `.467188/.343750`.  BM(g1) also has zero
+full-string-plus-EOS, although its EOS rate is `.90625` and cap rate `.09375`,
+so this is answer/readout failure rather than mere nontermination.  MR(g1) at
+48K has partial/strict/full-string-plus-EOS `.480208/.343750/.125000`, versus
+MR(g6) `.551562/.312500/.250000`.  Thus lowering gain can improve one output
+contract while degrading the primary partial and complete-answer contracts;
+it is not a general endpoint repair.  BM(g1) has 0 partial-score wins, 17
+losses, and 15 ties against BM(g6) at 48K.  Together with the failed smooth and
+RIBB profiles, this provides no result-specific reason to extend the static
+grid or fill a full curve.  BM's positive 8K--32K and log-AUC observations
+remain valid development findings with an unresolved endpoint tradeoff.

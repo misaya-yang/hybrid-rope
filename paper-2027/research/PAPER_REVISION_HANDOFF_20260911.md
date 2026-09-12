@@ -127,13 +127,13 @@ A11的native-endpoint Geo与midpoint EVQ属于conversion对比；A12/A13是后�
 
 ## 7. 后续优先级的初始依据
 
-以下是资产整理得出的初始依据；三方审查完成后的排序、预算与里程碑以[下一阶段计划](../../docs/research/next_stage_20260912/index.md)为准。本轮不启动模型。
+以下是资产整理得出的初始依据；三方审查完成后的排序、预算、里程碑与当前执行回执以[下一阶段计划](../../docs/research/next_stage_20260912/index.md)为准。S1首个151.9M配对训练block已在资格检查通过后启动，尚未产生科学端点。
 
 1. **先追回已有信息**：151M绝对四格、MLA/M4缓存身份；找到匹配hash/seed/协议的原件才能补齐。
 2. **同面板覆盖检查**：Native/MR(s)/BM(s)、table×gain；已有格复用，缺格显式列出，350/180不能拼成同一交互。
 3. **受限learnable-z主比较**：Pro§8.1提出固定端点、单调gaps、配对预算。新审查已找到full-z实现及A28成熟联合学习，但缺少学习期scratch匹配结果。当前推荐实际2K、两个support、Geo/Cosh/full-z三seed充分训练，窗口和初始化作为明确扩展；不因便宜默认只补256臂。旧unconstrained frequencies/learnable-tau不是等价对照。资源和时间由作者协调，排序与合同详见下一阶段计划。
 4. **有科学目的的稳健性扩展**：例如MLA精确端点/明确holdout、750M或8B第二seed；检验什么依赖比覆盖多少模型更重要。
-5. **研究储备独立保留**：Llama两套60方向、稀疏/压缩注意力、算子改变通过`experiments/index.md`查询；本轮未查远端实时进度，local selftest不是任务结果。
+5. **研究储备独立保留**：Llama两套60方向、稀疏/压缩注意力、算子改变通过`experiments/index.md`查询；Agent-Range/S6远端开发分支已完成有限收尾并冻结，不进入论文第四主线，local selftest仍不是任务结果。
 
 Pro指导书已原样保存于[外部指导](external-reviews/pro-guidance-20260911/index.md)。它是参考材料；用户确定的“建立成果联系、保留价值、不防御性写作”控制当前叙事。评分预测不作为结论；750M的strict AR按实际scorer定义，不替代EOS。
 
