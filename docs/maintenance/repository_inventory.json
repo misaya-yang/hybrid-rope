@@ -2049,6 +2049,16 @@
       "category": "navigation"
     },
     {
+      "path": "docs/research/next_stage_20260912/5090_recovery_preparation.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/ICLR2027_ROPE_EXPERIMENT_PLAN_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/experiments.md",
       "area": "docs",
       "category": "document"
@@ -4244,6 +4254,66 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_support_joint_151m_20260912/evaluate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/index.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/learnable_rope.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/preflight.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/prepare_eval_data.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/protocol.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/queue_evaluation.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/queue_first_block.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/queue_seed_block.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/recover_first_block.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_support_joint_151m_20260912/runtime.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/index.md",
       "area": "experiments",
       "category": "navigation"
@@ -5404,6 +5474,71 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/cpu_checks.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/data_audit.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/data_prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/data_score.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/evaluate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/index.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/make_plan.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/probe.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/readiness.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/runtime.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/test_evaluate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/train.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/pm_keep/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -5832,6 +5967,56 @@
       "path": "experiments/rope_decision_20260911/tables.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e2_prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e2_run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e2_score.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e2_test.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e3_postprocess.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e3_prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e3_run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e3_tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/e3_validate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/index.md",
+      "area": "experiments",
+      "category": "navigation"
     },
     {
       "path": "experiments/rope_operator_family/DESIGN.md",
@@ -11449,6 +11634,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_e3_rope_fast_5090.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_envelope_native.py",
       "area": "tests",
       "category": "code"
@@ -11465,6 +11655,11 @@
     },
     {
       "path": "tests/test_finite_scale_covariance.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_fixed_support_joint_151m.py",
       "area": "tests",
       "category": "code"
     },
@@ -12157,6 +12352,10 @@
     "rebuttal/index.md",
     "results/index.md",
     "scripts/index.md",
-    "tests/index.md"
+    "tests/index.md",
+    "docs/research/next_stage_20260912/5090_recovery_preparation.md",
+    "experiments/olmo_recovery_20260912/index.md",
+    "experiments/olmo_recovery_20260912/README.md",
+    "experiments/rope_fast_5090_20260912/index.md"
   ]
 }

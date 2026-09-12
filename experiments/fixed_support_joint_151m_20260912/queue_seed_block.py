@@ -13,6 +13,9 @@ import traceback
 from pathlib import Path
 
 
+ARMS = ("geo", "cosh", "full_z")
+
+
 def atomic_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".incomplete")
@@ -46,11 +49,19 @@ def main() -> None:
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--support", type=int, required=True)
     parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--arm-order", nargs=3, choices=ARMS, default=ARMS)
     args = parser.parse_args()
+    arm_order = tuple(args.arm_order)
+    if set(arm_order) != set(ARMS):
+        raise ValueError(f"arm order must contain each arm exactly once: {arm_order}")
     args.output_root.mkdir(parents=True, exist_ok=True)
     state_path = args.output_root / "queue_state.json"
     log_path = args.output_root / "queue.log"
-    state = {"status": "WAITING_UPSTREAM", "wait_pid": args.wait_pid}
+    state = {
+        "status": "WAITING_UPSTREAM",
+        "wait_pid": args.wait_pid,
+        "arm_order": list(arm_order),
+    }
     atomic_json(state_path, state)
     try:
         while alive(args.wait_pid):
@@ -82,7 +93,7 @@ def main() -> None:
             ],
             log_path,
         )
-        for arm in ("geo", "cosh", "full_z"):
+        for arm in arm_order:
             free_bytes = shutil.disk_usage(args.output_root).free
             if free_bytes < 5 * 2**30:
                 raise RuntimeError(

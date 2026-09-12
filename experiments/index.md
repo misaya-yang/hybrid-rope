@@ -20,6 +20,11 @@
 - [llama3_60dir_20260911](llama3_60dir_20260911/index.md)
 - [llama3_60m](llama3_60m/index.md)
 
+## 5090 后续准备（2026-09-12）
+
+- [OLMo LoRA 能力恢复](olmo_recovery_20260912/index.md)：本 session Top1；两端低资源阶段只准备代码和轻量清单。
+- [原计划 E2/E3](rope_fast_5090_20260912/index.md)：冻结模型比较，独立于 4080 的 S1 训练。
+
 ## 理论与候选工作台
 
 - [joint_kkt_20260910](joint_kkt_20260910/index.md)
