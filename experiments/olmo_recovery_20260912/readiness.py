@@ -21,9 +21,14 @@ def inspect(model: Path, sources: Path, data: Path) -> dict:
     required = ["config.json", "tokenizer.json", "tokenizer_config.json", *weights]
     missing_model = [name for name in required if not (model / name).is_file()]
     raw_names = ["pg19_books.json", "longalign.jsonl", "qasper-train-dev.tgz",
-                 "qasper-test.tgz", "native_rows.jsonl"]
+                 "qasper-test.tgz"]
     missing_sources = [name for name in raw_names if not (sources / name).is_file()]
+    if not any((sources / name).is_file() for name in ("native_rows.jsonl", "dolly.jsonl")):
+        missing_sources.append("native_rows.jsonl OR dolly.jsonl")
+    receipt_path = sources / "acquisition.json"
+    receipt = json.loads(receipt_path.read_text()) if receipt_path.is_file() else {}
     data_names = ["data_manifest.json", "cpt_train.npy", "sft_train.jsonl",
+                  "cpt_train_8192.npy", "sft_train_8192.jsonl", "sft_train_16384.jsonl",
                   "native_train.jsonl", "native_dev.jsonl", "native_test.jsonl",
                   "qa_dev.jsonl", "qa_test.jsonl", "lm_validation.npy", "lm_test.npy"]
     missing_data = [name for name in data_names if not (data / name).is_file()]
@@ -42,9 +47,13 @@ def inspect(model: Path, sources: Path, data: Path) -> dict:
         "model_sizes": {name: (model / name).stat().st_size for name in required
                         if (model / name).is_file()},
         "raw_sources_missing": missing_sources,
+        "raw_download_status": receipt.get("status", "NO_RECEIPT"),
+        "raw_download_completed_files": len(receipt.get("files", [])),
+        "raw_download_failures": receipt.get("failures", []),
         "prepared_data_missing": missing_data,
         "versions": versions,
-        "not_tested": ["full data and weight hashes", "tokenization and source separation",
+        "asset_validation_policy": "user_attested_clone; SHA validation is not required or scheduled",
+        "not_tested": ["tokenization and source separation",
                        "actual PEFT forward/backward and resume", "GPU memory and kernels",
                        "training stability", "model capability"],
         "gpu_started": False,

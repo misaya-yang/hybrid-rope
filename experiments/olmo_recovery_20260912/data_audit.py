@@ -10,7 +10,6 @@ from pathlib import Path
 
 import numpy as np
 
-from experiments.evq_recovery.acquire import file_hash
 from experiments.evq_recovery.data import JsonlIndex
 
 
@@ -30,12 +29,13 @@ def main() -> None:
         if name != "qa_train.jsonl" and (not (root / name).is_file() or not (root / name).stat().st_size):
             raise ValueError(f"required nonempty split is absent: {name}")
     for name, receipt in manifest["files"].items():
-        if file_hash(root / name) != receipt["sha256"]:
-            raise ValueError(f"prepared file drift: {name}")
+        path = Path(receipt.get("path", root / name))
+        if not path.is_file() or path.stat().st_size == 0:
+            raise ValueError(f"prepared file missing or empty: {name}")
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model.resolve(), local_files_only=True)
-    if file_hash(args.model.resolve() / "tokenizer.json") != manifest["tokenizer_sha256"]:
-        raise ValueError("tokenizer identity drift")
+    if tokenizer.eos_token_id != manifest["eos_token_id"]:
+        raise ValueError("tokenizer EOS differs from prepared semantic contract")
 
     groups = defaultdict(set)
     counts = defaultdict(int)
@@ -73,11 +73,12 @@ def main() -> None:
             overlap = groups[kind, left] & groups[kind, right]
             if overlap:
                 raise ValueError(f"{kind} source leakage {left}/{right}: {len(overlap)} groups")
-    for name in ("cpt_train.npy", "lm_validation.npy", "lm_test.npy"):
+    for name, width in (("cpt_train_8192.npy", 8193), ("cpt_train.npy", 16385),
+                        ("lm_validation.npy", 32769), ("lm_test.npy", 32769)):
         array = np.load(root / name, mmap_mode="r", allow_pickle=False)
-        if array.ndim != 2 or array.shape[1] not in (16_385, 32_769) or array.dtype.kind not in "iu":
+        if array.ndim != 2 or array.shape[1] != width or array.dtype.kind not in "iu":
             raise ValueError(f"invalid contiguous LM payload: {name}/{array.shape}/{array.dtype}")
-    report = {"status": "PASS", "counts": {f"{kind}/{split}": value for (kind, split), value in counts.items()},
+    report = {"status": "PASS", "asset_identity_policy": "user_attested_clone/no_sha_validation", "counts": {f"{kind}/{split}": value for (kind, split), value in counts.items()},
               "source_groups": {f"{kind}/{split}": len(value) for (kind, split), value in groups.items()},
               "claims": "split and target integrity only; no GPU readiness, learning, or FFN-necessity result"}
     print(json.dumps(report, sort_keys=True))

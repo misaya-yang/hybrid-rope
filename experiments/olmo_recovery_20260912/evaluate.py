@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 import contextlib
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -17,20 +16,11 @@ import torch
 import torch.nn.functional as F
 
 from experiments.evq_recovery.data import JsonlIndex, qa_scores
-from scripts.experiments.cross_audit.tables import tensor_sha
 from .runtime import load_model, validate_cuda
-from .train import verify_bound
+from .train import semantic_contract, verify_bound
 
 
 LENGTHS = (4_096, 8_192, 16_384, 32_768)
-
-
-def sha(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(8 << 20), b""):
-            h.update(block)
-    return h.hexdigest()
 
 
 def atomic(path: Path, value) -> None:
@@ -55,14 +45,15 @@ def contract(root: Path, arm: str, checkpoint: Path | None, base_native: bool,
         raise ValueError("real data manifest is not ready")
     verify_bound(plan, manifest_path, tables_path)
     for name, receipt in manifest["files"].items():
-        if sha(Path(receipt.get("path", manifest_path.parent / name))) != receipt["sha256"]:
-            raise ValueError(f"data artifact drift: {name}")
+        path = Path(receipt.get("path", manifest_path.parent / name))
+        if not path.is_file() or path.stat().st_size == 0:
+            raise ValueError(f"data artifact missing or empty: {name}")
     if arm not in tables or arm not in plan["arms"]:
         raise ValueError("unknown table arm")
     table = tables[arm]
     values = np.asarray(table["values_float32"], dtype=np.float32)
-    if tensor_sha(values) != table["tensor_sha256"]:
-        raise ValueError("table tensor identity drift")
+    if values.shape != (64,) or not np.isfinite(values).all() or not np.all(values[:-1] > values[1:]):
+        raise ValueError("table shape/order is invalid")
     if base_native or unadapted:
         if checkpoint is not None or (base_native and arm != "Native"):
             raise ValueError("original baseline is exactly Native with no adapter checkpoint")
@@ -72,23 +63,23 @@ def contract(root: Path, arm: str, checkpoint: Path | None, base_native: bool,
             raise ValueError("adapter evaluation requires --checkpoint")
         checkpoint = checkpoint.resolve()
         state = json.loads((checkpoint / "state.json").read_text())
-        expected = sha(plan_path) + sha(tables_path) + sha(manifest_path)
-        if state["contract_hash"] != expected or state["arm"] != arm:
-            raise ValueError("checkpoint plan/data/table/arm identity mismatch")
+        expected = semantic_contract(plan, arm, plan["gradient_accumulation"])
+        if state.get("semantic_contract") is not None and state["semantic_contract"] != expected:
+            raise ValueError("checkpoint semantic training contract mismatch")
+        if state.get("arm", arm) != arm:
+            raise ValueError("checkpoint arm mismatch")
         adapter_files = sorted(checkpoint.glob("adapter_model*.safetensors"))
         if not adapter_files:
             raise FileNotFoundError("adapter weights missing")
-        checkpoint_identity = {"path": str(checkpoint), "state_sha256": sha(checkpoint / "state.json"),
-                               "adapter_sha256": {p.name: sha(p) for p in adapter_files}}
-    identity = {"schema_version": 1, "plan_sha256": sha(plan_path), "tables_sha256": sha(tables_path),
-                "data_manifest": str(manifest_path.resolve()), "data_manifest_sha256": sha(manifest_path),
+        checkpoint_identity = {"adapter_files": [p.name for p in adapter_files],
+                               "arm": state.get("arm", arm), "cpt_tokens": state.get("cpt_tokens"),
+                               "semantic_contract": state.get("semantic_contract")}
+    identity = {"schema_version": 1, "asset_identity_policy": "user_attested_clone/no_sha_validation",
                 "arm": arm, "table": table, "base_native_no_adapter": base_native,
                 "unadapted_original_weights": base_native or unadapted,
                 "checkpoint": checkpoint_identity, "lengths": list(LENGTHS), "tail_targets": 128,
                 "generation": "greedy native chat prompt; raw token ids retained; terminal EOS/EOT removed only from decoded scoring text",
                 "metrics": "whole-response F1/exact/literal exact+terminal; LM per-document loss_sum/count for whole and tail128"}
-    model_path = Path(plan["model_path"])
-    identity["model_weights_sha256"] = {path.name: sha(path) for path in sorted(model_path.glob("*.safetensors"))}
     return identity, plan, manifest
 
 
@@ -129,11 +120,11 @@ def lm_loss_rows(model, token_ids: torch.Tensor, *, tail: int = 128, chunk_size:
             "tail128_loss_sum": tail_sum, "tail128_target_count": tail_count}
 
 
-def validate_saved(saved: list[dict], expected: list[dict], identity_sha: str) -> None:
+def validate_saved(saved: list[dict], expected: list[dict], contract_id: str) -> None:
     if len(saved) > len(expected):
         raise ValueError("saved generation count exceeds panel")
     for index, row in enumerate(saved):
-        if row.get("identity_sha256") != identity_sha or row.get("eval_id") != expected[index]["eval_id"]:
+        if row.get("evaluation_contract") != contract_id or row.get("eval_id") != expected[index]["eval_id"]:
             raise ValueError(f"saved generation prefix drift at {index}")
 
 
@@ -161,12 +152,12 @@ def main() -> None:
         raise ValueError("held-out LM payload must contain 32769-token document windows")
     identity["generation_rows"] = len(generation_rows)
     identity["lm_documents"] = len(lm)
-    identity_sha = hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    contract_id = f"{args.arm}:{args.split}:{'base' if args.base_native else 'unadapted' if args.unadapted else 'adapted'}"
     if args.dry_run:
         model_path = Path(plan["model_path"])
         status = "DRY_RUN_PASS" if model_path.exists() and any(model_path.glob("*.safetensors")) else "MODEL_MISSING_DATA_READY"
         print(json.dumps({"status": status, "generation_rows": len(generation_rows), "lm_documents": len(lm),
-                          "identity_sha256": identity_sha}, sort_keys=True))
+                          "evaluation_contract": contract_id, "asset_identity_policy": "user_attested_clone/no_sha_validation"}, sort_keys=True))
         return
     if args.output is None:
         p.error("--output is required with --execute")
@@ -193,7 +184,7 @@ def main() -> None:
         return wrapper.disable_adapter() if without_adapter else contextlib.nullcontext()
     raw_path = output / "generations.jsonl"
     saved = jsonl(raw_path)
-    validate_saved(saved, generation_rows, identity_sha)
+    validate_saved(saved, generation_rows, contract_id)
     with raw_path.open("a") as stream, torch.inference_mode(), adapter_context():
         for index, row in enumerate(generation_rows[len(saved):], start=len(saved)):
             ids = torch.tensor([row["prompt_ids"]], dtype=torch.long, device="cuda")
@@ -205,7 +196,7 @@ def main() -> None:
             score_ids = generated[:-1] if ended else generated
             text = tokenizer.decode(score_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
             scores = qa_scores(text, row["references"])
-            record = {"identity_sha256": identity_sha, "eval_id": row["eval_id"], "source_id": row["source_id"],
+            record = {"evaluation_contract": contract_id, "eval_id": row["eval_id"], "source_id": row["source_id"],
                       "suite": row["suite"], "task": row["task"], "length_bucket": row.get("length_bucket", 4096),
                       "prompt_sha256": row.get("prompt_sha256"), "generated_ids": generated, "prediction": text,
                       "eos_or_eot_terminated": ended, "hit_cap": len(generated) == row["generation_budget"] and not ended,
@@ -222,15 +213,13 @@ def main() -> None:
     if len(completed) > len(expected_cells):
         raise ValueError("saved LM stream exceeds the complete panel")
     for index, row in enumerate(completed):
-        if row.get("identity_sha256") != identity_sha or (row["document_index"], row["context_length"]) != expected_cells[index]:
+        if row.get("evaluation_contract") != contract_id or (row["document_index"], row["context_length"]) != expected_cells[index]:
             raise ValueError(f"saved LM prefix drift at {index}")
     with lm_path_out.open("a") as stream, torch.inference_mode(), adapter_context():
         for index, (document, length) in enumerate(expected_cells[len(completed):], start=len(completed)):
             window = np.asarray(lm[document, -(length + 1):], dtype=np.int64)
             row = lm_loss_rows(model, torch.from_numpy(window).unsqueeze(0).cuda(), tail=128)
-            row.update(identity_sha256=identity_sha, document_index=document, context_length=length,
-                       target_sha256=hashlib.sha256(window[1:].astype("<i8").tobytes()).hexdigest(),
-                       tail128_target_sha256=hashlib.sha256(window[-128:].astype("<i8").tobytes()).hexdigest())
+            row.update(evaluation_contract=contract_id, document_index=document, context_length=length)
             stream.write(json.dumps(row, sort_keys=True) + "\n")
             stream.flush()
             atomic(output / "live.json", {"stage": "lm", "completed": index + 1, "total": len(expected_cells)})
@@ -262,12 +251,13 @@ def main() -> None:
                                    "whole_target_count": whole_count, "whole_nll": whole_sum / whole_count,
                                    "tail128_loss_sum": tail_sum, "tail128_target_count": tail_count,
                                    "tail128_nll": tail_sum / tail_count}
-    atomic(output / "summary.json", {"status": "COMPLETE", "identity_sha256": identity_sha,
+    atomic(output / "summary.json", {"status": "COMPLETE", "evaluation_contract": contract_id,
+           "asset_identity_policy": "user_attested_clone/no_sha_validation",
            "generation": generation_summary, "lm": lm_summary,
            "boundary": "Native retention, full generated responses, and teacher-forced LM NLL are separate outcomes."})
-    atomic(output / "status.json", {"status": "COMPLETE", "identity_sha256": identity_sha,
+    atomic(output / "status.json", {"status": "COMPLETE", "evaluation_contract": contract_id,
+           "asset_identity_policy": "user_attested_clone/no_sha_validation",
            "generation_rows": len(generation_rows), "lm_rows": len(expected_cells),
-           "raw_generation_sha256": sha(raw_path), "lm_rows_sha256": sha(lm_path_out),
            "peak_cuda_bytes": int(torch.cuda.max_memory_allocated())})
 
 

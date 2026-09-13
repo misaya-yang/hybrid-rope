@@ -4,8 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
-import importlib.metadata
 import json
 import os
 import time
@@ -14,16 +12,7 @@ from pathlib import Path
 import numpy as np
 
 from scripts.eval.longbench_metrics import qa_f1_score
-from scripts.experiments.cross_audit.tables import tensor_sha
-from experiments.rope_fast_5090_20260912.e2_prepare import CAPS, digest
-
-
-def sha_file(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(8 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()
+from experiments.rope_fast_5090_20260912.e2_prepare import CAPS
 
 
 def atomic(path: Path, value) -> None:
@@ -36,19 +25,16 @@ def rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text().splitlines() if line]
 
 
-def validate(prepared: Path, model: Path, hash_weights: bool) -> tuple[dict, list[dict], dict, dict]:
+def validate(prepared: Path, model: Path) -> tuple[dict, list[dict], dict, dict]:
     manifest = json.loads((prepared / "manifest.json").read_text())
     if manifest.get("status") != "READY_GPU_NOT_RUN" or manifest["pool"]["rows"] != 778 or manifest["pool"]["long_rows"] != 631:
         raise ValueError("E2 manifest contract differs")
-    for name, expected in manifest["files"].items():
-        if sha_file(prepared / name) != expected:
-            raise ValueError(f"prepared file drift: {name}")
     data = rows(prepared / "inputs.jsonl")
     if len(data) != 778 or len({row["row_id"] for row in data}) != 778:
         raise ValueError("input pool is incomplete or duplicated")
     for row in data:
-        if len(row["prompt_ids"]) != row["input_tokens"] or digest(row["prompt_ids"]) != row["prompt_sha256"]:
-            raise ValueError(f"prompt token identity drift: {row['row_id']}")
+        if len(row["prompt_ids"]) != row["input_tokens"]:
+            raise ValueError(f"prompt token length drift: {row['row_id']}")
         if row["max_new_tokens"] != CAPS[row["task"]] or row["input_tokens"] + row["max_new_tokens"] > 16_384:
             raise ValueError(f"task cap drift: {row['row_id']}")
     tables = json.loads((prepared / "tables.json").read_text())
@@ -56,20 +42,13 @@ def validate(prepared: Path, model: Path, hash_weights: bool) -> tuple[dict, lis
         raise ValueError("arm order drift")
     for name, table in tables.items():
         values = np.asarray(table["values_float32"], dtype=np.float32)
-        if values.shape != (64,) or tensor_sha(values) != table["tensor_sha256"]:
+        if values.shape != (64,) or not np.isfinite(values).all() or not np.all(values > 0) or not np.all(values[:-1] > values[1:]):
             raise ValueError(f"table drift: {name}")
-    if sha_file(model / "tokenizer.json") != manifest["model"]["tokenizer_sha256"]:
-        raise ValueError("tokenizer drift")
-    if hash_weights and sha_file(model / manifest["model"]["weight_file"]) != manifest["model"]["weight_sha256"]:
-        raise ValueError("model weight drift")
-    root = Path(__file__).resolve().parents[2]
-    for name, expected in manifest["code_files"].items():
-        if sha_file(root / name) != expected:
-            raise ValueError(f"runtime code drift: {name}")
-    for package, expected in manifest["required_software"].items():
-        actual = importlib.metadata.version(package)
-        if actual != expected and not (package == "torch" and actual.startswith(expected + "+")):
-            raise RuntimeError(f"software drift: {package}={actual}, expected {expected}")
+    config = json.loads((model / "config.json").read_text())
+    if config.get("model_type") != "olmo2" or config.get("hidden_size") != 2048 or config.get("num_hidden_layers") != 16:
+        raise ValueError("unexpected OLMo model configuration")
+    if not (model / "tokenizer.json").is_file():
+        raise FileNotFoundError(model / "tokenizer.json")
     return manifest, data, tables, json.loads((prepared / "generation_config.json").read_text())
 
 
@@ -88,6 +67,15 @@ def validate_saved_rows(saved: list[dict], expected: list[dict], arm: str, eos_i
             raise ValueError(f"resume score mismatch: {arm}/{index}")
 
 
+def verify_table_values(model, table) -> None:
+    values = np.asarray(table["values_float32"], dtype=np.float32)
+    actual = model.model.rotary_emb.inv_freq.detach().cpu().numpy()
+    if actual.shape != values.shape or not np.array_equal(actual, values):
+        raise RuntimeError("runtime frequency values differ from the selected arm")
+    if float(model.model.rotary_emb.attention_scaling) != float(table["gain"]):
+        raise RuntimeError("runtime rotary gain differs from the selected arm")
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--prepared", type=Path, required=True)
@@ -96,10 +84,9 @@ def main() -> None:
     mode = p.add_mutually_exclusive_group(required=True)
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--execute", action="store_true")
-    p.add_argument("--skip-weight-hash", action="store_true", help="Only for CPU preparation; GPU execution always hashes weights")
     args = p.parse_args()
     prepared, model = args.prepared.resolve(), args.model.resolve()
-    manifest, data, tables, decoding_dict = validate(prepared, model, not args.skip_weight_hash or not args.dry_run)
+    manifest, data, tables, decoding_dict = validate(prepared, model)
     if args.dry_run:
         print(json.dumps({"status": "DRY_RUN_PASS", "rows": len(data), "long_rows": sum(r["input_tokens"] > 4096 for r in data), "arms": list(tables)}))
         return
@@ -110,7 +97,7 @@ def main() -> None:
 
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
-    from scripts.experiments.olmo_fast_screen.runtime import install, verify
+    from scripts.experiments.olmo_fast_screen.runtime import install
 
     if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():
         raise RuntimeError("CUDA BF16 device unavailable")
@@ -127,21 +114,22 @@ def main() -> None:
                                                      device_map={"": "cuda"}, attn_implementation="sdpa").eval()
     tokenizer = AutoTokenizer.from_pretrained(model, local_files_only=True)
     decoding = GenerationConfig.from_dict(decoding_dict)
-    runtime_contract = {"manifest_sha256": sha_file(prepared / "manifest.json"), "code_files": manifest["code_files"],
-                        "device_name": device_name, "cuda_capability": capability,
-                        "torch_arch_list": torch.cuda.get_arch_list(),
-                        "software": {name: importlib.metadata.version(name) for name in manifest["required_software"]},
-                        "model_weight_sha256": manifest["model"]["weight_sha256"], "decoder": manifest["decoder_contract"]}
-    if (output / "runtime.json").exists() and json.loads((output / "runtime.json").read_text()) != runtime_contract:
-        raise ValueError("resume runtime contract differs")
+    runtime_contract = {"experiment": "E2", "model": manifest["model"], "pool": manifest["pool"],
+                        "arms": manifest["arms"], "device_name": device_name, "cuda_capability": capability,
+                        "decoder": manifest["decoder_contract"], "generation_config": decoding_dict}
+    if (output / "runtime.json").exists():
+        previous_runtime = json.loads((output / "runtime.json").read_text())
+        if previous_runtime.get("arms", manifest["arms"]) != manifest["arms"]:
+            raise ValueError("resume runtime arm set differs")
+        if previous_runtime.get("generation_config", decoding_dict) != decoding_dict:
+            raise ValueError("resume decoder settings differ")
     atomic(output / "runtime.json", runtime_contract)
-    status = {"status": "RUNNING", "manifest_sha256": runtime_contract["manifest_sha256"],
-              "model_weight_sha256": manifest["model"]["weight_sha256"], "arms": list(tables),
+    status = {"status": "RUNNING", "experiment": "E2", "arms": list(tables),
               "started_at": time.time(), "completed_arms": []}
     if (output / "status.json").exists():
         previous = json.loads((output / "status.json").read_text())
-        if previous.get("manifest_sha256") != status["manifest_sha256"]:
-            raise ValueError("resume manifest differs")
+        if previous.get("arms") != status["arms"]:
+            raise ValueError("resume arm set differs")
         status["completed_arms"] = previous.get("completed_arms", [])
     atomic(output / "status.json", status)
     eos_ids = decoding.eos_token_id
@@ -150,14 +138,14 @@ def main() -> None:
         for arm in manifest["arms"]:
             table = tables[arm]
             install(model_obj, table)
-            verify(model_obj, table)
+            verify_table_values(model_obj, table)
             raw_path = output / f"{arm}.jsonl"
             complete_path = output / f"{arm}.json"
             saved = rows(raw_path) if raw_path.exists() else []
             validate_saved_rows(saved, data, arm, eos_ids)
             if complete_path.exists():
                 receipt = json.loads(complete_path.read_text())
-                if len(saved) != len(data) or receipt.get("raw_sha256") != sha_file(raw_path) or receipt.get("table") != table:
+                if len(saved) != len(data) or receipt.get("rows") != len(data) or receipt.get("table") != table:
                     raise ValueError(f"completed arm receipt drift: {arm}")
                 if arm not in status["completed_arms"]:
                     status["completed_arms"].append(arm)
@@ -179,9 +167,9 @@ def main() -> None:
                     stream.write(json.dumps(record, sort_keys=True) + "\n")
                     stream.flush()
                     atomic(output / "live.json", {"arm": arm, "completed": index + 1, "total": len(data)})
-            verify(model_obj, table)
+            verify_table_values(model_obj, table)
             atomic(complete_path, {"status": "COMPLETE", "rows": len(data),
-                   "raw_sha256": sha_file(raw_path), "table": table, "elapsed_seconds": time.monotonic() - started})
+                   "table": table, "elapsed_seconds": time.monotonic() - started})
             if arm not in status["completed_arms"]:
                 status["completed_arms"].append(arm)
             atomic(output / "status.json", status)

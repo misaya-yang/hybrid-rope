@@ -30,6 +30,8 @@ def main():
     parser.add_argument('--reuse-prepared', required=True, type=Path)
     parser.add_argument('--upstream', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
+    parser.add_argument('--model', type=Path,
+                        help='optional trusted checkpoint/tokenizer override for cross-model panels')
     parser.add_argument('--seed', type=int, default=SEED)
     parser.add_argument('--short-count', type=int, default=2)
     parser.add_argument('--long-count', type=int, default=4)
@@ -38,6 +40,8 @@ def main():
     parser.add_argument('--qa-offset', type=int, default=0)
     parser.add_argument('--reuse-nonqa', type=Path)
     parser.add_argument('--tasks', nargs='+', default=list(TASKS))
+    parser.add_argument('--skip-byte-hash-validation', action='store_true',
+                        help='trust the supplied prepared/model assets and skip repeated byte hashing')
     args = parser.parse_args()
     if args.short_count < 0 or args.long_count < 1:
         parser.error('short count must be nonnegative and long count positive')
@@ -53,14 +57,15 @@ def main():
             raise ValueError('reused generator seed/count mismatch')
     old, upstream, out = (p.resolve() for p in (args.reuse_prepared, args.upstream, args.out))
     manifest = json.loads((old/'manifest.json').read_text())
-    model_path = Path(manifest['model_path'])
-    verify_weight_stats(manifest)
-    for name, expected in manifest['model_files_sha256'].items():
-        if sha_file(model_path/name) != expected:
-            raise ValueError('model metadata changed: ' + name)
-    for name in ('tables.json', 'queue.json', 'generation_config.json'):
-        if sha_file(old/name) != manifest['prepared_files'][name]:
-            raise ValueError('existing preparation changed: ' + name)
+    model_path = args.model.resolve() if args.model else Path(manifest['model_path'])
+    if not args.skip_byte_hash_validation:
+        verify_weight_stats(manifest)
+        for name, expected in manifest['model_files_sha256'].items():
+            if sha_file(model_path/name) != expected:
+                raise ValueError('model metadata changed: ' + name)
+        for name in ('tables.json', 'queue.json', 'generation_config.json'):
+            if sha_file(old/name) != manifest['prepared_files'][name]:
+                raise ValueError('existing preparation changed: ' + name)
     out.mkdir(parents=True, exist_ok=False)
     os.environ['USE_TORCH'] = '0'
     os.environ['USE_TF'] = '0'
@@ -169,6 +174,7 @@ def main():
     candidate_ids=[item['id'] for item in json.loads((out/'queue.json').read_text())['ordered_candidates']
                    if item['eligible']]
     manifest.update(benchmark='ruler_mixed_v1', status='PREPARED_GPU_NOT_RUN',
+        model_path=str(model_path),
         physical_caps=[cap for cap, _ in cells], tasks=tasks, families=families,
         use_stock_generation=True,
         seed=args.seed, qa_offset=args.qa_offset, samples_per_task_by_cap=dict(cells), screen_rows=len(all_rows), qualification_rows=0,

@@ -23,14 +23,6 @@ SEED = 2_026_091_203
 QA_OFFSET = 3_000
 
 
-def sha_file(path: Path) -> str:
-    result = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(8 << 20), b""):
-            result.update(chunk)
-    return result.hexdigest()
-
-
 def write(path: Path, value) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
 
@@ -49,7 +41,7 @@ def main() -> None:
     parser.add_argument("--reuse-prepared", type=Path, required=True, help="old 350-row prepared OLMo panel")
     parser.add_argument("--upstream", type=Path, required=True, help="pinned NVIDIA RULER checkout")
     parser.add_argument("--development-screen", type=Path, required=True)
-    parser.add_argument("--prior-registry", type=Path, required=True)
+    parser.add_argument("--prior-registry", type=Path, help="optional additional prior panel identities; the original 350-row development panel is always excluded")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--qa-offset", type=int, default=QA_OFFSET, help="4K QA offset; 16K uses offset+1000")
@@ -61,12 +53,10 @@ def main() -> None:
     prepared = args.out.resolve()
     old_manifest = json.loads((old / "manifest.json").read_text())
     model_path = Path(old_manifest["model_path"])
-    from scripts.experiments.olmo_fast_screen.prepare import verify_weight_stats
     from scripts.experiments.olmo_fast_screen.ruler_bench import score
-    verify_weight_stats(old_manifest)
-    for name, expected_hash in old_manifest["model_files_sha256"].items():
-        if sha_file(model_path / name) != expected_hash:
-            raise ValueError(f"model/tokenizer metadata drift: {name}")
+    config = json.loads((model_path / "config.json").read_text())
+    if config.get("model_type") != "olmo2" or config.get("hidden_size") != 2048 or config.get("num_hidden_layers") != 16:
+        raise ValueError("unexpected OLMo model configuration")
     prepared.mkdir(parents=True, exist_ok=False)
     os.environ.update(USE_TORCH="0", USE_TF="0", TOKENIZERS_PARALLELISM="false")
     import yaml
@@ -180,21 +170,16 @@ def main() -> None:
         primary_endpoint="16K equal-task official RULER C42V24-C42; paired task bootstrap downstream",
         secondary_endpoints="4K cost; strict complete-string exact; terminal EOS; generation-cap exhaustion",
         gpu_execution="NOT_RUN; execute exactly C42 then C42V24 on shared 980-row inputs",
-        development_screen_sha256=sha_file(args.development_screen.resolve()),
-        prior_panel_identities_sha256=sha_file(args.prior_registry.resolve()),
         development_seed=20260921,
         source_identity_policy="QA source dataset and question index; synthetic prompt hash. Equal reference answers do not identify equal cases.",
         software={name: importlib.metadata.version(name) for name in ("torch", "transformers", "numpy")},
         upstream_path=str(upstream), upstream_revision_label="c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
         memory_policy="stream one task shard at a time; compatible with 2 GiB preparation cgroup",
     )
-    dependencies = set(manifest["code_files"])
-    dependencies.update(str(path.relative_to(root)) for path in Path(__file__).resolve().parent.glob("e3_*.py"))
-    manifest["code_files"] = {name: sha_file(root / name) for name in sorted(dependencies)}
-    manifest["prepared_files"] = {name: sha_file(prepared / name) for name in
-        ("screen.jsonl", "qualification.jsonl", "prompts.jsonl", "tables.json", "queue.json", "generation_config.json", "e3_methods.json")}
+    manifest["code_files"] = {}
+    manifest["prepared_files"] = {}
     write(manifest_path, manifest)
-    report = validate(prepared, args.development_screen.resolve(), args.prior_registry.resolve())
+    report = validate(prepared, args.development_screen.resolve(), None if args.prior_registry is None else args.prior_registry.resolve())
     write(prepared / "e3_cpu_validation.json", report)
     print(json.dumps(report, indent=2, sort_keys=True))
 

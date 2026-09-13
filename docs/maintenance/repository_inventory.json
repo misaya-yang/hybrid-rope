@@ -2049,12 +2049,42 @@
       "category": "navigation"
     },
     {
+      "path": "docs/research/next_stage_20260912/5090_FINAL_EXPERIMENT_REPORT_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/5090_SOL_HANDOFF_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/5090_recovery_preparation.md",
       "area": "docs",
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/EVQ_LORA_PRO_GUIDANCE_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/ICLR2027_ROPE_EXPERIMENT_PLAN_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/LORA_HISTORY_BRIEF_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/LORA_MECHANISM_AND_RECIPE_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/OLMO_LORA_V2_20260912.md",
       "area": "docs",
       "category": "document"
     },
@@ -4314,6 +4344,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_support_joint_151m_20260912/shutdown_after_seed42.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/index.md",
       "area": "experiments",
       "category": "navigation"
@@ -5489,6 +5524,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/data_multiscale.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/data_prepare.py",
       "area": "experiments",
       "category": "code"
@@ -5499,7 +5539,37 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/download_public_sft.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/download_sources.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/evaluate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/expand_longcite.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/expand_pg19_sources.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/expand_public_sft.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/gradual_table_train.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5509,7 +5579,27 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/interval_postprocess.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/length_schedule.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/make_plan.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/prepare_llama_bm_transfer.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/prepare_llama_transfer_eval.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5520,6 +5610,31 @@
     },
     {
       "path": "experiments/olmo_recovery_20260912/readiness.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/recovery_v2_data.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/recovery_v2_eval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/recovery_v2_probe.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/recovery_v2_runtime.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/recovery_v2_train.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5535,6 +5650,11 @@
     },
     {
       "path": "experiments/olmo_recovery_20260912/train.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/two_stage_train.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5969,6 +6089,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/rope_fast_5090_20260912/e2_extra_score.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/rope_fast_5090_20260912/e2_prepare.py",
       "area": "experiments",
       "category": "code"
@@ -6004,6 +6129,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/rope_fast_5090_20260912/e3_strong_baselines_postprocess.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/rope_fast_5090_20260912/e3_tables.py",
       "area": "experiments",
       "category": "code"
@@ -6017,6 +6147,31 @@
       "path": "experiments/rope_fast_5090_20260912/index.md",
       "area": "experiments",
       "category": "navigation"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/layer_group_probe.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/p1_factorial.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/qk_diagnostic.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/source_counterfactual.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_fast_5090_20260912/supplement_queue.py",
+      "area": "experiments",
+      "category": "code"
     },
     {
       "path": "experiments/rope_operator_family/DESIGN.md",
@@ -12356,6 +12511,11 @@
     "docs/research/next_stage_20260912/5090_recovery_preparation.md",
     "experiments/olmo_recovery_20260912/index.md",
     "experiments/olmo_recovery_20260912/README.md",
-    "experiments/rope_fast_5090_20260912/index.md"
+    "experiments/rope_fast_5090_20260912/index.md",
+    "docs/research/next_stage_20260912/5090_SOL_HANDOFF_20260912.md",
+    "docs/research/next_stage_20260912/OLMO_LORA_V2_20260912.md",
+    "docs/research/next_stage_20260912/EVQ_LORA_PRO_GUIDANCE_20260912.md",
+    "docs/research/next_stage_20260912/LORA_HISTORY_BRIEF_20260912.md",
+    "docs/research/next_stage_20260912/LORA_MECHANISM_AND_RECIPE_20260912.md"
   ]
 }

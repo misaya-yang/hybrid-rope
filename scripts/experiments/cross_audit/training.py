@@ -11,9 +11,10 @@ import torch.nn.functional as F
 from torch.utils.checkpoint import checkpoint
 
 
-def causal_loss(model, ids, labels, *, chunk_size=128):
+def causal_loss(model, ids, labels, *, chunk_size=128, backbone=None):
     """labels align with input tokens; hidden[i] predicts labels[i+1]."""
-    h=model.model(input_ids=ids[:,:-1],use_cache=False).last_hidden_state
+    transformer = model.model if backbone is None else backbone
+    h=transformer(input_ids=ids[:,:-1],use_cache=False).last_hidden_state
     target=labels[:,1:]
     mask=target!=-100
     n=int(mask.sum())

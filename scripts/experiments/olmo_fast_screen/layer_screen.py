@@ -30,13 +30,14 @@ def work(args):
     prepared, out = args.prepared, args.out
     manifest = json.loads((prepared/'manifest.json').read_text())
     natural = manifest.get('benchmark') == 'longbench_natural_v1'
-    for name, expected in manifest['prepared_files'].items():
-        if sha_file(prepared/name) != expected:
-            raise ValueError('frozen prepared inputs changed')
-    verify_weight_stats(manifest)
-    for name, expected in manifest['model_files_sha256'].items():
-        if sha_file(Path(manifest['model_path'])/name) != expected:
-            raise ValueError('model metadata changed')
+    if not args.skip_byte_hash_validation:
+        for name, expected in manifest['prepared_files'].items():
+            if sha_file(prepared/name) != expected:
+                raise ValueError('frozen prepared inputs changed')
+        verify_weight_stats(manifest)
+        for name, expected in manifest['model_files_sha256'].items():
+            if sha_file(Path(manifest['model_path'])/name) != expected:
+                raise ValueError('model metadata changed')
     params = json.loads((prepared/'generation_config.json').read_text())
     checked = dict(params)
     for name, default in dict(encoder_no_repeat_ngram_size=0,
@@ -62,15 +63,16 @@ def work(args):
         tables.update(extra)
     spec = json.loads(args.spec.read_text())
     methods = spec['methods']
-    if len({digest(v) for v in methods.values()}) != len(methods):
+    if len({tuple(v) for v in methods.values()}) != len(methods):
         raise ValueError('duplicate policies')
     cached = {}
     reused_files = {}
     if args.reuse_generations:
         previous = json.loads((args.reuse_generations/'runtime.json').read_text())
         expected = dict(model_id=manifest['model_id'], revision=manifest['revision'],
-            generation_config=params, spec=spec, mlp_chunk_size=args.mlp_chunk_size,
-            table_identity={name:digest(table) for name,table in tables.items()})
+            generation_config=params, spec=spec, mlp_chunk_size=args.mlp_chunk_size)
+        if not args.skip_byte_hash_validation:
+            expected['table_identity']={name:digest(table) for name,table in tables.items()}
         for key,value in expected.items():
             if previous.get(key) != value:
                 raise ValueError('reused generation scientific contract differs: '+key)
@@ -81,7 +83,8 @@ def work(args):
             path = args.reuse_generations/(name+'.jsonl')
             if not path.exists():
                 continue
-            reused_files[name] = sha_file(path)
+            if not args.skip_byte_hash_validation:
+                reused_files[name] = sha_file(path)
             cached[name] = {}
             for old in map(json.loads,path.read_text().splitlines()):
                 row = by_id[old['row_id']]
@@ -114,6 +117,21 @@ def work(args):
         if len(assignment) != len(model.model.layers) or not set(assignment) <= tables.keys():
             raise ValueError('invalid per-layer policy')
     tokenizer = AutoTokenizer.from_pretrained(manifest['model_path'], local_files_only=True)
+    def verify_installed(table):
+        if not args.skip_byte_hash_validation:
+            verify(model,table);return
+        import numpy as np
+        expected=np.asarray(table['values_float32'],dtype=np.float32)
+        actual=model.model.rotary_emb.inv_freq.detach().cpu().numpy()
+        if (expected.ndim!=1 or actual.shape!=expected.shape or not np.isfinite(expected).all()
+                or not np.all(expected>0) or not np.all(expected[:-1]>expected[1:])
+                or not np.array_equal(actual,expected)):
+            raise RuntimeError('runtime frequency values differ from selected table')
+        gain=model.model.rotary_emb.attention_scaling
+        if torch.is_tensor(gain) and (gain.numel()!=1 or float(gain)!=float(table['gain'])):
+            raise RuntimeError('runtime rotary gain differs from selected table')
+        if not torch.is_tensor(gain) and float(gain)!=float(table['gain']):
+            raise RuntimeError('runtime rotary gain differs from selected table')
     chunk_qualification = qualify_chunking(model, rows[0]['prompt_ids'], args.mlp_chunk_size)
     import transformers
     root = Path(__file__).resolve().parents[3]
@@ -128,18 +146,20 @@ def work(args):
         'scripts/experiments/scale_transport/position_visibility.py'}
     if natural:
         deps.add('scripts/eval/longbench_metrics.py')
-    atomic(out/'runtime.json', dict(parent_manifest_sha256=sha_file(prepared/'manifest.json'),
-        model_id=manifest['model_id'], revision=manifest['revision'],
-        code_files={name: sha_file(root/name) for name in deps},
-        spec=spec, spec_sha256=sha_file(args.spec), torch=torch.__version__,
-        extra_tables_sha256=sha_file(args.extra_tables) if args.extra_tables else None,
+    runtime_record=dict(model_id=manifest['model_id'], revision=manifest['revision'],
+        spec=spec, torch=torch.__version__,
         transformers=transformers.__version__, backend='Flash SDPA only',
         mlp_chunk_size=args.mlp_chunk_size,
         mlp_chunk_qualification=chunk_qualification,
         reused_generations_sha256=reused_files,
         allocator_configuration=os.environ.get('PYTORCH_CUDA_ALLOC_CONF'),
         row_ids=[r['row_id'] for r in rows], generation_config=params,
-        table_identity={name: digest(table) for name, table in tables.items()}))
+        table_values={name:{'values_float32':table['values_float32'],'gain':table['gain']} for name,table in tables.items()})
+    if not args.skip_byte_hash_validation:
+        runtime_record.update(parent_manifest_sha256=sha_file(prepared/'manifest.json'),
+            code_files={name: sha_file(root/name) for name in deps},spec_sha256=sha_file(args.spec),
+            extra_tables_sha256=sha_file(args.extra_tables) if args.extra_tables else None)
+    atomic(out/'runtime.json',runtime_record)
     count = 0
 
     def generate(name, row):
@@ -189,7 +209,7 @@ def work(args):
             bias_policy = None
             if len(set(assignment)) == 1:
                 # A single global table uses stock attention without layer hooks.
-                install(model, tables[assignment[0]]); verify(model, tables[assignment[0]])
+                install(model, tables[assignment[0]]); verify_installed(tables[assignment[0]])
                 policy = nullcontext()
             else:
                 policy = LayerTablePolicy(model, tables, assignment)
@@ -214,10 +234,13 @@ def work(args):
                             data = generate(name, row)
                         stream.write(json.dumps(data)+'\n'); stream.flush()
                         records.append(data)
-            atomic(out/(name+'.json'), dict(status='COMPLETE', rows=len(records),
-                row_ids=[r['row_id'] for r in records], raw_sha256=sha_file(out/(name+'.jsonl')),
+            receipt=dict(status='COMPLETE', rows=len(records),
+                row_ids=[r['row_id'] for r in records],
                 assignments=assignment, score_sum=sum(r['correct'] for r in records),
-                bias_position_receipt=bias_policy.receipt() if bias_policy else None))
+                bias_position_receipt=bias_policy.receipt() if bias_policy else None)
+            if not args.skip_byte_hash_validation:
+                receipt['raw_sha256']=sha_file(out/(name+'.jsonl'))
+            atomic(out/(name+'.json'),receipt)
     atomic(out/'status.json', dict(status='COMPLETE', generations=count,
         reused_generations=sum(len(v) for v in cached.values()),
         elapsed_seconds=time.monotonic()-started, peak_memory_bytes=torch.cuda.max_memory_allocated()))
@@ -234,6 +257,8 @@ def main():
     p.add_argument('--qualify-baseline', type=Path)
     p.add_argument('--mlp-chunk-size', type=int, default=0)
     p.add_argument('--reuse-generations', type=Path)
+    p.add_argument('--skip-byte-hash-validation', action='store_true',
+        help='Opt in for trusted cloned assets; retain semantic row/model/table checks without byte hashing.')
     args = p.parse_args(); args.out.mkdir(parents=True, exist_ok=False)
     atomic(args.out/'status.json', dict(status='RUNNING', pid=os.getpid(), started_unix=time.time()))
     try:

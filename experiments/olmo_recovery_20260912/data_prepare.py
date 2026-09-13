@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build source-separated Llama-3-8B recovery data without loading model weights."""
+"""Build source-separated OLMo 2x/4x recovery data without model weights."""
 
 from __future__ import annotations
 
@@ -9,17 +9,19 @@ from pathlib import Path
 
 import numpy as np
 
-from experiments.evq_recovery.acquire import file_hash
 from experiments.evq_recovery.data import chat_ids, sha_text, supervised_chat, write_json
 from experiments.evq_recovery.prepare import (
-    prepare_pg19, prepare_qasper, prepare_sft, screen_sft_files,
+    prepare_qasper, prepare_sft, screen_sft_files,
 )
+from .data_multiscale import partition_long_prompt_sft, prepare_pg19_multiscale
 
 
 REQUIRED_SOURCES = (
     "pg19_books.json", "longalign.jsonl", "qasper-train-dev.tgz",
-    "qasper-test.tgz", "native_rows.jsonl",
+    "qasper-test.tgz",
 )
+DOLLY_CATEGORIES = ("brainstorming", "classification", "closed_qa", "creative_writing",
+                     "general_qa", "information_extraction", "open_qa", "summarization")
 
 
 def add_kl_positions(path: Path) -> dict:
@@ -103,17 +105,85 @@ def prepare_native_converted(sources: Path, output: Path, source_tokenizer, toke
     return dict(counts)
 
 
+def dolly_receipt(sources: Path) -> dict:
+    acquisition = json.loads((sources / "acquisition.json").read_text())
+    receipts = [row for row in acquisition.get("files", []) if Path(row.get("path", "")).name == "dolly.jsonl"]
+    if len(receipts) != 1:
+        raise ValueError("acquisition.json must contain exactly one Dolly receipt")
+    revision = (receipts[0].get("revision") or acquisition.get("dolly_revision") or
+                acquisition.get("source_revisions", {}).get("databricks_dolly_15k"))
+    if not revision:
+        raise ValueError("acquisition.json lacks the pinned Dolly source revision")
+    return {"historical_sha256": receipts[0].get("sha256"), "revision": revision,
+            "url": receipts[0].get("url"), "identity_policy": "user_attested_clone/no_sha_validation"}
+
+
+def prepare_dolly(sources: Path, output: Path, tokenizer) -> tuple[dict, dict]:
+    """Prepare balanced public short replay without truncating context or truth."""
+    from collections import Counter, defaultdict
+    receipt = dolly_receipt(sources); candidates = defaultdict(list); counts = Counter()
+    group_splits = {}
+    with (sources / "dolly.jsonl").open() as stream:
+        for source_index, line in enumerate(stream):
+            raw = json.loads(line); category = raw.get("category")
+            if category not in DOLLY_CATEGORIES:
+                counts["unknown_category"] += 1; continue
+            instruction = str(raw.get("instruction", "")).strip()
+            context = str(raw.get("context", "")).strip()
+            response = str(raw.get("response", "")).strip()
+            if not instruction or not response:
+                counts["missing_instruction_or_response"] += 1; continue
+            normalized_context = " ".join(context.split())
+            source_hint = str(raw.get("source", "")).strip()
+            group_material = normalized_context if normalized_context else instruction + "\n" + source_hint
+            source_group_hash = sha_text(group_material)
+            split_digit = int(source_group_hash[:16], 16) % 10
+            split = "train" if split_digit < 8 else "dev" if split_digit == 8 else "test"
+            previous = group_splits.setdefault(source_group_hash, split)
+            if previous != split:
+                raise AssertionError("Dolly source group crossed splits")
+            question = instruction if not context else instruction + "\n\nContext:\n" + context
+            item = supervised_chat(tokenizer, question, response)
+            prompt_ids = item["input_ids"][:item["target_start"]]
+            if len(item["input_ids"]) > 4096 or len(prompt_ids) + 256 > 4096:
+                counts["over_4096_intact_skipped"] += 1; continue
+            original_row_sha = sha_text(line.rstrip("\n"))
+            item.update(id="dolly:" + original_row_sha, source_id="dolly-group:" + source_group_hash,
+                        source_group_sha256=source_group_hash, original_row_sha256=original_row_sha,
+                        source_row_index=source_index, split=split, task=category, prompt_ids=prompt_ids,
+                        references=[response], generation_budget=256, length_bucket=4096,
+                        prompt_sha256=sha_text(question), answer_sha256=sha_text(response),
+                        provenance="fresh public databricks-dolly-15k human-written replay; not legacy replay")
+            candidates[split, category].append(item)
+    limits = {"train": 64, "dev": 16, "test": 16}; selected_counts = {}
+    for split in limits:
+        balanced = min(limits[split], *(len(candidates[split, category]) for category in DOLLY_CATEGORIES))
+        if balanced <= 0:
+            raise ValueError(f"Dolly has no balanced eligible rows for {split}")
+        with (output / f"native_{split}.jsonl").open("x") as target:
+            for category in DOLLY_CATEGORIES:
+                selected = sorted(candidates[split, category], key=lambda row: row["original_row_sha256"])[:balanced]
+                for row in selected:
+                    target.write(json.dumps(row) + "\n")
+                selected_counts[f"{split}_{category}"] = len(selected)
+    selected_counts.update({"categories": list(DOLLY_CATEGORIES), "skip_counts": dict(counts),
+                            "policy": "source-group hash 80/10/10 split; equal per-category caps 64/16/16"})
+    return selected_counts, receipt
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--sources", type=Path, required=True)
     p.add_argument("--model", type=Path, required=True,
                    help="target OLMo or Llama checkpoint directory; tokenizer/config only are read")
-    p.add_argument("--source-tokenizer", type=Path, required=True,
-                   help="original OLMo tokenizer used by native_rows.jsonl")
+    p.add_argument("--source-tokenizer", type=Path,
+                   help="original OLMo tokenizer; required only with legacy native_rows.jsonl")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args()
     sources, model, output = args.sources.resolve(), args.model.resolve(), args.output.resolve()
     missing = [str(sources / name) for name in REQUIRED_SOURCES if not (sources / name).exists()]
+    if not (sources / "native_rows.jsonl").exists() and not (sources / "dolly.jsonl").exists():
+        missing.append(str(sources / "native_rows.jsonl OR dolly.jsonl"))
     if missing:
         raise FileNotFoundError("missing real source assets; no substitute pool will be generated: " + ", ".join(missing))
     if output.exists():
@@ -125,7 +195,6 @@ def main() -> None:
     if config.model_type not in {"llama", "olmo2"}:
         raise ValueError("target must be the selected OLMo or Llama recovery checkpoint")
     tokenizer = AutoTokenizer.from_pretrained(model, local_files_only=True)
-    source_tokenizer = AutoTokenizer.from_pretrained(args.source_tokenizer.resolve(), local_files_only=True)
     if tokenizer.eos_token_id is None or not tokenizer.chat_template:
         raise ValueError("target tokenizer lacks native EOS/chat template")
     terminal_probe = chat_ids(tokenizer, [{"role": "user", "content": "x"},
@@ -134,21 +203,35 @@ def main() -> None:
         raise ValueError(f"assistant terminal token {terminal_probe} differs from configured eos {tokenizer.eos_token_id}")
 
     denied, qasper = prepare_qasper(sources, output, tokenizer)
-    pg19 = prepare_pg19(sources, output, tokenizer)
+    pg19 = prepare_pg19_multiscale(sources, output, tokenizer)
     sft = prepare_sft(sources, output, tokenizer, denied)
     sft.update(screen_sft_files(output, tokenizer, denied))
-    native = prepare_native_converted(sources, output, source_tokenizer, tokenizer)
+    sft_multiscale = partition_long_prompt_sft(output, tokenizer.eos_token_id)
+    if (sources / "native_rows.jsonl").exists():
+        if args.source_tokenizer is None:
+            raise ValueError("--source-tokenizer is required for legacy native_rows.jsonl")
+        source_tokenizer = AutoTokenizer.from_pretrained(args.source_tokenizer.resolve(), local_files_only=True)
+        native = prepare_native_converted(sources, output, source_tokenizer, tokenizer)
+        replay_provenance = {"kind": "legacy_native_rows", "source": str(sources / "native_rows.jsonl"),
+                             "source_tokenizer": str(args.source_tokenizer.resolve()),
+                             "identity_policy": "user_attested_clone/no_sha_validation"}
+    else:
+        native, dolly_source = prepare_dolly(sources, output, tokenizer)
+        replay_provenance = {"kind": "fresh_public_dolly_replay", **dolly_source,
+                             "arm_policy": "identical frozen rows are available to the active Native and Cosh comparison",
+                             "metric_limit": "open-ended full-response F1 is lexical and incomplete; normalized exact and terminal behavior remain separate"}
     kl = add_kl_positions(output / "native_train.jsonl")
     manifest = {
         "schema_version": 1, "status": "CPU_DATA_READY_GPU_NOT_RUN",
+        "asset_identity_policy": "user_attested_clone/no_sha_validation",
         "model_type": config.model_type, "model_path": str(model),
-        "tokenizer_sha256": file_hash(model / "tokenizer.json"),
-        "source_tokenizer_sha256": file_hash(args.source_tokenizer.resolve() / "tokenizer.json"),
-        "tokenizer_chat_template_sha256": sha_text(tokenizer.chat_template),
+        "tokenizer_path": str(model),
+        "tokenizer_chat_template_id": sha_text(tokenizer.chat_template),
         "eos_token_id": tokenizer.eos_token_id,
         "assistant_terminal_id": terminal_probe,
-        "sources": {name: file_hash(sources / name) for name in REQUIRED_SOURCES},
-        "qasper": qasper, "pg19": pg19, "sft": sft, "native": native,
+        "sources": {name: str(sources / name) for name in REQUIRED_SOURCES},
+        "qasper": qasper, "pg19": pg19, "sft": sft, "sft_multiscale": sft_multiscale, "native": native,
+        "replay_provenance": replay_provenance,
         "native_teacher_kl_positions": kl,
         "native_teacher_kl_policy": "Text uses the frozen positions above. Instruction KL regenerates frozen Native greedy answer/termination prefixes at runtime; stored prompt positions are not its supervision positions.",
         "loss_roles": {
@@ -160,18 +243,29 @@ def main() -> None:
         "evaluation": "QASPER full-response F1/exact/EOS plus PG19 whole and tail NLL; no answer substring scoring",
         "limitations": [
             "LongAlign assistant labels are synthetic and do not establish professional-domain truth.",
-            "Historical Native replay is source-separated but not newly blind.",
+            "LongAlign prompt length does not establish decisive-evidence distance; no NIAH evaluation row is used for training.",
+            "Dolly fallback is fresh public replay, not a replay of the old Native evaluation pool.",
             "This preparation does not establish that FFN LoRA is necessary.",
         ],
     }
-    manifest["files"] = {path.name: {"bytes": path.stat().st_size, "sha256": file_hash(path)}
+    manifest["files"] = {path.name: {"bytes": path.stat().st_size, "path": str(path)}
                          for path in output.iterdir() if path.is_file()}
     def dataset_entry(name: str, rows: int) -> dict:
         path = output / name
-        return {"path": str(path), "sha256": file_hash(path), "rows": int(rows)}
-    manifest["cpt_train"] = dataset_entry("cpt_train.npy", pg19["train_windows"])
+        return {"path": str(path), "bytes": path.stat().st_size, "rows": int(rows)}
+    manifest["cpt_train_by_length"] = {
+        "8192": dataset_entry("cpt_train_8192.npy", pg19["train_windows_by_length"]["8192"]),
+        "16384": dataset_entry("cpt_train.npy", pg19["train_windows_by_length"]["16384"]),
+    }
+    manifest["cpt_train"] = manifest["cpt_train_by_length"]["16384"]
+    manifest["cpt_train"]["identity"] = "alias of cpt_train_by_length.16384"
+    manifest["sft_train_by_length"] = {
+        "8192": dataset_entry("sft_train_8192.jsonl", sft_multiscale["counts"]["train_8192"]),
+        "16384": dataset_entry("sft_train_16384.jsonl", sft_multiscale["counts"]["train_16384"]),
+    }
     manifest["sft_train"] = dataset_entry(
-        "sft_train.jsonl", sum(value for key, value in sft.items() if key.startswith("train_") and "removed" not in key))
+        "sft_train.jsonl", sum(sft_multiscale["counts"][f"train_{length}"] for length in (8192, 16384)))
+    manifest["sft_train"]["identity"] = "union of sft_train_by_length 8192 and 16384; every row remains intact"
     manifest["replay_train"] = dataset_entry(
         "native_train.jsonl", sum(value for key, value in native.items() if key.startswith("train_")))
     manifest["replay_train"]["identity"] = "alias of source-separated native_train.jsonl; replay CE and optional teacher KL are distinct losses"

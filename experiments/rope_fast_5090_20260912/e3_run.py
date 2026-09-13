@@ -15,7 +15,7 @@ def main() -> None:
     parser.add_argument("--prepared", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--development-screen", type=Path, required=True)
-    parser.add_argument("--prior-registry", type=Path, required=True)
+    parser.add_argument("--prior-registry", type=Path, help="optional additional prior panel identities")
     parser.add_argument("--reuse-generations", type=Path, help="prior partial/complete layer_screen output; writes a new recovery directory")
     parser.add_argument("--execute", action="store_true", help="explicitly authorize GPU evaluation")
     args = parser.parse_args()
@@ -27,7 +27,7 @@ def main() -> None:
         "recovery_source": None if args.reuse_generations is None else str(args.reuse_generations.resolve()),
     }
     from experiments.rope_fast_5090_20260912.e3_validate import validate
-    plan["cpu_validation"] = validate(args.prepared.resolve(), args.development_screen.resolve(), args.prior_registry.resolve())
+    plan["cpu_validation"] = validate(args.prepared.resolve(), args.development_screen.resolve(), None if args.prior_registry is None else args.prior_registry.resolve())
     print(json.dumps(plan, indent=2, sort_keys=True), flush=True)
     if not args.execute:
         return
@@ -40,7 +40,7 @@ def main() -> None:
         raise RuntimeError(f"E3 requires RTX 5090 sm120; got {properties.name!r} {capability}")
     command = [sys.executable, "-m", "scripts.experiments.olmo_fast_screen.layer_screen",
         "--prepared", str(args.prepared.resolve()), "--spec", str((args.prepared / "e3_methods.json").resolve()),
-        "--out", str(args.out.resolve())]
+        "--out", str(args.out.resolve()), "--skip-byte-hash-validation"]
     if args.reuse_generations is not None:
         command.extend(["--reuse-generations", str(args.reuse_generations.resolve())])
     subprocess.run(command, check=True)

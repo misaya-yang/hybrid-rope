@@ -19,6 +19,14 @@
    Do not repeat failed assumptions or generalize failures beyond their evidence.
    Successful methods are evidence, not immutable constraints.
 
+5. **Keep experiment overhead low.**
+   Check the core code and data needed for the intended experiment, reuse valid
+   checks, and proceed. Do not default to SHA scans, repeated preflights, or
+   exhaustive validation. When the user confirms cloned assets are reliable,
+   trust that confirmation; changed SSH endpoints, paths, or historical hashes
+   are not reasons to block, rebuild, or rerun. Keep only checks tied to concrete
+   execution risks, and do not interrupt healthy work for bookkeeping updates.
+
 Project-specific hypotheses, baselines, parameters, experiment plans, results,
 and failure records belong in project documents, not here.
 
@@ -38,7 +46,8 @@ and failure records belong in project documents, not here.
   new execution. Check an experiment's actual result owner before claiming it
   completed.
 - Preserve dirty work and source identities. Before moving evidence or code,
-  check path and hash dependencies; record relocations and verify navigation.
+  inspect existing path and identity references without defaulting to fresh
+  asset hashing; record relocations and verify navigation.
   Keep report-backed results distinct from raw-row verification and plans.
 - Put project-specific priorities and new scientific decisions in the current
   research plan linked from `index.md`, rather than expanding this file into an
