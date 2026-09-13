@@ -27,6 +27,10 @@
    teacher-forced目标上同时改善区间regret、端点、来源margin和Native项；独立
    select/confirm与350行宽任务生成显示收益分布不一致。因此将其分类为Pareto，
    不因任一开发阈值或单任务损失淘汰，也不称为当前最优表。
+7. **low/high 不能继续固定为YaRN边界。** 分钟级band实验得到Llama S=4小面板
+   当前最佳`[16,34]`，但原样迁入OLMo后8K/16K NIAH相对BM为-12.5/-25pp；
+   OLMo自身局部最佳basin为low=14、high=31--32。完整结果与Qwen最小判决见
+   [Band位置最小筛选](BAND_POSITION_MINIMAL_SCREEN_20260913.md)。
 
 ## 磁盘整理与保留资产
 
@@ -161,6 +165,18 @@ single1、multikey1持平，在single3、multivalue、multikey3和QA2下降，CW
 持平。相对C42则除multikey3外多数任务改善。该结果支持“候选有跨面板价值但仍在
 Pareto面上”，不支持淘汰或宣布胜出。
 
+为分离shape与gain，补齐C42V24和SolverC42的2×2缺失格：
+
+| allocation shape | C42V24 gain | Solver gain |
+|---|---:|---:|
+| C42V24 shape | **54.40** | 53.96 |
+| Solver shape | 51.86 | 50.39 |
+
+只改gain相对C42V24为-0.44pp，其row bootstrap敏感性区间[-2.09,+1.13]pp；
+只改shape为-2.54pp，区间[-5.19,-0.03]pp。两者共同改变还产生约-1.03pp负交互。
+因此本宽面板的损伤主要随allocation变化而来，但这不把该shape从其他长度/任务的
+Pareto集合删除。
+
 391行、五任务、全16K自然QA并集同样只生成SolverC42，并复用BM/MrPro历史原始
 行；主口径为完整响应F1、任务等权：
 
@@ -181,6 +197,29 @@ HotpotQA为+5.16pp，NarrativeQA近似持平，2Wiki/MultiField/Qasper分别为
 [+0.36,+7.04]pp。这只是当前冻结行的重采样敏感性区间，不是总体置信保证；尤其
 相对BM应判为统计未决，而不是把+0.17pp解释为胜利或把区间含零解释为失败。
 
+### Llama跨模型固定g8表
+
+将OLMo SolverC42的完整64槽exponent profile按Llama Native频率和S=8重建，
+使用标准g8 gain；同一张表运行8/16/32/48/64K，复用本页前述BM/MrPro原始行：
+
+| 固定表 | 8K | 16K | 32K | 48K | 64K | 5点log-AUC | 最弱点 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| BM_g8 | 95.83 | 85.42 | 97.92 | 95.83 | 72.92 | 91.33 | 72.92 |
+| MrPro_g8 | 91.67 | 95.83 | 87.50 | **100.00** | 68.75 | 91.76 | 68.75 |
+| Solver full-profile g8 | 95.83 | **97.92** | **100.00** | 95.83 | **85.42** | **96.91** | **85.42** |
+| YaRN-band remap control | **97.92** | **97.92** | 97.92 | 87.50 | 45.83 | 92.58 | 45.83 |
+
+full-profile相对BM/MrPro AUC为+5.58/+5.15pp，且只有48K低于MrPro 4.17pp；
+这是目前最强的跨模型开发信号，但每格仅三任务×4行。它保留OLMo profile约
+`[14,32]`的band placement，同时迁移内部shape，所以不能单独归因为shape。
+
+YaRN-band control把同一内部累计shape从OLMo `[14,32]`插值到按Llama Native
+wavelength得到的`[18,35]`。它保住1×--4×，却在6×/8×明显崩溃。该结果反驳
+“随Native长度机械平移YaRN band就是正确迁移”的假设；它不证明`[14,32]`普适。
+最终搜索必须让全64槽单调m参与优化，`l/h`和三段平台由解事后读出，不能固定为
+YaRN边界。两条表均保留：full-profile进入64K宽任务复核，remap作为机制反例和
+8--32K Pareto点。
+
 判定采用三层：协议/实现错误否决运行；任务层明确受支配才淘汰表；小样本不达线、
 代理冲突和单任务损失只标为Pareto/未决并继续独立复核。MrPro/BM/Native在每个
 benchmark只生成一次并永久复用。
@@ -194,6 +233,8 @@ benchmark只生成一次并永久复用。
 - 独立生成汇总：`summarize_range_generation.py`、
   `compare_broad_fixed_candidate.py`、`compare_natural_fixed_candidate.py`；
 - 配对敏感性分析：`bootstrap_task_equal_contrast.py`；
+- 跨模型profile构造与比较：`transfer_range_profile.py`、
+  `compare_llama_fixed_candidate.py`、`compare_llama_runner_parity.py`；
 - 本轮单测：`test_fixed_table_interval.py`、`tests/test_rope_ood_collision_pareto.py`、
   `tests/test_range_table_solver.py`、`tests/test_range_table_eval.py`、
   `tests/test_broad_fixed_candidate.py`、`tests/test_natural_fixed_candidate.py`；
@@ -202,4 +243,7 @@ benchmark只生成一次并永久复用。
 - 求解器与生成：`model_conditioned_range_20260913/`。
 
 本轮没有训练模型权重，没有下载新模型，没有提交或推送Git，也没有关机。实例
-继续保留，下一步用同一宽面板拆分SolverC42的allocation与gain贡献。
+继续保留。最新优先级已改为分钟级band响应与跨模型统一判决；Llama/OLMo结果、
+停止条件和下一组Qwen四臂见[Band位置最小筛选](BAND_POSITION_MINIMAL_SCREEN_20260913.md)。
+更宽的全谱求解仍保留在[跨模型流水线](FIXED_TABLE_CROSS_MODEL_PIPELINE_20260913.md)，
+但不先于这个最小判决。

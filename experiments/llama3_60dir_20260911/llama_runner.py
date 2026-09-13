@@ -124,6 +124,28 @@ class TableOperator(O.Operator):
         return np.full((p.size, self.geom.K), self._pair_gain, dtype=np.float64)
 
 
+def build_static_table_operator(payload, g, label):
+    """Compile one explicit 64-slot fixed table without changing runner semantics."""
+    table = payload.get("table", payload)
+    nu = np.asarray(table.get("values_float32"), dtype=np.float64)
+    gain = float(table.get("gain"))
+    if (
+        nu.shape != (g.K,)
+        or not np.isfinite(nu).all()
+        or np.any(nu <= 0.0)
+        or np.any(nu[:-1] <= nu[1:])
+        or not math.isfinite(gain)
+        or gain <= 0.0
+    ):
+        raise ValueError("invalid explicit static table")
+    if label in CONTROLS or label in MATCHED_CONTROLS or label in CONTROLLED_MODULES:
+        raise ValueError(f"static table label collides with a registered arm: {label}")
+    return TableOperator(
+        g, nu, label,
+        "explicit one-fixed-table JSON; no runtime length or layer switching",
+        pair_gain=gain, scope="frequency")
+
+
 def build_control(name, g):
     if name == "Native":
         return TableOperator(g, g.omega.copy(), "Native", "untouched trained frequencies",
@@ -642,7 +664,7 @@ def load_jsonl(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line]
 
 
-def dry_run(g, arm_names, max_pos, authorized_scopes):
+def dry_run(g, arm_names, max_pos, authorized_scopes, resolver=build_arm):
     """Exercise everything except the forward pass.
 
     This is deliberately NOT the OLMo runner's dry-run, which returns before its
@@ -650,7 +672,7 @@ def dry_run(g, arm_names, max_pos, authorized_scopes):
     """
     report = {"arms": [], "pair_layout": "half", "max_pos": max_pos}
     for name in arm_names:
-        op = build_arm(name, g, authorized_scopes)
+        op = resolver(name, g, authorized_scopes)
         p = np.array([0.0, 1.0, g.window, g.target - 1.0])
         qp = op.q_phase(p)
         qa = op.q_amp(p)
@@ -708,20 +730,35 @@ def main(argv=None):
                     help="optional comma-separated caps to run from the frozen panel")
     ap.add_argument("--authorized-scopes", default="frequency,frequency_assignment",
                     help="explicit Plan B scopes allowed for non-control arms")
+    ap.add_argument("--static-table-json", default=None,
+                    help="explicit fixed table containing values_float32[64] and gain")
+    ap.add_argument("--static-table-label", default="StaticTable",
+                    help="arm label used with --static-table-json")
     a = ap.parse_args(argv)
 
     g = O.Geometry.from_native(
         np.load(a.native_npy) if a.native_npy else None,
         window=a.window, theta=a.theta, scale=a.scale)
-    arm_names = [s.strip() for s in a.arms.split(",") if s.strip()]
+    static_op = None
+    if a.static_table_json:
+        payload = json.loads(Path(a.static_table_json).read_text())
+        static_op = build_static_table_operator(payload, g, a.static_table_label)
+        arm_names = [a.static_table_label]
+    else:
+        arm_names = [s.strip() for s in a.arms.split(",") if s.strip()]
     if not arm_names:
         raise SystemExit("no arms requested")
 
     scopes = tuple(x.strip() for x in a.authorized_scopes.split(",") if x.strip())
     if not scopes:
         raise SystemExit("REFUSING: --authorized-scopes may not be empty")
+    def resolve_arm(name, geometry, authorized_scopes):
+        if static_op is not None and name == a.static_table_label:
+            return static_op
+        return build_arm(name, geometry, authorized_scopes)
+
     for name in arm_names:
-        build_arm(name, g, scopes)
+        resolve_arm(name, g, scopes)
 
     raw_panel = [json.loads(line) for line in Path(a.panel).read_text().splitlines() if line]
     if a.lengths:
@@ -741,7 +778,7 @@ def main(argv=None):
         raise SystemExit(f"REFUSING: panel needs position {max_pos}, target is {g.target}")
 
     if a.dry_run:
-        rep = dry_run(g, arm_names, max_pos, scopes)
+        rep = dry_run(g, arm_names, max_pos, scopes, resolver=resolve_arm)
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         Path(a.out).write_text(json.dumps(rep, indent=2))
         print(f"DRY_RUN_OK: {len(rep['arms'])} arms constructed, "
@@ -799,7 +836,7 @@ def main(argv=None):
     pad_id = tok.pad_token_id if tok.pad_token_id is not None else min(stop_ids)
 
     for arm in arm_names:
-        op = build_arm(arm, g, scopes)
+        op = resolve_arm(arm, g, scopes)
         cache = build_cache(op, g, torch, torch.float32, model.device, max_pos)
         operator_sha = cache_sha256(cache)
         orig_apply = M.apply_rotary_pos_emb
@@ -894,6 +931,8 @@ def main(argv=None):
          "checkpoint_manifest_sha256": scorer.checkpoint_manifest_sha256,
          "runner_sha256": scorer.runner_sha256,
          "operators_sha256": scorer.operators_sha256,
+         "static_table_json": a.static_table_json,
+         "static_table_label": a.static_table_label if a.static_table_json else None,
          "panel_sha256": sha_file(a.panel), "scored": True,
          "note": "scored with the frozen external scorer; not reimplemented here"})
     return 0

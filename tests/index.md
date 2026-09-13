@@ -13,7 +13,12 @@
 - [test_broad_fixed_candidate.py](test_broad_fixed_candidate.py) — 冻结候选与归档七任务面板的row-matched official评分
 - [test_bootstrap_task_equal_contrast.py](test_bootstrap_task_equal_contrast.py) — 配对任务内重采样与任务等权敏感性区间
 - [test_build_range_factorial_tables.py](test_build_range_factorial_tables.py) — C42V24与SolverC42的shape×gain缺失格构造合同
+- [test_compare_llama_fixed_candidate.py](test_compare_llama_fixed_candidate.py) — Llama g8迁移表与归档固定表基线的五长度对齐
+- [test_compare_llama_64k8task.py](test_compare_llama_64k8task.py) — Llama 64K八任务候选与runner-matched基线统一重算
+- [test_compare_llama_runner_parity.py](test_compare_llama_runner_parity.py) — Llama 64K新旧runner token/text/score一致性
 - [test_natural_fixed_candidate.py](test_natural_fixed_candidate.py) — 391行自然QA并集的去重、身份对齐与任务等权汇总
+- [test_transfer_range_profile.py](test_transfer_range_profile.py) — 跨模型/倍率只迁移归一化exponent allocation
+- [test_winding_matched_table.py](test_winding_matched_table.py) — 作者Winding-Matched闭式表的端点同余、最大绕圈与顺序
 - [test_bm_diagnostic_decode.py](test_bm_diagnostic_decode.py) — test_bm_diagnostic_decode.py
 - [test_boundary_matched_deployment.py](test_boundary_matched_deployment.py) — test_boundary_matched_deployment.py
 - [test_causal_flash.py](test_causal_flash.py) — test_causal_flash.py
@@ -39,6 +44,7 @@
 - [test_k32_full13_confirmation.py](test_k32_full13_confirmation.py) — test_k32_full13_confirmation.py
 - [test_layer_policy.py](test_layer_policy.py) — test_layer_policy.py
 - [test_length_conditioned_budgeted_rope.py](test_length_conditioned_budgeted_rope.py) — test_length_conditioned_budgeted_rope.py
+- [test_llama_runner_static_table.py](test_llama_runner_static_table.py) — 旧Llama runner的任意64槽固定表JSON入口
 - [test_log_p2_phase_transfer_lora.py](test_log_p2_phase_transfer_lora.py) — test_log_p2_phase_transfer_lora.py
 - [test_long_lora_native_teacher.py](test_long_lora_native_teacher.py) — test_long_lora_native_teacher.py
 - [test_matched_transfer_round.py](test_matched_transfer_round.py) — test_matched_transfer_round.py
@@ -83,6 +89,8 @@
 - [test_native_relative_allocation.py](test_native_relative_allocation.py) — 可微Native-relative固定表、精确初始化与共享安装合同
 - [test_prepare_range_solver_data.py](test_prepare_range_solver_data.py) — 多长度任务8/4/4拆分和完整答案+EOS数据合同
 - [test_prepare_range_source_cf.py](test_prepare_range_source_cf.py) — 来源反事实成对标签、长度和拆分合同
+- [test_prepare_llama_minimal_band_screen.py](test_prepare_llama_minimal_band_screen.py) — Llama S=2 PPL/passkey/NIAH最小band屏幕表合同
+- [test_evaluate_static_tail_nll.py](test_evaluate_static_tail_nll.py) — 任意冻结表tail-NLL身份校验与分长度汇总
 - [test_range_table_solver.py](test_range_table_solver.py) — 字典序局部子问题、可行性恢复、全fit值与小批梯度组合
 - [test_range_table_eval.py](test_range_table_eval.py) — 独立split路由与log-length AUC汇总
 - [test_rope_table_definitions.py](test_rope_table_definitions.py) — test_rope_table_definitions.py
@@ -99,6 +107,8 @@
 - [test_sparse_memory_selective.py](test_sparse_memory_selective.py) — test_sparse_memory_selective.py
 - [test_sparse_memory_supervision.py](test_sparse_memory_supervision.py) — test_sparse_memory_supervision.py
 - [test_stable_teacher_kl.py](test_stable_teacher_kl.py) — test_stable_teacher_kl.py
+- [test_summarize_llama_minimal_band_screen.py](test_summarize_llama_minimal_band_screen.py) — S=2最小band屏幕的PPL/任务分列与描述性支配
+- [test_summarize_qwen_minimal_band_screen.py](test_summarize_qwen_minimal_band_screen.py) — Qwen S=2最小band屏幕的任务/PPL汇总与支配关系
 - [test_static_rope_baselines.py](test_static_rope_baselines.py) — test_static_rope_baselines.py
 - [test_success_first_portfolio.py](test_success_first_portfolio.py) — test_success_first_portfolio.py
 - [test_target_free_context_builder.py](test_target_free_context_builder.py) — test_target_free_context_builder.py

@@ -11,6 +11,20 @@ log-length AUC共同描述，不能用AUC掩盖中段深坑。
 
 [4080S固定表结果与下一轮求解合同](4080_FIXED_TABLE_RANGE_RESULT_20260913.md)
 已完成Llama g8的8/16/32/48/64K小面板、CPU OOD/SEP Pareto审计和磁盘整理。
+[CPU理论分层测量](CPU_THEORY_LAYERS_RESULT_20260913.md)
+给三层理论（几何/engagement/位置结构）配上零GPU仪器：权重级engagement跨模型
+r=0.970、位置结构模型特异≈0、gamma3-vs-BM分岔日程预测48K平/64K崩成立、暴露
+解释崩塌方向但不排序分数。
+[跨模型判决与无固定边界求解流水线](FIXED_TABLE_CROSS_MODEL_PIPELINE_20260913.md)
+记录逐实验目的、成功/失败价值、baseline复用、里程碑与当前服务器下一跳；最终
+搜索空间不固定YaRN的`l/h`，band-remap只作机制控制。
+[Winding-Matched RoPE作者方案](WINDING_MATCHED_ROPE_AUTHOR_PROPOSAL_20260913.md)
+记录作者于2026-09-13提出的整数绕圈闭式全频表；Codex只负责审计、实现和实验，
+CPU/GPU完成前不把精确算术性质升级为任务有效性结论。
+[Band位置最小筛选](BAND_POSITION_MINIMAL_SCREEN_20260913.md)
+用S=2/S=4的PPL与passkey/NIAH直接放开low/high：Llama S=4小面板当前最佳为
+`[16,34]`，但原样迁入OLMo后失败；OLMo局部最佳basin为low=14、high=31--32。
+该结果把band锁定为checkpoint/倍率条件化变量，并给出Qwen四臂最小统一判决。
 当前三任务开发面板上，BM频率配区间均值固定gain把最弱点从72.92%提高到75.00%、
 最大regret从10.42pp降到8.33pp，但AUC略低BM；只作为后续确认候选。
 gamma3和BM/MrPro表空间中点均失败。严格OOD-max+SEP-min出现22个几何支配/任务
@@ -28,6 +42,11 @@ QCQP、Llama64K反向和random-simplex没有进入首轮；旧强基线在每个
 候选判定不使用单一硬阈值提前筛除：协议/实现错误与任务层明确支配分开；开发集
 不达线、代理冲突、小样本单任务损伤只标记为Pareto或未决。静态候选表继续进入
 独立生成、宽任务和自然QA复核，避免把真实有用但收益分布不同的方案误删。
+
+最新Llama跨模型结果：OLMo full-profile按Llama Native频率与S=8重建后，
+8/16/32/48/64K为95.83/97.92/100/95.83/85.42，五点AUC96.91；但将内部
+shape机械重映射到Llama YaRN band `[18,35]` 后64K降到45.83。前者进入八任务
+64K复核；后者作为反例保留。最终求解不固定`l/h`，改为全64槽单调allocation。
 
 本轮5090收尾结果与停止决定见[OLMo BM适配与Llama 8B倍率交叉报告](5090_FINAL_EXPERIMENT_REPORT_20260912.md)：
 BM在4×目标和g8前半段强，MrRoPE-Pro在g8的4×/8×合成检索小幅领先，自然

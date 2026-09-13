@@ -2079,6 +2079,16 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/FIXED_TABLE_CROSS_MODEL_PIPELINE_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/WINDING_MATCHED_ROPE_AUTHOR_PROPOSAL_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/ICLR2027_ROPE_EXPERIMENT_PLAN_20260912.md",
       "area": "docs",
       "category": "document"
@@ -5539,6 +5549,21 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/compare_llama_fixed_candidate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/compare_llama_64k8task.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/compare_llama_runner_parity.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/compare_natural_fixed_candidate.py",
       "area": "experiments",
       "category": "code"
@@ -5654,6 +5679,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/prepare_llama_minimal_band_screen.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/prepare_range_source_cf.py",
       "area": "experiments",
       "category": "code"
@@ -5719,12 +5749,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/summarize_llama_minimal_band_screen.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/test_evaluate.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/olmo_recovery_20260912/test_fixed_table_interval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/transfer_range_profile.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/winding_matched_table.py",
       "area": "experiments",
       "category": "code"
     },
@@ -11874,6 +11919,21 @@
       "category": "code"
     },
     {
+      "path": "tests/test_compare_llama_fixed_candidate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_compare_llama_64k8task.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_compare_llama_runner_parity.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_natural_fixed_candidate.py",
       "area": "tests",
       "category": "code"
@@ -12014,6 +12074,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_llama_runner_static_table.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_log_p2_phase_transfer_lora.py",
       "area": "tests",
       "category": "code"
@@ -12115,6 +12180,11 @@
     },
     {
       "path": "tests/test_prepare_range_source_cf.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_prepare_llama_minimal_band_screen.py",
       "area": "tests",
       "category": "code"
     },
@@ -12310,6 +12380,21 @@
     },
     {
       "path": "tests/test_stable_teacher_kl.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_summarize_llama_minimal_band_screen.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_transfer_range_profile.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_winding_matched_table.py",
       "area": "tests",
       "category": "code"
     },

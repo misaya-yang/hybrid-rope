@@ -108,6 +108,24 @@ def chunked_greedy_tokens(model, ids, *, max_new_tokens, eos_ids, prefill_chunk_
     return generated
 
 
+def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128):
+    """Compute exact next-token NLL without importing unrelated evaluation data code."""
+    import torch.nn.functional as F
+    if token_ids.ndim != 2 or token_ids.shape[0] != 1 or token_ids.shape[1] < 2:
+        raise ValueError('LM window must have shape [1,L+1]')
+    hidden=model.model(input_ids=token_ids[:,:-1],use_cache=False).last_hidden_state[0]
+    targets=token_ids[0,1:];count=int(targets.numel());tail_count=min(int(tail),count)
+    whole_sum=tail_sum=0.
+    for start in range(0,count,chunk_size):
+        stop=min(start+chunk_size,count)
+        logits=F.linear(hidden[start:stop],model.lm_head.weight).float()
+        losses=F.cross_entropy(logits,targets[start:stop],reduction='none')
+        whole_sum+=float(losses.sum().detach());overlap=max(start,count-tail_count)
+        if overlap<stop:tail_sum+=float(losses[overlap-start:].sum().detach())
+    return {'whole_loss_sum':whole_sum,'whole_target_count':count,
+            'tail128_loss_sum':tail_sum,'tail128_target_count':tail_count}
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data',type=Path,required=True,help='v2 data manifest')
@@ -120,6 +138,8 @@ def main():
     parser.add_argument('--only-extra-panels',action='store_true',help='evaluate only explicitly supplied panels')
     parser.add_argument('--skip-lm',action='store_true',help='skip the held-out LM panel for generation-only downstream runs')
     parser.add_argument('--lm-limit-documents',type=int,default=0,help='0 keeps every held-out LM document')
+    parser.add_argument('--lm-length-cap',type=int,action='append',default=[],
+                        help='restrict LM evaluation to these prepared lengths; default is the legacy full grid')
     parser.add_argument('--length-cap',type=int,action='append',default=[],help='keep only these physical length caps')
     parser.add_argument('--limit-per-cell',type=int,default=0,help='0 keeps every row; a positive limit is explicitly reported as a subset')
     parser.add_argument('--prefill-chunk-size',type=int,default=0,
@@ -134,7 +154,9 @@ def main():
                           'split':args.split,'row_split':args.row_split,'lengths':LENGTHS,
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
                           'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
-    if args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0:
+    lm_lengths=tuple(args.lm_length_cap or LENGTHS)
+    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0
+            or len(set(lm_lengths))!=len(lm_lengths) or any(length not in LENGTHS for length in lm_lengths)):
         raise ValueError('limits and prefill chunk size must be nonnegative')
     import numpy as np
     import torch
@@ -171,6 +193,7 @@ def main():
               'unadapted':args.checkpoint is None,'row_ids':[r['eval_id'] for r in rows],
               'lengths':list(LENGTHS),'generation_length_caps':sorted({r['length_cap'] for r in rows}),
               'lm_enabled':bool(lm_path),'lm_limit_documents':args.lm_limit_documents,
+              'lm_lengths':list(lm_lengths),
               'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size,
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
@@ -212,11 +235,10 @@ def main():
             write(args.out/'live.json',{'phase':'generation','completed':len(saved),'total':len(rows)})
     lm_file=args.out/'lm_rows.jsonl';lm_saved=read_rows(lm_file) if lm_file.exists() else []
     if lm_path:
-        from .evaluate import lm_loss_rows
         values=np.load(lm_path,mmap_mode='r',allow_pickle=False)
-        if values.ndim!=2 or values.shape[1]<32769:raise ValueError('held-out LM requires full 32K+1 contiguous windows')
+        if values.ndim!=2 or values.shape[1]<max(lm_lengths)+1:raise ValueError('held-out LM is shorter than the requested grid')
         if args.lm_limit_documents:values=values[:args.lm_limit_documents]
-        expected=[(i,length) for i in range(len(values)) for length in LENGTHS]
+        expected=[(i,length) for i in range(len(values)) for length in lm_lengths]
         if len(lm_saved)>len(expected) or any((row['document'],row['length'])!=expected[i] for i,row in enumerate(lm_saved)):
             raise ValueError('LM output prefix differs')
         with lm_file.open('a') as stream,torch.inference_mode():
@@ -236,7 +258,7 @@ def main():
         if official:entry['ruler_official_score']=sum(official)/len(official)
         metrics['/'.join(map(str,cell))]=entry
     lm_summary={}
-    for length in LENGTHS:
+    for length in lm_lengths:
         items=[r for r in lm_saved if r['length']==length]
         if items:lm_summary[str(length)]={'documents':len(items),
             'whole_nll':sum(r['whole_loss_sum'] for r in items)/sum(r['whole_target_count'] for r in items),

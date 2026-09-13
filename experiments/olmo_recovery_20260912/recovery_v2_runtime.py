@@ -44,6 +44,14 @@ def table_for_config(config, arm: str) -> dict:
         reference_length = 8192
         if arm not in ("Native", "BM_g4", "BM_g8", "MrPro_g4", "MrPro_g8", "BetaSym_gamma3_g8", "RangeBridge50_g8", "BM_g8_RangeGain"):
             raise ValueError("unsupported Llama transfer table")
+    elif (config.model_type == "qwen2" and dim == 128
+          and config.max_position_embeddings == 32768 and base == 1000000):
+        # The generic evaluator loads Native first and then installs an explicit
+        # frozen JSON table.  Keep built-in recovery-v2 arms unavailable so a
+        # Qwen run cannot silently inherit OLMo/Llama-specific definitions.
+        reference_length = 32768
+        if arm != "Native":
+            raise ValueError("Qwen band screens require an explicit static table")
     else:
         raise ValueError("unsupported recovery-v2 model geometry")
     native = native_table(dim, base).astype(np.float32)

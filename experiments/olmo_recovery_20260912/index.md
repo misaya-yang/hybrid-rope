@@ -47,6 +47,26 @@
   shape×gain单变量交叉格，复用两个已测端点格以分离allocation、gain及其交互。
 - `bootstrap_task_equal_contrast.py`：对row-matched候选/基线做任务内配对重采样后
   再任务等权，报告敏感性区间；它不是总体置信保证，也不作为候选淘汰门禁。
+- `transfer_range_profile.py`：按目标Native表与倍率重建频率；跨Native长度时将
+  求解器形状从source transition band归一重映射到target band。literal-slot模式
+  只作为显式机制消融，gain策略另行声明；支持Solver与精确C42V24来源以补齐归因
+  2×2。
+- `compare_llama_fixed_candidate.py`：将一个迁移候选与已归档Llama g8 BM/MrPro
+  8/16/32/48/64K原始行对齐，汇总固定表AUC、最弱点和regret，不重跑基线。
+- `compare_llama_runner_parity.py`：在8个相同64K任务行上比较新旧runner的原始
+  token、文本与统一重算official，决定旧32行BM/MrPro能否永久复用。
+- `compare_llama_64k8task.py`：用同一scorer从原始文本重算候选和runner-matched
+  BM/MrPro的64K八任务official，报告任务向量与配对胜负。
+- `winding_matched_table.py`：实现作者提出的逐槽最大合法整数绕圈闭式表，输出
+  FP64/模拟FP32端点残差、频率顺序与m单调违例；不把构造断言当任务结果。
+- `prepare_llama_minimal_band_screen.py`：一次准备Llama S=2的BM/MrPro与4个平移
+  C42 band、两篇固定PG19文本；复用8/16K passkey/NIAH面板做分钟级最小漏斗。
+- `summarize_llama_minimal_band_screen.py`：分列8/16K task-equal official与两篇
+  PG19 PPL，四指标支配关系只作描述，不作为删除候选的门禁。
+- `evaluate_static_tail_nll.py`：对任意冻结64槽表运行配对自然文本tail-NLL，保存
+  逐文档token损失、表身份和分长度PPL；用于复用历史BM/MrPro而只测新band。
+- `summarize_qwen_minimal_band_screen.py`：汇总Qwen1.5B S=2的Native/BM/MrPro与
+  四种跨模型band，分列32/64K NIAH official、完整答案+EOS和两篇tail-512 PPL。
 
 判定采用分层证据，不把开发集阈值当作淘汰器：实现或协议错误可以否决一次运行；
 任务层明确受支配才淘汰候选；小样本未过线、代理冲突或单任务退化只记为Pareto/
