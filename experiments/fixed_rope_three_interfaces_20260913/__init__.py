@@ -1,0 +1,5 @@
+"""Range-optimal fixed-RoPE experiment pipeline."""
+
+PIPELINE_FORMAT = "FIXED_ROPE_RANGE_PIPELINE_V1"
+TABLE_FORMAT = "FROZEN_FIXED_ROPE_TABLE_V1"
+

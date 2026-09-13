@@ -67,6 +67,10 @@
   逐文档token损失、表身份和分长度PPL；用于复用历史BM/MrPro而只测新band。
 - `summarize_qwen_minimal_band_screen.py`：汇总Qwen1.5B S=2的Native/BM/MrPro与
   四种跨模型band，分列32/64K NIAH official、完整答案+EOS和两篇tail-512 PPL。
+- `permanent_mini_pipeline.py`：按prompt hash与显式semantic identity冻结跨来源mini
+  panel；从旧/新raw output自动计算每臂真实缺口、打印缺口运行命令并统一重算official，
+  最终报告task-equal log-length AUC及20,000次cell内配对bootstrap。覆盖不足时拒绝评分，
+  不把手写缺口数或异runner已存分数当成完整基线。
 
 判定采用分层证据，不把开发集阈值当作淘汰器：实现或协议错误可以否决一次运行；
 任务层明确受支配才淘汰候选；小样本未过线、代理冲突或单任务退化只记为Pareto/

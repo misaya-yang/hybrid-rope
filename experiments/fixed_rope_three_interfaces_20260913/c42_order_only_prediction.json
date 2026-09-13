@@ -1,0 +1,31 @@
+{
+  "status": "PREREGISTERED_MECHANISM_CONTRAST_V1",
+  "frozen_before_task_scores": true,
+  "model": "OLMo-2-0425-1B-Instruct",
+  "scale": 4,
+  "lengths": [4096, 8192, 16384],
+  "benchmark": "Core-6 low108, official RULER contains, task-equal",
+  "parent": "olmo_s4_c42_exact",
+  "candidate": "olmo_s4_c42_order_swap3_15_1_9",
+  "intervention": {
+    "increment_swaps_one_based": [[3, 15], [1, 9]],
+    "held_exact": [
+      "increment multiset",
+      "increment mass",
+      "increment first moment/centroid",
+      "sum of cumulative exponents",
+      "band",
+      "tail depth",
+      "gain"
+    ],
+    "changed": "increment order and therefore local smoothness/higher moments",
+    "parent_total_variation": 0.1467491447933999,
+    "candidate_total_variation": 0.35043492574440194,
+    "parent_squared_roughness": 0.0016647987130016262,
+    "candidate_squared_roughness": 0.013233113293975902
+  },
+  "prediction": "The smooth exact-C42 parent has higher log-length AUC and worst-length score than the permuted control; no effect size is asserted.",
+  "positive_interpretation": "Supports local increment smoothness/order as information beyond band, dose, centroid, tail depth, and gain.",
+  "negative_interpretation": "Rejects this smoothness ordering prediction for this model/scale/panel; it does not show that transition allocation is irrelevant.",
+  "decision_contract": "This is a mechanism-identification comparison, not a candidate-selection gate or a claim of a better table."
+}

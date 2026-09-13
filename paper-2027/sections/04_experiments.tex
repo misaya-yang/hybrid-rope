@@ -1,8 +1,8 @@
-\section{Turning Allocation into Model Gains}
+\section{Constructing Allocations for Learning}
 \label{sec:experiments}
 \label{sec:exp-mature}
 
-The preceding results identify a useful design freedom and the role of learning in realizing it. We next construct an explicit allocation, test whether its effects extend across shapes, and follow its use through training, continuation, and adaptation.
+Deployment adjusts a basis that weights already use. During training, weights can instead acquire a deliberately constructed basis. We study an analytic allocation family and follow its effects through training, continuation, and adaptation.
 
 \input{sections/04_construction}
 
@@ -45,4 +45,4 @@ A matched $300$-step Llama-$3$-$8$B LoRA pair applies the same $8$K adaptation t
 A separate OLMo study tests successful readout under explicit task supervision. On OLMo-$1.485$B, matched $100$-step query-gap and $32$-step answer-plus-EOS continuations give Native/Cosh complete-string-plus-EOS accuracy of $95\%/100\%$ at $4$K, $18\%/98\%$ at $8$K, and $0\%/60\%$ at $16$K, with $100$ prompts per length. These runs use at most $4$K physical tokens and target-range position IDs. A separate selective-Q/K continuation improves held-out $2$Wiki F1 at $8/16$K from $0.07/0\%$ to $21.48/8.57\%$ ($200$ rows/length; Appendix~\ref{sec:olmo2-1b}).
 
 \paragraph{Further evidence.}
-The same design question extends to $454$M three-seed range composition ($16$K PPL $157.7\to107.5$), $1.485$B training, video DiT, and a five-configuration GQA/MLA compression study. Their full results and protocols appear in Apps.~\ref{sec:range-composition}, \ref{sec:olmo2-1b}, and~\ref{sec:compression-ablation}. Together with the paired identification and factorial, these studies show that allocation is usable through several forms of learning. We next examine how to exploit it when the weights are already fixed.
+The same design question extends to $454$M three-seed range composition ($16$K PPL $157.7\to107.5$), $1.485$B training, video DiT, and a five-configuration GQA/MLA compression study. Their full results and protocols appear in Apps.~\ref{sec:range-composition}, \ref{sec:olmo2-1b}, and~\ref{sec:compression-ablation}. Together with the fixed-table studies, these results connect allocation design to both learned and frozen uses of a positional basis.

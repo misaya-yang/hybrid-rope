@@ -1,6 +1,6 @@
 {
   "schema": "paper_asset_registry_v1",
-  "as_of": "2026-09-12",
+  "as_of": "2026-09-13",
   "scope": "current manuscript assets; local availability snapshot, no model execution",
   "assets": [
     {
@@ -25,7 +25,7 @@
       "priority": "P0",
       "question": "设计价值是否超出一条曲线",
       "evidence_grade": "12配置×3seed；摘要",
-      "manuscript_location": "§5.2 / a5",
+      "manuscript_location": "§6.2 / a5",
       "interpretation": "128步；reference7/12，1.25×10/12，Exp9/12",
       "sources": [
         {
@@ -133,7 +133,8 @@
         {
           "path": "paper-2027/sections/03_compatibility.tex",
           "availability": "local-untracked",
-          "sha256": "91e6b92ebda17e4714123567548f79a24d775c12df431adf87ec20c2d0da0369"
+          "sha256": "de2aae8194a88abc1f33366b0644d0281f42f990436e2209e56b2e7141948360",
+          "revision_note": "2026-09-13: updated transition to deployment-first ordering; measurements unchanged."
         }
       ]
     },
@@ -143,7 +144,7 @@
       "priority": "P0",
       "question": "怎样系统构造有限分配",
       "evidence_grade": "显式凸目标推导",
-      "manuscript_location": "§5.1 / a1",
+      "manuscript_location": "§6.1 / a1",
       "interpretation": "唯一性相对stated functional；τ为参考工作点",
       "sources": [
         {
@@ -166,7 +167,7 @@
       "priority": "P0",
       "question": "已有权重下变量是否仍有效",
       "evidence_grade": "held-out与curated摘要",
-      "manuscript_location": "§6.1 / a6",
+      "manuscript_location": "§5.1 / a6",
       "interpretation": "与BM改变范围的应用对比分开",
       "sources": [
         {
@@ -187,7 +188,7 @@
       "priority": "P1",
       "question": "有限旋转通道中的实用价值",
       "evidence_grade": "三seed曲线摘要",
-      "manuscript_location": "§5.3 / a3",
+      "manuscript_location": "§6.3 / a3",
       "interpretation": "历史cache不能认证文档独立holdout",
       "sources": [
         {
@@ -208,7 +209,7 @@
       "priority": "P1",
       "question": "继续学习能否利用新分配",
       "evidence_grade": "单seed配对摘要",
-      "manuscript_location": "§5.3 / a2",
+      "manuscript_location": "§6.3 / a2",
       "interpretation": "answer-token exact不含终止EOS要求",
       "sources": [
         {
@@ -224,7 +225,7 @@
       "priority": "P1",
       "question": "长程来源如何进入表征",
       "evidence_grade": "单适配pair；curated与报告",
-      "manuscript_location": "§5.3 / a6",
+      "manuscript_location": "§6.3 / a6",
       "interpretation": "native-endpoint vs midpoint conversion；同adapter任务负结果保留",
       "sources": [
         {
@@ -250,7 +251,7 @@
       "priority": "P1",
       "question": "能否成功读出远处答案",
       "evidence_grade": "raw-hash lineage；100提示/长度",
-      "manuscript_location": "§5.3 / a6",
+      "manuscript_location": "§6.3 / a6",
       "interpretation": "单seed；物理≤4K而训练暴露长目标相位",
       "sources": [
         {
@@ -271,7 +272,7 @@
       "priority": "P1",
       "question": "位置相关适配能否改善自然输出",
       "evidence_grade": "匹配独立适配摘要",
-      "manuscript_location": "§5.3 / a6",
+      "manuscript_location": "§6.3 / a6",
       "interpretation": "与EOS/8B不同adapter和协议",
       "sources": [
         {
@@ -287,7 +288,7 @@
       "priority": "P1",
       "question": "成熟构造的任务价值",
       "evidence_grade": "QA逐行重算；匹配摘要",
-      "manuscript_location": "§6.2–6.3 / a7,a9",
+      "manuscript_location": "§5.2–5.4 / a7,a9",
       "interpretation": "自然QA631长层与48长RULER提示不混；F1含触顶响应",
       "sources": [
         {
@@ -313,7 +314,7 @@
       "priority": "P1",
       "question": "有效配置能否用低维结构描述",
       "evidence_grade": "CPU构造和GPU回执",
-      "manuscript_location": "§6.3 / a9",
+      "manuscript_location": "§5.4 / a9",
       "interpretation": "无Qwen重拟合；native窗口代价保留",
       "sources": [
         {
@@ -329,7 +330,7 @@
       "priority": "P1",
       "question": "相同总位移与质心是否仍有结构",
       "evidence_grade": "350开发raw rows；另16文档NLL",
-      "manuscript_location": "§6.1 / a9",
+      "manuscript_location": "§5.1 / a9",
       "interpretation": "开发发现，不等于独立泛化确认",
       "sources": [
         {
@@ -360,7 +361,7 @@
       "priority": "P1",
       "question": "连续profile如何安装到不同K",
       "evidence_grade": "预注册确认回执",
-      "manuscript_location": "§6.3 / a7",
+      "manuscript_location": "§5.4 / a7",
       "interpretation": "K与checkpoint共变；full13为table×amplitude联合收益",
       "sources": [
         {
@@ -588,6 +589,104 @@
           "path": "scripts/lib/rope/fixed_support_z.py",
           "availability": "tracked",
           "sha256": "7506d534ac9f6489513f76c52d124ead272ad6a250298700a1702d188c695666"
+        }
+      ]
+    },
+    {
+      "id": "A29",
+      "name": "固定表区间开发对照",
+      "priority": "P1",
+      "question": "端点分数是否充分描述可用窗口",
+      "evidence_grade": "report-backed开发汇总；仅AUC算术复算",
+      "manuscript_location": "§5.3 / App.H",
+      "interpretation": "不同panel严格分开；OLMo差区间跨零；未raw复核",
+      "sources": [
+        {
+          "path": "paper-2027/figs/interval_development_inputs.json",
+          "availability": "local-untracked",
+          "sha256": "182565c3bc66e0bf06c27d795ffeb3a902d5bbbda8cf9d8e25c5e5553f79a5d3"
+        }
+      ]
+    },
+    {
+      "id": "A30",
+      "name": "区间深度条件解与周期反例",
+      "priority": "P1",
+      "question": "端点/s何时不同于声明的区间最优",
+      "evidence_grade": "完整条件证明与独立标量数值核验",
+      "manuscript_location": "§5.3 / App.H",
+      "interpretation": "不预言真实checkpoint最优深度；replay仍待验证",
+      "sources": [
+        {
+          "path": "paper-2027/sections/05_threeband.tex",
+          "availability": "local-untracked",
+          "sha256": "8c371a9e35f972dd6531d801f50181800691f031c4c3e053b72cd4bb849c172c"
+        },
+        {
+          "path": "paper-2027/figs/verify_interval_design.py",
+          "availability": "local-untracked",
+          "sha256": "e445c3b531b92747cc608c75682649920e408c8392d8a667c434800c4b8f2aaa"
+        }
+      ]
+    },
+    {
+      "id": "A31",
+      "name": "Llama S4固定表区间确认与Native反例",
+      "priority": "P1",
+      "question": "一张固定Native-relative表能否在8K到32K的同口径任务区间超过BM/MrPro并保留Native能力",
+      "evidence_grade": "Core-6三长度12行每格完全配对；另报未参与gain选择的第二6行块；Native 8K 72行；后续full-z CAL与shape-gain哨兵为开发证据",
+      "manuscript_location": "next-stage owner; current manuscript claim not yet changed",
+      "interpretation": "log-gain中点相对BM/MrPro/C42的AUC与worst区间为正；Native FWE仍有显著损伤；约束full-z一阶射线及降低gain后增强transition均未闭合该缺口，不称完整range-optimal或跨benchmark SOTA",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md",
+          "availability": "tracked",
+          "sha256": "ef13698f4264d890327176686cdfd09364020298073109984c107ade7c99a27b"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s4_mix075_loggain_mid_vs_bm_mrpro_c42_core6_balanced12.json",
+          "availability": "local-ignored",
+          "sha256": "f8c422acee88aa2139cc49e52227c5a0630d9d2c9eaecb1426027d7a85eb3fa0"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s4_mix075_loggain_mid_vs_native_8k_balanced12.json",
+          "availability": "local-ignored",
+          "sha256": "e88107537969ac843a30e208d3e3da4e965195888936e1ee895409b2f4721ec7"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s4_loggain_mid_gain_selection_holdout_block2.json",
+          "availability": "local-ignored",
+          "sha256": "62d4264bba862cd4606dd47a5f5708134823d05fe5f847c26ca4529ca9882a54"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/tables/llama_s4_transition_mix075_band16_34_loggain_mid.json",
+          "availability": "local-ignored",
+          "sha256": "20cd1c0401108216e5a7ce3365e4e1fbebf4dad15a18e3adf963aeb347196566"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/constrained_full_z/constrained_full_z_fwe_repair_midgain_r1/proposal.json",
+          "availability": "local-ignored",
+          "sha256": "576d8f12556301f4b3ad419652db3f3d6c341a4267cf8e2c72eaec3cab7cd9bc"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/constrained_full_z/constrained_full_z_fwe_repair_midgain_r2_step1/proposal.json",
+          "availability": "local-ignored",
+          "sha256": "72ede9a0cc04032d3b86859e01dae96098f6b03fc5be0e8fa1c4458b67f8f493"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/runs/llama_s4_frontloaded_band16_34_gain1_remote_sentinel6/summary.json",
+          "availability": "local-ignored",
+          "sha256": "6e9af7ae94e02cdb76d6d9a5b959a0687d095871ae5bf6cd54017f4cd92101ba"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/runs/llama_s4_frontloaded_band14_32_gain1_remote_sentinel6/summary.json",
+          "availability": "local-ignored",
+          "sha256": "170cfdbaa5e7b12ad3d60185d9414b9ba9680f4f2e95fa25792284678594a10a"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/runs/llama_s4_frontloaded_band16_34_loggain_mid_fwe8k6/summary.json",
+          "availability": "local-ignored",
+          "sha256": "61da4364c796c9b1faa6380a6f5a96c2188be477a96a11b224d88d6335ef1928"
         }
       ]
     }

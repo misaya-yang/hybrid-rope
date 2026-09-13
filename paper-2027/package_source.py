@@ -34,6 +34,7 @@ def source_files() -> set[Path]:
 
     add(PAPER / "main.tex")
     for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py",
+                 "figs/verify_interval_design.py", "figs/interval_development_inputs.json",
                  "figs/make_m4_tradeoff.py", "figs/m4_tradeoff_inputs.json", "figs/m4_tradeoff_points.csv",
                  "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
                  "figs/make_exponent_revision_figures.py", "figs/figure_inputs.json",
@@ -77,6 +78,7 @@ def main() -> None:
             "model execution. The remaining historical figures are supplied as PDF.\n\n"
             "Verify the two explicit finite-frequency examples:\n"
             "  python3 figs/verify_explicit_geometry.py\n"
+            "  python3 figs/verify_interval_design.py\n"
             "  python3 figs/verify_profile_diagnostics.py\n"
             "  python3 figs/verify_recovered_assets.py\n"
             "  python3 figs/verify_routing_schedule.py\n\n"

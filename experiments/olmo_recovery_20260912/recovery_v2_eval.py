@@ -74,6 +74,33 @@ def greedy_tokens(model, ids, *, max_new_tokens, eos_ids, pad_token_id, prefill_
         model.config._attn_implementation = previous_attention
 
 
+def batched_greedy_tokens(model, prompt_ids, *, max_new_tokens, eos_ids, pad_token_id):
+    """Generate an exact-length batch without an attention padding mask."""
+    import torch
+
+    lengths = {len(values) for values in prompt_ids}
+    if len(lengths) != 1:
+        raise ValueError("Flash-only batching requires equal prompt lengths")
+    maximum = lengths.pop()
+    ids = torch.tensor(prompt_ids, device="cuda", dtype=torch.long)
+    mask = torch.ones_like(ids)
+    output = model.generate(
+        ids, attention_mask=mask, do_sample=False, num_beams=1,
+        repetition_penalty=1., no_repeat_ngram_size=0,
+        max_new_tokens=max_new_tokens, eos_token_id=list(eos_ids),
+        pad_token_id=pad_token_id, use_cache=True,
+    )[:, maximum:]
+    results = []
+    for sequence in output.tolist():
+        trimmed = []
+        for token in sequence:
+            trimmed.append(token)
+            if token in eos_ids:
+                break
+        results.append(trimmed)
+    return results
+
+
 def chunked_greedy_tokens(model, ids, *, max_new_tokens, eos_ids, prefill_chunk_size):
     import torch
     from transformers import DynamicCache
@@ -141,9 +168,12 @@ def main():
     parser.add_argument('--lm-length-cap',type=int,action='append',default=[],
                         help='restrict LM evaluation to these prepared lengths; default is the legacy full grid')
     parser.add_argument('--length-cap',type=int,action='append',default=[],help='keep only these physical length caps')
+    parser.add_argument('--task',action='append',default=[],help='keep only these generation tasks')
     parser.add_argument('--limit-per-cell',type=int,default=0,help='0 keeps every row; a positive limit is explicitly reported as a subset')
     parser.add_argument('--prefill-chunk-size',type=int,default=0,
                         help='0 uses stock generate; positive values enable exact-context chunked KV prefill')
+    parser.add_argument('--batch-size',type=int,default=1,
+                        help='contiguous exact-length generation batch using Flash SDPA')
     parser.add_argument('--static-table-json',type=Path,
                         help='install the table object (or result.table) from this frozen solver receipt')
     parser.add_argument('--table-label',help='result label for --static-table-json; does not alter the table')
@@ -155,7 +185,7 @@ def main():
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
                           'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
     lm_lengths=tuple(args.lm_length_cap or LENGTHS)
-    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0
+    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0 or args.batch_size<1
             or len(set(lm_lengths))!=len(lm_lengths) or any(length not in LENGTHS for length in lm_lengths)):
         raise ValueError('limits and prefill chunk size must be nonnegative')
     import numpy as np
@@ -167,6 +197,10 @@ def main():
     validate_cuda();rows=collect_rows(args,manifest)
     if args.length_cap:
         allowed=set(args.length_cap);rows=[row for row in rows if row['length_cap'] in allowed]
+    if args.task:
+        allowed_tasks=set(args.task);rows=[row for row in rows if row['task'] in allowed_tasks]
+    if args.batch_size > 1:
+        rows=sorted(rows,key=lambda row:(row['length_cap'],row['max_new_tokens'],len(row['prompt_ids']),row['task'],row['eval_id']))
     lm_path=None if args.skip_lm else manifest.get('lm_evaluation',{}).get(args.split)
     if not rows and not lm_path:raise ValueError('no evaluation material supplied')
     state=json.loads((args.checkpoint/'state.json').read_text()) if args.checkpoint else {}
@@ -195,6 +229,7 @@ def main():
               'lm_enabled':bool(lm_path),'lm_limit_documents':args.lm_limit_documents,
               'lm_lengths':list(lm_lengths),
               'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size,
+              'batch_size':args.batch_size,
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
     if contract.exists() and json.loads(contract.read_text())!=identity:raise ValueError('output contains a different evaluation')
@@ -213,25 +248,43 @@ def main():
     if len(saved)>len(rows) or any(row['eval_id']!=rows[i]['eval_id'] for i,row in enumerate(saved)):
         raise ValueError('saved generations are not the expected prefix')
     with path.open('a') as stream,torch.inference_mode():
-        for row in rows[len(saved):]:
-            ids=torch.tensor([row['prompt_ids']],device='cuda',dtype=torch.long)
-            tokens=greedy_tokens(model,ids,max_new_tokens=row['max_new_tokens'],eos_ids=eos,
-                                 pad_token_id=tokenizer.pad_token_id,
-                                 prefill_chunk_size=args.prefill_chunk_size)
-            ended=bool(tokens and tokens[-1] in eos)
-            text=tokenizer.decode(tokens[:-1] if ended else tokens,skip_special_tokens=False,clean_up_tokenization_spaces=False)
-            literal=any(text.strip()==ref.strip() for ref in row['references'])
-            exact=any(normalized(text)==normalized(ref) for ref in row['references'])
-            record={key:row.get(key) for key in (
-                'eval_id','row_id','suite','task','length_cap','input_tokens','prompt_sha256',
-                'document_cluster_id','group_id','source_seed','world','references')}
-            record.update(arm=result_arm,generated_ids=tokens,output_text=text,whole_response_f1=qa_f1_score(text,row['references']),
-                          literal_exact=literal,literal_exact_plus_eos=literal and ended,normalized_exact=exact,exact_plus_eos=exact and ended,
-                          ended_eos=ended,empty=not text.strip(),hit_cap=len(tokens)==row['max_new_tokens'] and not ended)
-            if row['task'].startswith('niah_') or row['task'] in ('vt','cwe','fwe','qa_1','qa_2'):
-                from scripts.experiments.olmo_fast_screen.ruler_bench import score
-                record['ruler_official_score']=score(row,text)
-            stream.write(json.dumps(record)+'\n');stream.flush();saved.append(record)
+        cursor=len(saved)
+        while cursor < len(rows):
+            first=rows[cursor]
+            batch=[first]
+            while (len(batch)<args.batch_size and cursor+len(batch)<len(rows)
+                   and rows[cursor+len(batch)]['max_new_tokens']==first['max_new_tokens']
+                   and rows[cursor+len(batch)]['length_cap']==first['length_cap']
+                   and len(rows[cursor+len(batch)]['prompt_ids'])==len(first['prompt_ids'])):
+                batch.append(rows[cursor+len(batch)])
+            if len(batch)==1:
+                ids=torch.tensor([first['prompt_ids']],device='cuda',dtype=torch.long)
+                token_batches=[greedy_tokens(
+                    model,ids,max_new_tokens=first['max_new_tokens'],eos_ids=eos,
+                    pad_token_id=tokenizer.pad_token_id,prefill_chunk_size=args.prefill_chunk_size,
+                )]
+            else:
+                token_batches=batched_greedy_tokens(
+                    model,[row['prompt_ids'] for row in batch],
+                    max_new_tokens=first['max_new_tokens'],eos_ids=eos,
+                    pad_token_id=tokenizer.pad_token_id,
+                )
+            for row,tokens in zip(batch,token_batches):
+                ended=bool(tokens and tokens[-1] in eos)
+                text=tokenizer.decode(tokens[:-1] if ended else tokens,skip_special_tokens=False,clean_up_tokenization_spaces=False)
+                literal=any(text.strip()==ref.strip() for ref in row['references'])
+                exact=any(normalized(text)==normalized(ref) for ref in row['references'])
+                record={key:row.get(key) for key in (
+                    'eval_id','row_id','suite','task','length_cap','input_tokens','prompt_sha256',
+                    'document_cluster_id','group_id','source_seed','world','references')}
+                record.update(arm=result_arm,generated_ids=tokens,output_text=text,whole_response_f1=qa_f1_score(text,row['references']),
+                              literal_exact=literal,literal_exact_plus_eos=literal and ended,normalized_exact=exact,exact_plus_eos=exact and ended,
+                              ended_eos=ended,empty=not text.strip(),hit_cap=len(tokens)==row['max_new_tokens'] and not ended)
+                if row['task'].startswith('niah_') or row['task'] in ('vt','cwe','fwe','qa_1','qa_2'):
+                    from scripts.experiments.olmo_fast_screen.ruler_bench import score
+                    record['ruler_official_score']=score(row,text)
+                stream.write(json.dumps(record)+'\n');stream.flush();saved.append(record)
+            cursor+=len(batch)
             write(args.out/'live.json',{'phase':'generation','completed':len(saved),'total':len(rows)})
     lm_file=args.out/'lm_rows.jsonl';lm_saved=read_rows(lm_file) if lm_file.exists() else []
     if lm_path:

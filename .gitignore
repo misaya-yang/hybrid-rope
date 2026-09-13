@@ -111,7 +111,11 @@ tong-jincheng-skill/
 .codex_tmp/
 .claude/
 .qoder/
-.agents/
+# Keep local agent state ignored; distribute the project evidence skill.
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/hybrid-rope-evidence/
 .superpowers/
 
 # Local rebuttal/provenance raw evidence.

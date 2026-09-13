@@ -13,6 +13,7 @@
 - [test_broad_fixed_candidate.py](test_broad_fixed_candidate.py) — 冻结候选与归档七任务面板的row-matched official评分
 - [test_bootstrap_task_equal_contrast.py](test_bootstrap_task_equal_contrast.py) — 配对任务内重采样与任务等权敏感性区间
 - [test_build_range_factorial_tables.py](test_build_range_factorial_tables.py) — C42V24与SolverC42的shape×gain缺失格构造合同
+- [test_checkpoint_attention_replay.py](test_checkpoint_attention_replay.py) — 三接口checkpoint replay的GQA/gain平方/有限rho/Native约束/active-zero QP合同
 - [test_compare_llama_fixed_candidate.py](test_compare_llama_fixed_candidate.py) — Llama g8迁移表与归档固定表基线的五长度对齐
 - [test_compare_llama_64k8task.py](test_compare_llama_64k8task.py) — Llama 64K八任务候选与runner-matched基线统一重算
 - [test_compare_llama_runner_parity.py](test_compare_llama_runner_parity.py) — Llama 64K新旧runner token/text/score一致性
@@ -61,6 +62,7 @@
 - [test_olmo_slotwise_gain.py](test_olmo_slotwise_gain.py) — test_olmo_slotwise_gain.py
 - [test_orbit_regression.py](test_orbit_regression.py) — test_orbit_regression.py
 - [test_pair_envelope.py](test_pair_envelope.py) — test_pair_envelope.py
+- [test_permanent_mini_pipeline.py](test_permanent_mini_pipeline.py) — 永久mini panel去重、旧/新结果合并、真实缺口与task-equal log-AUC/bootstrap合同
 - [test_position_visibility.py](test_position_visibility.py) — test_position_visibility.py
 - [test_prefix_phase_handoff.py](test_prefix_phase_handoff.py) — test_prefix_phase_handoff.py
 - [test_psr_groups.py](test_psr_groups.py) — test_psr_groups.py

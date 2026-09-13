@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-13",
+  "status": "complete",
+  "scientific_body_pages": 9,
+  "total_pdf_pages": 52,
+  "references_start_page": 11,
+  "pdf_bytes": 713841,
+  "pdf_sha256": "219a8f74c5d7fe4ecf3aee7c46b0f6f369db54b349f649db52b0f44e3b8d1df3",
+  "source_zip_bytes": 1444459,
+  "source_zip_sha256": "6fdadcfcc4314ec5a0042a62bf5b75f777855920972fbce2b2ffa99c5a39fa6f",
+  "source_archive_manuscript_files": 80,
+  "compile": {
+    "engine": "tectonic",
+    "undefined_refs_citations": 0,
+    "overfull_hbox_pt": 0,
+    "embedded_fonts": true,
+    "type3_fonts": 0,
+    "page_size": "US Letter",
+    "anonymous_metadata_scan": "passed"
+  },
+  "visual_review": {
+    "pages_rendered_and_inspected": 52,
+    "final_changed_pages_reinspected": [
+      6,
+      15,
+      48,
+      49,
+      50,
+      51,
+      52
+    ],
+    "result": "no clipping or overlap observed; conditional proposition kept on one page"
+  },
+  "clean_source_rebuild": {
+    "independently_extracted": true,
+    "compile_passed": true,
+    "identical_extracted_pdf_text_and_pagination": true,
+    "interval_numerics_passed": true
+  },
+  "documentation_checks": {
+    "managed_documents": 92,
+    "local_links_checked": 1379,
+    "assets": 30,
+    "source_occurrences_checked": 57,
+    "relocations": 5,
+    "local_source_occurrences": 1,
+    "mode": "git-portable",
+    "errors": [],
+    "model_execution": false
+  },
+  "mathematical_checks": {
+    "scalar_checks": "passed",
+    "max_derivative_error": 1.282546691072639e-08,
+    "circular_second_derivative": {
+      "numeric": -33.300661450574864,
+      "analytic": -33.30068061805308
+    },
+    "rounded_summary_auc_max_difference_pp": 0.0039973950821092785,
+    "evidence_scope": "summary arithmetic only; no bootstrap or raw-row revalidation",
+    "model_execution": false
+  },
+  "new_empirical_evidence": "report-backed development aggregates; no remote raw-row or bootstrap revalidation in this task",
+  "independent_pdf_review_rounds_this_revision": 0,
+  "model_execution": false,
+  "remote_experiment_mutation": false,
+  "git_commit_or_push": false,
+  "pre_edit_backup": "internal/local_snapshots/interval_story_20260913_090930/before.tar.gz"
+}

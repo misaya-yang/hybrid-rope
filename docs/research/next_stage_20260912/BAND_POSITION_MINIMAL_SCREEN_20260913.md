@@ -105,7 +105,7 @@ low/high 作用并不对称：low 从 14 移到 13 会损伤 16K NIAH、但可�
 high 在 31/32 间不改变这批生成。`[14,30]` 和 `[14,33]` 都使 16K NIAH下降，
 因此局部停止，不扩大网格。
 
-## 为什么没有通用 band 公式
+## 为什么固定槽位/单一winding还不是通用公式
 
 单层 attention 可局部写成
 
@@ -122,7 +122,8 @@ a(d)=\sum_k \operatorname{Re}(C_k e^{id\nu_k}),\qquad
 \]
 
 导数符号随距离、任务、层、头和 checkpoint 的内容系数 `C_k` 改变。它解释为何
-band 移动会产生非单调、任务交叉和模型差异；这是机制假设，不是最优性定理。
+band 移动会产生非单调、任务交叉和模型差异；这是机制假设，不是最优性定理，
+也不等于已经证明不存在跨模型、跨倍率的条件化坐标。
 
 若用 Native winding 数
 
@@ -138,11 +139,13 @@ k_T=K\frac{\log(L_T/L_S)+(k_S/K)\log b_S}{\log b_T}.
 
 OLMo `[14,32]` 映射到 Llama 约 `[17.38,35.38]`，接近 YaRN 几何边界，却不是
 实测小面板最佳 `[16,34]`。绝对槽位也预测失败；波长相对窗口只是 winding 的
-倒数，并非独立信息。几何适合提出少量候选，最终边界仍需由 checkpoint 任务响应
-决定。另外，同宽 band 整体右移会同时减少总 `sum(m)`，所以当前结果判的是完整
-部署 profile，尚未把 placement 与压缩剂量完全分离。
+倒数，并非独立信息。几何适合提出少量候选，但统一规律还必须显式包含目标倍率S
+与checkpoint谱敏感度。另外，同宽 band 整体右移会同时减少总 `sum(m)`，所以
+当前结果判的是完整部署 profile，尚未把 placement 与压缩剂量完全分离。后续的
+Native窗相位预算与两边界假说见
+[两边界理论草案](TWO_BOUNDARY_BAND_THEORY_20260913.md)。
 
-## Qwen 最小统一判决
+## Qwen 最小统一判决（历史预注册）
 
 服务器已有 Qwen2.5-1.5B：配置 Native 32768、base 1000000、head dimension
 128、64 槽，无配置级 rope scaling。tokenizer 的 `model_max_length=131072` 不能
@@ -160,6 +163,12 @@ OLMo `[14,32]` 映射到 Llama 约 `[17.38,35.38]`，接近 YaRN 几何边界，
 第一轮只使用 32/64K、固定前 4 行的 passkey/multikey NIAH，以及两篇固定自然
 文本；64K生成是主判据，32K负责 Native 保留，PPL只辅助诊断。最佳两臂才补剩余
 行。无论结果如何，都不能从一个 Qwen checkpoint 推出普适 band 定理。
+
+这四臂已经完成；点估计与64K扩充结果由
+[跨模型、跨倍率机制研究](BAND_NEXT_STAGE_RESULT_20260913.md)维护。它们没有覆盖
+后来由OLMo+Llama留一推出的Native窗相位预算预测`[20,38]`，所以不能把原四臂
+解释为所有统一坐标的最终判决。候选冻结后的统计确认不继续使用4行点估计；统一
+升级到[RULER四级评价合同](RULER_TIERED_PANEL_CONTRACT_20260913.md)。
 
 ## 代码与远端证据
 

@@ -14,10 +14,10 @@ We combine controlled interventions, full-pair geometry, and concrete designs. F
   \label{fig:spectral-budget-overview}
 \end{figure}
 
-Each rotary pair supplies a complete sine--cosine space. Canonical overlap and an exact effective-rank identity show how distinct frequencies can concentrate into shared positional directions over a finite window. Learned projections associate these directions with coordinate slots. This connects the supplied basis to its use by a model and motivates two practical settings: constructing a table that the model can learn, and adjusting the native table of an existing checkpoint. Analytic allocations, complete-answer generation, low-dimensional profile transport, and natural QA provide complementary evidence of this design freedom's value.
+The practical objective is context quality throughout a usable window. A fixed table chosen for horizon $SL$ also serves short and intermediate inputs; a larger extension factor alone does not establish better use of that window. We study native-relative constructions with actual task gains and distinguish band location, transition shape, and terminal compression as design variables. A conditional depth analysis shows why endpoint matching can leave an interval objective suboptimal. Learning-time constructions provide complementary evidence of how models acquire a new positional basis.
 
 \begin{itemize}
 \item \textbf{Identifying allocation effects.} We separate sampled support from interior exponent placement and isolate its effect through paired training, multiple allocation families, and fixed-support frozen interventions.
 \item \textbf{Connecting positional geometry and learning.} We characterize full sine--cosine overlap, its effective-rank identity and slow-frequency limit, and use range retargeting, crossed evaluation, and slot interventions to establish how learned weights use an allocation.
-\item \textbf{Constructing useful allocations.} We develop analytic learning-time and native-relative deployment constructions, with gains in language modeling, complete generation, and natural QA across their respective matched protocols.
+\item \textbf{Designing useful allocations.} We demonstrate native-relative and learning-time constructions with measured gains, and formulate fixed-table interval design with explicit task evaluation and a conditional depth analysis.
 \end{itemize}

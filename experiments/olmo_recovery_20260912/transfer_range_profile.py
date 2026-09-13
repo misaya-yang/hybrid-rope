@@ -18,6 +18,7 @@ def transfer_profile(
     gain_policy: str = "target_yarn",
     target_low: int | None = None,
     target_high: int | None = None,
+    tail_depth: float = 1.0,
 ) -> dict:
     allocation = solver_result.get("allocation", solver_result.get("table", {}).get("construction", {}))
     exponents = np.asarray(allocation.get("exponents"), dtype=np.float64)
@@ -43,6 +44,8 @@ def transfer_profile(
         raise ValueError("invalid source allocation, native table, or target scale")
     if (target_low is None) != (target_high is None):
         raise ValueError("target-low and target-high must be supplied together")
+    if not math.isfinite(tail_depth) or not 0.0 < tail_depth <= 1.0:
+        raise ValueError("tail_depth must be finite and in (0, 1]")
     if target_low is not None:
         source_low = int(allocation.get("low"))
         source_high = int(allocation.get("high"))
@@ -64,6 +67,8 @@ def transfer_profile(
         source_low = int(allocation.get("low", -1))
         source_high = int(allocation.get("high", -1))
         band_policy = "literal_slot_transfer"
+    full_depth_exponents = exponents.copy()
+    exponents = full_depth_exponents * tail_depth
     target_yarn_gain = 1.0 + 0.1 * math.log(target_scale)
     if gain_policy == "target_yarn":
         gain = target_yarn_gain
@@ -87,6 +92,13 @@ def transfer_profile(
             "target_low": target_low,
             "target_high": target_high,
             "band_policy": band_policy,
+            "full_depth_source": band_policy,
+            "full_depth_exponents": full_depth_exponents.tolist(),
+            "full_depth_exponent_sum": float(full_depth_exponents.sum()),
+            "full_depth_exponent_max": float(full_depth_exponents.max()),
+            "tail_depth": float(tail_depth),
+            "final_exponent_sum": float(exponents.sum()),
+            "final_exponent_max": float(exponents.max()),
             "gain_policy": gain_policy,
             "same_table_all_layers_and_lengths": True,
             "model_weight_updates": 0,
@@ -103,6 +115,7 @@ def main() -> None:
     parser.add_argument("--gain-policy", choices=("target_yarn", "relative_solver"), default="target_yarn")
     parser.add_argument("--target-low", type=int)
     parser.add_argument("--target-high", type=int)
+    parser.add_argument("--tail-depth", type=float, default=1.0)
     parser.add_argument("--label", required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
@@ -139,6 +152,7 @@ def main() -> None:
         gain_policy=args.gain_policy,
         target_low=args.target_low,
         target_high=args.target_high,
+        tail_depth=args.tail_depth,
     )
     payload = {
         "status": "FROZEN",

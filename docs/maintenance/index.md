@@ -7,6 +7,10 @@
 - [迁移与保留路径](relocations.json)：实际移动、因代码/JSON来源依赖保留的文件。
 - [验证结果](organization_validation.json)：新索引链接、52来源、原文件保持情况。
 
+- [Astra环境整理](ASTRA_ENVIRONMENT_AUDIT_20260913.md)：按任务读取、项目技能范围和验收边界。
+
+- [默认上下文入口整理](CONTEXT_ROUTING_20260913.md)：当前路线与按需历史目录。
+
 ## 后续如何维护
 
 1. 新结果：保留配置/代码/数据/权重/表身份、指标与单位、完整结果和原始行，登记到论文asset_registry（若用于本稿）。
@@ -20,3 +24,5 @@ README介绍用途；AGENTS保留稳定原则；日期状态只写在具体报�
 ## 跨机器路径检查
 
 默认检查Git可见导航（包括拟随Git提交的新增文件），路径严格按Git大小写匹配。新增文件/目录后运行`python3 scripts/check_repository_docs.py --refresh-inventory`刷新文件清单；本机原始镜像复核另用`--local-evidence`。忽略目录只保留仓库根相对路径文本，不成为跨机器必需链接。
+
+- [Sol每小时研究监督](SOL_RESEARCH_SUPERVISION_20260913.md)：用户授权范围、首轮反馈和待跟进问题。

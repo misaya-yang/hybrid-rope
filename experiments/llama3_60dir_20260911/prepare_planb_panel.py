@@ -1,4 +1,4 @@
-"""Prepare a Llama-tokenized Plan B P/S/V/H RULER-derived panel.
+"""Prepare a checkpoint-tokenized Plan B P/S/V/H RULER-derived panel.
 
 The upstream generators are pinned inputs, but their output is tokenized with
 the actual Meta-Llama-3-8B-Instruct checkpoint.  Every stage uses a distinct
@@ -138,12 +138,22 @@ def main(argv=None):
                     help="override long rows per task/length (engineering pilot only)")
     ap.add_argument("--guard-per-task", type=int, default=None,
                     help="override 8K rows per task (engineering pilot only)")
+    ap.add_argument("--model-contract", choices=("llama3-8b", "generic"),
+                    default="llama3-8b",
+                    help="keep the historical exact Llama identity gate or use an explicitly recorded checkpoint")
+    ap.add_argument("--tasks", default=",".join(TASKS),
+                    help="comma-separated registered RULER task subset")
     args = ap.parse_args(argv)
 
     caps = tuple(int(x) for x in args.caps.split(",") if x.strip())
     if not caps or len(set(caps)) != len(caps) or any(
             cap <= RESERVED_OUTPUT_TOKENS for cap in caps):
         raise SystemExit("REFUSING: --caps must contain unique positive context caps")
+
+    selected_tasks = tuple(value.strip() for value in args.tasks.split(",") if value.strip())
+    if not selected_tasks or len(set(selected_tasks)) != len(selected_tasks) or any(
+            task not in TASKS for task in selected_tasks):
+        raise SystemExit("REFUSING: --tasks must be a unique nonempty subset of registered tasks")
 
     import yaml
     from transformers import AutoTokenizer
@@ -159,8 +169,11 @@ def main(argv=None):
         config.get("max_position_embeddings"), config.get("rope_scaling"),
     )
     expected = ("llama", 4096, 32, 32, 8, 500000.0, 8192, None)
-    if identity != expected:
+    if args.model_contract == "llama3-8b" and identity != expected:
         raise SystemExit(f"REFUSING: checkpoint identity {identity!r} != {expected!r}")
+    if args.model_contract == "generic" and (
+            not config.get("model_type") or int(config.get("max_position_embeddings", 0)) <= 0):
+        raise SystemExit("REFUSING: generic checkpoint lacks model_type/native length")
 
     long_count, guard_count = STAGE_COUNTS[args.stage]
     pilot = args.per_cell is not None or args.guard_per_task is not None
@@ -177,6 +190,9 @@ def main(argv=None):
         "long_rows_per_task_length": long_count,
         "guard_rows_per_task": guard_count,
         "reserved_output_tokens": RESERVED_OUTPUT_TOKENS,
+        "model_contract": args.model_contract,
+        "model_identity": identity,
+        "tasks": list(selected_tasks),
     }
     atomic_json(out / "manifest.json", status)
 
@@ -202,7 +218,7 @@ def main(argv=None):
 
     for cap_index, cap in enumerate(caps):
         count = guard_count if cap == 8192 else long_count
-        for task_index, task in enumerate(TASKS):
+        for task_index, task in enumerate(selected_tasks):
             source_count = count
             if not pilot and task in SINGLE_EVIDENCE_TASKS | MULTI_EVIDENCE_TASKS:
                 # A deterministic oversample pool makes all four registered
@@ -216,6 +232,9 @@ def main(argv=None):
             template = tok.apply_chat_template(
                 [{"role": "user", "content": base["template"]}],
                 tokenize=False, add_generation_prompt=True) + base.get("answer_prefix", "")
+            content_char_start = template.find(base["template"])
+            if content_char_start < 0:
+                raise SystemExit(f"REFUSING: cannot locate user content start for {task}")
             cell_seed = (args.seed + STAGE_SEED_OFFSET[args.stage]
                          + cap_index * 10_000 + task_index * 100)
             source_path = out / "source" / str(cap) / task / "validation.jsonl"
@@ -302,10 +321,16 @@ def main(argv=None):
                 if padding_tokens > 0:
                     pad = (padding_unit * ((padding_tokens + len(padding_unit) - 1)
                                            // len(padding_unit)))[:padding_tokens]
-                    try:
-                        insert_at = prompt_ids.index(128007) + 1  # Llama end_header token
-                    except ValueError:
-                        insert_at = 1
+                    if args.model_contract == "llama3-8b":
+                        try:
+                            insert_at = prompt_ids.index(128007) + 1  # Llama end_header token
+                        except ValueError:
+                            insert_at = 1
+                    else:
+                        insert_at = token_index_for_char(offsets, content_char_start)
+                        if insert_at is None:
+                            raise SystemExit(
+                                f"REFUSING: cannot map content start for {task}/{cap}/{index}")
                     prompt_ids = prompt_ids[:insert_at] + pad + prompt_ids[insert_at:]
                     occurrence_map = [
                         p + padding_tokens if p >= insert_at else p
@@ -350,7 +375,7 @@ def main(argv=None):
                 "task": task, "cap": cap, "rows": count,
                 "generated_pool": source_count}), flush=True)
 
-    expected_rows = len(TASKS) * sum(
+    expected_rows = len(selected_tasks) * sum(
         guard_count if cap == 8192 else long_count for cap in caps)
     if len(rows) != expected_rows or len({r["row_id"] for r in rows}) != expected_rows:
         raise SystemExit(f"REFUSING: row identity/count mismatch {len(rows)} != {expected_rows}")
@@ -364,10 +389,10 @@ def main(argv=None):
     partial_rows_path.unlink(missing_ok=True)
     status.update({
         "status": "COMPLETE", "rows": len(rows),
-        "tasks": list(TASKS), "caps": list(caps),
+        "tasks": list(selected_tasks), "caps": list(caps),
         "cell_counts": {f"{task}|{cap}": sum(
             r["task"] == task and r["length_cap"] == cap for r in rows)
-            for task in TASKS for cap in caps},
+            for task in selected_tasks for cap in caps},
         "rows_sha256": sha_file(rows_path),
         "model_config_sha256": sha_file(model / "config.json"),
         "tokenizer_sha256": sha_file(model / "tokenizer.json"),

@@ -30,3 +30,5 @@
 - [validate_rebuttal_evidence_bundle.py](validate_rebuttal_evidence_bundle.py) — validate_rebuttal_evidence_bundle.py
 - [verify_tau_unified.py](verify_tau_unified.py) — verify_tau_unified.py
 - [video_temporal/](video_temporal)
+
+- [RoPE设计定理CPU验证](analysis/verify_rope_design_theorems.py)：公式、反例和可行方向的数值检查，不运行模型。

@@ -4,6 +4,11 @@
   "scope": "Git-visible existing files, including untracked; ignored payloads only directory-level",
   "files": [
     {
+      "path": ".agents/skills/hybrid-rope-evidence/SKILL.md",
+      "area": ".agents",
+      "category": "document"
+    },
+    {
       "path": ".gitattributes",
       "area": "root",
       "category": "other"
@@ -17,6 +22,11 @@
       "path": "AGENTS.md",
       "area": "root",
       "category": "navigation"
+    },
+    {
+      "path": "CATALOG_20260913.md",
+      "area": "root",
+      "category": "document"
     },
     {
       "path": "README.md",
@@ -1104,6 +1114,11 @@
       "category": "navigation"
     },
     {
+      "path": "docs/CATALOG_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/README.md",
       "area": "docs",
       "category": "navigation"
@@ -1379,7 +1394,22 @@
       "category": "navigation"
     },
     {
+      "path": "docs/maintenance/ASTRA_ENVIRONMENT_AUDIT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/maintenance/CONTEXT_ROUTING_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/maintenance/REPOSITORY_ORGANIZATION_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/maintenance/SOL_RESEARCH_SUPERVISION_20260913.md",
       "area": "docs",
       "category": "document"
     },
@@ -1505,6 +1535,11 @@
     },
     {
       "path": "docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/CATALOG_20260913.md",
       "area": "docs",
       "category": "document"
     },
@@ -2069,6 +2104,16 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/BAND_NEXT_STAGE_RESULT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/BAND_POSITION_MINIMAL_SCREEN_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/CODEX_INTERVAL_PROMPT_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2084,12 +2129,22 @@
       "category": "document"
     },
     {
-      "path": "docs/research/next_stage_20260912/WINDING_MATCHED_ROPE_AUTHOR_PROPOSAL_20260913.md",
+      "path": "docs/research/next_stage_20260912/GPT6PRO_THREE_INTERFACE_EVIDENCE_BRIEF_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/GPT6PRO_THREE_INTERFACE_REQUEST_20260913.md",
       "area": "docs",
       "category": "document"
     },
     {
       "path": "docs/research/next_stage_20260912/ICLR2027_ROPE_EXPERIMENT_PLAN_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md",
       "area": "docs",
       "category": "document"
     },
@@ -2109,6 +2164,51 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/PAPER_INTERVAL_DIRECTION_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/PLAN_HISTORY_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/RANGE_OPTIMAL_FIXED_ROPE_SELF_AUDIT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/RULER_TIERED_PANEL_CONTRACT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/SCALE_MODEL_TRANSFER_PLAN_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/THEOREM_FIRST_ROPE_DESIGN_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/THREE_INTERFACE_REPLAY_THEORY_AUDIT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/TWO_BOUNDARY_BAND_THEORY_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/WINDING_MATCHED_ROPE_AUTHOR_PROPOSAL_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/experiments.md",
       "area": "docs",
       "category": "document"
@@ -2122,6 +2222,11 @@
       "path": "docs/research/next_stage_20260912/paper.md",
       "area": "docs",
       "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/rope_design_theorems_cpu_20260913.json",
+      "area": "docs",
+      "category": "data-or-receipt"
     },
     {
       "path": "docs/research/next_stage_20260912/theory.md",
@@ -4099,6 +4204,11 @@
       "category": "other"
     },
     {
+      "path": "experiments/CATALOG_20260913.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
       "path": "experiments/broad_position_eval/README.md",
       "area": "experiments",
       "category": "navigation"
@@ -4135,6 +4245,41 @@
     },
     {
       "path": "experiments/broad_position_eval/test_panel.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/capture_checkpoint.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/capture_io.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/core.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/index.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/rank_tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/solver.py",
       "area": "experiments",
       "category": "code"
     },
@@ -4300,6 +4445,81 @@
     },
     {
       "path": "experiments/evq_recovery/validate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/c42_order_only_prediction.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/constrained_full_z_fwe_repair.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/exponent_box_z.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/full_z_fwe_repair.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/index.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/margin_direction.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/matched_generation_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/night_run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/pipeline.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_margin_targets.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_server.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/resident_eval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/target_support_z.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5534,12 +5754,12 @@
       "category": "navigation"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/build_range_factorial_tables.py",
+      "path": "experiments/olmo_recovery_20260912/bootstrap_task_equal_contrast.py",
       "area": "experiments",
       "category": "code"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/bootstrap_task_equal_contrast.py",
+      "path": "experiments/olmo_recovery_20260912/build_range_factorial_tables.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5549,12 +5769,12 @@
       "category": "code"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/compare_llama_fixed_candidate.py",
+      "path": "experiments/olmo_recovery_20260912/compare_llama_64k8task.py",
       "area": "experiments",
       "category": "code"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/compare_llama_64k8task.py",
+      "path": "experiments/olmo_recovery_20260912/compare_llama_fixed_candidate.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5609,6 +5829,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/evaluate_static_tail_nll.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/expand_longcite.py",
       "area": "experiments",
       "category": "code"
@@ -5659,6 +5884,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/permanent_mini_pipeline.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/prepare_fixed_table_interval.py",
       "area": "experiments",
       "category": "code"
@@ -5669,17 +5899,17 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/prepare_llama_minimal_band_screen.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/prepare_llama_transfer_eval.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/olmo_recovery_20260912/prepare_range_solver_data.py",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
-      "path": "experiments/olmo_recovery_20260912/prepare_llama_minimal_band_screen.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5744,12 +5974,17 @@
       "category": "code"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/summarize_range_generation.py",
+      "path": "experiments/olmo_recovery_20260912/summarize_llama_minimal_band_screen.py",
       "area": "experiments",
       "category": "code"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/summarize_llama_minimal_band_screen.py",
+      "path": "experiments/olmo_recovery_20260912/summarize_qwen_minimal_band_screen.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/summarize_range_generation.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5764,22 +5999,22 @@
       "category": "code"
     },
     {
-      "path": "experiments/olmo_recovery_20260912/transfer_range_profile.py",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
-      "path": "experiments/olmo_recovery_20260912/winding_matched_table.py",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
       "path": "experiments/olmo_recovery_20260912/train.py",
       "area": "experiments",
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/transfer_range_profile.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/two_stage_train.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/winding_matched_table.py",
       "area": "experiments",
       "category": "code"
     },
@@ -6994,6 +7229,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/HANDOFF_HISTORY_20260913.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/NARRATIVE_GUIDE.md",
       "area": "paper-2027",
       "category": "document"
@@ -7649,6 +7889,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/figs/interval_development_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/llama_temporal_summary.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
@@ -7754,6 +7999,11 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/verify_interval_design.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/verify_profile_diagnostics.py",
       "area": "paper-2027",
       "category": "code"
@@ -7819,6 +8069,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/research/CATALOG_20260913.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md",
       "area": "paper-2027",
       "category": "document"
@@ -7850,6 +8105,11 @@
     },
     {
       "path": "paper-2027/research/EXPONENT_SECOND_REVIEW_20260909.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/PAPER_INTERVAL_REORIENTATION_20260913.md",
       "area": "paper-2027",
       "category": "document"
     },
@@ -8979,6 +9239,11 @@
       "category": "navigation"
     },
     {
+      "path": "paper-2027/research/interval_reorientation_validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/20260909/README.md",
       "area": "paper-2027",
       "category": "navigation"
@@ -9714,6 +9979,11 @@
       "category": "code"
     },
     {
+      "path": "scripts/analysis/build_band_evidence_ledger.py",
+      "area": "scripts",
+      "category": "code"
+    },
+    {
       "path": "scripts/analysis/build_boundary_matched_mrpro.py",
       "area": "scripts",
       "category": "code"
@@ -10175,6 +10445,11 @@
     },
     {
       "path": "scripts/analysis/verify_prefix_phase_handoff.py",
+      "area": "scripts",
+      "category": "code"
+    },
+    {
+      "path": "scripts/analysis/verify_rope_design_theorems.py",
       "area": "scripts",
       "category": "code"
     },
@@ -11904,7 +12179,7 @@
       "category": "code"
     },
     {
-      "path": "tests/test_broad_fixed_candidate.py",
+      "path": "tests/test_bm_diagnostic_decode.py",
       "area": "tests",
       "category": "code"
     },
@@ -11914,37 +12189,22 @@
       "category": "code"
     },
     {
-      "path": "tests/test_build_range_factorial_tables.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_compare_llama_fixed_candidate.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_compare_llama_64k8task.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_compare_llama_runner_parity.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_natural_fixed_candidate.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_bm_diagnostic_decode.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
       "path": "tests/test_boundary_matched_deployment.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_broad_fixed_candidate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_build_band_evidence_ledger.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_build_range_factorial_tables.py",
       "area": "tests",
       "category": "code"
     },
@@ -11964,7 +12224,27 @@
       "category": "code"
     },
     {
+      "path": "tests/test_checkpoint_attention_replay.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_chunked_mlp.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_compare_llama_64k8task.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_compare_llama_fixed_candidate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_compare_llama_runner_parity.py",
       "area": "tests",
       "category": "code"
     },
@@ -11999,6 +12279,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_evaluate_static_tail_nll.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_export_log_p2_factor_frontier.py",
       "area": "tests",
       "category": "code"
@@ -12010,6 +12295,11 @@
     },
     {
       "path": "tests/test_finite_scale_covariance.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_fixed_rope_three_interfaces.py",
       "area": "tests",
       "category": "code"
     },
@@ -12139,6 +12429,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_natural_fixed_candidate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_official_yarn_parity.py",
       "area": "tests",
       "category": "code"
@@ -12164,6 +12459,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_permanent_mini_pipeline.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_position_visibility.py",
       "area": "tests",
       "category": "code"
@@ -12174,17 +12474,17 @@
       "category": "code"
     },
     {
+      "path": "tests/test_prepare_llama_minimal_band_screen.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_prepare_range_solver_data.py",
       "area": "tests",
       "category": "code"
     },
     {
       "path": "tests/test_prepare_range_source_cf.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_prepare_llama_minimal_band_screen.py",
       "area": "tests",
       "category": "code"
     },
@@ -12384,27 +12684,22 @@
       "category": "code"
     },
     {
-      "path": "tests/test_summarize_llama_minimal_band_screen.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_transfer_range_profile.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
-      "path": "tests/test_winding_matched_table.py",
-      "area": "tests",
-      "category": "code"
-    },
-    {
       "path": "tests/test_static_rope_baselines.py",
       "area": "tests",
       "category": "code"
     },
     {
       "path": "tests/test_success_first_portfolio.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_summarize_llama_minimal_band_screen.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_summarize_qwen_minimal_band_screen.py",
       "area": "tests",
       "category": "code"
     },
@@ -12430,6 +12725,16 @@
     },
     {
       "path": "tests/test_training_artifact_audit.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_transfer_range_profile.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_winding_matched_table.py",
       "area": "tests",
       "category": "code"
     },
@@ -12781,6 +13086,26 @@
     "docs/research/next_stage_20260912/OLMO_LORA_V2_20260912.md",
     "docs/research/next_stage_20260912/EVQ_LORA_PRO_GUIDANCE_20260912.md",
     "docs/research/next_stage_20260912/LORA_HISTORY_BRIEF_20260912.md",
-    "docs/research/next_stage_20260912/LORA_MECHANISM_AND_RECIPE_20260912.md"
+    "docs/research/next_stage_20260912/LORA_MECHANISM_AND_RECIPE_20260912.md",
+    "docs/research/next_stage_20260912/PAPER_INTERVAL_DIRECTION_20260913.md",
+    "paper-2027/research/PAPER_INTERVAL_REORIENTATION_20260913.md",
+    "AGENTS.md",
+    ".agents/skills/hybrid-rope-evidence/SKILL.md",
+    "docs/maintenance/ASTRA_ENVIRONMENT_AUDIT_20260913.md",
+    "experiments/fixed_support_joint_151m_20260912/index.md",
+    "experiments/checkpoint_attention_replay_20260913/index.md",
+    "experiments/fixed_rope_three_interfaces_20260913/index.md",
+    "experiments/rope_z_ood_collision_20260913/index.md",
+    "CATALOG_20260913.md",
+    "experiments/CATALOG_20260913.md",
+    "docs/CATALOG_20260913.md",
+    "docs/research/CATALOG_20260913.md",
+    "paper-2027/research/CATALOG_20260913.md",
+    "docs/research/next_stage_20260912/PLAN_HISTORY_20260913.md",
+    "paper-2027/HANDOFF_HISTORY_20260913.md",
+    "docs/maintenance/CONTEXT_ROUTING_20260913.md",
+    "docs/maintenance/SOL_RESEARCH_SUPERVISION_20260913.md",
+    "docs/research/next_stage_20260912/THEOREM_FIRST_ROPE_DESIGN_20260913.md",
+    "docs/research/next_stage_20260912/SCALE_MODEL_TRANSFER_PLAN_20260913.md"
   ]
 }

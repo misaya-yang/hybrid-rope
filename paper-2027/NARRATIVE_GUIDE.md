@@ -1,9 +1,8 @@
 # Manuscript narrative
 
-The central object is the RoPE exponent distribution. Define it, explain the
-controlled behavior it changes, then explain its positional geometry. Present
-Cosh as one explicit allocation construction, followed by adjustments of frozen
-models. The fixed-range finding and weight-table crossings organize the paper.
+The central object is finite RoPE allocation. The practical objective is useful context quality across a declared deployment window using one fixed table, including task-valid short inputs, the native range, intermediate lengths, and the horizon. Strong improvements over YaRN/MrRoPE are valuable; explaining the historical difference between these methods is not the manuscript's storyline. Band, transition shape, and terminal depth are research tools. They become method contributions only through a usable construction and measured benefit.
+
+Preserve the fixed-support, geometry, learned-compatibility, BM, and learning-time evidence. Present mature fixed-table deployment before the Cosh learning-time construction. Distinguish established gains, development observations, conditional mathematics, and proposed predictors. Do not imply that recent training difficulties invalidate all historical EVQ results, or that restating the interval objective solves it.
 
 1. Write the positive argument: question, controlled finding, analysis, design,
    interpretation. Put actual experiment conditions next to the result.

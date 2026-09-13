@@ -1,10 +1,10 @@
-\section{Reallocating Frequencies in Mature Models}
+\section{Designing One Table for a Deployment Interval}
 \label{sec:mature-adjustments}
 \label{sec:exp-frozen-support}
 \label{sec:exp-zero-training-system}
 \label{sec:coordinate}
 
-The learned associations in \S\ref{sec:compatibility} make a checkpoint's native table the natural reference for frozen deployment. We first isolate an allocation effect at fixed support, then construct an intermediate-band adjustment and evaluate its practical use.
+A deployed table serves many lengths. Let $L$ be the native window and $H=SL$ the target horizon. We seek one native-relative table shared across layers and held fixed through prefill and decoding, with useful quality from task-valid short inputs through $H$. Fixed-support controls identify allocation's effect; practical design can also change support and amplitude.
 
 \subsection{The allocation effect survives with frozen weights}
 
@@ -21,7 +21,7 @@ d_k=\log\frac{\omega_k^N}{\omega'_k},\qquad
 \omega'_k=\omega_k^Ne^{-d_k},\qquad \phi'_k-\phi_k^N=\frac{d_k}{\log b}.
 \label{eq:movement-allocation}
 \end{equation}
-Frequency blending, log-frequency shifts, and mixed-radix conversion all admit this coordinate (Appendix~\ref{sec:adjustment-details}). Here $s$ is the configured extension factor; at $s=1$ the scaled profiles recover the native frequencies. Tables are installed before prefill and retained through decoding. The amplitude $g=1+c\ln s$ scales both cosine and sine and therefore contributes $g^2$ to attention logits. Each frequency comparison fixes $g$; joint table--amplitude configurations are reported separately.
+Frequency blending and mixed-radix conversion admit this coordinate (Appendix~\ref{sec:adjustment-details}). Here $s$ denotes the configured extension factor. Scaling both sine and cosine by $g$ multiplies rotary logits by $g^2$. Frequency comparisons fix $g$; joint table--amplitude results are identified separately.
 
 MrRoPE-Pro allocates a cumulative shift across an intermediate band \citep{tian2026mrrope}. With $N=h-l$ and $q=\operatorname{clip}(k-l,0,N)$, its profile and our boundary-matched (BM) construction are
 \begin{equation}
@@ -29,7 +29,7 @@ m_q^{\rm Pro}=\frac{q(q+1)}{N(N+1)},\qquad
 m_q^{\rm BM}=\frac{q(q+1)(3N+2-2q)}{N(N+1)(N+2)}.
 \label{eq:bm-formula}
 \end{equation}
-BM minimizes quadratic difference energy in the radix increments, matching smoothly to the unmodified outer bands. Both profiles retain the band boundaries and terminal extension; their interior cumulative shifts differ (Appendix~\ref{sec:bm-construction}). Cosh chooses a basis for learning; BM redistributes extension relative to a basis the weights already use. Both turn interior placement into a concrete design.
+BM minimizes quadratic difference energy in the radix increments, matching smoothly to the unmodified outer bands. Both profiles retain the band boundaries and terminal extension; their interior cumulative shifts differ (Appendix~\ref{sec:bm-construction}). The construction provides a concrete deployment baseline. Band, transition shape, and terminal depth remain available for improving the quality of a fixed table over its usable window.
 
 \begin{figure}[t]
 \centering
@@ -38,6 +38,13 @@ BM minimizes quadratic difference energy in the radix increments, matching smoot
 \label{fig:frozen-application}
 \label{fig:bm-natural-qa}
 \end{figure}
+
+\subsection{Endpoint matching and interval quality}
+\label{sec:interval-main}
+
+Write $m_k=c b_k$, with a monotone normalized profile $b_k\in[0,1]$. Its active increments locate the band, $c$ sets terminal depth, and their distribution sets transition shape. These choices interact. For a slow plateau scaled by $a=S^{-c}$, $a=1/S$ exactly matches native phase exposure at $SL$. In contrast, minimizing log-uniform distortion $F(ar-1)$ over $r\in[1,S]$ gives $a=2/(S+1)$ when $F$ is even and strictly increasing in error magnitude (Proposition~\ref{prop:interval-depth}). This conditional result supplies a depth control, not a measured optimum for a checkpoint.
+
+For task quality $Q(r)$, interval evaluation reports log-length AUC together with native, endpoint, and worst measured length; task-valid inputs below $L$ are evaluated separately. Development comparisons already distinguish these objectives: two remapped Llama profiles tie at $64$K yet differ at $32$K; an OLMo profile improves the endpoint but trades off native and task-family scores (Appendix~\ref{sec:interval-observations}). Thus a target multiplier alone does not specify the quality of its usable window.
 
 \subsection{Natural tasks and placement on finite grids}
 

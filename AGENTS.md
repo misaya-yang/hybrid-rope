@@ -1,5 +1,14 @@
 # AGENTS.md
 
+## Execution
+
+Complete the requested outcome within the user's scope: implement, inspect the
+result, and fix relevant failures without stopping at a first draft. Resolve
+routine choices from available evidence. Ask only when missing information or a
+conflict would materially change the outcome; continue independent work meanwhile.
+Existing authorization carries across related follow-ups. A plan alone does not
+authorize paid GPU runs, downloads, remote changes, or publication.
+
 1. **Test the requested outcome.**
    Do not substitute proxy metrics or intermediate milestones for the requested
    result. Keep positive and negative conclusions within what was actually tested.
@@ -32,8 +41,12 @@ and failure records belong in project documents, not here.
 
 ## Navigation and documentation maintenance
 
-- Start with the root `index.md`. For manuscript work, follow its current paper
-  handoff and evidence index; for a specific experiment, follow the local index.
+- Use root `index.md` to orient when the task location is unclear. For a known
+  file or experiment, use its local context directly. Read only the task-relevant
+  route; a small edit does not require the full paper handoff or repository map.
+  Full catalogs, historical plans and external proposals are opt-in reference
+  material: open them for a specific provenance question or requested branch,
+  not as startup context.
 - Keep navigation in lowercase `index.md`, directory introductions in
   `README.md`, and dated findings/plans in their classified folders. Update the
   nearest index when adding or changing an evidence owner.

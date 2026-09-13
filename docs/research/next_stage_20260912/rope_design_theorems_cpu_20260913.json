@@ -1,0 +1,68 @@
+{
+  "status": "CPU_IDENTITIES_VERIFIED",
+  "model_execution": false,
+  "scope": "standard-library algebra and constructed examples, not task prediction",
+  "profiles_n17_s4": {
+    "index_ramp_yarn": {
+      "sum_m_interior": 6.104186475649061,
+      "first_increment": 0.03254751411094242,
+      "last_increment": 0.11723262681851132,
+      "increments_increasing": true
+    },
+    "mrpro": {
+      "sum_m_interior": 5.333333333333334,
+      "first_increment": 0.006535947712418301,
+      "last_increment": 0.11111111111111116,
+      "increments_increasing": true
+    },
+    "uniform": {
+      "sum_m_interior": 8.0,
+      "first_increment": 0.058823529411764705,
+      "last_increment": 0.05882352941176472,
+      "increments_increasing": false
+    },
+    "bm": {
+      "sum_m_interior": 8.0,
+      "first_increment": 0.017543859649122806,
+      "last_increment": 0.01754385964912286,
+      "increments_increasing": false
+    }
+  },
+  "rotation_ramp_yarn": {
+    "4.0": {
+      "min_second_difference": -0.007482011082903139,
+      "max_second_difference": -0.0030810898740668557
+    },
+    "16.0": {
+      "min_second_difference": -0.0037230758030285527,
+      "max_second_difference": -0.0005670128340655722
+    },
+    "32.0": {
+      "min_second_difference": -1.1102230246251565e-16,
+      "max_second_difference": 2.220446049250313e-16
+    },
+    "64.0": {
+      "min_second_difference": 0.00020308256693070403,
+      "max_second_difference": 0.012423681010718335
+    }
+  },
+  "z_identity_max_error": 5.551115123125783e-17,
+  "finite_response_derivative_error": 1.535238602912159e-11,
+  "signed_response_counterexample": [
+    0.009991669443948456,
+    -0.009991669443948456
+  ],
+  "three_gap_stencil": {
+    "indices_zero_based": [
+      6,
+      7,
+      8
+    ],
+    "values": [
+      1,
+      -2,
+      1
+    ],
+    "feasible_example_eta": 0.019865841073271412
+  }
+}
