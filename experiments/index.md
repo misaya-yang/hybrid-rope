@@ -24,6 +24,8 @@
 
 - [OLMo LoRA 能力恢复](olmo_recovery_20260912/index.md)：本 session Top1；两端低资源阶段只准备代码和轻量清单。
 - [原计划 E2/E3](rope_fast_5090_20260912/index.md)：冻结模型比较，独立于 4080 的 S1 训练。
+- [Phase-OOD / collision 审计与 E0–E5 流水线](rope_z_ood_collision_20260913/index.md)：
+  复核两份 Web 方案，保留全 δ Pareto 机制 arms，并以 plan-only 外壳复用当前模型条件化 solver。
 
 ## 理论与候选工作台
 

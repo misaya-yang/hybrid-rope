@@ -7,7 +7,8 @@ import json
 from pathlib import Path
 
 ARMS=('Native','Cosh_tau_sqrt2','Cosh_tau1','Cosh_tau2','C42V24_g4','CoshDeploy_tau1_g4','BM_g4',
-      'BM_g8','MrPro_g4','MrPro_g8','MrUni_g4','BetaSym_gamma1p5_g4','BetaSym_gamma3_g4')
+      'BM_g8','MrPro_g4','MrPro_g8','MrUni_g4','BetaSym_gamma1p5_g4','BetaSym_gamma3_g4',
+      'BetaSym_gamma3_g8','RangeBridge50_g8','BM_g8_RangeGain')
 CHECKPOINT_ARMS=ARMS+('Cosh_tau_sqrt2_gradual_install',)
 LENGTHS=(4096,8192,16384,32768)
 
@@ -33,6 +34,7 @@ def collect_rows(args,manifest):
     for path,suite in panels:
         if not path.is_file():raise FileNotFoundError(path)
         for index,row in enumerate(read_rows(path)):
+            if args.row_split and row.get('split')!=args.row_split:continue
             if row.get('task')=='text':continue
             prompt=row.get('prompt_ids')
             if not prompt and 'target_start' in row:prompt=row['input_ids'][:row['target_start']]
@@ -112,6 +114,8 @@ def main():
     parser.add_argument('--model',type=Path,required=True);parser.add_argument('--arm',choices=ARMS,required=True)
     parser.add_argument('--checkpoint',type=Path);parser.add_argument('--checkpoint-arm',choices=CHECKPOINT_ARMS)
     parser.add_argument('--split',choices=['dev','test'],default='dev')
+    parser.add_argument('--row-split',choices=['fit','select','internal_confirm'],
+                        help='for explicit panels, retain only rows carrying this prepared split')
     parser.add_argument('--regression-data',type=Path);parser.add_argument('--extra-panel',type=Path,action='append',default=[])
     parser.add_argument('--only-extra-panels',action='store_true',help='evaluate only explicitly supplied panels')
     parser.add_argument('--skip-lm',action='store_true',help='skip the held-out LM panel for generation-only downstream runs')
@@ -120,11 +124,16 @@ def main():
     parser.add_argument('--limit-per-cell',type=int,default=0,help='0 keeps every row; a positive limit is explicitly reported as a subset')
     parser.add_argument('--prefill-chunk-size',type=int,default=0,
                         help='0 uses stock generate; positive values enable exact-context chunked KV prefill')
+    parser.add_argument('--static-table-json',type=Path,
+                        help='install the table object (or result.table) from this frozen solver receipt')
+    parser.add_argument('--table-label',help='result label for --static-table-json; does not alter the table')
     parser.add_argument('--out',type=Path,required=True);parser.add_argument('--execute',action='store_true')
     args=parser.parse_args();manifest=json.loads(args.data.read_text())
     if not args.execute:
         print(json.dumps({'status':'PLAN_ONLY','arm':args.arm,'checkpoint':str(args.checkpoint) if args.checkpoint else None,
-                          'split':args.split,'lengths':LENGTHS,'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
+                          'split':args.split,'row_split':args.row_split,'lengths':LENGTHS,
+                          'static_table_json':str(args.static_table_json) if args.static_table_json else None,
+                          'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
     if args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0:
         raise ValueError('limits and prefill chunk size must be nonnegative')
     import numpy as np
@@ -132,7 +141,6 @@ def main():
     from transformers import AutoTokenizer
     from .recovery_v2_runtime import load_model
     from .runtime import validate_cuda
-    from .evaluate import lm_loss_rows
     from scripts.eval.longbench_metrics import qa_f1_score
     validate_cuda();rows=collect_rows(args,manifest)
     if args.length_cap:
@@ -142,17 +150,40 @@ def main():
     state=json.loads((args.checkpoint/'state.json').read_text()) if args.checkpoint else {}
     checkpoint_arm=args.checkpoint_arm or args.arm
     if args.checkpoint is None and args.checkpoint_arm:raise ValueError('--checkpoint-arm requires --checkpoint')
+    if args.static_table_json and args.checkpoint:
+        raise ValueError('--static-table-json is a frozen-model evaluation and cannot use a checkpoint')
+    if args.table_label and not args.static_table_json:
+        raise ValueError('--table-label requires --static-table-json')
+    static_table=None
+    if args.static_table_json:
+        payload=json.loads(args.static_table_json.read_text())
+        static_table=payload.get('table',payload)
+        values=np.asarray(static_table.get('values_float32'),dtype=np.float32)
+        gain=float(static_table.get('gain'))
+        if values.shape!=(64,) or not np.isfinite(values).all() or not np.all(values[:-1]>values[1:]) or not np.isfinite(gain) or gain<=0:
+            raise ValueError('invalid frozen solver table')
+        static_table={'values_float32':values.tolist(),'gain':gain,
+                      'construction':static_table.get('construction',{})}
+    result_arm=args.table_label or args.arm
     if state and state.get('arm')!=checkpoint_arm:raise ValueError('checkpoint belongs to another arm')
-    identity={'arm':args.arm,'checkpoint_arm':checkpoint_arm if args.checkpoint else None,
+    identity={'arm':result_arm,'base_arm':args.arm,'checkpoint_arm':checkpoint_arm if args.checkpoint else None,
               'split':args.split,'seed':state.get('seed'),'input_tokens':state.get('input_tokens'),
               'unadapted':args.checkpoint is None,'row_ids':[r['eval_id'] for r in rows],
               'lengths':list(LENGTHS),'generation_length_caps':sorted({r['length_cap'] for r in rows}),
               'lm_enabled':bool(lm_path),'lm_limit_documents':args.lm_limit_documents,
-              'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size}
+              'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size,
+              'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
     if contract.exists() and json.loads(contract.read_text())!=identity:raise ValueError('output contains a different evaluation')
     write(contract,identity)
     model,wrapper,table=load_model(args.model,args.arm,checkpoint=args.checkpoint,training=False)
+    if static_table:
+        from scripts.experiments.cross_audit.tables import install_static
+        install_static(model,np.asarray(static_table['values_float32'],dtype=np.float32),static_table['gain'])
+        actual=model.model.rotary_emb.inv_freq.detach().cpu().float().numpy()
+        if not np.array_equal(actual,np.asarray(static_table['values_float32'],dtype=np.float32)):
+            raise RuntimeError('installed solver table differs from the frozen receipt')
+        table=static_table
     tokenizer=AutoTokenizer.from_pretrained(args.model,local_files_only=True)
     eos=model.generation_config.eos_token_id;eos=set(eos if isinstance(eos,list) else [eos])
     path=args.out/'generations.jsonl';saved=read_rows(path) if path.exists() else []
@@ -171,7 +202,7 @@ def main():
             record={key:row.get(key) for key in (
                 'eval_id','row_id','suite','task','length_cap','input_tokens','prompt_sha256',
                 'document_cluster_id','group_id','source_seed','world','references')}
-            record.update(arm=args.arm,generated_ids=tokens,output_text=text,whole_response_f1=qa_f1_score(text,row['references']),
+            record.update(arm=result_arm,generated_ids=tokens,output_text=text,whole_response_f1=qa_f1_score(text,row['references']),
                           literal_exact=literal,literal_exact_plus_eos=literal and ended,normalized_exact=exact,exact_plus_eos=exact and ended,
                           ended_eos=ended,empty=not text.strip(),hit_cap=len(tokens)==row['max_new_tokens'] and not ended)
             if row['task'].startswith('niah_') or row['task'] in ('vt','cwe','fwe','qa_1','qa_2'):
@@ -181,6 +212,7 @@ def main():
             write(args.out/'live.json',{'phase':'generation','completed':len(saved),'total':len(rows)})
     lm_file=args.out/'lm_rows.jsonl';lm_saved=read_rows(lm_file) if lm_file.exists() else []
     if lm_path:
+        from .evaluate import lm_loss_rows
         values=np.load(lm_path,mmap_mode='r',allow_pickle=False)
         if values.ndim!=2 or values.shape[1]<32769:raise ValueError('held-out LM requires full 32K+1 contiguous windows')
         if args.lm_limit_documents:values=values[:args.lm_limit_documents]
@@ -216,6 +248,7 @@ def main():
             for items in pairs.values() if len(items)==2 and {r['world'] for r in items}=={0,1}]
     summary={'status':'COMPLETE','identity':identity,'generation_metrics':metrics,'lm_metrics':lm_summary,
              'paired_source_follow':{'groups':len(paired),'accuracy':sum(paired)/len(paired) if paired else None},
+             'table':table,
              'asset_identity_policy':'user_attested_clone/no_sha_validation',
              'scope':'development/regression or explicit supplied panels; no automatic stability gate or method win'}
     write(args.out/'summary.json',summary);write(args.out/'status.json',{'status':'COMPLETE','rows':len(saved),'lm_rows':len(lm_saved)})

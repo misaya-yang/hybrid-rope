@@ -83,7 +83,7 @@ def seed_all(seed):
 def validate_cuda():
  if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():raise RuntimeError('BF16 CUDA required')
  name=torch.cuda.get_device_name();cap=torch.cuda.get_device_capability();arch=torch.cuda.get_arch_list()
- if cap!=(12,0) or '5090' not in name.upper() or not any(x.startswith('sm_120') for x in arch):raise RuntimeError(f'requires RTX5090 sm120 and compatible cubin: {name} {cap} {arch}')
+ if cap<(8,0):raise RuntimeError(f'requires a BF16 CUDA GPU with Flash SDPA support: {name} {cap} {arch}')
  torch.set_float32_matmul_precision('high')
  torch.backends.cuda.matmul.allow_tf32=True;torch.backends.cudnn.allow_tf32=True
  torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction=True

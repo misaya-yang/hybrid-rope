@@ -10,6 +10,10 @@
 - [test_artifact_manifest.py](test_artifact_manifest.py) — test_artifact_manifest.py
 - [test_attention_demand_companding_r0.py](test_attention_demand_companding_r0.py) — test_attention_demand_companding_r0.py
 - [test_bias_position.py](test_bias_position.py) — test_bias_position.py
+- [test_broad_fixed_candidate.py](test_broad_fixed_candidate.py) — 冻结候选与归档七任务面板的row-matched official评分
+- [test_bootstrap_task_equal_contrast.py](test_bootstrap_task_equal_contrast.py) — 配对任务内重采样与任务等权敏感性区间
+- [test_build_range_factorial_tables.py](test_build_range_factorial_tables.py) — C42V24与SolverC42的shape×gain缺失格构造合同
+- [test_natural_fixed_candidate.py](test_natural_fixed_candidate.py) — 391行自然QA并集的去重、身份对齐与任务等权汇总
 - [test_bm_diagnostic_decode.py](test_bm_diagnostic_decode.py) — test_bm_diagnostic_decode.py
 - [test_boundary_matched_deployment.py](test_boundary_matched_deployment.py) — test_boundary_matched_deployment.py
 - [test_causal_flash.py](test_causal_flash.py) — test_causal_flash.py
@@ -73,6 +77,14 @@
 - [test_rope_decision_solver.py](test_rope_decision_solver.py) — test_rope_decision_solver.py
 - [test_rope_nll_readout.py](test_rope_nll_readout.py) — test_rope_nll_readout.py
 - [test_rope_operator_factorial.py](test_rope_operator_factorial.py) — test_rope_operator_factorial.py
+- [test_rope_ood_collision_pareto.py](test_rope_ood_collision_pareto.py) — 完整sine-cosine码距离、离散Native OOD与Pareto反转检查
+- [test_rope_z_ood_collision_mechanisms.py](test_rope_z_ood_collision_mechanisms.py) — phase arc、完整pair collision与全delta三态机制审计
+- [test_rope_z_ood_collision_pipeline.py](test_rope_z_ood_collision_pipeline.py) — E0–E5输入身份、solver三态、固定表执行门与blocked lineage
+- [test_native_relative_allocation.py](test_native_relative_allocation.py) — 可微Native-relative固定表、精确初始化与共享安装合同
+- [test_prepare_range_solver_data.py](test_prepare_range_solver_data.py) — 多长度任务8/4/4拆分和完整答案+EOS数据合同
+- [test_prepare_range_source_cf.py](test_prepare_range_source_cf.py) — 来源反事实成对标签、长度和拆分合同
+- [test_range_table_solver.py](test_range_table_solver.py) — 字典序局部子问题、可行性恢复、全fit值与小批梯度组合
+- [test_range_table_eval.py](test_range_table_eval.py) — 独立split路由与log-length AUC汇总
 - [test_rope_table_definitions.py](test_rope_table_definitions.py) — test_rope_table_definitions.py
 - [test_rope_validation_statistics.py](test_rope_validation_statistics.py) — test_rope_validation_statistics.py
 - [test_rotary_budget.py](test_rotary_budget.py) — test_rotary_budget.py

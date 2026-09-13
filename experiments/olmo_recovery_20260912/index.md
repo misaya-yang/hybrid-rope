@@ -24,3 +24,30 @@
 - `recovery_v2_runtime.py` / `recovery_v2_train.py`：全层QKVO64+FFN16、分组LR、短KL与固定schedule续训。
 - `recovery_v2_probe.py` / `recovery_v2_eval.py`：必要工程检查与完整任务/NLL评价。
 - `gradual_table_train.py`：8K 300步单变量安装路径对照；20步Native、180步log-frequency过渡、100步固定Cosh，最终表与骤换Cosh相同。
+- `prepare_fixed_table_interval.py` / `score_fixed_table_interval.py`：Llama Native 8K
+  到64K的单固定g8表面板及log-length AUC、内部最弱点、Native/endpoint regret汇总；
+  48K作为显式内部压力点，不动态换表。
+- `test_fixed_table_interval.py`：gamma3、BM/MrPro等距表与BM range-mean gain的
+  固定表身份和AUC算术检查。
+- `prepare_range_solver_data.py` / `prepare_range_source_cf.py`：冻结OLMo的
+  4/6/8/10/12/14/16K任务与4K/16K来源反事实8/4/4拆分；目标含完整答案和EOS。
+- `native_relative_allocation.py` / `solve_range_table.py`：固定S=4、band[14,32]
+  的17个有效increment自由度与一个gain自由度；冻结模型权重，以全fit真实值和
+  轮转小批梯度做字典序顺序线性trust-region求解。
+- `measure_range_baselines.py`：Native、BM、MrPro、C42V24在同一fit任务和
+  source-counterfactual合同上的一次性teacher-forced基线。
+- `recovery_v2_eval.py` / `summarize_range_generation.py`：加载冻结求解器tensor，
+  在独立select/confirm上分别报告RULER official contains、完整答案+EOS与来源
+  pair-follow，不把三种口径混成总分。
+- `compare_broad_fixed_candidate.py`：将一个冻结候选与Git归档、row-matched的
+  350行七任务16K C42/C42V24输出比较，只生成候选，不重跑历史基线。
+- `compare_natural_fixed_candidate.py`：将同一冻结候选与391行自然QA历史原始行
+  做row/prompt身份对齐后比较；只生成候选，BM/MrPro基线永久复用。
+- `build_range_factorial_tables.py`：构造C42V24与SolverC42之间缺失的两个
+  shape×gain单变量交叉格，复用两个已测端点格以分离allocation、gain及其交互。
+- `bootstrap_task_equal_contrast.py`：对row-matched候选/基线做任务内配对重采样后
+  再任务等权，报告敏感性区间；它不是总体置信保证，也不作为候选淘汰门禁。
+
+判定采用分层证据，不把开发集阈值当作淘汰器：实现或协议错误可以否决一次运行；
+任务层明确受支配才淘汰候选；小样本未过线、代理冲突或单任务退化只记为Pareto/
+未决，并保留静态表供后续宽面板、自然任务和独立seed复核。

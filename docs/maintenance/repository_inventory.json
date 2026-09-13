@@ -1,6 +1,6 @@
 {
   "schema": "repository_inventory_v1",
-  "as_of": "2026-09-12",
+  "as_of": "2026-09-13",
   "scope": "Git-visible existing files, including untracked; ignored payloads only directory-level",
   "files": [
     {
@@ -2049,6 +2049,11 @@
       "category": "navigation"
     },
     {
+      "path": "docs/research/next_stage_20260912/4080_FIXED_TABLE_RANGE_RESULT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/5090_FINAL_EXPERIMENT_REPORT_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2060,6 +2065,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/5090_recovery_preparation.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/CODEX_INTERVAL_PROMPT_20260912.md",
       "area": "docs",
       "category": "document"
     },
@@ -5514,6 +5524,26 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/build_range_factorial_tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/bootstrap_task_equal_contrast.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/compare_broad_fixed_candidate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/compare_natural_fixed_candidate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/cpu_checks.py",
       "area": "experiments",
       "category": "code"
@@ -5594,6 +5624,21 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/measure_range_baselines.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/native_relative_allocation.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/prepare_fixed_table_interval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/prepare_llama_bm_transfer.py",
       "area": "experiments",
       "category": "code"
@@ -5604,7 +5649,22 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/prepare_range_solver_data.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/prepare_range_source_cf.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/probe.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/probe_range_table.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5644,7 +5704,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_recovery_20260912/score_fixed_table_interval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/solve_range_table.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/summarize_range_generation.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/olmo_recovery_20260912/test_evaluate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_recovery_20260912/test_fixed_table_interval.py",
       "area": "experiments",
       "category": "code"
     },
@@ -6307,6 +6387,41 @@
       "path": "experiments/rope_operator_family/validation.txt",
       "area": "experiments",
       "category": "other"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/build_mechanism_arms.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/cpu_mechanism_b500k_k32_l2048.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/index.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/lock_selection.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/mechanisms.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/rope_z_ood_collision_20260913/pipeline.py",
+      "area": "experiments",
+      "category": "code"
     },
     {
       "path": "experiments/rotary_budget/DESIGN_SOURCE.md",
@@ -9534,6 +9649,11 @@
       "category": "code"
     },
     {
+      "path": "scripts/analysis/audit_rope_ood_collision_pareto.py",
+      "area": "scripts",
+      "category": "code"
+    },
+    {
       "path": "scripts/analysis/audit_scale_consistent_log_interpolation.py",
       "area": "scripts",
       "category": "code"
@@ -11739,6 +11859,26 @@
       "category": "code"
     },
     {
+      "path": "tests/test_broad_fixed_candidate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_bootstrap_task_equal_contrast.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_build_range_factorial_tables.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_natural_fixed_candidate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_bm_diagnostic_decode.py",
       "area": "tests",
       "category": "code"
@@ -11919,6 +12059,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_native_relative_allocation.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_native_single_code_calibration.py",
       "area": "tests",
       "category": "code"
@@ -11960,6 +12105,16 @@
     },
     {
       "path": "tests/test_prefix_phase_handoff.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_prepare_range_solver_data.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_prepare_range_source_cf.py",
       "area": "tests",
       "category": "code"
     },
@@ -12024,6 +12179,16 @@
       "category": "code"
     },
     {
+      "path": "tests/test_range_table_eval.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_range_table_solver.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_reference_corrected_ruler.py",
       "area": "tests",
       "category": "code"
@@ -12059,6 +12224,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_rope_ood_collision_pareto.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_rope_operator_factorial.py",
       "area": "tests",
       "category": "code"
@@ -12070,6 +12240,16 @@
     },
     {
       "path": "tests/test_rope_validation_statistics.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_rope_z_ood_collision_mechanisms.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_rope_z_ood_collision_pipeline.py",
       "area": "tests",
       "category": "code"
     },

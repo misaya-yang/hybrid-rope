@@ -18,7 +18,8 @@ ARMS = ("Native", "Cosh_tau1", "Cosh_tau2")
 TABLE_ARMS = (
     "Native", "Cosh_tau_sqrt2", "Cosh_tau1", "Cosh_tau2", "C42V24_g4",
     "CoshDeploy_tau1_g4", "BM_g4", "BM_g8", "MrPro_g4", "MrPro_g8", "MrUni_g4",
-    "BetaSym_gamma1p5_g4", "BetaSym_gamma3_g4",
+    "BetaSym_gamma1p5_g4", "BetaSym_gamma3_g4", "BetaSym_gamma3_g8", "RangeBridge50_g8",
+    "BM_g8_RangeGain",
 )
 QK = ("q_proj", "k_proj")
 VO = ("v_proj", "o_proj")
@@ -41,7 +42,7 @@ def table_for_config(config, arm: str) -> dict:
           and config.num_attention_heads == 32 and config.num_key_value_heads == 8
           and config.max_position_embeddings == 8192 and base == 500000):
         reference_length = 8192
-        if arm not in ("Native", "BM_g4", "BM_g8", "MrPro_g4", "MrPro_g8"):
+        if arm not in ("Native", "BM_g4", "BM_g8", "MrPro_g4", "MrPro_g8", "BetaSym_gamma3_g8", "RangeBridge50_g8", "BM_g8_RangeGain"):
             raise ValueError("unsupported Llama transfer table")
     else:
         raise ValueError("unsupported recovery-v2 model geometry")
@@ -67,7 +68,7 @@ def table_for_config(config, arm: str) -> dict:
             "gain": gain,
             "source": "pre-existing evq_deploy_t1 construction",
         }
-    elif arm in ("BM_g4", "BM_g8"):
+    elif arm in ("BM_g4", "BM_g8", "BM_g8_RangeGain"):
         from scripts.lib.rope.boundary_matched import boundary_matched_inv_freq
         scale = 4.0 if arm == "BM_g4" else 8.0
         installed, gain, construction = boundary_matched_inv_freq(
@@ -86,7 +87,15 @@ def table_for_config(config, arm: str) -> dict:
         else:
             values = installed.detach().cpu().float().numpy()
             source = "existing E2 bm_g4 construction"
+        if arm == "BM_g8_RangeGain":
+            gain = 1.0 + 0.05 * math.log(scale)
+            source = "exact BM_g8 frequencies with log-length interval-average fixed gain"
         construction = {**construction, "source": source}
+        if arm == "BM_g8_RangeGain":
+            construction.update(
+                gain_rule="mean of 1 + 0.1*ln(r) under uniform log-length measure on r in [1,S]",
+                frequency_table_equal_to="BM_g8",
+            )
     elif arm in ("MrPro_g4", "MrPro_g8"):
         from scripts.experiments.cross_audit.tables import transform
         scale = 4.0 if arm == "MrPro_g4" else 8.0
@@ -95,6 +104,31 @@ def table_for_config(config, arm: str) -> dict:
             scale=scale, method="mrpro",
         )
         construction = {**construction, "source": f"MrRoPE-Pro target-{int(reference_length * scale) // 1024}K diagnostic"}
+    elif arm == "RangeBridge50_g8":
+        scale = 8.0
+        turns = np.power(float(base), -np.arange(dim // 2, dtype=np.float64) / (dim // 2))
+        turns *= reference_length / (2.0 * math.pi)
+        low = int(np.flatnonzero(turns > 32.0)[-1])
+        high = int(np.flatnonzero(turns < 1.0)[0])
+        n = high - low
+        q = np.clip(np.arange(dim // 2) - low, 0, n).astype(np.float64)
+        mrpro = q * (q + 1.0) / (n * (n + 1.0))
+        bm = q * (q + 1.0) * (3.0 * n + 2.0 - 2.0 * q) / (n * (n + 1.0) * (n + 2.0))
+        exponent = 0.5 * (mrpro + bm)
+        native64 = np.power(float(base), -np.arange(dim // 2, dtype=np.float64) / (dim // 2))
+        values = (native64 * np.power(scale, -exponent)).astype(np.float32)
+        gain = 1.0 + 0.1 * math.log(scale)
+        construction = {
+            "method": "equal minimax midpoint of BM and MrRoPE-Pro cumulative exponents",
+            "mixture_weight_BM": 0.5,
+            "mixture_weight_MrPro": 0.5,
+            "low": low,
+            "high": high,
+            "N": n,
+            "scale": scale,
+            "reference_length": reference_length,
+            "source": "parameter-free exponent-space bridge between complementary fixed-table incumbents",
+        }
     elif arm == "MrUni_g4":
         from scripts.experiments.cross_audit.tables import transform
         values, gain, construction = transform(
@@ -102,30 +136,37 @@ def table_for_config(config, arm: str) -> dict:
             scale=4.0, method="mruni",
         )
         construction = {**construction, "source": "existing E2 MrRoPE-Uni construction"}
-    elif arm in ("BetaSym_gamma1p5_g4", "BetaSym_gamma3_g4"):
+    elif arm in ("BetaSym_gamma1p5_g4", "BetaSym_gamma3_g4", "BetaSym_gamma3_g8"):
         gamma = 1.5 if arm == "BetaSym_gamma1p5_g4" else 3.0
-        # OLMo's fixed 32/1-turn transition is slots [14, 32], N=18.
-        n, low = 18, 14
+        scale = 8.0 if arm.endswith("_g8") else 4.0
+        turns = np.power(float(base), -np.arange(dim // 2, dtype=np.float64) / (dim // 2))
+        turns *= reference_length / (2.0 * math.pi)
+        fast = np.flatnonzero(turns > 32.0)
+        slow = np.flatnonzero(turns < 1.0)
+        if not len(fast) or not len(slow) or int(slow[0]) <= int(fast[-1]):
+            raise ValueError("native grid has no valid 32/1-turn transition")
+        low, high = int(fast[-1]), int(slow[0])
+        n = high - low
         kk = np.arange(1, n + 1, dtype=np.float64)
         weights = np.power(kk, gamma - 1.0) * np.power(n + 1 - kk, gamma - 1.0)
         exponent = np.zeros(dim // 2, dtype=np.float64)
         exponent[low:low + n + 1] = np.concatenate([[0.0], np.cumsum(weights / weights.sum())])
         exponent[low + n + 1:] = 1.0
         native64 = np.power(float(base), -np.arange(dim // 2, dtype=np.float64) / (dim // 2))
-        values = (native64 * np.power(4.0, -exponent)).astype(np.float32)
-        gain = 1.0 + 0.1 * math.log(4.0)
+        values = (native64 * np.power(scale, -exponent)).astype(np.float32)
+        gain = 1.0 + 0.1 * math.log(scale)
         construction = {
             "method": "symmetric beta increments",
             "gamma": gamma,
             "shape_a": gamma - 1.0,
             "shape_b": gamma - 1.0,
-            "low": 14,
-            "high": 32,
-            "N": 18,
-            "scale": 4.0,
+            "low": low,
+            "high": high,
+            "N": n,
+            "scale": scale,
             "reference_length": reference_length,
             "sum_exponents": float(exponent.sum()),
-            "source": "m_incr_beta with fixed center, span, band, and exponent area",
+            "source": "OLMo interval-selected gamma=3 transfer; fixed table for every runtime length",
         }
     elif arm.startswith("Cosh_tau"):
         tau = math.sqrt(2.0) if arm == "Cosh_tau_sqrt2" else float(arm.removeprefix("Cosh_tau"))
