@@ -134,10 +134,21 @@ def test_tailspline_builder_enforces_shared_mrpro_band_and_gain(monkeypatch):
 
 def test_tailspline_cpu_verification_matches_documented_widths_and_scope():
     verification = run_tailspline_verification()
-    assert verification["status"] == "TAILSPLINE_CPU_VERIFICATION_V1"
+    assert verification["status"] == "TAILSPLINE_CPU_VERIFICATION_V2"
     assert verification["checkpoint_loaded"] is False
     assert verification["real_model_evaluations"] == 0
     assert verification["benchmark_advantage_demonstrated"] is False
+    assert verification["boundary_condition_audit"] == {
+        "one_sided_entry_penalty": 0.0,
+        "one_sided_tail_penalty": 1.0,
+        "one_sided_unique_minimizer": "tailspline",
+        "symmetric_entry_penalty": 1.0,
+        "symmetric_tail_penalty": 1.0,
+        "symmetric_unique_minimizer": "bm",
+        "nonnegative_entry_penalty_has_unique_closed_form_continuum": True,
+        "intermediate_penalties_are_gpu_candidates": False,
+        "cpu_selects_boundary_condition": False,
+    }
     records = {record["n"]: record for record in verification["widths"]}
     assert set(records) == {17, 18}
     assert all(all(record["checks"].values()) for record in records.values())
@@ -145,6 +156,15 @@ def test_tailspline_cpu_verification_matches_documented_widths_and_scope():
     assert records[18]["finite_grid_front_weight"] == pytest.approx(0.7297297297297297)
     assert records[17]["objective"] == pytest.approx(0.0005602240896358543)
     assert records[18]["objective"] == pytest.approx(0.000474158368895211)
+    assert records[17]["symmetric_objective"] == pytest.approx(12 / (17 * 18 * 19))
+    assert records[18]["symmetric_objective"] == pytest.approx(12 / (18 * 19 * 20))
+    assert records[18]["transport_geometry"]["tailspline"]["increment_centroid"] < (
+        records[18]["transport_geometry"]["bm"]["increment_centroid"]
+    )
+    assert records[18]["transport_geometry"]["bm"]["increment_centroid"] < (
+        records[18]["transport_geometry"]["mrpro"]["increment_centroid"]
+    )
+    assert records[18]["maximum_relative_frequency_difference_from_bm"]["S4"] > 0.24
     assert records[17]["maximum_relative_frequency_difference_from_mix075"]["S8"] == pytest.approx(
         0.012214028458268356,
     )

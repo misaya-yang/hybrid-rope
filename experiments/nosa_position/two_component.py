@@ -29,7 +29,7 @@ class TwoComponentSelector(ExactBlockSelector):
             if self.variant in ('e05_rank4','e09_independent'):
                 w=bias.softmax(-1);mean=(w[...,None]*x).sum(-2)
                 weighted=(x-mean[:,:,None])*w.sqrt()[...,None]
-                gram=[REDACTED_EMAIL](-1,-2)
+                gram=weighted@weighted.transpose(-1,-2)
                 _,vectors=torch.linalg.eigh(gram)
                 rank=4 if self.variant=='e05_rank4' else 32
                 factors=vectors[...,-rank:].transpose(-1,-2)@weighted

@@ -29,7 +29,7 @@ def reconstruct():
     assert a[0]==b[0]==0 and a[-1]==b[-1]==1
     epsa,epsb=np.diff(a),np.diff(b)
     assert np.all(epsa>=-1e-14) and np.all(epsb>=-1e-14)
-    assert abs([REDACTED_EMAIL](1,64)-[REDACTED_EMAIL](1,64))<1e-12
+    assert abs(epsa@np.arange(1,64)-epsb@np.arange(1,64))<1e-12
     rawpaths=[ROOT/f'ds_workspace/recon_20260910/work/jsonl/olmo_c42/{name}.jsonl' for name in ['ctl_C42','ctl_C42V24']]
     raw=[{r['row_id']:r for r in map(json.loads,p.read_text().splitlines())} for p in rawpaths]
     assert set(raw[0])==set(raw[1]) and len(raw[0])==350

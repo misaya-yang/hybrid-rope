@@ -13,7 +13,7 @@ def test_rotary_replay_matches_direct_rotation_and_causal_gqa():
         ph=p[:,None]*freq;co=torch.cat([ph.cos(),ph.cos()],-1);si=torch.cat([ph.sin(),ph.sin()],-1)
         return x*co+torch.cat([-x[...,D//2:],x[...,:D//2]],-1)*si
     qr=rot(q,pos);kr=rot(k,torch.arange(L)).repeat_interleave(2,0);vr=v.repeat_interleave(2,0)
-    logits=[REDACTED_EMAIL](-1,-2)*(gain*gain/math.sqrt(D));logits.masked_fill_(pos[:,None]<torch.arange(L),-torch.inf)
+    logits=qr@kr.transpose(-1,-2)*(gain*gain/math.sqrt(D));logits.masked_fill_(pos[:,None]<torch.arange(L),-torch.inf)
     expected=(logits.softmax(-1)@vr).transpose(0,1).reshape(Q,H*D)@wo.T
     actual,profile=replay(q,k,v,wo,freq,gain,pos,response=True)
     torch.testing.assert_close(actual,expected,atol=2e-5,rtol=2e-5)

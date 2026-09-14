@@ -1270,7 +1270,7 @@ MEMORY.md:18-23|note=[minimal sufficient skill instructions and no retired promp
 
 To view this in the Codex app:
 
-[View research-workbench](codex://plugins/research-workbench?marketplacePath=%2FUsers%2Fmisaya.yanghejazfs.com.au%2F.agents%2Fplugins%2Fmarketplace.json) · [Share research-workbench](codex://plugins/research-workbench?marketplacePath=%2FUsers%2Fmisaya.yanghejazfs.com.au%2F.agents%2Fplugins%2Fmarketplace.json&mode=share)
+[View research-workbench](codex://plugins/research-workbench?marketplacePath=%2FUsers%2F[REDACTED_AUTHOR].yanghejazfs.com.au%2F.agents%2Fplugins%2Fmarketplace.json) · [Share research-workbench](codex://plugins/research-workbench?marketplacePath=%2FUsers%2F[REDACTED_AUTHOR].yanghejazfs.com.au%2F.agents%2Fplugins%2Fmarketplace.json&mode=share)
 <oai-mem-citation>
 <citation_entries>
 MEMORY.md:18-23|note=[minimal sufficient instructions and no retired skill dependency]

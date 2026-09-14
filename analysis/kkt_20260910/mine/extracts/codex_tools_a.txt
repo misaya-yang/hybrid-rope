@@ -7582,7 +7582,7 @@ $ /bin/zsh -lc cat /Users/yang/.codex/automations/rope/automation.toml
 id = "rope"
 kind = "heartbeat"
 name = "RoPE 今夜实验接续"
-prompt = "持续推进用户授权的RoPE零训练研究直到用户睡醒叫停/调整或真正完成，约10小时不是硬截止。读取/Users/yang/projects/hybrid-rope/README.md、paper-2027/HANDOFF.md及当前owner。快慢并行：有依据轻量GPU验证期间同步深入分析准备高质量后续；找到有价值方法后深入测试解释，失败回到并行选法。不要GPU长期空转等完美理论，也不能盲扫。最新判断规则：更好方法不必每子集全胜，看跨模型、NLL、passkey、RULER、QA整体证据；保留负项和代价，不把不同量纲强揉成一个总分，不因个别子项退步自动否决。理论逻辑优先：为什么比MrPro好、哪些条件下好、还能否改进，整体优势后继续深入。复用已有可比MrPro基线，只跑本方；胜出后换模型任务；缺基线才补一次归档。当前固定BM的OLMo自然任务迁移567条/臂已完成，长输入三任务等权F1 26.01对21.37，各任务均值提高，短Hotpot n5有退步。7个新增RULER任务在run_ruler_newtasks_01运行；Qwen2.5-7B资产由镜像下载并对齐官方SHA，不能同时另起GPU。深线在审查均值模式保护的残差BM算子，未经资格不能自动运行。GapCapped已失败，CausalGain仍暂停。使用ssh -p27741 [REDACTED_EMAIL].com现有GPU，本任务唯一执行。保持完整生成/EOS/官方评分/代理边界。只有跨模型全量可比验证及理论分析支持真正完成才授权关机并停心跳，否则继续到用户回来。只对实质结果/路线变化/失败/需要用户动作通知，未变安静。"
+prompt = "持续推进用户授权的RoPE零训练研究直到用户睡醒叫停/调整或真正完成，约10小时不是硬截止。读取/Users/yang/projects/hybrid-rope/README.md、paper-2027/HANDOFF.md及当前owner。快慢并行：有依据轻量GPU验证期间同步深入分析准备高质量后续；找到有价值方法后深入测试解释，失败回到并行选法。不要GPU长期空转等完美理论，也不能盲扫。最新判断规则：更好方法不必每子集全胜，看跨模型、NLL、passkey、RULER、QA整体证据；保留负项和代价，不把不同量纲强揉成一个总分，不因个别子项退步自动否决。理论逻辑优先：为什么比MrPro好、哪些条件下好、还能否改进，整体优势后继续深入。复用已有可比MrPro基线，只跑本方；胜出后换模型任务；缺基线才补一次归档。当前固定BM的OLMo自然任务迁移567条/臂已完成，长输入三任务等权F1 26.01对21.37，各任务均值提高，短Hotpot n5有退步。7个新增RULER任务在run_ruler_newtasks_01运行；Qwen2.5-7B资产由镜像下载并对齐官方SHA，不能同时另起GPU。深线在审查均值模式保护的残差BM算子，未经资格不能自动运行。GapCapped已失败，CausalGain仍暂停。使用ssh -p27741 [REDACTED_EMAIL].seetacloud.com现有GPU，本任务唯一执行。保持完整生成/EOS/官方评分/代理边界。只有跨模型全量可比验证及理论分析支持真正完成才授权关机并停心跳，否则继续到用户回来。只对实质结果/路线变化/失败/需要用户动作通知，未变安静。"
 status = "ACTIVE"
 rrule = "FREQ=MINUTELY;INTERVAL=30"
 target_thread_id = "01a08151-4eb4-7572-8865-b321956dda94"

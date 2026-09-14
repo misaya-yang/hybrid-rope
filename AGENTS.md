@@ -1,68 +1,36 @@
 # AGENTS.md
 
-## Execution
+## Research execution
 
-Complete the requested outcome within the user's scope: implement, inspect the
-result, and fix relevant failures without stopping at a first draft. Resolve
-routine choices from available evidence. Ask only when missing information or a
-conflict would materially change the outcome; continue independent work meanwhile.
-Existing authorization carries across related follow-ups. A plan alone does not
-authorize paid GPU runs, downloads, remote changes, or publication.
+Complete the requested result, including relevant verification and repairs.
+Existing authorization carries across related follow-ups; a plan alone does not
+approve paid GPU runs, downloads, remote changes, or publication.
 
-1. **Test the requested outcome.**
-   Do not substitute proxy metrics or intermediate milestones for the requested
-   result. Keep positive and negative conclusions within what was actually tested.
+- Test the research claim itself. Distinguish mathematical/CPU checks, proxy
+  diagnostics, and actual model/task results; keep conclusions within the evidence.
+- Choose the least costly comparison that distinguishes the relevant explanations.
+  Reuse valid baselines and prior findings; preserve conditional gains and failures.
+  Incomplete theory need not block an informative experiment.
+- Check concrete execution risks, not a fixed preflight ritual. Trust assets the
+  user has confirmed; endpoint/path changes alone do not justify rebuilding,
+  rehashing, or rerunning. Keep bookkeeping out of healthy experiment execution.
 
-2. **Reason from mechanism and evidence.**
-   Ground hypotheses in the computation, mathematics, implementation, and observed
-   results. Challenge assumptions with counterexamples and competing explanations;
-   a complete theory is not a prerequisite for a useful experiment.
+## Context and evidence
 
-3. **Run decision-sufficient experiments.**
-   Use the least costly comparison that can distinguish explanations or determine
-   the next decision. Reuse valid baselines; preserve diagnostic value and keep
-   checks proportional to concrete risks without inventing workflow gates.
-
-4. **Use prior results critically.**
-   Check previous results, failures, and corrections before repeating a direction.
-   Do not repeat failed assumptions or generalize failures beyond their evidence.
-   Successful methods are evidence, not immutable constraints.
-
-5. **Keep experiment overhead low.**
-   Check the core code and data needed for the intended experiment, reuse valid
-   checks, and proceed. Do not default to SHA scans, repeated preflights, or
-   exhaustive validation. When the user confirms cloned assets are reliable,
-   trust that confirmation; changed SSH endpoints, paths, or historical hashes
-   are not reasons to block, rebuild, or rerun. Keep only checks tied to concrete
-   execution risks, and do not interrupt healthy work for bookkeeping updates.
-
-Project-specific hypotheses, baselines, parameters, experiment plans, results,
-and failure records belong in project documents, not here.
-
-## Navigation and documentation maintenance
-
-- Use root `index.md` to orient when the task location is unclear. For a known
-  file or experiment, use its local context directly. Read only the task-relevant
-  route; a small edit does not require the full paper handoff or repository map.
-  Full catalogs, historical plans and external proposals are opt-in reference
-  material: open them for a specific provenance question or requested branch,
-  not as startup context.
-- Keep navigation in lowercase `index.md`, directory introductions in
-  `README.md`, and dated findings/plans in their classified folders. Update the
-  nearest index when adding or changing an evidence owner.
-- Keep core documentation paths stable across machines. Use document-relative
-  Markdown links and repository-root-relative paths in source registries; do
-  not use machine-specific absolute paths for navigation. Mark ignored local
-  artifacts separately from files distributed through Git.
-- Treat dated GPU states, queues, budgets, old handoffs, and external guidance as
-  historical context. They do not replace the current user's scope or authorize
-  new execution. Check an experiment's actual result owner before claiming it
-  completed.
-- Preserve dirty work and source identities. Before moving evidence or code,
-  inspect existing path and identity references without defaulting to fresh
-  asset hashing; record relocations and verify navigation.
-  Keep report-backed results distinct from raw-row verification and plans.
-- Put project-specific priorities and new scientific decisions in the current
-  research plan linked from `index.md`, rather than expanding this file into an
-  experiment ledger. Validate documentation with
-  `python3 scripts/check_repository_docs.py` after navigation changes.
+- Use root `index.md` when the task location is unclear; otherwise read the relevant
+  file or experiment directly. Catalogs, old plans, and full handoffs are for
+  specific provenance questions, not startup reading.
+- Current research decisions belong in the plan linked from `index.md`. Dated
+  queues, memory, and external proposals do not establish current priorities,
+  live execution status, or new authorization.
+- Preserve dirty work and evidence identity. Inspect dependencies before moving
+  code or sources; record relocations. Report-backed claims and raw-row verification
+  are different evidence levels; missing local artifacts do not invalidate a report.
+- Keep navigation in `index.md`, introductions in `README.md`, and findings in
+  their existing classified folders. Use document-relative links and root-relative
+  registry paths; distinguish ignored local artifacts from Git-distributed files.
+  Update the nearest index when an evidence owner changes; update the claim map
+  when the manuscript claim changes.
+- After navigation changes, run `python3 scripts/check_repository_docs.py`.
+  Inventory refresh and other maintenance procedures are in
+  [maintenance](docs/maintenance/index.md), when needed.

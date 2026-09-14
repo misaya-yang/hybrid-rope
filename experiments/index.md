@@ -1,13 +1,12 @@
 # 当前实验入口
 
-研究目标与优先级见[当前研究索引](../docs/research/next_stage_20260912/index.md)。本页按当前用途导航，不表示远端任务已启动或完成。
+当前目标、方法与停止条件见[研究索引](../docs/research/next_stage_20260912/index.md)。
+本页导航不表示远端任务已经启动或完成。
 
 | 用途 | 入口 |
 |---|---|
-| 固定表跨长度质量确认与条件干预 | [固定表确认流水线](fixed_rope_three_interfaces_20260913/index.md) |
-| fixed-u解析迁移与决定性方法判决 | [fixed-u决定性计划](../docs/research/next_stage_20260912/DECISIVE_FIXED_U_METHOD_PLAN_20260914.md)；实现继续复用固定表流水线 |
+| 精确TailSpline与Llama统一评测 | [方法与评测合同](../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
+| 实现、运行脚本与报告工具 | [固定表流水线](fixed_rope_three_interfaces_20260913/index.md) |
 | 核实已进入论文的结果 | [论文证据](../paper-2027/research/evidence/index.md) |
 
-只有研究表选择预测器时，才进入[checkpoint replay](checkpoint_attention_replay_20260913/index.md)；它不是任务质量确认的前置条件。
-
-[完整实验目录](CATALOG_20260913.md)保留学习/适配、旧5090准备、理论与位置能力旁线的原路径。需要复用其代码、追溯结果或收到具体任务时再打开。旧“Top1”和服务器状态不代表当前优先级。
+[完整实验目录](CATALOG_20260913.md)用于复用旧代码或追溯历史结果；其中队列和服务器状态不定义当前优先级。

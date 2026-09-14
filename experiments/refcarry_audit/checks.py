@@ -54,7 +54,7 @@ def run():
     assert np.linalg.matrix_rank(features)==2 and sketch.size==1
     # Convex interpolation of two opposite unit rotations can erase a query.
     gated=.5*rot(0.)+.5*rot(np.pi)
-    normratio=float(np.linalg.norm([REDACTED_EMAIL]([1.,0.])))
+    normratio=float(np.linalg.norm(q@k))
     assert normratio<1e-15
     # Same unrotated learned query, correct origin replacement can double-count
     # a reference already computed by native hidden states.

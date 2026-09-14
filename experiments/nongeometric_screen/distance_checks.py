@@ -18,7 +18,7 @@ def check_kernel(tables):
     p=torch.arange(n,device='cuda');delta=p[:,None]-p[None]
     ql=rotate(q,p,native,gain).float();kl=rotate(k,p,native,gain).repeat_interleave(8,1).float()
     qr=rotate(q,p,mr,gain,w*(native-mr)).float();kr=rotate(k,p,mr,gain).repeat_interleave(8,1).float()
-    z=torch.where((delta<=w)[None,None],[REDACTED_EMAIL](-1,-2),[REDACTED_EMAIL](-1,-2))/math.sqrt(128)
+    z=torch.where((delta<=w)[None,None],ql@kl.transpose(-1,-2),qr@kr.transpose(-1,-2))/math.sqrt(128)
     z.masked_fill_((delta<0)[None,None],-torch.inf)
     expected=z.softmax(-1)@v.repeat_interleave(8,1).float()
     with torch.inference_mode():

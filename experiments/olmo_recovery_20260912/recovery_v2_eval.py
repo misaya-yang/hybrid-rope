@@ -276,7 +276,9 @@ def main():
                 exact=any(normalized(text)==normalized(ref) for ref in row['references'])
                 record={key:row.get(key) for key in (
                     'eval_id','row_id','suite','task','length_cap','input_tokens','prompt_sha256',
-                    'document_cluster_id','group_id','source_seed','world','references')}
+                    'document_cluster_id','group_id','source_seed','world','references',
+                    'source_document_id','semantic_group_id','generator_seed','depth_profile',
+                    'depth_target','depth_error_mean_abs','evidence_positions')}
                 record.update(arm=result_arm,generated_ids=tokens,output_text=text,whole_response_f1=qa_f1_score(text,row['references']),
                               literal_exact=literal,literal_exact_plus_eos=literal and ended,normalized_exact=exact,exact_plus_eos=exact and ended,
                               ended_eos=ended,empty=not text.strip(),hit_cap=len(tokens)==row['max_new_tokens'] and not ended)

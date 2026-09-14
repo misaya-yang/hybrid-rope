@@ -834,20 +834,20 @@
       "id": "A37",
       "name": "TailSpline精确有限网格构造",
       "priority": "P1",
-      "question": "最小化one-sided log-gap roughness并平滑接入完整缩放尾段是否导出无需搜索的中频allocation",
-      "evidence_grade": "严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；GPU统一评测运行中",
+      "question": "one-sided与symmetric边界roughness分别导出什么中频allocation，真实任务是否偏好early transport与smooth tail landing",
+      "evidence_grade": "两种严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；Llama统一评测待判决",
       "manuscript_location": "next-stage method owner; benchmark claim not yet changed",
-      "interpretation": "TailSpline是声明离散目标的唯一解；不证明任务优势，旧mix075只作近似prior",
+      "interpretation": "one-sided唯一解是TailSpline，symmetric唯一解是BM；边界条件本身不能由CPU选择，不证明任务优势，旧mix075只作近似prior",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
           "availability": "local-untracked",
-          "sha256": "adf011fa9780fec97e79e1c757d492472d407e8b511cc8e81fdf860399a27f13"
+          "sha256": "eeaae06f643650a7b269819d7aee70300a5441b4bffe5f3fc3412842c2b7614e"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
           "availability": "local-untracked",
-          "sha256": "179879b258c97fb1e1002fe323669dc408234b7faa84e7680b8808cf023dcada"
+          "sha256": "d1506c172a75baa095257b56e478cb5c7d699c82df7e7a132b2488d112b1c7af"
         }
       ]
     }

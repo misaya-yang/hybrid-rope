@@ -2114,6 +2114,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/CATALOG_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/CODEX_INTERVAL_PROMPT_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2145,6 +2150,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/ICLR2027_ROPE_EXPERIMENT_PLAN_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/LLAMA_CLASSIC_ASSET_AUDIT_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -2245,6 +2255,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/TWO_BOUNDARY_BAND_THEORY_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -4494,6 +4509,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/CATALOG_20260914.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -4515,6 +4535,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/chain_current_mix_to_tailspline.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_llama_diagnostic_to_complete108.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4594,12 +4619,22 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_llama_ppl50.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_margin_targets.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_server.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_classic_assets.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4620,6 +4655,16 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen25_s4_full.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_classic.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_complete108.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4645,6 +4690,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_llama_classic_report.py",
       "area": "experiments",
       "category": "code"
     },
@@ -12844,6 +12894,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_tailspline_llama_classic.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_target_free_context_builder.py",
       "area": "tests",
       "category": "code"
@@ -13249,6 +13304,9 @@
     "docs/research/next_stage_20260912/SCALE_MODEL_TRANSFER_PLAN_20260913.md",
     "docs/research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md",
     "docs/research/next_stage_20260912/THEORY_AND_EXPERIMENT_PAUSE_REPORT_20260914.md",
-    "docs/research/next_stage_20260912/OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md"
+    "docs/research/next_stage_20260912/OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md",
+    "docs/research/next_stage_20260912/CATALOG_20260914.md",
+    "experiments/fixed_rope_three_interfaces_20260913/CATALOG_20260914.md",
+    "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md"
   ]
 }

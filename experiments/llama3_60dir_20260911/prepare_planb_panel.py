@@ -24,17 +24,28 @@ TASKS = (
     "niah_single_2", "niah_multikey_2", "niah_multivalue", "niah_multiquery",
     "vt", "fwe", "qa_1", "qa_2",
 )
+REGISTERED_TASKS = (
+    "niah_single_1", "niah_single_2", "niah_single_3",
+    "niah_multikey_1", "niah_multikey_2", "niah_multikey_3",
+    "niah_multivalue", "niah_multiquery", "vt", "cwe", "fwe", "qa_1", "qa_2",
+)
 FAMILIES = {
-    "niah_single_2": "retrieval", "niah_multikey_2": "retrieval",
+    "niah_single_1": "retrieval", "niah_single_2": "retrieval",
+    "niah_single_3": "retrieval", "niah_multikey_1": "retrieval",
+    "niah_multikey_2": "retrieval", "niah_multikey_3": "retrieval",
     "niah_multivalue": "retrieval", "niah_multiquery": "retrieval",
-    "vt": "tracking", "fwe": "aggregation", "qa_1": "qa", "qa_2": "qa",
+    "vt": "tracking", "cwe": "aggregation", "fwe": "aggregation",
+    "qa_1": "qa", "qa_2": "qa",
 }
 STAGE_COUNTS = {"P": (4, 4), "S": (8, 4), "V": (16, 8), "H": (64, 32)}
 CAPS = (8192, 16384, 32768)
 RESERVED_OUTPUT_TOKENS = 128
 STAGE_SEED_OFFSET = {"P": 0, "S": 100_000, "V": 200_000, "H": 300_000}
 QA_STAGE_ROW_OFFSET = {"P": 0, "S": 1_000, "V": 2_500, "H": 5_000}
-SINGLE_EVIDENCE_TASKS = {"niah_single_2", "niah_multikey_2"}
+SINGLE_EVIDENCE_TASKS = {
+    "niah_single_1", "niah_single_2", "niah_single_3",
+    "niah_multikey_1", "niah_multikey_2", "niah_multikey_3",
+}
 MULTI_EVIDENCE_TASKS = {"niah_multivalue", "niah_multiquery"}
 DEPTH_TARGETS = (0.10, 0.35, 0.65, 0.90)
 MULTI_DEPTH_PROFILES = (
@@ -92,14 +103,16 @@ def token_index_for_char(offsets, char_index):
     return None
 
 
-def select_depth_balanced(task, candidates, count, cap, pilot):
+def select_depth_balanced(
+    task, candidates, count, cap, pilot, *, depth_targets=DEPTH_TARGETS,
+):
     """Select a deterministic frozen subset with preregistered depth coverage."""
     if pilot or task not in SINGLE_EVIDENCE_TASKS | MULTI_EVIDENCE_TASKS:
         return candidates[:count]
     chosen = []
     remaining = list(candidates)
     if task in SINGLE_EVIDENCE_TASKS:
-        targets = [("point", (DEPTH_TARGETS[i % len(DEPTH_TARGETS)],))
+        targets = [("point", (depth_targets[i % len(depth_targets)],))
                    for i in range(count)]
     else:
         targets = [MULTI_DEPTH_PROFILES[i % len(MULTI_DEPTH_PROFILES)]
@@ -143,6 +156,18 @@ def main(argv=None):
                     help="keep the historical exact Llama identity gate or use an explicitly recorded checkpoint")
     ap.add_argument("--tasks", default=",".join(TASKS),
                     help="comma-separated registered RULER task subset")
+    ap.add_argument(
+        "--contract", choices=("planb", "tailspline-classic"), default="planb",
+        help="tailspline-classic freezes Full-13, 10 rows/cell and five depth targets",
+    )
+    ap.add_argument(
+        "--counts-by-cap", default="",
+        help="comma-separated CAP:ROWS counts; required by tailspline-classic",
+    )
+    ap.add_argument(
+        "--depth-targets", default=",".join(str(value) for value in DEPTH_TARGETS),
+        help="comma-separated fractional targets for single-answer NIAH tasks",
+    )
     args = ap.parse_args(argv)
 
     caps = tuple(int(x) for x in args.caps.split(",") if x.strip())
@@ -152,8 +177,40 @@ def main(argv=None):
 
     selected_tasks = tuple(value.strip() for value in args.tasks.split(",") if value.strip())
     if not selected_tasks or len(set(selected_tasks)) != len(selected_tasks) or any(
-            task not in TASKS for task in selected_tasks):
+            task not in REGISTERED_TASKS for task in selected_tasks):
         raise SystemExit("REFUSING: --tasks must be a unique nonempty subset of registered tasks")
+    depth_targets = tuple(float(value) for value in args.depth_targets.split(",") if value.strip())
+    if (
+        not depth_targets
+        or len(set(depth_targets)) != len(depth_targets)
+        or any(not 0.0 < value < 1.0 for value in depth_targets)
+    ):
+        raise SystemExit("REFUSING: --depth-targets must be unique fractions in (0,1)")
+    counts_by_cap = {}
+    for item in (value.strip() for value in args.counts_by_cap.split(",") if value.strip()):
+        try:
+            cap_text, count_text = item.split(":", 1)
+            cap, count = int(cap_text), int(count_text)
+        except ValueError as error:
+            raise SystemExit("REFUSING: --counts-by-cap must use CAP:ROWS entries") from error
+        if cap in counts_by_cap or count <= 0:
+            raise SystemExit("REFUSING: --counts-by-cap has duplicate caps or nonpositive rows")
+        counts_by_cap[cap] = count
+    if counts_by_cap and set(counts_by_cap) != set(caps):
+        raise SystemExit("REFUSING: --counts-by-cap must cover every requested cap exactly")
+    if args.contract == "tailspline-classic":
+        if (
+            selected_tasks != REGISTERED_TASKS
+            or caps != CAPS
+            or counts_by_cap != {8192: 10, 16384: 10, 32768: 10}
+            or depth_targets != (0.10, 0.30, 0.50, 0.70, 0.90)
+            or args.per_cell is not None
+            or args.guard_per_task is not None
+        ):
+            raise SystemExit(
+                "REFUSING: tailspline-classic requires Full-13, 10 rows per 8/16/32K cell, "
+                "and depths 0.10/0.30/0.50/0.70/0.90"
+            )
 
     import yaml
     from transformers import AutoTokenizer
@@ -182,13 +239,25 @@ def main(argv=None):
     if long_count < 1 or guard_count < 1:
         raise SystemExit("REFUSING: every cell needs at least one row")
 
+    def rows_for_cap(cap):
+        if counts_by_cap:
+            return counts_by_cap[cap]
+        return guard_count if cap == 8192 else long_count
+
     out.mkdir(parents=True, exist_ok=True)
     status = {
         "status": "PREPARING", "stage": args.stage,
-        "role": "ENGINEERING_PILOT" if pilot else "PLAN_B_STAGE",
+        "role": (
+            "TAILSPLINE_UNIFIED_CLASSIC" if args.contract == "tailspline-classic"
+            else "ENGINEERING_PILOT" if pilot else "PLAN_B_STAGE"
+        ),
         "model": str(model), "upstream_revision": UPSTREAM_REVISION,
-        "long_rows_per_task_length": long_count,
-        "guard_rows_per_task": guard_count,
+        "long_rows_per_task_length": (
+            10 if args.contract == "tailspline-classic" else long_count
+        ),
+        "guard_rows_per_task": (
+            10 if args.contract == "tailspline-classic" else guard_count
+        ),
         "reserved_output_tokens": RESERVED_OUTPUT_TOKENS,
         "model_contract": args.model_contract,
         "model_identity": identity,
@@ -217,7 +286,7 @@ def main(argv=None):
         tmp.replace(partial_rows_path)
 
     for cap_index, cap in enumerate(caps):
-        count = guard_count if cap == 8192 else long_count
+        count = rows_for_cap(cap)
         for task_index, task in enumerate(selected_tasks):
             source_count = count
             if not pilot and task in SINGLE_EVIDENCE_TASKS | MULTI_EVIDENCE_TASKS:
@@ -225,7 +294,10 @@ def main(argv=None):
                 # depths/profile types fillable without using model outcomes.
                 # H grows only 2x (64 -> 128), while small P/S/V cells get the
                 # larger absolute pool needed for repeated depth targets.
-                source_count = max(64, 2 * count)
+                source_count = max(
+                    64,
+                    (4 if args.contract == "tailspline-classic" else 2) * count,
+                )
             task_config = definitions[task]
             base = constants.TASKS[task_config["task"]]
             budget = int(base["tokens_to_generate"])
@@ -261,7 +333,7 @@ def main(argv=None):
                 # distractor seed alone does not make P/S/V/H independent.
                 # Reserve disjoint question ranges per stage and per cap.
                 prior_cap_rows = sum(
-                    guard_count if prior_cap == 8192 else long_count
+                    rows_for_cap(prior_cap)
                     for prior_cap in caps[:cap_index])
                 command.extend(["--pre_samples", str(
                     QA_STAGE_ROW_OFFSET[args.stage] + prior_cap_rows)])
@@ -369,14 +441,16 @@ def main(argv=None):
                     "irrelevant_padding_tokens": padding_tokens,
                 })
             rows.extend(select_depth_balanced(
-                task, cell_rows, count=count, cap=cap, pilot=pilot))
+                task, cell_rows, count=count, cap=cap, pilot=pilot,
+                depth_targets=depth_targets,
+            ))
             checkpoint_rows()
             print(json.dumps({
                 "task": task, "cap": cap, "rows": count,
                 "generated_pool": source_count}), flush=True)
 
     expected_rows = len(selected_tasks) * sum(
-        guard_count if cap == 8192 else long_count for cap in caps)
+        rows_for_cap(cap) for cap in caps)
     if len(rows) != expected_rows or len({r["row_id"] for r in rows}) != expected_rows:
         raise SystemExit(f"REFUSING: row identity/count mismatch {len(rows)} != {expected_rows}")
     if len({r["prompt_sha256"] for r in rows}) != expected_rows:
@@ -402,13 +476,19 @@ def main(argv=None):
         },
         "independence": "distinct seed per task-length cell; unique semantic/source id per row",
         "depth_selection": ({
-            "single_evidence_targets": list(DEPTH_TARGETS),
+            "single_evidence_targets": list(depth_targets),
             "multi_evidence_profiles": {name: list(values)
                                         for name, values in MULTI_DEPTH_PROFILES},
             "selection_uses_model_outputs": False,
         } if not pilot else "not applied to engineering pilot"),
-        "claim_scope": ("engineering pilot only" if pilot else
-                        f"Plan B {args.stage} split; task evidence only after paired controls"),
+        "claim_scope": (
+            "TailSpline unified Full-13 classic benchmark; task evidence only after paired controls"
+            if args.contract == "tailspline-classic"
+            else "engineering pilot only" if pilot
+            else f"Plan B {args.stage} split; task evidence only after paired controls"
+        ),
+        "contract": args.contract,
+        "counts_by_cap": {str(cap): rows_for_cap(cap) for cap in caps},
     })
     atomic_json(out / "manifest.json", status)
     print(json.dumps({"status": "COMPLETE", "rows": len(rows), "out": str(rows_path)}))
