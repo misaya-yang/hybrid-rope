@@ -37,6 +37,10 @@
       "file": "ROPE_QWEN7_BM_RESULT_20260908.json",
       "sha256": "8e356b57186c10ab8ec17003a46552585352264d9588d116974d1b3d8147ba69"
     },
+    "slot_report": {
+      "file": "SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
+      "sha256": "cf03ed974502a0bc1068c23b254d51a0794a18d5294c427ed354428f22f49a1d"
+    },
     "coadapt50": {
       "file": "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
       "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91"
@@ -5490,6 +5494,7 @@
         ]
       }
     },
+    "slot_report": "All four 20-row task cells scored zero, versus macro `0.7000` for the ordered\nunchanged unordered spectrum.  The candidate's 1x PG-19 NLL was `6.864926`,\nversus `3.104234` for the reference, so `Delta NLL=+3.760692` decisively crossed",
     "coadapt50": "| Geo | Geo | 1.9659 | 7.14 | 4.57 | 14.86 | 10.20 / 1.99e-8 | 1.79 / 8.80e-7 |\n| Geo | EVQ | 4.3333 | 76.20 | 12.54 | 25.51 | 1.48 / 2.93e-6 | 2.21 / 3.95e-3 |\n| EVQ | Geo | 3.1378 | 23.05 | 4.57 | 16.94 | 8.34 / 1.12e-7 | 1.04 / 5.63e-5 |\n| EVQ | EVQ | 1.9685 | 7.16 | 12.54 | 21.91 | 12.65 / 1.69e-8 | 4.99 / 2.80e-7 |\n| Geo | original geometric | 500K | 1.9659 | 7.14 | 4.57 |\n| Geo | span-match geometric | 377.7K | 1.9687 | 7.16 | 4.66 |\n| Geo | endpoint-match geometric | 331.6K | 1.9884 | 7.30 | 4.71 |\n| Geo | LS-fit geometric | 8.06K | 3.8206 | 45.63 | 7.53 |\n| Geo | full historical EVQ | 500K+Cosh | 4.3333 | 76.20 | 12.54 |\n| EVQ | original geometric | 500K | 3.1378 | 23.05 | 4.57 |\n| EVQ | span-match geometric | 377.7K | 3.0975 | 22.14 | 4.66 |\n| EVQ | endpoint-match geometric | 331.6K | 3.0769 | 21.69 | 4.71 |\n| EVQ | LS-fit geometric | 8.06K | 2.2644 | 9.63 | 7.53 |\n| EVQ | full historical EVQ | 500K+Cosh | 1.9685 | 7.16 | 12.54 |",
     "coadapt151": {
       "small_model_crossing": {

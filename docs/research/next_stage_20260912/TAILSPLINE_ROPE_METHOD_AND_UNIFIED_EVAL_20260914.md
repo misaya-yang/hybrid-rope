@@ -1,6 +1,7 @@
 # TailSpline-RoPE方法与统一评测合同
 
-更新：2026-09-14。状态：**精确有限网格实现与边界条件CPU审计完成；后续统一GPU评测使用Llama-3-8B；尚无精确TailSpline性能结论。**
+更新：2026-09-14。状态：**精确有限网格实现与边界条件CPU审计完成；Llama-3-8B与
+OLMo-2-1B的统一两臂判决均在Full-13、NIAH与PPL三个预注册方向上胜MrPro。**
 
 本文吸收作者提供的`TailSpline_RoPE_final_answer_20260914.md`与
 `MRROPE_TASK_REVERSALS_AND_METHOD_CLOSURE.md`，替代fixed-u、局部task repair和旧
@@ -85,6 +86,16 @@ interpolated tail”，不是任意Q/K上的accuracy dominance定理。
 value聚合和EOS读出放大；它不用于根据VT/FWE或其他局部指标调表。
 
 ## 4. 当前Llama-3-8B S4诊断与主判决边界
+
+统一经典两臂主判决已经完成，准确结果、raw身份与解释边界见
+[TailSpline–MrPro Llama经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)。
+Full-13 AUC差为`+3.20pp`，95%配对区间`[+0.65,+5.79]pp`；NIAH为
+`+3.75pp`，PPL AUC为`−0.00449`（越低越好），预注册门3/3通过。以下Core-6记录
+继续只作历史诊断，不能替代该主结果。
+
+第二checkpoint结果见[OLMo经典两臂结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：
+Full-13差`+49.23pp`、NIAH差`+64.45pp`、PPL AUC差`−3.853`，三个方向均通过，
+13个任务AUC差全部为正。两模型结果确立方法候选，但仍不识别总剂量与one-sided形状机制。
 
 当前根目录：
 `/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_first/`。

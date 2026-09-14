@@ -1,5 +1,9 @@
-\subsection{Complete rotary pairs and positional overlap}
+\section{Finite-Window Structure of Allocation}
 \label{sec:theory}
+
+The preceding experiments move frequency samples without changing their range. We now identify what those samples supply: finite-window positional subspaces whose overlap depends on placement.
+
+\subsection{Complete rotary pairs and positional overlap}
 \label{sec:subspaces}
 \label{sec:budget}
 
@@ -8,7 +12,7 @@ For a fixed content pair, one rotary channel contributes $C\cos(\omega\Delta)+D\
 V_\omega=\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}.
 \label{eq:subspace}
 \end{equation}
-Comparing only cosine curves would privilege one content phase. Instead, let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$ and define $S_\omega=\mathbb E[x_\omega^\top x_\omega]$, $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular self-Grams, the singular values of $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations of the two spaces. Their mean square,
+Comparing only cosine curves would privilege one content phase. Instead, let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$ and define $S_\omega=\mathbb E[x_\omega^\top x_\omega]$, $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular self-Grams, the singular values of $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations, or cosines of principal angles, of the two spaces \citep{bjorck1973angles}. Their mean square,
 \begin{equation}
 c_{\omega\nu}=\tfrac12\|Q_{\omega\nu}\|_F^2\in[0,1],
 \label{eq:collision}
@@ -19,7 +23,7 @@ r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
 =\frac{2K}{1+(K-1)\bar c}.
 \label{eq:budget-identity}
 \end{equation}
-This connects pairwise overlap to the number of effective directions supplied by the entire positional design matrix: increasing overlap concentrates the same $2K$ coordinates into fewer directions.
+Here $\operatorname{tr}(\Gamma^2)$ is the frame potential of the normalized positional functions \citep{benedetto2003frames}. The identity specializes this classical measure to full rotary pairs: increasing pairwise overlap concentrates the same $2K$ coordinates into fewer effective positional directions.
 
 \subsection{Finite-window concentration of slow directions}
 \label{sec:slow-limit}
@@ -29,13 +33,8 @@ This connects pairwise overlap to the number of effective directions supplied by
 Under uniform measure on $[0,L]$, with $t=\Delta/L$, as $x=\omega L\to0$, $\cos(xt)\to1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal O(\epsilon^4)$.
 \end{proposition}
 
-Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened rank $2.00013$. The finite-window calculation also reaches the core experiment: at $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have rank $2.11$ (Fig.~\ref{fig:allocation-basis}). Their overlap is substantial even though every frequency has $\omega L>1$.
+Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened rank $2.00013$. The finite-window calculation also reaches the core experiment: at $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have rank $2.11$ (Fig.~\ref{fig:allocation-basis}a). Their overlap is substantial even though every frequency has $\omega L>1$.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig_allocation_basis.pdf}
-\caption{\textbf{Log-frequency spacing and positional directions are different objects.} Uniform separation measure on $[0,L]$. (a) Canonical overlap of full sine--cosine pairs on the actual $b=256$, $K=32$, $L=256$ identification grid. The eight slowest pairs share most of their positional space. (b) Effective rank as progressively faster pairs enter that slow subset: eight pairs give $16$ coordinates but $r_2=2.11$. Values are closed-form Gram calculations checked by independent quadrature.}
-\label{fig:allocation-basis}
-\end{figure}
 
-The geometry explains why allocating frequencies uniformly in log space need not spread positional directions uniformly over a finite window. It supplies a concrete object for design: where samples are placed changes which scales and directions are represented. Model behavior then depends on the content coefficients learned on this basis. The next interventions examine that learned use directly; complete geometric proofs and cross-length ordering examples appear in Appendix~\ref{sec:geometry-proofs}--\ref{sec:static-counterexamples}.
+
+The geometry supplies a structural reason to reconsider log-uniform placement: distinct slow frequencies can provide strongly overlapping positional directions. It describes the supplied basis; learned content coefficients determine its use. Crossed tables and same-spectrum slot permutations demonstrate this compatibility dependence (Appendix~\ref{sec:compatibility}). We use the structure as a design motivation and validate the resulting allocations in models.

@@ -1,23 +1,15 @@
 \section{Introduction}
 \label{sec:intro}
 
-The frequency range locates a RoPE spectrum; allocation distributes its finite rotary budget. A base specifies the range of a standard geometric table \citep{su2024roformer,liu2024scaling,xu2024base}, while the placement of its rotary pairs determines which positional functions the model receives. Interior allocation remains a design choice when the fastest and slowest frequencies are held exactly fixed.
+Frequency redesign already enables longer contexts, through bandwise scaling, mixed-radix conversion and learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. These methods often change range and internal placement together. We isolate the value of the interior allocation, then exploit it constructively: better learned extrapolation and training-free improvements in frozen models.
 
-Recent work studies distinct parts of this design problem: frequency-band and entropy measurements characterize learned usage \citep{oka2026fmrope,oka2026frequencyentropy}; LeRoPE and AdaRoPE learn shared or head-specific frequencies \citep{karypis2026lerope,wang2026adarope}; context-extension methods transform a native spectrum for a target length \citep{peng2024yarn,tian2026mrrope}; and GRAPE and Selective RoPE extend the positional map \citep{zhang2026grape,movahedi2026selectiverope}. We isolate how a finite table populates a fixed range, asking \emph{how interior allocation changes the supplied basis, its learned use, and model behavior}.
+With initialization, data, optimization and actual frequency endpoints fixed, moving only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Matched-support interventions also improve frozen OLMo and Qwen task scores. These gains identify value beyond range expansion; complete methods can then combine allocation with range, band and amplitude choices.
 
-We combine controlled interventions, full-pair geometry, and concrete designs. Figure~\ref{fig:spectral-budget-overview} starts from paired $151.9$M training: changing only $30$ interior exponents improves extended-length loss in every seed. Runtime range retargeting reverses the ordering, and crossed evaluations reveal strong weight--table compatibility. The geometric analysis characterizes the positional directions being allocated; training and frozen-model experiments show how that freedom becomes useful.
+Finite-window positional directions can overlap despite uniform log-frequency spacing. This motivates two design routes: Cosh supplies a nonuniform basis during learning; TailSpline reshapes the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-  \caption{\textbf{A fixed frequency range admits different allocations and learned uses.} (a) Two allocations share both sampled endpoints and $32$ rotary pairs. (b,c) Cosh-minus-Geo tail NLL at $2\times/4\times/8\times$ the $256$-token training window; thin lines are three training seeds, thick lines their means. The ordering reverses when the runtime range is retargeted. (d) Crossing factor-four tables derived from the training allocations at $1$K: each frozen weight set favors its corresponding table (two seeds, $32$ anchors per seed).}
-  \label{fig:spectral-budget-overview}
-\end{figure}
-
-The practical objective is context quality throughout a usable window. A fixed table chosen for horizon $SL$ also serves short and intermediate inputs; a larger extension factor alone does not establish better use of that window. We study native-relative constructions with actual task gains and distinguish band location, transition shape, and terminal compression as design variables. A conditional depth analysis shows why endpoint matching can leave an interval objective suboptimal. Learning-time constructions provide complementary evidence of how models acquire a new positional basis.
-
+The resulting benefits reach beyond a small controlled experiment. Cosh improves multi-seed MLA extrapolation and $750$M continued training. TailSpline improves frozen Llama-$3$-$8$B and OLMo on RULER-13 and NIAH, while the symmetric boundary-matched construction (BM) raises frozen OLMo's five-task natural-QA F1 from $21.62$ to $25.44$. Our contributions are:
 \begin{itemize}
-\item \textbf{Identifying allocation effects.} We separate sampled support from interior exponent placement and isolate its effect through paired training, multiple allocation families, and fixed-support frozen interventions.
-\item \textbf{Connecting positional geometry and learning.} We characterize full sine--cosine overlap, its effective-rank identity and slow-frequency limit, and use range retargeting, crossed evaluation, and slot interventions to establish how learned weights use an allocation.
-\item \textbf{Designing useful allocations.} We demonstrate native-relative and learning-time constructions with measured gains, and formulate fixed-table interval design with explicit task evaluation and a conditional depth analysis.
+\item \textbf{Controlled allocation value.} Fixed-support training and frozen-model interventions isolate useful interior-frequency changes beyond range adjustments.
+\item \textbf{Structure and constructions.} Full-pair finite-window geometry characterizes positional redundancy; explicit density and boundary objectives yield Cosh and TailSpline allocations.
+\item \textbf{Learning and training-free gains.} Matched evaluations demonstrate improvements in language modeling, retrieval and natural QA, with complete length responses and protocol-specific controls.
 \end{itemize}

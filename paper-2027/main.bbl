@@ -1,15 +1,9 @@
-\begin{thebibliography}{46}
+\begin{thebibliography}{42}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[Bae(2026)]{bae2026mobius}
-Ji~Ho Bae.
-\newblock Anti-periodic positional encoding: {M\"obius} boundary conditions
-  make in-context retrieval reliable.
-\newblock \emph{arXiv preprint arXiv:2607.21405}, 2026.
 
 \bibitem[Bai et~al.(2024)Bai, Lv, Zhang, Lyu, Tang, Huang, Du, Liu, Zeng, Hou,
   Dong, Tang, and Li]{bai2024longbench}
@@ -33,6 +27,20 @@ Federico Barbero, Alex Vitvitskyi, Christos Perivolaropoulos, Razvan Pascanu,
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/e6d58fc68c0f3c36ae6e0e64478a69c0-Abstract-Conference.html}.
 
+\bibitem[Benedetto \& Fickus(2003)Benedetto and Fickus]{benedetto2003frames}
+John~J. Benedetto and Matthew Fickus.
+\newblock Finite normalized tight frames.
+\newblock \emph{Advances in Computational Mathematics}, 18:\penalty0 357--385,
+  2003.
+\newblock \doi{10.1023/A:1021323312367}.
+
+\bibitem[Bj{\"o}rck \& Golub(1973)Bj{\"o}rck and Golub]{bjorck1973angles}
+{\AA}ke Bj{\"o}rck and Gene~H. Golub.
+\newblock Numerical methods for computing angles between linear subspaces.
+\newblock \emph{Mathematics of Computation}, 27\penalty0 (123):\penalty0
+  579--594, 1973.
+\newblock \doi{10.1090/S0025-5718-1973-0348991-3}.
+
 \bibitem[Black et~al.(2022)Black, Biderman, Hallahan, Anthony, Gao, Golding,
   He, Leahy, McDonell, Phang, Pieler, Prashanth, Purohit, Reynolds, Tow, Wang,
   and Weinbach]{black2022gptneox}
@@ -47,6 +55,15 @@ Sidney Black, Stella Biderman, Eric Hallahan, Quentin Anthony, Leo Gao,
 \newblock \doi{10.18653/v1/2022.bigscience-1.9}.
 \newblock URL \url{https://aclanthology.org/2022.bigscience-1.9/}.
 
+\bibitem[{bloc97}(2023)]{bloc972023ntk}
+{bloc97}.
+\newblock {NTK}-aware scaled {RoPE} allows {LLaMA} models to have extended
+  (8k+) context size without any fine-tuning and minimal perplexity
+  degradation.
+\newblock Reddit, r/LocalLLaMA, 2023.
+\newblock URL
+  \url{https://www.reddit.com/r/LocalLLaMA/comments/14lz7j5/ntkaware_scaled_rope_allows_llama_models_to_have/}.
+
 \bibitem[Chen et~al.(2023{\natexlab{a}})Chen, Wong, Chen, and
   Tian]{chen2024position}
 Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuandong Tian.
@@ -55,16 +72,6 @@ Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuandong Tian.
 \newblock \emph{arXiv preprint arXiv:2306.15595}, 2023{\natexlab{a}}.
 \newblock \doi{10.48550/arXiv.2306.15595}.
 \newblock URL \url{https://arxiv.org/abs/2306.15595}.
-
-\bibitem[Chen et~al.(2025)Chen, Lv, Luan, Wang, and Liu]{chen2025hope}
-Yuhan Chen, Ang Lv, Jian Luan, Bin Wang, and Wei Liu.
-\newblock {HoPE}: A novel positional encoding without long-term decay for
-  enhanced context awareness and extrapolation.
-\newblock In \emph{Proceedings of the 63rd Annual Meeting of the Association
-  for Computational Linguistics (Volume 1: Long Papers)}, pp.\  23044--23056,
-  2025.
-\newblock \doi{10.18653/v1/2025.acl-long.1123}.
-\newblock URL \url{https://aclanthology.org/2025.acl-long.1123/}.
 
 \bibitem[Chen et~al.(2023{\natexlab{b}})Chen, Qian, Tang, Lai, Liu, Han, and
   Jia]{chen2023longlora}
@@ -75,15 +82,6 @@ Yukang Chen, Shengju Qian, Haotian Tang, Xin Lai, Zhijian Liu, Song Han, and
 \newblock \emph{arXiv preprint arXiv:2309.12307}, 2023{\natexlab{b}}.
 \newblock \doi{10.48550/arXiv.2309.12307}.
 \newblock URL \url{https://arxiv.org/abs/2309.12307}.
-
-\bibitem[Chiang \& Yogatama(2025)Chiang and Yogatama]{chiang2025rotary}
-Ting-Rui Chiang and Dani Yogatama.
-\newblock The rotary position embedding may cause dimension inefficiency in
-  attention heads for long-distance retrieval.
-\newblock In \emph{Findings of the Association for Computational Linguistics:
-  ACL 2025}, pp.\  13552--13562, 2025.
-\newblock \doi{10.18653/v1/2025.findings-acl.697}.
-\newblock URL \url{https://aclanthology.org/2025.findings-acl.697/}.
 
 \bibitem[DeepSeek-AI(2024{\natexlab{a}})]{deepseekv2}
 DeepSeek-AI.
@@ -107,21 +105,13 @@ Yiran Ding, Li~Lyna Zhang, Chengruidong Zhang, Yuanyuan Xu, Ning Shang, Jiahang
   Learning}, volume 235 of \emph{PMLR}, pp.\  11091--11104, 2024.
 \newblock URL \url{https://proceedings.mlr.press/v235/ding24i.html}.
 
-\bibitem[Du et~al.(2026)Du, Harris, Tian, Huerta, Ronanki, Rongali, Galstyan,
-  and Peng]{du2026distinguishes}
-Yufeng Du, Phillip Harris, Minyang Tian, Eliu~A. Huerta, Srikanth Ronanki,
-  Subendhu Rongali, Aram Galstyan, and Hao Peng.
-\newblock {RoPE} distinguishes neither positions nor tokens in long contexts,
-  provably.
-\newblock \emph{arXiv preprint arXiv:2605.15514}, 2026.
-\newblock \doi{10.48550/arXiv.2605.15514}.
-\newblock URL \url{https://arxiv.org/abs/2605.15514}.
-
-\bibitem[{Gemma Team} et~al.(2024)]{gemmateam2024gemma}
-{Gemma Team} et~al.
-\newblock Gemma: Open models based on gemini research and technology.
-\newblock \emph{arXiv preprint arXiv:2403.08295}, 2024.
-\newblock URL \url{https://arxiv.org/abs/2403.08295}.
+\bibitem[{emozilla}(2023)]{emozilla2023dynamic}
+{emozilla}.
+\newblock Dynamically scaled {RoPE} further increases performance of long
+  context {LLaMA} with zero fine-tuning.
+\newblock Reddit, r/LocalLLaMA, 2023.
+\newblock URL
+  \url{https://www.reddit.com/r/LocalLLaMA/comments/14mrgpr/dynamically_scaled_rope_further_increases/}.
 
 \bibitem[Grattafiori et~al.(2024)Grattafiori, Dubey, Jauhri,
   et~al.]{grattafiori2024llama3}
@@ -137,14 +127,6 @@ Robert~M. Gray and David~L. Neuhoff.
 \newblock \emph{IEEE Transactions on Information Theory}, 44\penalty0
   (6):\penalty0 2325--2383, 1998.
 \newblock \doi{10.1109/18.720541}.
-
-\bibitem[Gu et~al.(2026)Gu, Chen, Zhang, Zhang, and Hu]{gu2026deconstructing}
-Zihan Gu, Ruoyu Chen, Han Zhang, Hua Zhang, and Yue Hu.
-\newblock Deconstructing positional information: From attention logits to
-  training biases.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2026.
-\newblock URL \url{https://openreview.net/forum?id=D0u0glT060}.
 
 \bibitem[Ho et~al.(2020)Ho, Duong~Nguyen, Sugawara, and Aizawa]{ho2020twowiki}
 Xanh Ho, Anh-Khoa Duong~Nguyen, Saku Sugawara, and Akiko Aizawa.
@@ -183,14 +165,6 @@ Ermo Hua, Che Jiang, Xingtai Lv, Kaiyan Zhang, Youbang Sun, Yuchen Fan, Xuekai
   Learning}, volume 267 of \emph{PMLR}, pp.\  24932--24949, 2025.
 \newblock URL \url{https://proceedings.mlr.press/v267/hua25b.html}.
 
-\bibitem[Huang et~al.(2026)Huang, Jiang, Zheng, Hu, Han, and
-  Chen]{huang2026ppe}
-Mouxiao Huang, Borui Jiang, Dehua Zheng, Hailin Hu, Kai Han, and Xinghao Chen.
-\newblock {PPE}: Positional preservation embedding for token compression in
-  multimodal large language models.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2026.
-
 \bibitem[Karypis et~al.(2026)Karypis, O'Brien, Kadekodi, Zhu, and
   McAuley]{karypis2026lerope}
 Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
@@ -199,20 +173,11 @@ Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
 \newblock \doi{10.48550/arXiv.2607.10134}.
 \newblock URL \url{https://arxiv.org/abs/2607.10134}.
 
-\bibitem[Li et~al.(2026{\natexlab{a}})Li, Ren, Yuille, and
-  Wang]{li2026copeclipped}
-Haoran Li, Sucheng Ren, Alan Yuille, and Feng Wang.
-\newblock {CoPE}: Clipped {RoPE} as a scalable free lunch for long context
-  {LLMs}.
-\newblock \emph{arXiv preprint arXiv:2602.05258}, 2026{\natexlab{a}}.
-\newblock \doi{10.48550/arXiv.2602.05258}.
-\newblock URL \url{https://arxiv.org/abs/2602.05258}.
-
-\bibitem[Li et~al.(2026{\natexlab{b}})Li, Zhao, Cai, and Sproat]{li2026repo}
+\bibitem[Li et~al.(2026)Li, Zhao, Cai, and Sproat]{li2026repo}
 Huayang Li, Tianyu Zhao, Deng Cai, and Richard Sproat.
 \newblock {RePo}: Language models with context re-positioning.
 \newblock In \emph{Proceedings of the 43rd International Conference on Machine
-  Learning}, 2026{\natexlab{b}}.
+  Learning}, 2026.
 \newblock URL \url{https://icml.cc/virtual/2026/poster/64002}.
 \newblock arXiv:2512.14391.
 

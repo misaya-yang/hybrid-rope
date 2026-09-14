@@ -1,55 +1,29 @@
-\section{Designing One Table for a Deployment Interval}
-\label{sec:mature-adjustments}
-\label{sec:exp-frozen-support}
-\label{sec:exp-zero-training-system}
-\label{sec:coordinate}
+\subsection{TailSpline for training-free deployment}
+\label{sec:mature-adjustments}\label{sec:exp-zero-training-system}\label{sec:coordinate}\label{sec:bm-main}
+A frozen model already uses its native frequencies. We retain its high-frequency band and divide its low-frequency tail by $s$, while designing the intervening allocation. Following the $32/1$-turn boundaries used by MrRoPE \citep{tian2026mrrope}, let $l$ be the last pair making more than $32$ turns over the native window and $h$ the first making less than one. Put $n=h-l$ and $q=\operatorname{clip}(k-l,0,n)$. The transition accumulates increments $\epsilon_q=m_q-m_{q-1}$, with $m_0=0$, $m_n=1$.
 
-A deployed table serves many lengths. Let $L$ be the native window and $H=SL$ the target horizon. We seek one native-relative table shared across layers and held fixed through prefill and decoding, with useful quality from task-valid short inputs through $H$. Fixed-support controls identify allocation's effect; practical design can also change support and amplitude.
-
-\subsection{The allocation effect survives with frozen weights}
-
-On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, fix the checkpoint, both sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The endpoints span the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents achieve $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$ (Fig.~\ref{fig:frozen-application}a). Qwen's four-task development comparison gives $57.75/64.00/66.50\%$. Thus the allocation effect extends from paired learning to existing checkpoints and task-level generation. The coarse control also shows that much of the effect is captured by the overall profile (Appendix~\ref{sec:frozen-fixed-support}).
-
-Writing $\omega_k^\prime=\omega_k4^{-m_k}$, a finer control fixes the band, terminal shift, and total displacement $\sum_km_k=42$, while changing the interior profile. On the $350$-row OLMo development panel, the two profiles score $43.67/54.40\%$; a separate $16$-document instrument gives NLL $2.9417/2.8309$. Interior structure therefore carries information beyond the total displacement (Appendix~\ref{sec:fixed-total-profile}).
-
-\subsection{Constructing an adjustment relative to the native table}
-\label{sec:bm-main}
-
-For native frequencies $\omega_k^N$ and installed frequencies $\omega'_k$, define
+The increments have a direct spectral meaning. For a geometric native grid with gap $c=\log b/K$,
 \begin{equation}
-d_k=\log\frac{\omega_k^N}{\omega'_k},\qquad
-\omega'_k=\omega_k^Ne^{-d_k},\qquad \phi'_k-\phi_k^N=\frac{d_k}{\log b}.
-\label{eq:movement-allocation}
+x'_{l+q}-x'_{l+q-1}=c+\epsilon_q\log s.
+\label{eq:increment-log-gap}
 \end{equation}
-Frequency blending and mixed-radix conversion admit this coordinate (Appendix~\ref{sec:adjustment-details}). Here $s$ denotes the configured extension factor. Scaling both sine and cosine by $g$ multiplies rotary logits by $g^2$. Frequency comparisons fix $g$; joint table--amplitude results are identified separately.
+Their unit sum allocates exactly $\log s$ of extra span across the band. Beyond it, $m=1$ is constant, so the extra gap returns to zero.
 
-MrRoPE-Pro allocates a cumulative shift across an intermediate band \citep{tian2026mrrope}. With $N=h-l$ and $q=\operatorname{clip}(k-l,0,N)$, its profile and our boundary-matched (BM) construction are
+MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$. We instead smooth the transition into the fully interpolated tail, whose subsequent increments are zero:
 \begin{equation}
-m_q^{\rm Pro}=\frac{q(q+1)}{N(N+1)},\qquad
-m_q^{\rm BM}=\frac{q(q+1)(3N+2-2q)}{N(N+1)(N+2)}.
-\label{eq:bm-formula}
+\min_{\epsilon:\,\sum_{q=1}^n\epsilon_q=1}
+\sum_{q=1}^{n-1}(\epsilon_{q+1}-\epsilon_q)^2+\epsilon_n^2.
+\label{eq:tailspline-objective}
 \end{equation}
-BM minimizes quadratic difference energy in the radix increments, matching smoothly to the unmodified outer bands. Both profiles retain the band boundaries and terminal extension; their interior cumulative shifts differ (Appendix~\ref{sec:bm-construction}). The construction provides a concrete deployment baseline. Band, transition shape, and terminal depth remain available for improving the quality of a fixed table over its usable window.
+This one-sided objective penalizes internal changes and the terminal jump. It leaves the high-frequency entry unpenalized, an explicit boundary prior rather than a fitted model statistic.
+\begin{theorem}[Finite-grid TailSpline]\label{thm:tailspline}
+The unique minimizer of Eq.~\eqref{eq:tailspline-objective} has positive increments and cumulative profile
+\begin{equation}
+\epsilon_q=\frac{3(n+q)(n-q+1)}{n(n+1)(2n+1)},\qquad
+m_q^{\rm TS}=\frac{q(3n^2+3n+1-q^2)}{n(n+1)(2n+1)}.
+\label{eq:tailspline}
+\end{equation}
+\end{theorem}
+The quadratic objective is strictly convex; solving its tridiagonal stationarity system gives Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the symmetric entry penalty $\epsilon_1^2$ yields BM, whose increments are proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). TailSpline reduces the terminal gap jump relative to MrPro by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$. Figure~\ref{fig:tailspline-main}a includes the two outer zero-increment regions so both entry and tail jumps are visible. This is a construction guarantee, whose task consequences are tested below.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig_frozen_application.pdf}
-\caption{\textbf{From a controlled allocation effect to natural-question-answering gains.} (a) Frozen OLMo $16$K RULER on nine held-out tasks, $20$ rows/task; sampled endpoints, amplitude, weights and inputs are shared. (b) A separate matched $s=4$ BM/MrRoPE-Pro comparison on five LongBench tasks: whole-response token F1 on $631$ untruncated inputs longer than $4$K. Responses reaching the generation cap are included in F1; EOS rates are reported in Appendix~\ref{sec:bm-natural}. Each panel answers a different question: allocation's effect at fixed support, and the usefulness of a concrete redistribution.}
-\label{fig:frozen-application}
-\label{fig:bm-natural-qa}
-\end{figure}
-
-\subsection{Endpoint matching and interval quality}
-\label{sec:interval-main}
-
-Write $m_k=c b_k$, with a monotone normalized profile $b_k\in[0,1]$. Its active increments locate the band, $c$ sets terminal depth, and their distribution sets transition shape. These choices interact. For a slow plateau scaled by $a=S^{-c}$, $a=1/S$ exactly matches native phase exposure at $SL$. In contrast, minimizing log-uniform distortion $F(ar-1)$ over $r\in[1,S]$ gives $a=2/(S+1)$ when $F$ is even and strictly increasing in error magnitude (Proposition~\ref{prop:interval-depth}). This conditional result supplies a depth control, not a measured optimum for a checkpoint.
-
-For task quality $Q(r)$, interval evaluation reports log-length AUC together with native, endpoint, and worst measured length; task-valid inputs below $L$ are evaluated separately. Development comparisons already distinguish these objectives: two remapped Llama profiles tie at $64$K yet differ at $32$K; an OLMo profile improves the endpoint but trades off native and task-family scores (Appendix~\ref{sec:interval-observations}). Thus a target multiplier alone does not specify the quality of its usable window.
-
-\subsection{Natural tasks and placement on finite grids}
-
-On the matched OLMo six-task panel ($48$ long prompts), BM($4$) reaches $51.32\%$ at $16$K; MrRoPE-Uni($4$), official YaRN($4$), and MrRoPE-Pro($4$) score $32.12\%$, $6.94\%$, and $2.78\%$ (Appendix~\ref{sec:four-method-control}). Across five natural-QA tasks, it increases task-equal F1 from $21.62\%$ to $25.44\%$ ($95\%$ interval for the difference $[1.32,6.29]$ points); every task mean improves (Fig.~\ref{fig:frozen-application}b). The complete three-model comparison retains the small Qwen panels, where $128$K means favor MrRoPE-Pro: $78.13/70.83\%$ on $3$B and $84.44/71.11\%$ on $7$B (Table~\ref{tab:bm-models}).
-
-Useful profiles can also have compact descriptions. A two-parameter clipped-affine law fitted to an OLMo $64$-point profile and transported without Qwen refitting achieves $67.75/57.25\%$ at Qwen $64/128$K, compared with $67.25/54.50\%$ for the full transported profile. Qwen $32$K performance drops from $82.00\%$ to $71.25\%$; OLMo PPL retention $0.870971$ also misses the registered $0.875$ deployment threshold (Appendix~\ref{sec:compact-coupling}). The result establishes a compact representation of measured long-end behavior. Together with the fixed-total control, it shows that useful structure can be low-dimensional while exceeding a single displacement sum.
-
-Placement is itself a finite-allocation choice. On Gemma-$1.1$-$2$B with $128$ pairs \citep{gemmateam2024gemma}, normalized-index interpolation of a reference displacement profile achieves $79.00\%$ at $16$K versus $72.81\%$ for direct-gap placement, a $6.19$-point gain ($[2.81,9.63]$). A Qwen-$0.5$B static table--amplitude configuration improves $64$K RULER-13 by $6.09$ points over the evaluated YaRN($2$) configuration while retaining near-equal $32$K scores. Apps.~\ref{sec:index-adjustment}--\ref{sec:coordinate-confirmation} give the paired placement and joint-configuration comparisons; Table~\ref{tab:gain-factorial} separates table and amplitude contrasts on the small Qwen-$3$B panel. These results extend allocation design from continuous profiles to their installation on real model grids.
+Install $\omega'_k=\omega_k^Ns^{-m_k}$ before prefill and retain it across all layers and input lengths for the declared $s$. We use $g=1+0.1\ln s$, matched to the baseline. Neither construction reads weights, activations or calibration outputs; the boundary rule uses only the native grid and reference length. The objectives prove construction properties; the following experiments test task value.

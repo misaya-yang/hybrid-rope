@@ -20,3 +20,5 @@
 - [PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md](PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md) — PC2 失败归因与贡献审查（进行中）（已归类移动）
 
 - [Pro仓库审计处理](PRO_AUDIT_DISPOSITION_20260914.md) — 当前适用性、同总log位移对照及step42归因纠正；不替代执行合同。
+
+- [Pro十问回答评议](TEN_QUESTIONS_ASSESSMENT_20260914.md) — 数学复核、各题论文价值及修改优先级；候选机制不自动进入队列。

@@ -36,6 +36,10 @@
       "file": "ROPE_QWEN7_BM_RESULT_20260908.json",
       "sha256": "8e356b57186c10ab8ec17003a46552585352264d9588d116974d1b3d8147ba69"
     },
+    "slot_report": {
+      "file": "SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
+      "sha256": "cf03ed974502a0bc1068c23b254d51a0794a18d5294c427ed354428f22f49a1d"
+    },
     "coadapt50": {
       "file": "FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
       "sha256": "2ee9fc25fc264a792dbcbef89c0b1ed5ed89379ea5272cbcfce6c3030497ca91"
@@ -62,7 +66,10 @@
     "llama_ppl_nll_rounding_consistent": true,
     "bm_profiles_match_recorded_definitions": true,
     "coordinate_identity_and_macros_verified": true,
-    "coadaptation_sources_cross_checked": true
+    "coadaptation_sources_cross_checked": true,
+    "fixed_support_training_window_included": true,
+    "slot_assignment_report_values_verified": true,
+    "main_qa_table_recomputed": true
   },
-  "execution": "Plotting and recomputing stored scores only; no model execution."
+  "execution": "Replotting recorded outcomes and generating the main QA table only; no model execution."
 }

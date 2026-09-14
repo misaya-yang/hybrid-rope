@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Strict paired report for the TailSpline Llama Full-13 + PPL46 contract."""
+"""Strict paired report for the TailSpline Llama Full-13 + PPL46 contract.
+
+The small set of module-level identity constants is intentionally overrideable
+by the OLMo wrapper.  The scoring, pairing and bootstrap implementation remains
+one shared path across checkpoints.
+"""
 from __future__ import annotations
 
 import argparse
@@ -25,6 +30,9 @@ POINT_DEPTH_TASKS = TASKS[:6]
 LENGTHS = (8192, 16384, 32768)
 COUNTS = {8192: 10, 16384: 10, 32768: 10}
 DEPTHS = (0.10, 0.30, 0.50, 0.70, 0.90)
+EXPECTED_BAND = (18, 35)
+PPL_CONTRACT = "TAILSPLINE_LLAMA_PPL46_V1"
+REPORT_STATUS = "TAILSPLINE_LLAMA_CLASSIC_REPORT_V1"
 
 
 def read_jsonl(path: Path) -> list[dict]:
@@ -62,7 +70,7 @@ def validate_arm(run: Path, receipt_path: Path) -> tuple[list[dict], list[dict]]
         not np.array_equal(receipt_values, static_values)
         or receipt_gain != static_gain
         or tensor_sha256(static_values) != receipt.get("table_sha256_float32")
-        or receipt.get("band_envelope") != [18, 35]
+        or receipt.get("band_envelope") != list(EXPECTED_BAND)
         or float(receipt_gain) != 1.0 + 0.1 * math.log(4.0)
     ):
         raise ValueError(f"table/gain/band receipt drift in {run}")
@@ -236,7 +244,7 @@ def main() -> None:
         raise ValueError("runs and receipts must cover exactly candidate and baselines")
     ppl_manifest = json.loads(args.ppl_manifest.read_text())
     if (
-        ppl_manifest.get("contract") != "TAILSPLINE_LLAMA_PPL46_V1"
+        ppl_manifest.get("contract") != PPL_CONTRACT
         or ppl_manifest.get("documents") != 46
         or ppl_manifest.get("lengths") != list(LENGTHS)
     ):
@@ -320,7 +328,7 @@ def main() -> None:
         }
     strong_baselines = [name for name in ("mrpro",) if name in contrasts]
     report = {
-        "status": "TAILSPLINE_LLAMA_CLASSIC_REPORT_V1",
+        "status": REPORT_STATUS,
         "candidate": args.candidate, "baselines": args.baseline,
         "tasks": list(TASKS), "lengths": list(LENGTHS),
         "rows_per_arm": sum(COUNTS.values()) * len(TASKS),

@@ -2154,6 +2154,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/KEY_EXPERIMENT_COMPASS_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/LLAMA_CLASSIC_ASSET_AUDIT_20260914.md",
       "area": "docs",
       "category": "document"
@@ -2175,6 +2180,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/LORA_MECHANISM_AND_RECIPE_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -2234,6 +2244,16 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
       "area": "docs",
       "category": "document"
@@ -2259,7 +2279,17 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_POST_TAILSPLINE_MRPRO_PROMPT_TEMPLATE_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_WEIGHT_INDEPENDENT_FOLLOWUP_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -2315,6 +2345,11 @@
     },
     {
       "path": "docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/reviews/TEN_QUESTIONS_ASSESSMENT_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -4529,6 +4564,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/build_mrrope_baseline_registry.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/c42_order_only_prediction.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -4580,6 +4620,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/constrained_full_z_fwe_repair.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py",
       "area": "experiments",
       "category": "code"
     },
@@ -4644,12 +4689,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_olmo_ppl46.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_server.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_classic_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_full50_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_olmo_classic_assets.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4664,12 +4724,22 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_native_window_ppl_controls.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen25_s2_full324.sh",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen25_s4_full.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen_then_llama_full50.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4685,6 +4755,21 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_core6.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_full50.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_olmo_s4_classic.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s2_32k64k.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4710,6 +4795,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_llama_classic_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_olmo_classic_report.py",
       "area": "experiments",
       "category": "code"
     },
@@ -7474,6 +7564,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/appendix/a10_tailspline.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/appendix/a1_proofs.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -7884,6 +7979,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/allocation_value_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/attn_aggregate_comparison.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -7965,6 +8065,26 @@
     },
     {
       "path": "paper-2027/figs/fig_allocation_basis.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_allocation_compatibility.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_allocation_compatibility.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_allocation_learning.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_allocation_learning.png",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -8064,6 +8184,16 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/fig_tailspline_main.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_main.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/figs/fig_unification_orthogonal.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8107,6 +8237,11 @@
       "path": "paper-2027/figs/m4_tradeoff_points.csv",
       "area": "paper-2027",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/make_allocation_value.py",
+      "area": "paper-2027",
+      "category": "code"
     },
     {
       "path": "paper-2027/figs/make_exponent_revision_figures.py",
@@ -8309,6 +8444,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/LUNA_FIVE_DIMENSION_REVIEW_20260914.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/PAPER_INTERVAL_REORIENTATION_20260913.md",
       "area": "paper-2027",
       "category": "document"
@@ -8334,6 +8474,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/RESEARCH_RECONSTRUCTION_20260914.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/SEVEN_PAPER_WRITING_COMPARISON_20260909.md",
       "area": "paper-2027",
       "category": "document"
@@ -8345,6 +8490,16 @@
     },
     {
       "path": "paper-2027/research/SUBMISSION_REVISION_20260911.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/THREE_DISCOVERIES_REVISION_20260914.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/UNUSED_ASSET_INVENTORY_20260914.md",
       "area": "paper-2027",
       "category": "document"
     },
@@ -9764,6 +9919,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_bm_qa_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_bm_tasks.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -9790,6 +9950,11 @@
     },
     {
       "path": "paper-2027/tables/table_index_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_learning_main.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -13325,6 +13490,11 @@
     "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md",
     "docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md",
     "paper-2027/NARRATIVE_GUIDE.md",
-    "paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md"
+    "paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md",
+    "docs/research/reviews/TEN_QUESTIONS_ASSESSMENT_20260914.md",
+    "docs/research/next_stage_20260912/WEB_PRO_WEIGHT_INDEPENDENT_FOLLOWUP_20260914.md",
+    "paper-2027/research/LUNA_FIVE_DIMENSION_REVIEW_20260914.md",
+    "paper-2027/SUPPLEMENT_README.md",
+    "paper-2027/research/THREE_DISCOVERIES_REVISION_20260914.md"
   ]
 }

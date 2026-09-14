@@ -122,6 +122,10 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--bootstrap-draws", type=int, default=20_000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260923)
+    parser.add_argument(
+        "--length", action="append", type=int, default=[],
+        help="retain only these recorded length caps before pairing; repeat as needed",
+    )
     args = parser.parse_args()
     if args.out.exists() or args.candidate in args.baseline or len(set(args.baseline)) != len(args.baseline):
         raise ValueError("invalid comparison identity or pre-existing output")
@@ -130,6 +134,16 @@ def main() -> None:
     if set(sources) != wanted:
         raise ValueError("sources must cover exactly candidate and baselines")
     arms = {name: normalize_arm(paths) for name, paths in sources.items()}
+    if args.length:
+        wanted_lengths = set(args.length)
+        if len(wanted_lengths) != len(args.length):
+            raise ValueError("--length values must be unique")
+        arms = {
+            name: [row for row in rows if int(row["length_cap"]) in wanted_lengths]
+            for name, rows in arms.items()
+        }
+        if any(not rows for rows in arms.values()):
+            raise ValueError("length filter removed every row from an arm")
     prompts = {name: {row["prompt_sha256"] for row in rows} for name, rows in arms.items()}
     reference_prompts = prompts[args.candidate]
     if any(value != reference_prompts for value in prompts.values()):

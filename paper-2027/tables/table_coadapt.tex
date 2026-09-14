@@ -7,7 +7,7 @@
 seed-$42$ $50$M models trained with the geometric and \evq{} tables, each
 evaluated under both runtime tables with all parameters frozen ($1{,}920$
 head--query observations). Both runtime tables use the shared midpoint grid
-$u_k=(k+1/2)/K$ for this diagnostic. The matched pairs remain near PPL $7$, whereas both
+$u_k=(k+1/2)/K$ for this diagnostic ($K=32$, $b=500{,}000$, $L=512$). Static rank uses equal weights on integer separations $0,\ldots,511$, distinct from the continuous measure of the main geometric proposition. The matched pairs remain near PPL $7$, whereas both
 cross-swaps fail; the worst cell is also the one whose static $r_2$ improves
 most.}
 \label{tab:coadapt}

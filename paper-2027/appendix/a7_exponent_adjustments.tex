@@ -21,6 +21,14 @@ m_k\log s,&\text{log-frequency shift},\\
 \end{equation}
 The blend weight $w_k$ and log-shift profile $m_k$ have different meanings; the first line is the exact conversion between them.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_frozen_application.pdf}
+\caption{\textbf{Fixed-support identification and natural-QA use are separate comparisons.} (a) Frozen OLMo $16$K scores on nine held-out RULER tasks ($20$ rows/task), with endpoints, amplitude, weights and inputs shared. (b) Matched BM/MrRoPE-Pro $s=4$ natural QA on $631$ untruncated inputs longer than $4$K, using whole-response token F1. The two panels retain their own task and metric definitions.}
+\label{fig:frozen-application}
+\label{fig:bm-natural-qa}
+\end{figure}
+
 \subsection{Normalized-index profile}
 \label{sec:index-adjustment}
 

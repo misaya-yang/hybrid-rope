@@ -104,7 +104,7 @@ C42V24 $[14,31]$ &79.65&71.84&53.15&&&69.12\\
 
 These recorded summaries establish a reason to measure intermediate lengths and task families. They do not establish a universal band, a validated soft-depth method, or a complete causal explanation of generation. The large effect of changing a band in one checkpoint is also not evidence that the same slot indices transfer to another checkpoint.
 
-\subsection{Connecting a candidate objective to the learned checkpoint}
+\subsection{Frequency interactions in attention}
 \label{sec:interval-replay}
 
 For fixed pre-rotation Q/K coefficients, a rotary score can be written
@@ -118,7 +118,7 @@ H=J^\top\bigl(\operatorname{diag}(p)-pp^\top\bigr)J.
 \]
 It couples frequencies through key competition even though each score is a sum over pairs. If $m=T\epsilon$ is the cumulative-increment parameterization, the corresponding curvature is $T^\top H T$. Diagonal per-slot scores do not retain these interactions.
 
-One proposed construction uses native-text Q/K captures and exact finite-phase attention replay on a fixed dilation grid. It can optimize a declared interval risk while separately monitoring native and group-level distortion. This is a candidate predictor, not a validated model result: holding intermediate Q/K fixed omits upstream hidden-state changes, new distractors, value/output pathways, and autoregressive decisions. Runtime parity, retrospective ranking without retuning, and prospectively frozen task comparisons are needed to establish whether the predictor helps select useful tables. The full sine--cosine geometry remains the supplied positional object; checkpoint measurements address how that object is used.
+This calculation identifies a structural source of interaction: softmax normalization couples frequency changes through all competing keys. It explains why per-frequency geometric changes can combine differently in attention. Here the content coefficients remain symbolic; the Cosh and BM constructions use declared geometry and design parameters to form their tables. The fixed-support and crossing experiments test the resulting model behavior under their respective protocols.
 
 \subsection{Earlier phase geometry and profile diagnostics}
 \label{sec:three-band-chain}

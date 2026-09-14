@@ -3,7 +3,8 @@
 | 任务 | 入口 |
 |---|---|
 | 当前主线与修订目标 | [修订目标](../REVISION_BRIEF.md) |
-| 上次稿件构建记录 | [2026-09-13区间修订](PAPER_INTERVAL_REORIENTATION_20260913.md) |
+| 重新理解完整研究贡献 | [仓库证据与贡献重建](RESEARCH_RECONSTRUCTION_20260914.md) |
+| 本轮稿件与对照审查 | [三个发现改稿与验证](THREE_DISCOVERIES_REVISION_20260914.md) |
 | 核实数字与来源可达性 | [证据索引](evidence/index.md) |
 | 查具体主张、图表或公式 | [主张映射](EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
 | 下一步研究 | [当前研究索引](../../docs/research/next_stage_20260912/index.md) |

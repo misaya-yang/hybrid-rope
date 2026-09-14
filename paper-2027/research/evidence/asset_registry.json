@@ -9,7 +9,7 @@
       "priority": "P0",
       "question": "只动内部指数能否改变学习与外推",
       "evidence_grade": "三seed配对；带raw hash摘要",
-      "manuscript_location": "§3.1 / a5",
+      "manuscript_location": "§3.1 / Fig1 / a5",
       "interpretation": "绝对四格NLL尚未追回，配对差已确认",
       "sources": [
         {
@@ -25,7 +25,7 @@
       "priority": "P0",
       "question": "设计价值是否超出一条曲线",
       "evidence_grade": "12配置×3seed；摘要",
-      "manuscript_location": "§6.2 / a5",
+      "manuscript_location": "§3多形状段 / a5",
       "interpretation": "128步；reference7/12，1.25×10/12，Exp9/12",
       "sources": [
         {
@@ -59,7 +59,7 @@
       "priority": "P0",
       "question": "有限坐标提供哪些位置方向",
       "evidence_grade": "证明和独立数值核验",
-      "manuscript_location": "§3.2 / a1",
+      "manuscript_location": "§4 / Fig2a / a1",
       "interpretation": "block whitening对象，不是模型loss预测器",
       "sources": [
         {
@@ -80,7 +80,7 @@
       "priority": "P0",
       "question": "慢频几何怎样落到核心参数",
       "evidence_grade": "有限矩阵与独立求积",
-      "manuscript_location": "§3.3 / Fig2",
+      "manuscript_location": "§4 / Fig2a / a1",
       "interpretation": "b256不能直接套ωL≪1",
       "sources": [
         {
@@ -101,7 +101,7 @@
       "priority": "P0",
       "question": "权重如何学得使用分配",
       "evidence_grade": "50M报告、151M两seed摘要",
-      "manuscript_location": "§4.1–4.2",
+      "manuscript_location": "Appendix compatibility / former Fig3",
       "interpretation": "50M/151M指标不同；range差值不是四格绝对排序",
       "sources": [
         {
@@ -122,7 +122,7 @@
       "priority": "P0",
       "question": "频率集与安装方式是否不同",
       "evidence_grade": "置换定理、冻结干预报告",
-      "manuscript_location": "§4.3 / a1",
+      "manuscript_location": "Appendix compatibility / a1",
       "interpretation": "固定权重置换与同步Q/K补偿分开",
       "sources": [
         {
@@ -133,7 +133,7 @@
         {
           "path": "paper-2027/sections/03_compatibility.tex",
           "availability": "local-untracked",
-          "sha256": "de2aae8194a88abc1f33366b0644d0281f42f990436e2209e56b2e7141948360",
+          "sha256": "5bda99a32c8b6e1c1a71da4d65bff2cd5dcd3d9f97d3a8e3e2418845046c4815",
           "revision_note": "2026-09-13: updated transition to deployment-first ordering; measurements unchanged."
         }
       ]
@@ -144,19 +144,19 @@
       "priority": "P0",
       "question": "怎样系统构造有限分配",
       "evidence_grade": "显式凸目标推导",
-      "manuscript_location": "§6.1 / a1",
+      "manuscript_location": "§5.1 / a1",
       "interpretation": "唯一性相对stated functional；τ为参考工作点",
       "sources": [
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "64905f886f417c96c0a7a6be95a6af6c8202a26aea108f23abd3f6c6e342e6f8",
+          "sha256": "a34363b075debc238582f585c1c878c830797e83cd77df32475285c4d3c8a33f",
           "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
         },
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "665c561652f2a10e3018950b5144048422f65bf55090f29a2e96ee60635012c3",
+          "sha256": "92d46733060f2807e064106590c963301eb2e1f785cf0a474a207202c2f45275",
           "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
         }
       ]
@@ -167,7 +167,7 @@
       "priority": "P0",
       "question": "已有权重下变量是否仍有效",
       "evidence_grade": "held-out与curated摘要",
-      "manuscript_location": "§5.1 / a6",
+      "manuscript_location": "§3.2 / Fig1c / a6",
       "interpretation": "与BM改变范围的应用对比分开",
       "sources": [
         {
@@ -188,7 +188,7 @@
       "priority": "P1",
       "question": "有限旋转通道中的实用价值",
       "evidence_grade": "三seed曲线摘要",
-      "manuscript_location": "§6.3 / a3",
+      "manuscript_location": "§6.1 / Fig2b / Table1 / a3",
       "interpretation": "历史cache不能认证文档独立holdout",
       "sources": [
         {
@@ -209,7 +209,7 @@
       "priority": "P1",
       "question": "继续学习能否利用新分配",
       "evidence_grade": "单seed配对摘要",
-      "manuscript_location": "§6.3 / a2",
+      "manuscript_location": "§6.1 / Table1 / a2",
       "interpretation": "answer-token exact不含终止EOS要求",
       "sources": [
         {
@@ -225,7 +225,7 @@
       "priority": "P1",
       "question": "长程来源如何进入表征",
       "evidence_grade": "单适配pair；curated与报告",
-      "manuscript_location": "§6.3 / a6",
+      "manuscript_location": "§6末指针 / a6",
       "interpretation": "native-endpoint vs midpoint conversion；同adapter任务负结果保留",
       "sources": [
         {
@@ -251,7 +251,7 @@
       "priority": "P1",
       "question": "能否成功读出远处答案",
       "evidence_grade": "raw-hash lineage；100提示/长度",
-      "manuscript_location": "§6.3 / a6",
+      "manuscript_location": "§6.1 / Table1 / a6",
       "interpretation": "单seed；物理≤4K而训练暴露长目标相位",
       "sources": [
         {
@@ -272,7 +272,7 @@
       "priority": "P1",
       "question": "位置相关适配能否改善自然输出",
       "evidence_grade": "匹配独立适配摘要",
-      "manuscript_location": "§6.3 / a6",
+      "manuscript_location": "§6末指针 / a6",
       "interpretation": "与EOS/8B不同adapter和协议",
       "sources": [
         {
@@ -288,7 +288,7 @@
       "priority": "P1",
       "question": "成熟构造的任务价值",
       "evidence_grade": "QA逐行重算；匹配摘要",
-      "manuscript_location": "§5.2–5.4 / a7,a9",
+      "manuscript_location": "§6.3 / Table2 / a7",
       "interpretation": "自然QA631长层与48长RULER提示不混；F1含触顶响应",
       "sources": [
         {
@@ -314,7 +314,7 @@
       "priority": "P1",
       "question": "有效配置能否用低维结构描述",
       "evidence_grade": "CPU构造和GPU回执",
-      "manuscript_location": "§5.4 / a9",
+      "manuscript_location": "§6末指针 / a9",
       "interpretation": "无Qwen重拟合；native窗口代价保留",
       "sources": [
         {
@@ -330,7 +330,7 @@
       "priority": "P1",
       "question": "相同总位移与质心是否仍有结构",
       "evidence_grade": "350开发raw rows；另16文档NLL",
-      "manuscript_location": "§5.1 / a9",
+      "manuscript_location": "§3末指针 / a9",
       "interpretation": "开发发现，不等于独立泛化确认",
       "sources": [
         {
@@ -361,7 +361,7 @@
       "priority": "P1",
       "question": "连续profile如何安装到不同K",
       "evidence_grade": "预注册确认回执",
-      "manuscript_location": "§5.4 / a7",
+      "manuscript_location": "§6末指针 / a7",
       "interpretation": "K与checkpoint共变；full13为table×amplitude联合收益",
       "sources": [
         {
@@ -598,7 +598,7 @@
       "priority": "P1",
       "question": "端点分数是否充分描述可用窗口",
       "evidence_grade": "report-backed开发汇总；仅AUC算术复算",
-      "manuscript_location": "§5.3 / App.H",
+      "manuscript_location": "§6.2末指针 / App.H",
       "interpretation": "不同panel严格分开；OLMo差区间跨零；未raw复核",
       "sources": [
         {
@@ -614,13 +614,13 @@
       "priority": "P1",
       "question": "端点/s何时不同于声明的区间最优",
       "evidence_grade": "完整条件证明与独立标量数值核验",
-      "manuscript_location": "§5.3 / App.H",
+      "manuscript_location": "Appendix interval design",
       "interpretation": "不预言真实checkpoint最优深度；replay仍待验证",
       "sources": [
         {
           "path": "paper-2027/sections/05_threeband.tex",
           "availability": "local-untracked",
-          "sha256": "8c371a9e35f972dd6531d801f50181800691f031c4c3e053b72cd4bb849c172c"
+          "sha256": "338f3c03eba39a8e03f692c2c404a6d94173928fafe87129c01e768abe5070be"
         },
         {
           "path": "paper-2027/figs/verify_interval_design.py",
@@ -833,21 +833,91 @@
     {
       "id": "A37",
       "name": "TailSpline精确有限网格构造",
-      "priority": "P1",
+      "priority": "P0",
       "question": "one-sided与symmetric边界roughness分别导出什么中频allocation，真实任务是否偏好early transport与smooth tail landing",
-      "evidence_grade": "两种严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；Llama统一评测待判决",
-      "manuscript_location": "next-stage method owner; benchmark claim not yet changed",
+      "evidence_grade": "两种严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；任务结果另见A39",
+      "manuscript_location": "§5.2 / TailSpline proof appendix",
       "interpretation": "one-sided唯一解是TailSpline，symmetric唯一解是BM；边界条件本身不能由CPU选择，不证明任务优势，旧mix075只作近似prior",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
           "availability": "local-untracked",
-          "sha256": "acfe3dfd1bcddb4078ba8e1648ca439df9e73ed697c878b36011698332152bdb"
+          "sha256": "978f105aab17fe642284a7ff9c221826efbfa0e5cdf9240269dd7cbe8365ada0"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
           "availability": "local-untracked",
           "sha256": "d1506c172a75baa095257b56e478cb5c7d699c82df7e7a132b2488d112b1c7af"
+        }
+      ]
+    },
+    {
+      "id": "A38",
+      "name": "YaRN–MrPro等剂量单交叉后移对照",
+      "priority": "P2",
+      "question": "固定band、端点、gain与总log位移后，将中频减速后移是否仍能前瞻改善成熟checkpoint任务",
+      "evidence_grade": "n=17有限网格闭式与数值CPU核验；唯一S*=7.51324282212058及单交叉成立；尚无模型结果",
+      "manuscript_location": "next-stage theory audit; current manuscript claim not changed",
+      "interpretation": "CPU只定义无调参的等剂量YaRN–MrPro方向对照，不证明back-loading性能优势；按作者要求后置于当前TailSpline–MrPro判决",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md",
+          "availability": "local-untracked",
+          "sha256": "7714c5d6740b029d4aff02a349ae903681178fa5097cfc64781fec63bb1fd5c7"
+        },
+        {
+          "path": "experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py",
+          "availability": "local-untracked",
+          "sha256": "304c6336551f3906d1a5eebf644693d4ba0ef96602768393fd53f1fbd80ce747"
+        }
+      ]
+    },
+    {
+      "id": "A39",
+      "name": "TailSpline–MrPro Llama S4经典两臂判决",
+      "priority": "P0",
+      "question": "不训练且固定checkpoint、band、gain与评测协议时，exact TailSpline能否在经典长上下文任务整体胜过exact MrPro",
+      "evidence_grade": "Llama-3-8B-Instruct；Full-13 13任务×3长度×10行与PPL46×3长度全量配对；20k paired bootstrap",
+      "manuscript_location": "Abstract / §6.2 / Fig3 Llama / TailSpline appendix",
+      "interpretation": "三个预注册方向3/3通过：Full-13 +3.20pp且区间为正，NIAH +3.75pp，PPL AUC -0.00449；保留PPL短端与QA/单任务反转，不单独推出one-sided机制或跨checkpoint普适性",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
+          "availability": "local-untracked",
+          "sha256": "775028994884acb1a3a507366a383f9b78e2724d693d26515a7f89001156481d"
+        }
+      ]
+    },
+    {
+      "id": "A40",
+      "name": "TailSpline–MrPro OLMo S4跨模型确认",
+      "priority": "P0",
+      "question": "不读取本次OLMo输出选表时，exact TailSpline相对exact MrPro的方法优势能否迁移到另一模型家族与Native窗口",
+      "evidence_grade": "OLMo-2-0425-1B-Instruct；Full-13 13任务×3长度×10行与PPL46×3长度全量配对；20k paired bootstrap",
+      "manuscript_location": "Abstract / §6.2 / Fig3 OLMo / TailSpline appendix",
+      "interpretation": "三个预注册方向3/3通过：Full-13 +49.23pp、NIAH +64.45pp、PPL AUC -3.853，13任务差全部为正；OLMo历史方向先验和总剂量混杂禁止将其写成完全独立盲测或one-sided机制证明",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
+          "availability": "local-untracked",
+          "sha256": "c2ab489e921dea8e3a5b605a2130123fe32ff8ae813325eadaf0051cf0dea042"
+        }
+      ]
+    },
+    {
+      "id": "A41",
+      "name": "历史原生Std-RoPE三seed形状对照",
+      "priority": "P1",
+      "question": "历史外推改善是否仅来自midpoint参照",
+      "evidence_grade": "历史git报告聚合；本轮未重跑训练",
+      "manuscript_location": "§3末 / Appendix native-grid-control",
+      "interpretation": "L128、14974976 tokens、三seed、原生Std参照和span匹配形状；不同于500M严格固定支持主实验",
+      "sources": [
+        {
+          "path": "paper-2027/figs/allocation_value_inputs.json",
+          "availability": "local-untracked",
+          "sha256": "9967550f398738276e834ccf8f477ad3d882e49424e77f57dc0a936b2c8f4e90",
+          "role": "data.native_grid_historical; sources.native_grid_historical identifies git 79e52bb report"
         }
       ]
     }

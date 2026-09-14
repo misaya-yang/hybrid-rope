@@ -359,6 +359,8 @@ $6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths.
 
 
 \paragraph{Generation and natural-QA outcomes of the same adapters.}
+The same three-arm source collection also includes the unadapted base model. Its domain-macro prefix PPL at $8/16/32$K is $7.948/150.545/1492.915$, compared with $6.817/108.958/991.475$ for Native-LoRA and $10.068/24.068/127.911$ for Cosh-LoRA. This adds the adaptation baseline while retaining the $8$K cost; the matched Native-LoRA comparison remains the control for generic adaptation. The portable three-arm prefix summaries retain their source collection identity.
+
 The source interventions reveal how remote evidence affects answer probabilities. Task evaluation measures whether those probabilities produce the required output. In the seed-$42$ capability evaluation, Cosh passkey exact is $100/0/0\%$ at $8/16/32$K, and single-needle top-1 is $56.67/3.33/0\%$. The registered three-arm QA comparison gives task-macro F1 $0.2309$ for the base model, $0.2110$ for Native-LoRA, and $0.1126$ for Cosh-LoRA; the paired Cosh-minus-Native difference is $-0.0984$, with $95\%$ bootstrap interval $[-0.1297,-0.0697]$. The deficit is concentrated in inputs of at most $8$K; on the longer subset all arms are near the floor. Forced-gold inclusion changes NLL by $-0.034$, and the sparse readout pilot does not improve conversion. These report-backed outcomes accompany the probability and source-use measurements of the same $300$-step adapters. They motivate distinguishing access to a distant source from successful task readout.
 
 \paragraph{RULER-family continuation.}

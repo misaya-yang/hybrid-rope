@@ -269,3 +269,21 @@ setting gives $455.3$ PPL. The learned table and the fixed Cosh allocation
 both improve on Geo in this protocol.
 
 These inverse frequencies are learned without fixing the sampled endpoints, so this comparison varies realized support as well as interior placement. The comparator uses $15$M training tokens.
+
+\subsection{Historical native-grid shape control}
+\label{sec:native-grid-control}
+A separate three-seed study compares the native standard-grid RoPE reference with a span-matched native-grid Cosh table. It uses $151{,}898{,}880$ parameters, base $500{,}000$, head dimension $64$, training length $128$ and $14{,}974{,}976$ tokens. The same study compares additional analytic and kernel-derived shapes at matched span and RMS deformation. Selection uses $16$ anchors and evaluation $32$ disjoint test anchors. This is a short-training shape study, separate from the $500$M-token fixed-support replication.
+\begin{table}[ht]
+\centering\small
+\caption{Historical native-grid three-seed mean tail NLL. The complete length response retains the training window.}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Table & $128$ & $256$ & $512$ & $1$K & $2$K & $4$K & $8$K \\
+\midrule
+Native Std-RoPE & 5.5046 & 5.5026 & 5.6563 & 5.8456 & 6.0530 & 6.2566 & 6.3928 \\
+Native Cosh & 5.4645 & 5.4473 & 5.5434 & 5.6966 & 5.8457 & 6.0664 & 6.2935 \\
+\bottomrule
+\end{tabular}
+\end{table}
+The recorded seed-level $95\%$ intervals for Cosh-minus-Std-RoPE NLL at $512/1$K/$2$K/$4$K/$8$K are $[-0.200,-0.026]$, $[-0.183,-0.115]$, $[-0.241,-0.174]$, $[-0.260,-0.121]$, and $[-0.141,-0.058]$. All three seeds favor Cosh at each of those lengths. This supports the conclusion that the historical extrapolation improvement is not confined to a midpoint geometric comparator. It does not establish a universal Cosh optimum: the same report includes other useful nonuniform shapes. The source archive preserves the reported values and historical source identity in \path{figs/allocation_value_inputs.json}; the original training streams are separate.
+\FloatBarrier

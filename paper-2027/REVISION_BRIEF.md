@@ -1,26 +1,39 @@
-# 当前论文修订目标
+# 当前论文修订目标与完成范围
 
-更新：2026-09-14。本文负责写作目标；[当前研究入口](../docs/research/next_stage_20260912/index.md)负责候选、实验优先级和结果状态。
+2026-09-14。当前主线：**z的实用价值 → 受控归因 → 位置基结构 → 解析构造 → 学习与零训练任务收益**。标题保持 Beyond the Base: Exponent Allocation in RoPE。
 
-## 论证与实验呈现
+固定支持实验识别z独立作用；完整方法可联合改变范围、band、终点和gain，收益归完整方法。窗口内增强是后续目标，M4联合改善是初步证据。
 
-核心贡献是固定支持下allocation的独立作用、位置基与学得使用的区分，以及各自协议下可复核的构造收益。正文以[写作约定](NARRATIVE_GUIDE.md)的三组证据组织，按[主张映射](research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)核实每项范围。
+## 当前正文
 
-| 论证任务 | 主文呈现 | 附录保留 |
-|---|---|---|
-| 识别allocation | 同实际端点的干预示意与配对训练结果；几何解释所改变的对象 | 全seed/长度、窗口内代价、多形状及定理条件 |
-| 区分学得兼容性 | 范围重定向、权重×表交叉、固定频谱槽位干预形成一条对照链 | 完整矩阵与协议；补偿恒等式和真实生成实验分别标明 |
-| 展示可利用性 | 成熟BM自然QA和学习期构造分别呈现；沿用现稿成熟部署在先的顺序 | 全任务/模型、训练与adapter身份、Native代价、placement和table×gain差异 |
+§3固定支持学习与冻结任务收益；§4完整位置基；§5 Cosh与TailSpline/BM构造；§6学习、适配、TailSpline两个模型族及BM自然QA；§7相关工作；§8结论。范围交叉、权重×表和槽位干预完整保留附录。
 
-TailSpline获得自己的匹配任务证据后，才据实际结果决定在第三组中的位置。几何目标最优、相对强基线的任务优势、尾端机制识别分别表述；同总log位移对照C目前是可选归因方案。未胜出的新候选不抹去旧方法正结果。
+作者在实施中提供[关键实验罗盘](../docs/research/next_stage_20260912/KEY_EXPERIMENT_COMPASS_20260914.md)：OLMo TailSpline确认已完成，因此与Llama一起进入摘要、主图和实验节。BM自然QA保持独立方法身份。新增数字按报告owner导入，不声称本机重新核验raw生成。
 
-## 本轮修订检查
+## 验证与交付
 
-- 摘要与引言用已有结果支撑三项贡献，不将坐标定义、任务目标或待验证候选写成已完成方法。
-- 每张主图回答一个问题，注明实际方法、干预和协议；完整条件与反例放入对应附录，不按实验日期堆叙事。
-- NIAH与Full-13共享数据时不计作独立重复确认；PPL、F1、完整答案/EOS保留各自指标。开发选择、样本留出和外部复现分别标识。
-- 采纳[审计纠正](../docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md)：step42的任务构成变化不归因成纯噪声；同band/gain不单独识别尾端机制。
+保持三图两表、正文至多9页。主图重建入口为 `figs/make_allocation_value.py`，最后运行以覆盖旧布局生成器；它验证TailSpline闭式和报告AUC算术。精确主张见[主张映射](research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)。不新增模型实验，不改写既有异常证据。
 
-## 交付状态
+## 改稿记录
 
-2026-09-13的TeX/PDF构建记录见[区间修订回执](research/PAPER_INTERVAL_REORIENTATION_20260913.md)。2026-09-14更新的是Markdown修订目标与解释，尚未据此重写或重建论文。修改TeX后按[论文索引](index.md)构建并检查受影响的页、图表与数字；外部Pro审计不是新版PDF验收。
+保留：固定支持三seed、冻结任务、MLA、750M、完整答案+EOS、BM自然QA。新增：TailSpline离散证明及Llama/OLMo完整长度结果。移入附录：兼容性整节和原Fig3。撤回叙事：三个区别是全部贡献、TailSpline仅CPU未验证、所有方法必须只动z。训练和零训练协议不混合；未声称全球SOTA、普适最优或成熟窗口内增强已完成。
+
+## 高价值清单的取舍
+
+核对DeepSeek清单后增加：正文BM–Uni等总位移形状对照；附录χ²刚度精确式；8B未适配底模的三臂补充。清单全表Σm少计1，实际K64/[14,32]是BM/Uni=40.5、Pro=37⅔；相对差17/6正确。已有小τ展开是有效渐近式，不是定理被推翻。
+
+不采纳“gain收益大所以隐藏”或“原始文件未commit所以不能引用”的规则；联合方法不要求z是最大单独杠杆。A31–A34旧mix075不与exact TailSpline混用。E3有报告线索但暂无本机raw复核，暂不追加新的正文方法。数学no-go、离散DP、τ-floor等不挤占当前核心构造。B8的TailSpline零命中已过时，且n=2的单侧/对称解并不重合。
+
+Final build: 9 scientific-body pages, 54 total pages; three main figures and two main tables. Undefined references/citations and overfull boxes: zero.
+
+## 深入理论与文献复核
+
+对照MrRoPE、LeRoPE、YaRN和DoPE原文后，摘要删除“频率设计仍未被探索”的泛化暗示，引言/相关工作直接说明已有非均匀与可学习频率设计，并明确我们的受控归因及边界构造增量。
+
+新增理论连接：实际相邻log-frequency间隔=c+epsilon logS，因此TailSpline目标精确对应中段及尾端的log-gap变化；尾端jump相对MrPro的精确比例是3/(2n+1)，在Llama/OLMo为0.086/0.081。更大的entry jump同样披露。附录给连续自然边界解释及Cosh密度目标在quantile-gap坐标下的精确改写，没有把两种目标合称一个任务最优理论。
+
+主图现在画出两侧零增量，避免把边界跳变藏在图外；MLA曲线标出三seed范围。源码包新增不加载模型的TailSpline构造器与独立代数/求积核验。根据实际runner补齐greedy、prefill、NIAH深度及配对bootstrap单位。
+
+追回历史native Std-RoPE三seed对照：明确14974976 tokens、L128、等span的独立实验身份，主文一句+附录完整长度，数值从git 79e52bb报告导入。交叉实验4.57秩按midpoint/离散整数lag复算一致；补全测度而非误判无效。
+
+文献复核入口：[MrRoPE](https://arxiv.org/html/2601.22181v1)、[LeRoPE](https://arxiv.org/html/2607.10134v1)、[YaRN](https://arxiv.org/html/2309.00071v3)、[DoPE](https://arxiv.org/html/2511.09146v1)。未据异协议公开分数作跨论文SOTA排名。

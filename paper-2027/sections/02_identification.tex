@@ -1,6 +1,13 @@
 \subsection{A paired intervention at fixed support}
 \label{sec:exp-identify}
 
-We train paired $151.9$M models with $K=32$ rotary pairs at length $256$. Within each of three seeds, architecture, initialization, token order, optimizer, schedule, and the $499{,}974{,}144$-token budget are identical. The geometric arm uses the FMRoPE training-base rule $b=L_{\mathrm{train}}$ \citep{oka2026fmrope}; the other anchors Cosh quantiles with $\tau=4$ to the same endpoints (construction in \S\ref{sec:construction}). Only the $30$ interior exponents differ. The factorial in \S\ref{sec:factorial} extends fixed-endpoint comparisons to bases $500$K and $1$M across twelve configurations.
+We train paired $151.9$M models with $K=32$ rotary pairs at length $256$. Within each of three seeds, architecture, initialization, token order, optimizer, schedule, and the $499{,}974{,}144$-token budget are identical. The geometric arm uses the FMRoPE training-base rule $b=L_{\mathrm{train}}$ \citep{oka2026fmrope}; the other anchors Cosh quantiles with $\tau=4$ to the same endpoints (construction in \S\ref{sec:construction}). Only the $30$ interior exponents differ.
 
-With the training table retained at evaluation, mean Cosh-minus-geometric tail NLL is $+0.026$ at the training length and $-0.281/-0.176/-0.146$ at $512/1024/2048$ tokens. All three training seeds improve at every extended length (Fig.~\ref{fig:spectral-budget-overview}b; full contrasts in Appendix~\ref{sec:exact-range-control}). Thus internal placement can shift the learned length response while frequency endpoints remain unchanged. To see what this intervention changes in the model's input to attention, we next examine the basis supplied by a rotary pair.
+With the training table retained at evaluation, mean Cosh-minus-geometric tail NLL is $+0.026$ at the training length and $-0.281/-0.176/-0.146$ at $512/1024/2048$ tokens. All three training seeds improve at every extended length (Fig.~\ref{fig:spectral-budget-overview}b; full contrasts in Appendix~\ref{sec:exact-range-control}). Thus interior allocation improves extrapolation at a small training-window cost, without changing either frequency endpoint.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
+\caption{\textbf{Internal allocation improves extrapolation and frozen-model tasks.} (a) Uniform and anchored Cosh allocations share both sampled endpoints and $32$ rotary pairs. (b) Cosh-minus-Geo tail NLL at the training length ($1\times=256$) and three extended lengths. Thin lines are the three paired training seeds; the thick line is their mean. (c) Frozen matched-support interventions: OLMo has nine held-out tasks and Qwen four development tasks, each with $20$ inputs/task. The uniform, coarse-ramp and derived arms share endpoints, amplitude, weights and inputs. Training-window costs remain visible in (b).}
+\label{fig:spectral-budget-overview}
+\end{figure}

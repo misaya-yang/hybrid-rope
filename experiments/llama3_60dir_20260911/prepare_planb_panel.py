@@ -168,6 +168,10 @@ def main(argv=None):
         "--depth-targets", default=",".join(str(value) for value in DEPTH_TARGETS),
         help="comma-separated fractional targets for single-answer NIAH tasks",
     )
+    ap.add_argument(
+        "--qa-base-offset", type=int, default=None,
+        help="override the stage QA row offset to freeze a disjoint confirmation block",
+    )
     args = ap.parse_args(argv)
 
     caps = tuple(int(x) for x in args.caps.split(",") if x.strip())
@@ -211,6 +215,12 @@ def main(argv=None):
                 "REFUSING: tailspline-classic requires Full-13, 10 rows per 8/16/32K cell, "
                 "and depths 0.10/0.30/0.50/0.70/0.90"
             )
+    if args.qa_base_offset is not None and args.qa_base_offset < 0:
+        raise SystemExit("REFUSING: --qa-base-offset must be nonnegative")
+    qa_base_offset = (
+        QA_STAGE_ROW_OFFSET[args.stage]
+        if args.qa_base_offset is None else args.qa_base_offset
+    )
 
     import yaml
     from transformers import AutoTokenizer
@@ -262,6 +272,7 @@ def main(argv=None):
         "model_contract": args.model_contract,
         "model_identity": identity,
         "tasks": list(selected_tasks),
+        "qa_base_offset": qa_base_offset,
     }
     atomic_json(out / "manifest.json", status)
 
@@ -336,7 +347,7 @@ def main(argv=None):
                     rows_for_cap(prior_cap)
                     for prior_cap in caps[:cap_index])
                 command.extend(["--pre_samples", str(
-                    QA_STAGE_ROW_OFFSET[args.stage] + prior_cap_rows)])
+                    qa_base_offset + prior_cap_rows)])
 
             if not source_path.exists():
                 old_argv, old_path, old_cwd = sys.argv, sys.path[:], os.getcwd()
@@ -436,7 +447,7 @@ def main(argv=None):
                     "split": args.stage, "scorer_revision": "ruler-upstream-string-match-v1",
                     "upstream_index": raw.get("index"), "generator_seed": cell_seed,
                     "qa_source_index": (
-                        QA_STAGE_ROW_OFFSET[args.stage] + prior_cap_rows + index
+                        qa_base_offset + prior_cap_rows + index
                         if task.startswith("qa_") else None),
                     "irrelevant_padding_tokens": padding_tokens,
                 })

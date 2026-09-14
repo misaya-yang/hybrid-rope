@@ -61,6 +61,14 @@ BM($4$) & 81.81 & 51.32 \\
 \end{tabular}
 \end{table}
 
+\paragraph{An equal-total-displacement shape control.}
+For $q=1,\ldots,n-1$, summing the cumulative profiles gives
+\[
+\sum_q m_q^{\rm BM}=\sum_q m_q^{\rm Uni}=\frac{n-1}{2},\qquad
+\sum_q m_q^{\rm Pro}=\frac{n-1}{3}.
+\]
+The outer bands agree, so BM and Uni have identical full-table displacement, whereas BM exceeds Pro by $(n-1)\log s/6$. On the actual $K=64$, $[l,h]=[14,32]$ grid, full-table $\sum_km_k$ is $40.5$ for BM/Uni and $37\frac23$ for Pro. The $16$K BM--Uni difference of $19.20$ points therefore compares different shapes at equal total displacement. This is the recorded small six-task panel, separate from natural QA and the C42 development panel; it does not prove that boundary smoothness alone explains the task gain.
+
 The official YaRN and Uni raw-output files have recorded hashes but are not bundled with the source archive; their per-task aggregates and identities are preserved. The separate natural-QA experiment in Appendix~\ref{sec:bm-natural} evaluates the BM/MrRoPE-Pro comparison on natural inputs.
 
 \subsection{Full-lag positional geometry as a candidate construction}

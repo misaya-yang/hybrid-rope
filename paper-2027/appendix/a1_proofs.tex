@@ -380,7 +380,10 @@ For $\delta=(\omega'-\omega)\Delta$, the second-order cosine remainder is bounde
 \FloatBarrier
 \subsection{Proof of the closed-form variational optimum}
 
-This subsection proves Theorem~\ref{thm:ode} directly from the stated
+\begin{theorem}[Unique density minimizer]\label{thm:ode}
+For $\alpha>0$ and $\beta\ge0$, the unit-mass nonnegative $L^2$ minimizer of Eq.~\eqref{eq:Capp} is uniquely $\rho_\tau(\phi)=\tau\cosh[\tau(1-\phi)]/\sinh\tau$, with the uniform limit at $\tau=0$.
+\end{theorem}
+This subsection proves the theorem directly from the stated
 variational objective. Starting from the kernel
 \begin{equation}
 K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
@@ -435,6 +438,18 @@ The Cosh solution has an analytically invertible CDF, so its quantiles turn
 the continuous allocation directly into a finite frequency table.
 
 \FloatBarrier
+\subsection{The density objective in interval coordinates}
+\label{sec:cosh-gap-form}
+For a strictly positive density, let $Q=F^{-1}$ and $h(u)=Q'(u)>0$ with $\int_0^1h=1$. Then $\rho(Q(u))=1/h(u)$ and $S_\rho(Q(u))=1-u$. Changing variables in the declared density objective gives the exact identity
+\[
+\mathcal C_{\rm app}=\frac12\int_0^1\left[\frac\alpha{h(u)}+\beta(1-u)^2h(u)\right]du.
+\]
+Thus Cosh can equivalently be viewed as an interval-allocation design. Its quantile derivative is
+\[
+h_\tau(u)=\frac{\sinh\tau}{\tau\sqrt{1+(1-u)^2\sinh^2\tau}}.
+\]
+This is a change of coordinates for the stated prior, not a derivation of that prior from exact full-pair overlap. TailSpline uses a different, discrete objective on increments of native-relative displacement. The common design object is frequency spacing; the two objectives serve distinct learning and deployment settings.
+
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}
 
@@ -552,6 +567,13 @@ q(x)&=\frac12+\frac{\sin(2x)}{4x}
       -\left(\frac{\sin x}{x}\right)^2.
 \end{aligned}
 \end{equation}
+The stiffness itself also has an exact expression:
+\begin{equation}
+S_{\chi^2}(\tau)=\frac1{\dhd}\left[\frac{\sinh\tau\,\arctan(\sinh\tau)}{\tau^2}-1\right].
+\label{eq:stiffness-exact}
+\end{equation}
+Indeed, unit mass reduces its defining integral to $\int\rho_\tau^{-1}-1$, and integrating $\operatorname{sech}$ gives Eq.~\eqref{eq:stiffness-exact}. The quartic term is a local expansion: at $\tau=\sqrt2,2,4$, it exceeds the exact stiffness by factors approximately $1.52,1.97,3.52$. It is not a finite-$\tau$ accuracy guarantee for the operating rule.
+
 Stationarity of
 $\mathcal F(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ gives the
 leading small-$\tau$ balance

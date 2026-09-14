@@ -8,6 +8,22 @@ This section gives the training, continuation, and video protocols.
 Apps.~\ref{sec:identification-details} and~\ref{sec:mature-details} detail
 the fixed-range and mature-model experiments.
 
+\subsection{Table and operator identities}
+\label{sec:table-identities}
+
+\paragraph{RoPE, Geo and Native.}
+Geo is a geometric RoPE table with $\omega_k=b^{-u_k}$. For standard $u_k=k/K$ and midpoint $u_k=(k+1/2)/K$ grids at the same base,
+\[
+\omega_k^{\rm mid}=b^{-1/(2K)}\omega_k^{\rm standard}.
+\]
+Both are geometric RoPE with identical normalized allocation $z$ and log-span $R$; the midpoint offset changes $a$ in Eq.~\eqref{eq:table-decomposition}. For $b>1$, the factor is below one, giving uniformly slower rotation at the same token separation. The midpoint Cosh family's $\tau\to0$ limit is this midpoint Geo. Native identifies the inherited table of a specified released model. Each experiment retains its actual grid and baseline; geometric equivalence of the family does not by itself quantify a task-score difference.
+
+\paragraph{Cosh shape and finite installation.}
+The family in Eq.~\eqref{eq:warp} uses $\phi_\tau(u)=1-\operatorname{arcsinh}((1-u)\sinh\tau)/\tau$. Grid choice and optional affine anchoring determine the installed tensor. At fixed endpoints, the anchored shape satisfies Eq.~\eqref{eq:anchored-cosh-order}; a midpoint deployment without anchoring also changes the sampled range. Results are assigned to these actual installations, not to the family name alone.
+
+\paragraph{Extension operators.}
+Official-equation YaRN, the MLA wavelength blend in Appendix~\ref{sec:mla-results}, and the repository fixed-index ramp in Eq.~\eqref{eq:repo-range-scaler} are distinct transformations. The last two appeared under historical YaRN labels in evaluation outputs; this manuscript names their actual operators. Paired gains with a shared operator remain evidence for that composition, and are not relabeled as official YaRN comparisons.
+
 \FloatBarrier
 \subsection{Models and training settings}
 

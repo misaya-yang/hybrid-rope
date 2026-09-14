@@ -1,20 +1,17 @@
-\section{The Allocation Coordinate}
-\label{sec:exponents}
-\label{sec:identification}
-
-Let $K=\drot/2\ge2$ be the number of rotary pairs. Standard RoPE assigns
+\section{Allocation as a Design Variable}
+\label{sec:exponents}\label{sec:identification}
+For $K=d_{\rm rot}/2$ pairs, standard RoPE uses $\omega_k=b^{-k/K}$. Any strictly ordered positive table admits
 \begin{equation}
-\omega_k=b^{-\phi_k},\qquad \phi_k=\frac{k}{K},\qquad k=0,\ldots,K-1,
-\label{eq:exponent-rope}
-\end{equation}
-with base $b>1$. To separate range from placement, write any strictly ordered positive table $\omega_0>\cdots>\omega_{K-1}>0$ as
-\begin{equation}
-x_k=-\log\omega_k=a+Rz_k,\qquad
-z_k=\frac{x_k-x_0}{x_{K-1}-x_0},\qquad z_0=0,\ z_{K-1}=1.
+x_k=-\log\omega_k=a+Rz_k,\quad z_k=\frac{x_k-x_0}{x_{K-1}-x_0},\quad z_0=0,\ z_{K-1}=1.
 \label{eq:table-decomposition}
 \end{equation}
-Here $(a,R)$ fixes the sampled log-frequency interval, and the $K-2$ interior values of $z$ allocate the pairs within it. Every geometric table has $z_k=k/(K-1)$, irrespective of base. A base change therefore moves the sampled range while retaining uniform normalized spacing. Changing $z$ at fixed $(a,R,K)$ redistributes the interior frequencies.
+The endpoints $(a,R)$ fix the sampled log-frequency range; $K-2$ interior coordinates define allocation. Every geometric table has $z_k=k/(K-1)$ irrespective of base. The full space $\mathcal Z_K=\{0=z_0<\cdots<z_{K-1}=1\}$ includes analytic subfamilies and positive-gap learned parameterizations.
 
-This ordered table is installed in labeled Q/K coordinate blocks. A permutation $\pi$ of the same frequency multiset changes its \emph{slot assignment}; learned projections determine how each assigned frequency contributes to attention. We use these distinctions to design separate interventions on allocation, runtime range, and assignment.
+For deployment relative to a native table, write
+\begin{equation}
+\omega'_k=\omega_k^N s^{-m_k},\qquad d_k=\log(\omega_k^N/\omega'_k)=m_k\log s.
+\label{eq:movement-allocation}
+\end{equation}
+Changing frequencies preserves RoPE's relative-position composition and norm preservation \citep{su2024roformer}. Multiplying cosine/sine amplitudes by $g$ separately scales the rotary Q/K contribution by $g^2$. Fixed-support experiments isolate $z$; complete methods may jointly choose allocation, range and amplitude.
 
-Continuous densities give a convenient way to construct allocations through quantiles. The installed tensor also depends on the finite grid: midpoint nodes, inclusive endpoints, and affine endpoint anchoring yield different tables. Our identification experiments anchor quantiles to the baseline's actual sampled endpoints. Model applications state their grid convention alongside the comparison. This makes the mathematical coordinate in~\eqref{eq:table-decomposition} directly usable as an experimental control.
+Geo denotes each protocol's geometric reference and Native a released model's inherited table. Standard and midpoint geometric grids share $z$ but differ by an overall frequency offset. Exact grid and endpoint conventions are in Appendix~\ref{sec:table-identities}.

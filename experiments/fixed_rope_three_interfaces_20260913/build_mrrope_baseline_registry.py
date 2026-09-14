@@ -191,6 +191,24 @@ def curated_bundles(root: Path, out: Path) -> list[dict]:
                 "panel_16k.jsonl": root / "fixed_rope_three_interfaces_20260913/panels/llama_s4_core6_fresh6_16k32k_seed20260917_v2/screen.jsonl",
             },
         },
+        {
+            "id": "olmo2_1b_s4_full13_ppl46_mrpro",
+            "model": "OLMo-2-0425-1B-Instruct",
+            "scale": 4,
+            "band": [14, 32],
+            "gain": 1.138629436111989,
+            "protocol": "Full-13 x 4K/8K/16K x 10 rows plus PPL46 x 3 lengths",
+            "expected_generation_rows": 390,
+            "expected_lm_rows": 138,
+            "links": {
+                "run": root / "today_rope_plan_20260914/tailspline_olmo_s4_classic/runs/mrpro",
+                "table.json": root / "today_rope_plan_20260914/tailspline_olmo_s4_classic/tables/mrpro.json",
+                "full13_rows.jsonl": root / "today_rope_plan_20260914/tailspline_olmo_s4_classic/assets/full13/rows.jsonl",
+                "full13_manifest.json": root / "today_rope_plan_20260914/tailspline_olmo_s4_classic/assets/full13/manifest.json",
+                "ppl46_lm.npy": root / "today_rope_plan_20260914/tailspline_olmo_s4_classic/assets/ppl46/lm.npy",
+                "ppl46_manifest.json": root / "today_rope_plan_20260914/tailspline_olmo_s4_classic/assets/ppl46/manifest.json",
+            },
+        },
     ]
     bundles = []
     for spec in specs:
@@ -256,6 +274,17 @@ def main() -> None:
         ),
     }
     atomic_json(out / "registry.json", registry)
+    atomic_json(out / "reusable.json", {
+        "status": FORMAT,
+        "curated_bundles": [
+            record for record in bundles if record["ready_for_score_reuse"]
+        ],
+        "legacy_raw_candidates": [
+            record for record in legacy
+            if record["reuse_class"] == "raw_reusable_with_exact_matching_contract"
+        ],
+        "warning": registry["policy"],
+    })
     (out / "README.md").write_text(
         "# MrRoPE baseline registry\n\n"
         "`current/` contains strict reusable bundles. `legacy/` is a non-destructive symlink "

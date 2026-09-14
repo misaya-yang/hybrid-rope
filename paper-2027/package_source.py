@@ -33,7 +33,8 @@ def source_files() -> set[Path]:
                 add(PAPER / (part + ".bib"))
 
     add(PAPER / "main.tex")
-    for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py",
+    for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py", "SUPPLEMENT_README.md",
+                 "figs/allocation_design.py", "figs/make_allocation_value.py", "figs/allocation_value_inputs.json",
                  "figs/verify_interval_design.py", "figs/interval_development_inputs.json",
                  "figs/make_m4_tradeoff.py", "figs/m4_tradeoff_inputs.json", "figs/m4_tradeoff_points.csv",
                  "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
@@ -72,6 +73,8 @@ def main() -> None:
             "  python3 figs/make_exponent_revision_figures.py\n"
             "  python3 figs/make_story_figures.py\n"
             "  python3 figs/make_m4_tradeoff.py\n"
+            "  python3 figs/make_allocation_value.py\n"
+            "  python3 figs/allocation_design.py\n"
             "This uses the bundled figs/figure_inputs.json, with original-source\n"
             "SHA256 values and the 778 natural-QA row scores (no prompt/output text).\n"
             "Python requirements: NumPy and Matplotlib. Regeneration performs no\n"

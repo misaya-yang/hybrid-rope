@@ -1,6 +1,16 @@
-\section{How Allocation Organizes the Positional Basis}
+\section{Controlled Extrapolation and Frozen-Model Gains}
 \label{sec:controlled-findings}
 
-We first establish that interior placement has a measurable learning effect, then examine the positional functions whose placement is changing.
+We first hold the frequency range fixed and change its interior allocation. The training comparison asks whether allocation improves learned extrapolation; the frozen comparison asks whether it improves tasks without updating weights.
+
 \input{sections/02_identification}
-\input{sections/03_theory}
+
+\subsection{The effect remains in frozen models}
+\label{sec:exp-frozen-support}
+
+On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we fix the checkpoint, sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The range extends from the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents score $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$. Qwen's four-task development comparison gives $57.75/64.00/66.50\%$ (Appendix~\ref{sec:frozen-fixed-support}). The simple ramp already captures much of the difference: the finding is the consequence of interior placement at fixed support.
+
+\paragraph{Beyond one shape.}\label{sec:factorial}
+The matched-endpoint M4 factorial tests two bases, two training lengths, three head dimensions and three paired seeds. Reference Cosh, a preassigned $1.25\times$ strength and matched exponential improve weighted OOD NLL in $7/12$, $10/12$ and $9/12$ configurations. These short, $128$-step runs support allocation breadth (Appendix~\ref{sec:exact-range-factorial}); the longer paired training above establishes the replicated extrapolation result.
+
+A separate three-seed native Std-RoPE shape comparison also improves all five reported $512$--$8$K extrapolation lengths, so the effect is not restricted to a midpoint geometric reference (Appendix~\ref{sec:native-grid-control}).

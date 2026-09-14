@@ -5,6 +5,8 @@ This performs no model evaluation. Run from any directory:
 """
 from __future__ import annotations
 import hashlib
+import re
+import argparse
 from decimal import Decimal, ROUND_HALF_UP
 import json
 from pathlib import Path
@@ -42,6 +44,7 @@ SOURCES = {
     "olmo": "docs/research/ROPE_OLMO_BM_RESULT_20260908.json",
     "qwen3": "docs/research/ROPE_BM_TRANSFER_RESULT_20260908.json",
     "qwen7": "docs/research/ROPE_QWEN7_BM_RESULT_20260908.json",
+    "slot_report": "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
     "coadapt50": "paper-2027/research/foundations/FULL_ROPE_SPECTRAL_BASIS_AND_COADAPTATION_REPORT_20260819.md",
     "coadapt151": "paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
     "coordinate128": "paper-2027/research/attention-aware-retrofit/evidence/K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json",
@@ -90,6 +93,8 @@ def write_portable_inputs(data):
         "index": keep(data["index"], ["tasks", "scores"]),
         "qa": keep(data["qa"], ["by_stratum", "task_equal_macro"]),
         "bm_definition": {},
+        "slot_report": "\n".join(line for line in data["slot_report"].splitlines()
+            if "All four 20-row" in line or "candidate's 1x PG-19" in line or "versus `3.104234`" in line),
         "coadapt50": "\n".join(r for r in data["coadapt50"].splitlines()
                                  if r.startswith("| Geo |") or r.startswith("| EVQ |")),
         "coadapt151": {"small_model_crossing": keep(data["coadapt151"]["small_model_crossing"],
@@ -178,58 +183,97 @@ def axis_style(ax):
     ax.set_axisbelow(True)
 
 def build_overview(data):
-    fig, axes = plt.subplots(2, 2, figsize=(7.25, 4.45))
-    axes = axes.ravel()
+    """Fixed support only: the training window is an observed point, not an inset."""
+    fig, axes = plt.subplots(1, 2, figsize=(7.25, 2.45))
     ax = axes[0]
     k, K, tau = np.arange(32), 32, 4.
     u = (k + .5) / K
     q = 1 - np.arcsinh((1-u)*np.sinh(tau))/tau
-    z = (q-q[0])/(q[-1]-q[0])
-    geom = k/(K-1)
+    z = (q-q[0])/(q[-1]-q[0]); geom = k/(K-1)
     assert np.all(z <= geom+1e-12)
     for xs, y, color, marker in [(geom,.7,BLUE,"o"),(z,.25,ORANGE,"D")]:
         ax.hlines(y,0,1,color=GRID,lw=1)
         ax.scatter(xs,np.full(K,y),color=color,s=12,marker=marker,zorder=3)
         ax.scatter([0,1],[y,y],s=30,facecolor="white",edgecolor=INK,zorder=4)
-    ax.text(.03,.82,"Geometric",color=BLUE,fontsize=10)
-    ax.text(.03,.37,"Anchored Cosh",color=ORANGE,fontsize=10)
+    ax.text(.03,.82,"Uniform allocation",color=BLUE,fontsize=9)
+    ax.text(.03,.37,"Redistributed interiors",color=ORANGE,fontsize=9)
     ax.set(xlim=(-.04,1.04),ylim=(0,1),xlabel="Normalized exponent",xticks=[0,.5,1])
-    ax.set_yticks([])
-    ax.spines[["left","right","top"]].set_visible(False)
-    ax.set_title("(a) Interior allocation",loc="left")
-    lengths=[512,1024,2048]
-    for ax,key,title,color in [(axes[1],"fixed_training_range","(b) Paired learning effect",ORANGE),
-                               (axes[2],"target_matched_range","(c) Range interaction",BLUE)]:
-        block=data["range"][key]
-        vals=np.array([[block[str(L)]["seed_values"][str(seed)] for L in lengths]
-                       for seed in [42,137,256]])
-        means=vals.mean(0)
-        assert np.all(vals < 0) if key=="fixed_training_range" else np.all(vals > 0)
-        ax.axhline(0,color=INK,lw=.8)
-        for v in vals: ax.plot(range(3),v,color="#B9BFC4",lw=1,marker="o",ms=3)
-        ax.plot(range(3),means,color=color,lw=2,marker="D",ms=4)
-        ax.set(xticks=range(3),xticklabels=["2x","4x","8x"],ylim=(-.57,.83),
-               xlabel="Eval. / train length")
-        ax.set_title(title,loc="left")
-        axis_style(ax)
-    axes[1].set_ylabel("Cosh minus Geo NLL")
-    axes[2].set_ylabel("Cosh minus Geo NLL")
-    ax=axes[3]
-    rows=data["coadapt151"]["small_model_crossing"]["mean_tail_nll_two_seed_length1024"]
-    vals=np.array([[rows[w][t] for t in ["fmrope_derived","cosh_derived"]]
-                  for w in ["fmrope_weights","anchored_cosh_weights"]])
-    penalties=vals-np.diag(vals)[:,None]
-    ax.imshow(penalties,cmap="Oranges",vmin=0,vmax=2.5)
-    for i in range(2):
-        for j in range(2): ax.text(j,i,f"{vals[i,j]:.3f}",ha="center",va="center",fontsize=11,
-                                   color="white" if penalties[i,j]>1.5 else INK)
-    ax.set(xticks=[0,1],xticklabels=["Geo","Cosh"],yticks=[0,1],
-           yticklabels=["Geo","Cosh"],xlabel="Derived runtime table",ylabel="Trained weights")
-    ax.set_title("(d) Learned compatibility",loc="left",pad=12)
-    ax.tick_params(length=0)
-    for sp in ax.spines.values(): sp.set_visible(False)
-    fig.subplots_adjust(left=.10,right=.97,bottom=.12,top=.93,wspace=.48,hspace=.82)
+    ax.set_yticks([]);ax.spines[["left","right","top"]].set_visible(False)
+    ax.set_title("(a) Same endpoints and pair count",loc="left")
+    lengths=[256,512,1024,2048]; block=data["range"]["fixed_training_range"]
+    vals=np.array([[block[str(L)]["seed_values"][str(seed)] for L in lengths] for seed in [42,137,256]])
+    assert np.all(vals[:,0]>0) and np.all(vals[:,1:]<0)
+    means=vals.mean(0)
+    for L,mean in zip(lengths,means):
+        assert abs(mean-block[str(L)]["mean_nll_difference"])<1e-8
+    ax=axes[1];ax.axhline(0,color=INK,lw=.8)
+    for i,v in enumerate(vals):ax.plot(range(4),v,color="#A9B0B7",lw=1,marker="o",ms=3,label="Three seeds" if i==0 else None)
+    ax.plot(range(4),means,color=ORANGE,lw=2,marker="D",ms=4,label="Seed mean")
+    ax.set(xticks=range(4),xticklabels=["1x","2x","4x","8x"],ylim=(-.57,.12),
+           xlabel="Evaluation / training length",ylabel="Cosh minus Geo tail NLL")
+    ax.set_title("(b) Paired fixed-support intervention",loc="left")
+    ax.legend(frameon=False,fontsize=8,loc="lower right");axis_style(ax)
+    fig.subplots_adjust(left=.035,right=.985,bottom=.23,top=.86,wspace=.52)
     finish(fig,"fig_evidence_overview")
+
+
+def build_compatibility(data):
+    """Three controls in four readable panels; each metric has its own axis."""
+    fig,axes=plt.subplots(2,2,figsize=(7.25,4.3),gridspec_kw={"wspace":.52,"hspace":.95})
+    ax=axes[0,0];lengths=[512,1024,2048]
+    for key,color,marker,label in [("fixed_training_range",ORANGE,"D","Base kept at 256"),("target_matched_range",BLUE,"o","Base = eval. length")]:
+        vals=np.array([[data["range"][key][str(L)]["seed_values"][str(seed)] for L in lengths] for seed in [42,137,256]])
+        for v in vals:ax.plot(range(3),v,color=color,alpha=.25,lw=.8)
+        ax.plot(range(3),vals.mean(0),color=color,marker=marker,lw=1.7,ms=3,label=label)
+    ax.axhline(0,color=INK,lw=.7)
+    ax.set(xticks=range(3),xticklabels=["2x","4x","8x"],xlabel="Eval. / train length",ylabel="Cosh minus Geo tail NLL",ylim=(-.57,.83))
+    ax.set_title("(a) Change evaluation range",loc="left")
+    ax.legend(frameon=False,fontsize=8,loc="upper left");axis_style(ax)
+    ax=axes[0,1]
+    rows=data["coadapt151"]["small_model_crossing"]["mean_tail_nll_two_seed_length1024"]
+    vals=np.array([[rows[w][t] for t in ["fmrope_derived","cosh_derived"]] for w in ["fmrope_weights","anchored_cosh_weights"]])
+    penalties=vals-np.diag(vals)[:,None]
+    assert penalties[0,1]>0 and penalties[1,0]>0
+    ax.imshow(penalties,cmap="Oranges",vmin=0,vmax=2.5,aspect="auto")
+    for i in range(2):
+        for j in range(2):ax.text(j,i,f"{vals[i,j]:.3f}",ha="center",va="center",fontsize=11,color="white" if penalties[i,j]>1.5 else INK)
+    ax.set(xticks=[0,1],xticklabels=["Geo","Cosh"],yticks=[0,1],yticklabels=["Geo","Cosh"],xlabel="Runtime table",ylabel="Trained weights")
+    ax.set_title("(b) Cross the tables: tail NLL",loc="left")
+    ax.tick_params(length=0)
+    for sp in ax.spines.values():sp.set_visible(False)
+    report=data["slot_report"]
+    match=re.search(r"candidate's 1x PG-19 NLL was `([0-9.]+)`,\nversus `([0-9.]+)`",report)
+    assert match, "missing OLMo permutation result"
+    perm,ref=map(float,match.groups())
+    qref=float(re.search(r"zero, versus macro `([0-9.]+)`",report).group(1))*100
+    assert abs(ref-3.104234)<1e-8 and abs(perm-6.864926)<1e-8 and qref==70
+    for ax,values,title,xlabel,maximum,digits in [
+        (axes[1,0],[ref,perm],"(c) Reassign slots: OLMo","PG-19 tail NLL (lower is better)",8,3),
+        (axes[1,1],[qref,0],"(d) Reassign slots: Qwen","64K task macro (%) (higher is better)",100,0)]:
+        ax.barh([0,1],values,color=[BLUE,ORANGE],height=.55)
+        ax.set(yticks=[0,1],yticklabels=["Reference","Permuted"],xlabel=xlabel,xlim=(0,maximum));ax.invert_yaxis()
+        ax.xaxis.label.set_size(9)
+        for y,v in enumerate(values):ax.text(v+maximum*.025,y,f"{v:.{digits}f}",va="center",fontsize=9)
+        ax.set_title(title,loc="left");ax.spines[["top","right"]].set_visible(False)
+    fig.subplots_adjust(left=.13,right=.96,bottom=.14,top=.92)
+    finish(fig,"fig_allocation_compatibility")
+
+
+def write_main_qa_table(data):
+    qa=data["qa"]["by_stratum"]["extended"]
+    macro=data["qa"]["task_equal_macro"]["extended"]
+    rows=[r"\begin{table}[!ht]",r"\centering\small",
+          r"\caption{\textbf{A concrete redistribution improves natural QA.} Frozen OLMo, static $s=4$, whole-response token F1 (\%). Both methods share the declared band, gain and inputs. The $631$ inputs exceed the $4$K native window; task means are equally weighted. Differences use unrounded scores. The paired, task-stratified $95\%$ interval for the macro difference is $[1.32,6.29]$ points.}",
+          r"\label{tab:bm-qa-main}",r"\begin{tabular}{@{}lrrrr@{}}",r"\toprule",
+          r"Task & $n$ & MrRoPE-Pro & BM & Difference\\",r"\midrule"]
+    for task,name in TASK_NAMES.items():
+        a,b=100*qa[task]['MrPro'],100*qa[task]['BM']
+        rows.append(f"{name} & {qa[task]['n']} & {a:.2f} & {b:.2f} & {b-a:+.2f}"+r" \\")
+    assert sum(qa[t]['n'] for t in TASK_NAMES)==631
+    ci=np.array(macro['paired_bootstrap_95_interval'])*100
+    assert np.allclose(ci,[1.3160525890820804,6.291977669603137])
+    rows += [r"\midrule",f"Task-equal mean & 631 & {100*macro['MrPro']:.2f} & {100*macro['BM']:.2f} & {100*macro['delta']:+.2f}"+r" \\",r"\bottomrule",r"\end{tabular}",r"\end{table}"]
+    (PAPER/'tables/table_bm_qa_main.tex').write_text('\n'.join(rows)+'\n')
 
 def build_llama(data):
     # Published rounded PPL values from the matched adaptation report;
@@ -394,9 +438,24 @@ def write_tables(data):
     (PAPER/"tables/table_coordinate_confirmation.tex").write_text("\n".join(lines)+"\n")
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--main-only",action="store_true",help="Rebuild discovery figures and main QA table only")
+    args=parser.parse_args()
     data=load_data()
     write_portable_inputs(data)
     build_overview(data)
+    build_compatibility(data)
+    write_main_qa_table(data)
+    if args.main_only:
+        receipt_path=OUT/"exponent_revision_source_receipt.json"
+        receipt=json.loads(receipt_path.read_text())
+        receipt["sources"]=json.loads(PORTABLE_INPUTS.read_text())["sources"]
+        receipt["checks"].update({"fixed_support_training_window_included":True,
+            "slot_assignment_report_values_verified":True,"main_qa_table_recomputed":True})
+        receipt["execution"]="Replotting recorded outcomes and generating the main QA table only; no model execution."
+        receipt_path.write_text(json.dumps(receipt,indent=2)+"\n")
+        print("Built fixed-support and compatibility figures plus QA table; source values checked.")
+        return
     build_llama(data)
     build_qa(data)
     build_profiles(data)
@@ -411,7 +470,7 @@ def main():
                        "coadaptation_sources_cross_checked":True},
              "execution":"Plotting and recomputing stored scores only; no model execution."}
     (OUT/"exponent_revision_source_receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
-    print("Rebuilt five figures and four appendix tables from verified stored scores.")
+    print("Rebuilt discovery and supporting figures plus main/appendix tables from verified stored scores.")
 
 if __name__=="__main__":
     main()

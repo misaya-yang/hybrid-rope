@@ -137,6 +137,11 @@ PY
 run_arm tailspline
 run_arm mrpro
 
+/root/miniconda3/bin/python -m \
+  experiments.fixed_rope_three_interfaces_20260913.build_mrrope_baseline_registry \
+  --root /root/autodl-tmp \
+  --out /root/autodl-tmp/mrrope_baselines
+
 report="${experiment_root}/reports/tailspline_vs_mrpro_classic.json"
 if [[ ! -e "${report}" ]]; then
   /root/miniconda3/bin/python -m \

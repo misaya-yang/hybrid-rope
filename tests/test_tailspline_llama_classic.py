@@ -7,6 +7,9 @@ from experiments.fixed_rope_three_interfaces_20260913.build_mrrope_baseline_regi
     discover,
     summarize_source,
 )
+from experiments.fixed_rope_three_interfaces_20260913.dose_matched_yarn_mrpro_verification import (
+    verify as verify_dose_matched_yarn_mrpro,
+)
 from experiments.fixed_rope_three_interfaces_20260913.prepare_llama_ppl46 import (
     validate_sources,
 )
@@ -119,3 +122,14 @@ def test_mrrope_registry_discovers_complete_raw_without_moving_it(tmp_path):
     assert record["tasks"] == ["niah_single_1"]
     assert record["lengths"] == [8192]
     assert record["reuse_class"] == "raw_reusable_with_exact_matching_contract"
+
+
+def test_dose_matched_yarn_mrpro_cpu_audit_is_single_crossing_and_non_empirical():
+    result = verify_dose_matched_yarn_mrpro()
+    assert result["dose_crossing_scale"] == pytest.approx(7.513242822120576)
+    assert result["target_window"] == pytest.approx(61548.48519881176)
+    assert result["crossings"] == [[9, 10]]
+    assert all(result["checks"].values())
+    assert result["checkpoint_loaded"] is False
+    assert result["model_task_evaluations"] == 0
+    assert result["performance_advantage_demonstrated"] is False

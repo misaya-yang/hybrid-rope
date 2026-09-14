@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering\small
+\caption{\textbf{Allocation benefits across learning protocols.} Each block compares matched arms, with its own metric. MLA uses three seeds, midpoint Cosh and $8$K training. The $750$M pair uses fixed endpoints and one seed. OLMo uses one matched adaptation pair with physical inputs $\le4$K and explicit long-phase exposure; its score requires the full answer and EOS. These blocks are not pooled.}
+\label{tab:training-models}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Protocol & Endpoint & Geo / Native & Cosh \\
+\midrule
+MLA, 50\% budget & PPL at $16$K & 166.2 & 118.0 \\
+MLA, 75\% budget & PPL at $16$K & 146.2 & 101.6 \\
+MLA, 100\% budget & PPL at $16$K & 138.8 & 95.6 \\
+\midrule
+$750$M continuation & PPL at $4$K & 22.0 & 22.3 \\
+ & PPL at $16$K & 45.1 & 24.4 \\
+ & $8$K answer-token exact & $0/40$ & $31/40$ \\
+\midrule
+OLMo matched adaptation & $4$K complete + EOS & $95/100$ & $100/100$ \\
+ & $8$K complete + EOS & $18/100$ & $98/100$ \\
+ & $16$K complete + EOS & $0/100$ & $60/100$ \\
+\bottomrule
+\end{tabular}
+\end{table}

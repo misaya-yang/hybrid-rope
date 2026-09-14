@@ -1,48 +1,47 @@
-\section{Constructing Allocations for Learning}
-\label{sec:experiments}
-\label{sec:exp-mature}
+\section{Learning and Training-Free Evaluation}
+\label{sec:experiments}\label{sec:exp-mature}
 
-Deployment adjusts a basis that weights already use. During training, weights can instead acquire a deliberately constructed basis. We study an analytic allocation family and follow its effects through training, continuation, and adaptation.
-
-\input{sections/04_construction}
-
-\subsection{Evidence across allocation families}
-\label{sec:factorial}
-
-A $50.9$M factorial compares geometric allocation, three Cosh strengths, and a deformation-matched exponential family across two bases, two training lengths, three head dimensions, and three paired seeds. Each configuration retains identical sampled endpoints. Reference Cosh improves weighted OOD NLL in $7/12$ configurations; the preassigned $1.25\times$ strength improves $10/12$, and matched exponential improves $9/12$. The reference-Cosh-minus-exponential aggregate is $+0.00074$ NLL with $95\%$ interval $[-0.006,0.008]$ (Table~\ref{tab:m4}). Multiple analytic shapes therefore realize useful changes along the allocation coordinate. These $128$-step runs use a repeated WikiText-2 training stream and average about $0.01$ NLL improvement; Fig.~\ref{fig:m4-operating-points} jointly displays their training-window and OOD effects. They broaden the evidence across allocation families; the longer paired runs establish the main learning effect.
-
-\subsection{Learning with the constructed basis}
+\subsection{Learning an allocation: curves, continuation and readout}
 \label{sec:exp-capability}
+A $432$M MLA-style model allocates $16$ rotary pairs, trains for $500$M tokens at $8$K, and uses three seeds \citep{deepseekv2,deepseekv3}. Cosh improves all five extended lengths from $16$K through $32$K in every seed (Fig.~\ref{fig:allocation-basis}b). Its $16$K advantage is already present at half and three-quarters of training (Table~\ref{tab:training-models}). The same wavelength-blend rule applied to both learned tables preserves the advantage. This is a matched composition test, with the exact historical operator stated in Appendix~\ref{sec:mla-results}.
 
-\paragraph{Allocating scarce rotary channels.}
-In a $432$M MLA-style model, only $16$ pairs carry explicit rotation \citep{deepseekv2,deepseekv3}. Across three seeds, training on $500$M tokens at length $8192$ with the Cosh table reduces $16$K PPL from $138.8$ to $95.6$, while $8$K PPL is $35.4/35.8$ for Geo/Cosh (Table~\ref{tab:training-models}). Applying the same wavelength-blend rule to both tables gives $117.9/71.1$ at $16$K; the combined Cosh configuration retains the lowest mean PPL at $24$K and $32$K. Allocation has practical value when a small explicit rotary budget must support longer contexts.
+\begin{figure}[t]
+\centering\includegraphics[width=\linewidth]{fig_allocation_learning.pdf}
+\caption{\textbf{Positional structure motivates allocation; model evaluations establish its value.} (a) Full-pair canonical overlap on the $b=256$, $K=32$, $L=256$ identification grid under uniform separation measure. (b) Three-seed mean PPL of $432$M MLA at $8$--$32$K; solid curves use the trained tables, dashed curves the same wavelength blend ($s=4$). Shading gives the three-seed range for unscaled tables, not a confidence interval. The panels use distinct protocols and do not identify overlap as a task-loss mediator.}
+\label{fig:allocation-basis}
+\end{figure}
 
-\begin{table}[t]
-\centering\small
-\setlength{\tabcolsep}{5pt}
-\caption{\textbf{Learning-time allocation improves long-context modeling.} Mean PPL within each matched protocol; the endpoint column identifies the frequency-table intervention. The $432$M run uses midpoint Cosh quantiles; the $750$M continuation anchors inclusive quantiles to the inherited endpoints. The MLA blend is the shared wavelength-dependent evaluation rule in Appendix~\ref{sec:mla-results} ($s=4$).}
-\label{tab:training-models}
-\begin{tabular}{@{}lccclrr@{}}
-\toprule
-Model / setting & Seeds & Train & Endpoints fixed & Evaluate & Geo & Cosh \\
-\midrule
-$432$M MLA & 3 & $8$K & No & $8$K & 35.4 & 35.8 \\
-& & & & $16$K & 138.8 & \textbf{95.6} \\
-\quad + wavelength blend & 3 & $8$K & No & $16$K & 117.9 & \textbf{71.1} \\
-$750$M continuation & 1 & $4$K & Yes & $4$K & 22.0 & 22.3 \\
-& & & & $16$K & 45.1 & \textbf{24.4} \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{tables/table_learning_main}
 
-\paragraph{Learning a new allocation from a shared checkpoint.}
-A $750$M pair continues full-parameter training from the same $2$K Geo checkpoint for $500$M tokens at length $4096$. At $16$K, PPL falls from $45.1$ to $24.4$; at $4$K it is $22.0/22.3$. On $40$ associated $8$K passkey cases, fixed-length greedy answer-token exact match rises from $0/40$ to $31/40$, while both teacher-forced retrieval probes remain saturated. Continued learning can therefore turn the allocation change into an improvement in generated answers as well as text likelihood. The single-seed protocol includes $3\%$ passkey and $10\%$ downstream training mix (Appendix~\ref{sec:larger-scale-supporting}).
+A $750$M pair continues from the same $2$K Geo checkpoint for $500$M tokens at $4$K. Cosh reduces $16$K PPL by $45.9\%$ and raises $8$K greedy answer-token exact match from $0/40$ to $31/40$, with a small $4$K PPL cost. This single-seed continuation includes $3\%$ passkey and $10\%$ downstream mix (Appendix~\ref{sec:larger-scale-supporting}).
 
-\paragraph{Learning to use distant sources.}
-A matched $300$-step Llama-$3$-$8$B LoRA pair applies the same $8$K adaptation to native-endpoint Geo and midpoint Cosh tables \citep{hu2022lora,grattafiori2024llama3}. Native/Cosh PPL is $6.82/10.07$ at $8$K, $108.96/24.07$ at $16$K, and $991.48/127.91$ at $32$K. Removing remote gold-block access raises answer NLL by $1.5055$ for Cosh versus $-0.0095$ for Native. Source use improves, while $16$K exact retrieval remains zero and the registered QA comparison favors Native (Appendix~\ref{sec:llama8b}).
+Allocation can also support complete answers after matched adaptation. The OLMo pair in Table~\ref{tab:training-models} undergoes the same routing and answer-plus-EOS continuation. It uses physical inputs of at most $4$K with explicit target-range position IDs, then evaluates real contiguous prompts. The $8/16$K gains therefore demonstrate successful length transfer after phase exposure; they are separate from our zero-training results. Appendix~\ref{sec:olmo2-1b} retains the complete lineage, supervision and native-window controls.
 
-\paragraph{Learning to produce complete answers.}
-A separate OLMo study tests successful readout under explicit task supervision. On OLMo-$1.485$B, matched $100$-step query-gap and $32$-step answer-plus-EOS continuations give Native/Cosh complete-string-plus-EOS accuracy of $95\%/100\%$ at $4$K, $18\%/98\%$ at $8$K, and $0\%/60\%$ at $16$K, with $100$ prompts per length. These runs use at most $4$K physical tokens and target-range position IDs. A separate selective-Q/K continuation improves held-out $2$Wiki F1 at $8/16$K from $0.07/0\%$ to $21.48/8.57\%$ ($200$ rows/length; Appendix~\ref{sec:olmo2-1b}).
+\subsection{TailSpline on frozen Llama and OLMo}
+\label{sec:tailspline-evaluation}
+We compare exact finite-grid TailSpline and MrRoPE-Pro on frozen Llama-$3$-$8$B-Instruct, using $s=4$, native window $8192$, band $[18,35]$, and common gain $1.1386294361$. Each method installs one static table; weights, inputs, greedy decoder, precision and scorer are shared. RULER-13 has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). Natural-text PPL uses $32$ ProofPile-test and $14$ PG19-test documents at the same lengths ($138$ rows per arm).
 
-\paragraph{Further evidence.}
-The same design question extends to $454$M three-seed range composition ($16$K PPL $157.7\to107.5$), $1.485$B training, video DiT, and a five-configuration GQA/MLA compression study. Their full results and protocols appear in Apps.~\ref{sec:range-composition}, \ref{sec:olmo2-1b}, and~\ref{sec:compression-ablation}. Together with the fixed-table studies, these results connect allocation design to both learned and frozen uses of a positional basis.
+\begin{figure}[t]
+\centering\includegraphics[width=\linewidth]{fig_tailspline_main.pdf}
+\caption{\textbf{Training-free gains on two model families.} (a) Analytic extra log gaps at $n=17$, including unchanged outer gaps. The remaining rows show Llama ($8/16/32$K) and OLMo ($4/8/16$K). Columns show RULER-13 macro, NIAH paired difference, and PPL. Each comparison shares band, endpoints, gain and evaluation inputs; models have separate tokenized panels. NIAH is a RULER subset. Lines join measured points.}
+\label{fig:tailspline-main}
+\end{figure}
+
+We aggregate lengths using normalized trapezoidal area in log length: weights $1/4,1/2,1/4$ at $8/16/32$K. TailSpline raises RULER-13 AUC from $75.60$ to $78.80\%$, a $+3.20$-point difference (paired $95\%$ interval $[+0.65,+5.79]$). NIAH AUC improves by $3.75$ points ($[+0.55,+7.03]$); its single-key passkey subtask has AUC $100.0$ versus $97.5\%$. These are task-equal scores under the recorded scorers, including partial credit.
+
+PPL AUC decreases from $4.62112$ to $4.61664$, with paired difference $-0.00449$ and interval $[-0.00872,-0.00121]$. This small gain is driven by $32$K; $8/16$K PPL is slightly worse (Fig.~\ref{fig:tailspline-main}d). Full-13 improves at all three lengths. Across task families, retrieval, tracking and aggregation improve in AUC, while QA decreases by $1.25$ points. The complete task and termination results are in Appendix~\ref{sec:tailspline-details}.
+
+
+\paragraph{Prospective OLMo confirmation.}
+The same frozen formula is tested on OLMo-$2$-$1$B-Instruct at $s=4$, band $[14,32]$ and $4/8/16$K, with $390$ RULER prompts and $138$ LM rows per arm. The exact table was frozen before reading this OLMo evaluation; historical OLMo development had supplied direction priors. Full-13 AUC rises from $17.36$ to $66.60\%$ ($+49.23$ points, $95\%$ interval $[45.34,53.04]$). NIAH improves by $64.45$ points and PPL AUC decreases by $3.853$; all $13$ task AUC differences are positive. This confirms the method direction on a second model family. TailSpline/MrPro reach the generation cap on $133/142$ of $390$ OLMo inputs, so official scores do not imply complete-answer-plus-EOS success. Full responses and interval definitions appear in Appendix~\ref{sec:tailspline-details}.
+
+\subsection{BM on natural QA and broader evidence}
+On frozen OLMo, symmetric boundary matching improves each of five natural-QA task means (Table~\ref{tab:bm-qa-main}). The complete available untruncated pool contains $778$ paired inputs; the reported long-input stratum contains $631$ inputs exceeding $4$K. With the same band, $s=4$, amplitude and decoder, macro F1 rises from $21.62$ to $25.44$, a $3.82$-point gain with paired interval $[1.32,6.29]$.
+\input{tables/table_bm_qa_main}
+
+An equal-displacement control supplies a complementary shape test: BM and MrRoPE-Uni have the same endpoints, band, gain and total log-frequency displacement, yet score $51.32$ versus $32.12\%$ on the recorded six-task $16$K panel (Appendix~\ref{sec:four-method-control}). Thus total displacement alone does not explain that comparison.
+
+These constructions have distinct tested scopes: BM's natural-QA result remains a separate experiment from TailSpline's two-model confirmation. Small Qwen $128$K panels favor MrPro over BM ($78.13/70.83\%$ at $3$B and $84.44/71.11\%$ at $7$B). Likewise, changing a table after learning can disrupt its association with Q/K coordinates; the range, crossed-table and slot controls in Appendix~\ref{sec:compatibility} explain why training and frozen deployment need different constructions. They do not impose a fixed-support restriction on complete methods.
+
+Additional evidence broadens the picture without mixing protocols. A frozen Qwen-$0.5$B configuration improves $64$K RULER-13 over YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}); selective-Q/K adaptation improves long-input natural QA (Appendix~\ref{sec:olmo2-1b}); Video DiT shows temporal extrapolation gains (Appendix~\ref{sec:video-dit}). M4 includes preliminary joint in-window/OOD improvements, while C42 isolates an internal-shape effect at fixed total displacement (Appendices~\ref{sec:exact-range-factorial},~\ref{sec:fixed-total-profile}). These support the wider design space rather than a universal table or a mature in-window enhancement claim.
+\label{sec:interval-main}

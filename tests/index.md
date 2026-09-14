@@ -86,7 +86,7 @@
 - [test_rope_nll_readout.py](test_rope_nll_readout.py) — test_rope_nll_readout.py
 - [test_rope_operator_factorial.py](test_rope_operator_factorial.py) — test_rope_operator_factorial.py
 - [test_rope_today_plan.py](test_rope_today_plan.py) — TailSpline有限网格闭式/KKT、fixed-u解析迁移、table×gain配对分解与局部有限干预合同
-- [test_tailspline_llama_classic.py](test_tailspline_llama_classic.py) — Llama首次Full-13 390行、五深度、PPL50来源与配对汇总合同
+- [test_tailspline_llama_classic.py](test_tailspline_llama_classic.py) — Llama首次Full-13 390行、五深度、PPL46来源、MrRoPE复用库与YaRN–MrPro等剂量CPU合同
 - [test_rope_ood_collision_pareto.py](test_rope_ood_collision_pareto.py) — 完整sine-cosine码距离、离散Native OOD与Pareto反转检查
 - [test_rope_z_ood_collision_mechanisms.py](test_rope_z_ood_collision_mechanisms.py) — phase arc、完整pair collision与全delta三态机制审计
 - [test_rope_z_ood_collision_pipeline.py](test_rope_z_ood_collision_pipeline.py) — E0–E5输入身份、solver三态、固定表执行门与blocked lineage
