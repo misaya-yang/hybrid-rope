@@ -30,36 +30,8 @@ Official-equation YaRN, the MLA wavelength blend in Appendix~\ref{sec:mla-result
 Table~\ref{tab:evidence-map} collects the model settings and evaluation units.
 Scratch text runs use FineWeb-Edu \citep{penedo2024fineweb}.
 
-\begin{table}[ht]
-\caption{Evidence and protocol map. Every row retains its own intervention,
-experimental unit, and endpoint.}
-\label{tab:evidence-map}
-\centering
-\small
-\renewcommand{\arraystretch}{1.12}
-\begin{tabular}{@{}
-  >{\raggedright\arraybackslash}p{0.19\linewidth}
-  >{\raggedright\arraybackslash}p{0.41\linewidth}
-  >{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
-\toprule
-Role & Model/regime and intervention & Unit, endpoint, and appendix \\
-\midrule
-Allocation identification & 151.9M scratch; fixed support, $30$ interiors & 3 training seeds; tail NLL; App.~\ref{sec:exact-range-control} \\
-Co-adaptation replication & 151.9M frozen crossing; weights $\times$ runtime table & 2 training seeds; tail NLL; App.~\ref{sec:crossing-151m} \\
-Shape/configuration breadth & 50.9M factorial; fixed support, 5 allocations & 12 configs $\times$ 3 seeds; weighted OOD NLL; App.~\ref{sec:exact-range-factorial} \\
-Scarce rotary budget & 432M MLA-style; Geo/\evq{}, $K{=}16$ & 3 training seeds; PPL; App.~\ref{sec:mla-results} \\
-Full-parameter scale & 750M/1.485B; continued/from-init Geo/\evq{} & one comparison each; PPL/retrieval; Apps.~\ref{sec:larger-scale-supporting}/\ref{sec:olmo2-1b} \\
-Frozen allocation & OLMo/Qwen; same support and amplitude & 20 rows/task; RULER; App.~\ref{sec:frozen-fixed-support} \\
-Zero-training deployment & OLMo; frozen long table, gain, session route & fixed checkpoint/rows; NLL/RULER/F1; App.~\ref{sec:frozen-fixed-support} \\
-Adaptation/source use & 1.485B/8B; matched LoRA/source block & one trained pair; QA/RULER/NLL; Apps.~\ref{sec:olmo2-1b}/\ref{sec:llama8b} \\
-Static index profile & Qwen-$0.5$B; one table across lengths & 13 tasks, 20 rows/task/length; App.~\ref{sec:index-adjustment} \\
-Profile placement & Qwen/Gemma; direct gap versus normalized index & 4 tasks, 80 rows/task; App.~\ref{sec:coordinate-confirmation} \\
-Intermediate-band shape & OLMo/Qwen; matched BM/MrPro profiles & 6 tasks; Table~\ref{tab:bm-models}; App.~\ref{sec:bm-model-comparison} \\
-Natural-QA transfer & OLMo; matched static BM/MrPro profiles & 778 inputs, 631 long; token F1; App.~\ref{sec:bm-natural} \\
-Video modeling & 129.6M video DiT; temporal Geo/\evq{} & 1 training seed; denoising MSE; App.~\ref{sec:video-dit} \\
-\bottomrule
-\end{tabular}
-\end{table}
+The front-of-appendix protocol glossary (Table~\ref{tab:protocol-glossary}) separates identification, learning, adaptation and frozen deployment. Additional shape, placement, architecture and video studies retain their local sample units and endpoints in their respective sections.
+
 
 Table~\ref{tab:hyperparams} lists the training hyperparameters shared across
 the supporting text experiments.
@@ -126,7 +98,7 @@ Here $K=32$ and $s=8$, giving $(\ell,h,T)=(6,28,1.21)$.
 The temperature factor is folded into the frequency divisor; cosine/sine
 amplitude stays at $g=1$. Equation~\eqref{eq:repo-range-scaler} specifies
 the operator used in this experiment, separately from the official-equation
-YaRN comparisons in \S\ref{sec:mature-adjustments}.
+YaRN comparisons in Appendix~\ref{sec:four-method-control}.
 Table~\ref{tab:evq-repo-ramp} reports the three-seed comparison.
 
 \input{tables/table_evq_ramp}

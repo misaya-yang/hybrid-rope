@@ -4709,27 +4709,17 @@
       "category": "code"
     },
     {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_full50_assets.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_olmo_classic_assets.sh",
       "area": "experiments",
       "category": "code"
     },
     {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_olmo_full50_assets.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_qwen_full50_assets.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/resident_eval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_llama32_batch2_canary.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4754,7 +4744,7 @@
       "category": "code"
     },
     {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen_then_llama_full50.sh",
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen_core6_then_llama32_full500.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4779,17 +4769,7 @@
       "category": "code"
     },
     {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_full50.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_olmo_s4_classic.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_olmo_s4_full50.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4804,17 +4784,7 @@
       "category": "code"
     },
     {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s2_full50.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s4_core6.sh",
-      "area": "experiments",
-      "category": "code"
-    },
-    {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/run_three_model_full50_overnight.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -8515,6 +8485,11 @@
     },
     {
       "path": "paper-2027/research/RESEARCH_RECONSTRUCTION_20260914.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/ROPE_TOP_PAPER_WRITING_AND_RESEARCH_SYNTHESIS_20260914.md",
       "area": "paper-2027",
       "category": "document"
     },

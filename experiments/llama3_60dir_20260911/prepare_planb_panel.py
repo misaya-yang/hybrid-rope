@@ -172,6 +172,13 @@ def main(argv=None):
         "--qa-base-offset", type=int, default=None,
         help="override the stage QA row offset to freeze a disjoint confirmation block",
     )
+    ap.add_argument(
+        "--selection-mode", choices=("balanced", "source-order"), default="balanced",
+        help=(
+            "balanced oversamples NIAH and selects registered depths; source-order keeps the "
+            "requested official generator sample count without model-based selection"
+        ),
+    )
     args = ap.parse_args(argv)
 
     caps = tuple(int(x) for x in args.caps.split(",") if x.strip())
@@ -300,7 +307,11 @@ def main(argv=None):
         count = rows_for_cap(cap)
         for task_index, task in enumerate(selected_tasks):
             source_count = count
-            if not pilot and task in SINGLE_EVIDENCE_TASKS | MULTI_EVIDENCE_TASKS:
+            if (
+                not pilot
+                and args.selection_mode == "balanced"
+                and task in SINGLE_EVIDENCE_TASKS | MULTI_EVIDENCE_TASKS
+            ):
                 # A deterministic oversample pool makes all four registered
                 # depths/profile types fillable without using model outcomes.
                 # H grows only 2x (64 -> 128), while small P/S/V cells get the
@@ -451,10 +462,14 @@ def main(argv=None):
                         if task.startswith("qa_") else None),
                     "irrelevant_padding_tokens": padding_tokens,
                 })
-            rows.extend(select_depth_balanced(
-                task, cell_rows, count=count, cap=cap, pilot=pilot,
-                depth_targets=depth_targets,
-            ))
+            rows.extend(
+                cell_rows[:count]
+                if args.selection_mode == "source-order"
+                else select_depth_balanced(
+                    task, cell_rows, count=count, cap=cap, pilot=pilot,
+                    depth_targets=depth_targets,
+                )
+            )
             checkpoint_rows()
             print(json.dumps({
                 "task": task, "cap": cap, "rows": count,
@@ -491,7 +506,12 @@ def main(argv=None):
             "multi_evidence_profiles": {name: list(values)
                                         for name, values in MULTI_DEPTH_PROFILES},
             "selection_uses_model_outputs": False,
+        } if not pilot and args.selection_mode == "balanced" else {
+            "mode": "source-order",
+            "selection_uses_model_outputs": False,
+            "generated_rows_retained": "all requested rows in generator order",
         } if not pilot else "not applied to engineering pilot"),
+        "selection_mode": args.selection_mode,
         "claim_scope": (
             "TailSpline unified Full-13 classic benchmark; task evidence only after paired controls"
             if args.contract == "tailspline-classic"

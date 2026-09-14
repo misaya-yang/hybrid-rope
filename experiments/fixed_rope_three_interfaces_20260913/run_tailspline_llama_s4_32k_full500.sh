@@ -5,7 +5,7 @@ repo_dir=/root/autodl-tmp/hybrid-rope
 experiment_root=/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_32k_full500
 base_root=/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_classic
 model_dir=/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct
-extra_rows="${experiment_root}/assets/full13_32k_extra490/rows.jsonl"
+extra_rows="${experiment_root}/assets/full13_32k_extra490_parallel/rows.jsonl"
 data_manifest="${base_root}/assets/ppl46/manifest.json"
 batch_size=${LLAMA_FULL500_BATCH_SIZE:-1}
 

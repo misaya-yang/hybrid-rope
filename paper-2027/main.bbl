@@ -1,4 +1,4 @@
-\begin{thebibliography}{42}
+\begin{thebibliography}{43}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -376,6 +376,12 @@ Yifan Zhang, Zixiang Chen, Yifeng Liu, Zhen Qin, Huizhuo Yuan, Kangping Xu,
   (ICLR)}, 2026.
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2026/file/5cb58625f49ddf70fe2d527e9e4bbae5-Paper-Conference.pdf}.
+
+\bibitem[Zhang et~al.(2025)Zhang, Yang, and Yan]{zhang2025s3pe}
+Zhu Zhang, Tianxing Yang, and Zihan Yan.
+\newblock {S3PE}: A simple scalable sigmoid-style position encoding.
+\newblock OpenReview preprint, 2025.
+\newblock URL \url{https://openreview.net/attachment?id=9xuGBOrIW7&name=pdf}.
 
 \bibitem[Zhao et~al.(2025)Zhao, He, Chen, Zhu, Li, and Zhu]{zhao2025riflex}
 Min Zhao, Guande He, Yixiao Chen, Hongzhou Zhu, Chongxuan Li, and Jun Zhu.

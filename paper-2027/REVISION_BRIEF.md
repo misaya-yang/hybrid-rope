@@ -39,3 +39,11 @@ Final build: 9 scientific-body pages, 55 total pages; three main figures and two
 文献复核入口：[MrRoPE](https://arxiv.org/html/2601.22181v1)、[LeRoPE](https://arxiv.org/html/2607.10134v1)、[YaRN](https://arxiv.org/html/2309.00071v3)、[DoPE](https://arxiv.org/html/2511.09146v1)。未据异协议公开分数作跨论文SOTA排名。
 
 当前仍不作全球SOTA判断：两个模型族的S4/MrPro匹配结果支持方法有效；缺少与所有当代方法在同一完整独立协议上的比较，不能用修辞补出排名。后续更强实验应由研究任务实际执行，本轮不增加GPU运行。构造器已在两种Native长度×三倍率的六个输入上与现有实验公式逐位一致，独立CPU核验通过。
+
+补充原文检索：S3PE已探索sigmoid插值及继续预训练，现加入相关工作（OpenReview preprint）。其存在不否定本稿固定支持归因和TailSpline结果，但排除把“平滑频率曲线”本身当作首创。OpenReview页面/API直接访问受限；原文摘要、作者、方法段来自搜索服务收录的官方PDF内容，未推断录用状态。
+
+## 逐篇综合审读的集中改稿
+
+完整阅读[综合审读](research/ROPE_TOP_PAPER_WRITING_AND_RESEARCH_SYNTHESIS_20260914.md)并对照当前owner后，落实P0/P1：第一页统一z对象；贡献按识别、刻画与构造、学习/零训练验证平行组织；正文用问题职责承接，补theory-to-task contract；前置协议术语表并替换重复导航；讨论集中交代已测作用域。没有增加构造名或恢复旧主线，未改动模型实验和数值。
+
+综合审读修订验收：正文9页、总稿55页；第一页贡献完整同页；协议glossary位于附录首面；0未定义引用、0溢出、匿名/字体检查通过。本轮未更改实验数字、图源或数学命题；原有两项source-hash差异保留，不重写异常证据。

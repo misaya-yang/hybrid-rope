@@ -4,6 +4,7 @@
 |---|---|
 | 当前主线与修订目标 | [修订目标](../REVISION_BRIEF.md) |
 | 重新理解完整研究贡献 | [仓库证据与贡献重建](RESEARCH_RECONSTRUCTION_20260914.md) |
+| 对照32篇同领域论文优化叙事、理论、实验与附录 | [顶会论文综合审读](ROPE_TOP_PAPER_WRITING_AND_RESEARCH_SYNTHESIS_20260914.md) |
 | 本轮稿件与对照审查 | [三个发现改稿与验证](THREE_DISCOVERIES_REVISION_20260914.md) |
 | 核实数字与来源可达性 | [证据索引](evidence/index.md) |
 | 查具体主张、图表或公式 | [主张映射](EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |

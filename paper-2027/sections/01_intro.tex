@@ -1,15 +1,15 @@
 \section{Introduction}
 \label{sec:intro}
 
-Frequency redesign already enables longer contexts, through bandwise scaling, mixed-radix conversion and learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. These methods often change range and internal placement together. We isolate the value of the interior allocation, then exploit it constructively: better learned extrapolation and training-free improvements in frozen models.
+A RoPE table makes two design choices: its sampled frequency support and the allocation $z$ of finite rotary pairs within it. Existing extensions often change both through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We isolate $z$, establish its extrapolation value, and use it to construct allocations for learning and zero-training deployment.
 
-With initialization, data, optimization and actual frequency endpoints fixed, moving only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Matched-support interventions also improve frozen OLMo and Qwen task scores. These gains identify value beyond range expansion; complete methods can then combine allocation with range, band and amplitude choices.
+With initialization, data, optimization and actual frequency endpoints fixed, moving only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Matched-support interventions also improve frozen OLMo and Qwen task scores. These controls identify the independent value of $z$. Complete methods may combine it with support, band, terminal scaling and amplitude; their measured gains belong to the realized configurations.
 
-Finite-window positional directions can overlap despite uniform log-frequency spacing. This motivates two design routes: Cosh supplies a nonuniform basis during learning; TailSpline reshapes the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
+Changing $z$ changes the positional basis: distinct frequencies can supply overlapping directions over a finite window. We characterize this structure and develop two design routes: Cosh supplies a nonuniform basis during learning; TailSpline reshapes the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
 
 The resulting benefits reach beyond a small controlled experiment. Cosh improves multi-seed MLA extrapolation and $750$M continued training. TailSpline improves frozen Llama-$3$-$8$B and OLMo on RULER-13 and NIAH, while the symmetric boundary-matched construction (BM) raises frozen OLMo's five-task natural-QA F1 from $21.62$ to $25.44$. Our contributions are:
 \begin{itemize}
-\item \textbf{Controlled allocation value.} Fixed-support training and frozen-model interventions isolate useful interior-frequency changes beyond range adjustments.
-\item \textbf{Structure and constructions.} Full-pair finite-window geometry characterizes positional redundancy; explicit density and boundary objectives yield Cosh and TailSpline allocations.
-\item \textbf{Learning and training-free gains.} Matched evaluations demonstrate improvements in language modeling, retrieval and natural QA, with complete length responses and protocol-specific controls.
+\item \textbf{Identification.} Fixed-support training and frozen-model interventions establish that $z$ is independently useful beyond range changes.
+\item \textbf{Characterization and construction.} Full-pair geometry describes the positional structure changed by $z$; density and boundary objectives yield explicit Cosh and TailSpline allocations.
+\item \textbf{Learning and zero-training validation.} Matched evaluations establish language-modeling, retrieval and natural-QA gains, with training, adaptation and frozen protocols distinguished.
 \end{itemize}

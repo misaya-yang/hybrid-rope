@@ -1,10 +1,10 @@
 \section{Explicit Allocation Constructions}
 \label{sec:allocation-methods}
-We construct tables in two settings: a model can learn a new allocation from training data, or a frozen model can receive a native-relative redistribution. Both change adjacent log-frequency intervals. The first designs a density and samples its quantiles; the second distributes a prescribed extension across a transition band.
+We exploit the allocation freedom $z$ in two settings: a model can learn a new allocation from training data, or a frozen model can receive a native-relative redistribution. Both change adjacent log-frequency intervals. The first designs a density and samples its quantiles; the second distributes a prescribed extension across a transition band.
 \subsection{An analytic construction from a tail-energy prior}
 \label{sec:construction}
 
-The overlap analysis motivates spreading a finite budget across useful scales while controlling concentration toward the slow end. We express this motivation as a geometry-inspired, weight-independent density-design prior, using a density over normalized exponent space $[0,1]$. Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider the convex design criterion
+During learning, a model can adapt to a supplied allocation. The overlap analysis motivates spreading its finite rotary budget across scales while controlling concentration toward the slow end. We express this motivation as a geometry-inspired, weight-independent density-design prior, using a density over normalized exponent space $[0,1]$. Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider the convex design criterion
 \begin{equation}
 \Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
 \qquad \text{s.t. } \int_0^1\rho=1,\ \rho\ge0.

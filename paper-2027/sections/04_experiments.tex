@@ -1,7 +1,9 @@
-\section{Learning and Training-Free Evaluation}
+\section{Using \texorpdfstring{$z$}{z} in Learning and Zero-Training Deployment}
 \label{sec:experiments}\label{sec:exp-mature}
 
-\subsection{Learning an allocation: curves, continuation and readout}
+We now test whether explicit allocation designs deliver practical gains. Learning experiments use Cosh in matched training recipes; frozen experiments install TailSpline or BM without weight updates. Matched adaptation is reported separately as evidence of successful readout after learning, not as zero-training performance. Table~\ref{tab:protocol-glossary} summarizes these contracts.
+
+\subsection{Learning to use an explicit allocation}
 \label{sec:exp-capability}
 A $432$M MLA-style model allocates $16$ rotary pairs, trains for $500$M tokens at $8$K, and uses three seeds \citep{deepseekv2,deepseekv3}. Cosh improves all five extended lengths from $16$K through $32$K in every seed (Fig.~\ref{fig:allocation-basis}b). Its $16$K advantage is already present at half and three-quarters of training (Table~\ref{tab:training-models}). The same wavelength-blend rule applied to both learned tables preserves the advantage. This is a matched composition test, with the exact historical operator stated in Appendix~\ref{sec:mla-results}.
 
@@ -17,7 +19,7 @@ A $750$M pair continues from the same $2$K Geo checkpoint for $500$M tokens at $
 
 Allocation can also support complete answers after matched adaptation. The OLMo pair in Table~\ref{tab:training-models} undergoes the same routing and answer-plus-EOS continuation. It uses physical inputs of at most $4$K with explicit target-range position IDs, then evaluates real contiguous prompts. The $8/16$K gains therefore demonstrate successful length transfer after phase exposure; they are separate from our zero-training results. Appendix~\ref{sec:olmo2-1b} retains the complete lineage, supervision and native-window controls.
 
-\subsection{TailSpline on frozen Llama and OLMo}
+\subsection{Zero-training deployment on Llama and OLMo}
 \label{sec:tailspline-evaluation}
 We compare exact finite-grid TailSpline and MrRoPE-Pro on frozen Llama-$3$-$8$B-Instruct, using $s=4$, native window $8192$, band $[18,35]$, and common gain $1.1386294361$. Each method installs one static table; weights, inputs, greedy decoder, precision and scorer are shared. RULER-13 has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). Natural-text PPL uses $32$ ProofPile-test and $14$ PG19-test documents at the same lengths ($138$ rows per arm).
 
@@ -35,8 +37,8 @@ PPL AUC decreases from $4.62112$ to $4.61664$, with paired difference $-0.00449$
 \paragraph{Prospective OLMo confirmation.}
 The same frozen formula is tested on OLMo-$2$-$1$B-Instruct at $s=4$, band $[14,32]$ and $4/8/16$K, with $390$ RULER prompts and $138$ LM rows per arm. The exact table was frozen before reading this OLMo evaluation; historical OLMo development had supplied direction priors. Full-13 AUC rises from $17.36$ to $66.60\%$ ($+49.23$ points, $95\%$ interval $[45.34,53.04]$). NIAH improves by $64.45$ points and PPL AUC decreases by $3.853$; all $13$ task AUC differences are positive. This confirms the method direction on a second model family. TailSpline/MrPro reach the generation cap on $133/142$ of $390$ OLMo inputs, so official scores do not imply complete-answer-plus-EOS success. Full responses and interval definitions appear in Appendix~\ref{sec:tailspline-details}.
 
-\subsection{BM on natural QA and broader evidence}
-On frozen OLMo, symmetric boundary matching improves each of five natural-QA task means (Table~\ref{tab:bm-qa-main}). The complete available untruncated pool contains $778$ paired inputs; the reported long-input stratum contains $631$ inputs exceeding $4$K. With the same band, $s=4$, amplitude and decoder, macro F1 rises from $21.62$ to $25.44$, a $3.82$-point gain with paired interval $[1.32,6.29]$.
+\subsection{Natural QA with the symmetric construction}
+The complementary symmetric construction, BM, tests allocation design on natural outputs. On frozen OLMo it improves each of five task means (Table~\ref{tab:bm-qa-main}). The complete available untruncated pool contains $778$ paired inputs; the reported long-input stratum contains $631$ inputs exceeding $4$K. With the same band, $s=4$, amplitude and decoder, macro F1 rises from $21.62$ to $25.44$, a $3.82$-point gain with paired interval $[1.32,6.29]$.
 \input{tables/table_bm_qa_main}
 
 An equal-displacement control supplies a complementary shape test: BM and MrRoPE-Uni have the same endpoints, band, gain and total log-frequency displacement, yet score $51.32$ versus $32.12\%$ on the recorded six-task $16$K panel (Appendix~\ref{sec:four-method-control}). Thus total displacement alone does not explain that comparison.

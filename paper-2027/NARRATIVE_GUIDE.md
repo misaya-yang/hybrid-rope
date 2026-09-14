@@ -9,3 +9,5 @@ Figure 1: fixed-endpoint allocation, three-seed loss differences and frozen task
 Cosh is the learning-time construction; TailSpline is the primary training-free construction; BM is the symmetric boundary construction with separate QA evidence. Compatibility, range reversals and detailed development results remain in the appendix. Full-z denotes the complete space, not an unverified optimized method. Mature in-window enhancement remains future work.
 
 Use report-backed TailSpline aggregates with source identities; do not claim new raw-row verification. NIAH is a subset of RULER. OLMo is prospective exact-table confirmation informed by historical direction priors. Keep task scores distinct from EOS-exact success.
+
+The abstract, introduction and contributions name z as the shared central object. Section 3 identifies its value beyond support; Section 4 characterizes the supplied basis and states the theory-to-task contract; Section 6 distinguishes learning from zero-training deployment. The appendix protocol glossary replaces the previous duplicate evidence-map table. Outcomes of matched adaptation remain distinct from frozen performance.

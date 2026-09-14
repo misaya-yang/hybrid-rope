@@ -156,7 +156,7 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "92d46733060f2807e064106590c963301eb2e1f785cf0a474a207202c2f45275",
+          "sha256": "af3573e277c1426d7e28b92c67480ca3e9e8a026c52e0099b8c820b60fbd6dc6",
           "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
         }
       ]

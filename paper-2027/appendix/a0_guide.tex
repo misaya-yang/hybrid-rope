@@ -1,10 +1,10 @@
 \section*{Guide to the Supplementary Material}
-The supplementary material follows the paper's argument, expanding each connection between geometry, learning, and practical allocation. Table~\ref{tab:argument-guide} provides entry points to the complete results and proofs.
+The supplementary material follows the argument from the independent value of $z$ to positional structure, explicit constructions and task validation. Table~\ref{tab:argument-guide} maps claims to their supporting material; Table~\ref{tab:protocol-glossary} distinguishes the experimental contracts.
 \begin{table}[ht]
 \centering\small
 \caption{\textbf{Where each part of the argument is developed.}}
 \label{tab:argument-guide}
-\begin{tabular}{@{}p{.36\linewidth}p{.59\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.36\linewidth}>{\raggedright\arraybackslash}p{.59\linewidth}@{}}
 \toprule
 Question & Supporting material \\
 \midrule
@@ -12,6 +12,25 @@ How is allocation value identified? & Fixed-support training (App.~\ref{sec:exac
 How are the constructions derived? & Full-pair geometry and Cosh (App.~\ref{sec:proofs}); TailSpline (App.~\ref{sec:tailspline-details}); BM (App.~\ref{sec:bm-construction}). \\
 What are the complete learning and deployment results? & Continuation and MLA (Apps.~\ref{sec:experiment-details},~\ref{sec:mla-results}); adaptation and readout (App.~\ref{sec:mature-details}); frozen profiles and QA (App.~\ref{sec:adjustment-details}); TailSpline (App.~\ref{sec:tailspline-details}). \\
 What controls delimit the conclusions? & Range, crossed-table and slot interventions (App.~\ref{sec:compatibility}); profile diagnostics (App.~\ref{sec:profile-diagnostic-audit}); interval design (App.~\ref{sec:interval-design}); video and architecture (Apps.~\ref{sec:video-dit},~\ref{sec:compression-ablation}). \\
+\bottomrule
+\end{tabular}
+\end{table}
+\FloatBarrier
+
+\begin{table}[!ht]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Protocol glossary: which comparison supports which conclusion.} Results are not pooled across rows. Geometry and construction theorems characterize their declared objects; task value is measured by the corresponding model evaluation.}
+\label{tab:protocol-glossary}\label{tab:evidence-map}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.18\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.32\linewidth}>{\raggedright\arraybackslash}p{.22\linewidth}@{}}
+\toprule
+Protocol & Weight state & Table and matched control & Evidence role \\
+\midrule
+Fixed-support identification & Paired scratch training or frozen intervention & Same endpoints, different interior $z$; shared training or evaluation settings & Independent contribution of $z$; Apps.~\ref{sec:exact-range-control},~\ref{sec:frozen-fixed-support} \\
+Cosh learning & Scratch or shared-start continuation & Analytic allocation versus Geo under a matched recipe; grid/endpoint treatment stated per experiment & Learned extrapolation; Apps.~\ref{sec:mla-results},~\ref{sec:larger-scale-supporting} \\
+TailSpline deployment & Frozen; zero training & Static closed-form table versus MrPro; shared band, endpoints, gain and inputs & Two-model method results; App.~\ref{sec:tailspline-details} \\
+BM natural QA & Frozen; zero training & Symmetric boundary construction versus matched MrPro & Natural-response F1; App.~\ref{sec:bm-natural} \\
+Matched adaptation & Explicit adapter continuation & Paired table/adapter recipes with declared long-phase exposure & Learned complete-answer readout; App.~\ref{sec:olmo2-1b} \\
 \bottomrule
 \end{tabular}
 \end{table}
