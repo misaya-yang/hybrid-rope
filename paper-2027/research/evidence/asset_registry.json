@@ -813,6 +813,43 @@
           "sha256": "c3a5ed753647fd38a181a0069aac0ebaed11667cddeec825ce3babbd16efd16a"
         }
       ]
+    },
+    {
+      "id": "A36",
+      "name": "OLMo S8 fixed-u倍率迁移反事实",
+      "priority": "P1",
+      "question": "保持band内归一化log-frequency坐标能否优于固定指数的S4到S8迁移",
+      "evidence_grade": "Core-6三长度6行每格；同prompt、band、端点、gain与decoder；108行每臂配对",
+      "manuscript_location": "next-stage negative-result owner; current manuscript claim not changed",
+      "interpretation": "fixed-u相对fixed-m的log-AUC差为负且95%区间不跨零；worst点估计改善未确认；终止该迁移分支而非整体研究",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md",
+          "availability": "local-untracked",
+          "sha256": "7d4770ac681c53d0fc12d6438f2d57044b97cf4619d2b2a86989b7fd9141cc56"
+        }
+      ]
+    },
+    {
+      "id": "A37",
+      "name": "TailSpline精确有限网格构造",
+      "priority": "P1",
+      "question": "最小化one-sided log-gap roughness并平滑接入完整缩放尾段是否导出无需搜索的中频allocation",
+      "evidence_grade": "严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；GPU统一评测运行中",
+      "manuscript_location": "next-stage method owner; benchmark claim not yet changed",
+      "interpretation": "TailSpline是声明离散目标的唯一解；不证明任务优势，旧mix075只作近似prior",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
+          "availability": "local-untracked",
+          "sha256": "adf011fa9780fec97e79e1c757d492472d407e8b511cc8e81fdf860399a27f13"
+        },
+        {
+          "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
+          "availability": "local-untracked",
+          "sha256": "179879b258c97fb1e1002fe323669dc408234b7faa84e7680b8808cf023dcada"
+        }
+      ]
     }
   ]
 }

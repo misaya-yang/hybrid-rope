@@ -46,6 +46,8 @@
 | A33 | OLMo S=8冻结经验规则迁移：4/16/32K采样区间及两个gain点 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md)；Core-6低6；完整配置AUC优于BM/MrPro，绝对32K低且Native未测 |
 | A34 | Qwen2.5-1.5B S=2冻结确认：开发低6、独立追加12及累计18 | [结果owner](../../../docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md)；Core-6×32/48/64K；累计AUC对BM区间为正、Native 32K正差；对MrPro/C42未确认 |
 | A35 | 功能相位区间的条件构造与band内固定坐标倍率迁移 | [推导](../../../docs/research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md)、[CPU核验](../../../docs/research/next_stage_20260912/rope_design_theorems_cpu_20260913.json)；条件数学与变量控制，不是任务最优表或GPU胜利 |
+| A36 | OLMo S=4→8 fixed-u倍率迁移反事实 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md)；Core-6×4/16/32K×6行/格；同prompt/gain的fixed-u AUC显著低于fixed-m，终止该迁移分支 |
+| A37 | TailSpline精确有限网格构造 | [方法与评测合同](../../../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py)；one-sided roughness唯一闭式解，GPU统一评测运行中，尚无优势结论 |
 
 ## 使用时的解释边界
 
@@ -82,6 +84,8 @@
 - **A33**：候选与基线是frequency×gain完整配置比较；两个candidate gain点不能证明普遍校准规律。
 - **A34**：累计18含已开封低6；独立追加块三项AUC差均跨0，C42的64K/worst点估计更高。
 - **A35**：功能区间给定后才可解析求表；当前缺逐行、角色限定signed C输入，Native旋转误差界在实际中频槽已饱和。
+- **A36**：每格6行的机制判别块足以否决当前fixed-u扩展，但不是16/24/8最终样本块；不否决S4直接mix075、z自由度或其他构造。
+- **A37**：CPU只证明声明的离散roughness目标；历史mix075是近似prior，不能代替精确有限网格TailSpline的GPU结果；Core-6也不能冒充PPL/passkey/full-13闭环。
 
 ## 添加或更正结果
 

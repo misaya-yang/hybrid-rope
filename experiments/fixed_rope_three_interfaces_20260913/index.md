@@ -67,6 +67,45 @@ Llama S4细节见[结果owner](../../docs/research/next_stage_20260912/LLAMA_S4_
   上限样本做Flash-SDPA批量greedy；本轮Qwen队列未传该参数而使用默认1，后续小模型
   应先用2/4短canary冻结最大稳定批量，Llama 64K仍保持单条。
 
+## 2026-09-14 fixed-u决定性方法补充
+
+fixed-u计划及其停止条件见[决定性闭环](../../docs/research/next_stage_20260912/DECISIVE_FIXED_U_METHOD_PLAN_20260914.md)。
+OLMo机制块已经完成，[结果owner](../../docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md)
+显示fixed-u相对fixed-m的AUC差为负且区间不跨零，因此终止该倍率迁移分支；作者随后要求
+整体零训练研究继续，不能把分支停止扩大成总任务暂停。
+
+- `tables.py scale-transport`：从实际S4父表直接生成现有resident runner可安装的
+  `fixed_m`或`fixed_u`冻结receipt；实际Native FP32数组决定band log坐标。
+- `math_and_transport.py`：31项CPU恒等式核验和实际数组capsule；不加载checkpoint。
+- `tailspline_verification.py`：独立核验有限网格TailSpline闭式增量、KKT唯一解、
+  one-sided roughness最优值及其与有限网格BM/front精确混合的等价性；明确不把CPU代数
+  当作checkpoint或benchmark优势证据。
+- `factorial_report.py`：完成方法胜出后才使用的同prompt table×gain四格分解。
+- `causal_intervention.py`：实现中层当前query的phase-only/donor-output诊断，但已从
+  主GPU队列移除；它不能决定最终方法是否胜过强基线。
+- `run_qwen25_s2_full324.sh`：在Qwen2.5-3B上串行运行mix075、MrPro、static YaRN和BM，
+  使用同一Core-6×32/48/64K×18行/格完整面板、batch 2和冻结静态表；单臂完成不停止队列。
+  先前batch 4正式运行在114/324遇到48K峰值OOM，partial raw保留但不拼入正式结果。
+- `analyze_qwen25_s2_full324.sh`：四臂结束后独立核验324行、prompt集合、generated ids、
+  official score、table/gain receipt及raw hash，并生成mix075对三个强基线的配对区间报告；
+  它在后台CPU运行，不阻塞后继Llama占用GPU。
+- `run_llama_s4_factorial_gap48.sh`：复用三个已完成且48个prompt完全重合的析因格，
+  只补C42 table×mix075 midpoint gain的48条缺口，随后生成VT/FWE、8K/32K的配对2×2报告。
+- `chain_qwen_to_llama_factorial.sh`：只在Qwen四臂监督器写出`QUEUE_COMPLETE`后衔接上述
+  Llama缺格；若Qwen异常退出则拒绝越过失败继续运行，交给监控按原合同恢复。
+- `chain_qwen_to_analysis.sh`：为本次已经启动的S2监督器补挂CPU分析；等待同一
+  `QUEUE_COMPLETE`后核验和出报告，不与Llama的GPU衔接互相阻塞。
+- `run_qwen25_s4_full.sh`：在未跑过同表的Qwen2.5-3B已有完整资产上预注册S4比较；
+  32K/64K复用18行/格面板，128K复用32行/格heldout面板，依次运行mix075、canonical
+  MrPro、static YaRN和同band BM。近端batch 2、128K batch 1，生成三长度配对报告。
+- `run_tailspline_qwen25_s2_full324.sh`：按作者2026-09-14新方案，以精确有限网格
+  TailSpline作为唯一候选，在统一canonical band/gain下与MrPro、static YaRN、BM使用
+  同一324条Qwen2.5-3B面板比较；旧mix075只作为近似开发prior，不冒充精确表结果。
+- `chain_current_mix_to_tailspline.sh`：等待已接近完成的mix075首臂写出324行和COMPLETE，
+  随即终止已冻结的旧监督器并启动TailSpline；不会继续旧S2三基线或Llama局部修复队列。
+- `../../tests/test_rope_today_plan.py`：fixed-u数值/复合性、capsule、四格分解、案例冻结
+  与完整key竞争有限干预的CPU检查。
+
 checkpoint Q/K capture、finite circular replay 和 active-set/QP 基础实现继续复用
 [`checkpoint_attention_replay_20260913`](../checkpoint_attention_replay_20260913/index.md)。
 只有它先通过 R0 实现等价和 R1 已有候选回放排序审计，才允许冻结一张新表进入真实

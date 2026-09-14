@@ -2119,6 +2119,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/DECISIVE_FIXED_U_METHOD_PLAN_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/EVQ_LORA_PRO_GUIDANCE_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2169,6 +2174,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md",
       "area": "docs",
       "category": "document"
@@ -2210,6 +2220,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/SCALE_MODEL_TRANSFER_PLAN_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -4484,9 +4499,34 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/analyze_qwen25_s2_full324.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/c42_order_only_prediction.json",
       "area": "experiments",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/causal_intervention.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_current_mix_to_tailspline.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_qwen_to_analysis.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_qwen_to_llama_factorial.sh",
+      "area": "experiments",
+      "category": "code"
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/constrained_full_z_fwe_repair.py",
@@ -4495,6 +4535,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/exponent_box_z.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/factorial_report.py",
       "area": "experiments",
       "category": "code"
     },
@@ -4524,6 +4569,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/math_and_transport.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/night_run.py",
       "area": "experiments",
       "category": "code"
@@ -4549,12 +4599,37 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_llama_s4_factorial_gap48.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen25_s2_full324.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_qwen25_s4_full.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s2_full324.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/scale_transfer_audit.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
       "area": "experiments",
       "category": "code"
     },
@@ -12645,6 +12720,11 @@
     },
     {
       "path": "tests/test_rope_table_definitions.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_rope_today_plan.py",
       "area": "tests",
       "category": "code"
     },

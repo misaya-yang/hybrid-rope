@@ -1,9 +1,11 @@
 # 当前研究：边界、低频终点与中频过渡
 
-**当前状态（2026-09-14）：作者要求暂停新增实验。** 已有GPU队列自然结束，
-只收束统计与文档。先读[理论与实验阶段报告](THEORY_AND_EXPERIMENT_PAUSE_REPORT_20260914.md)。
+**当前状态（2026-09-14）：精确TailSpline是唯一新候选；Qwen2.5-3B统一S2判决运行中。**
+当前执行以[TailSpline方法与统一评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)
+为准。fixed-u已失败退出；旧mix075、Llama局部修复和非统一S4后继队列不再执行。
+冻结checkpoint、零训练、持续GPU接管和禁止无依据参数搜索的边界不变。
 交给外部AI分析或转公司PC时使用[独立问题清单](OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md)。
-下列旧计划及新推导都不是自动执行队列；恢复实验需要作者后续指令。
+下列旧计划仍不是自动执行队列；本轮授权只覆盖决定性闭环中的零训练固定表实验。
 
 更新：2026-09-13，按作者最新纠正。实验分别回答三个设计问题：高频保持区与可调整区边界如何确定；低频最终缩放到ω/s是否最优；两个端点确定后中频如何过渡。每项需要数学解释、可计算方案和最小验证。问题可分别提出，干预仍需说明交互。
 
@@ -13,9 +15,12 @@
 
 | 任务 | 入口 |
 |---|---|
-| 本轮最终实验结论与停止点 | [理论与实验阶段报告](THEORY_AND_EXPERIMENT_PAUSE_REPORT_20260914.md)：Qwen累计只确认对BM的AUC胜出并保持Native；MrPro/C42仍未决；GPU实验停止 |
+| 当前唯一方法与GPU主线 | [TailSpline方法与统一评测](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)：精确有限网格闭式；先Qwen3B 324行/臂统一对照，再进入PPL、NIAH/passkey、full-13 RULER |
+| fixed-u倍率迁移判决 | [OLMo结果owner](OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md)：相对fixed-m的AUC差为负且区间不跨零；终止该分支，不终止整体研究 |
+| 历史mix075完整臂 | Qwen2.5-3B S2的mix075已324/324完成并保留raw；因band/gain不同，只作近似开发prior，不与当前统一TailSpline主比较合并 |
+| 上一轮最终实验结论与停止点 | [理论与实验阶段报告](THEORY_AND_EXPERIMENT_PAUSE_REPORT_20260914.md)：Qwen累计只确认对BM的AUC胜出并保持Native；MrPro/C42仍未决；当时GPU实验停止 |
 | 最新推导：从计算约束到具体构造 | [功能区间、最小改动与跨倍率z迁移](ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md)：逐槽排序、条件边界/终点解、唯一保持band内分配的倍率迁移；CPU验证，未跑新模型 |
-| 最新下一阶段：8×与模型迁移 | [倍率与模型计划](SCALE_MODEL_TRANSFER_PLAN_20260913.md)，历史执行计划；当前以阶段报告的停止指令为准 |
+| 上一轮8×与模型迁移 | [倍率与模型计划](SCALE_MODEL_TRANSFER_PLAN_20260913.md)，历史执行计划；当前以TailSpline统一合同为准 |
 | Llama S8冻结规则迁移 | [结果owner](LLAMA_S8_SCALE_TRANSFER_RESULT_20260913.md)：共同32K桥接与64K三对照、Native 8K已完成；未形成匹配区间AUC |
 | OLMo S8冻结allocation迁移 | [结果owner](OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md)：相对BM/MrPro的采样网格AUC正结果；父gain在两个测试点中较好；Native 4K未测 |
 | Qwen1.5B S2冻结transition迁移 | [完成结果owner](QWEN_S2_MIX075_RANGE_RESULT_20260913.md)：累计18确认AUC超过BM并保持Native；相对MrPro/C42未决 |

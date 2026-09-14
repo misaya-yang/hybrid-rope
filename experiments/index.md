@@ -5,6 +5,7 @@
 | 用途 | 入口 |
 |---|---|
 | 固定表跨长度质量确认与条件干预 | [固定表确认流水线](fixed_rope_three_interfaces_20260913/index.md) |
+| fixed-u解析迁移与决定性方法判决 | [fixed-u决定性计划](../docs/research/next_stage_20260912/DECISIVE_FIXED_U_METHOD_PLAN_20260914.md)；实现继续复用固定表流水线 |
 | 核实已进入论文的结果 | [论文证据](../paper-2027/research/evidence/index.md) |
 
 只有研究表选择预测器时，才进入[checkpoint replay](checkpoint_attention_replay_20260913/index.md)；它不是任务质量确认的前置条件。

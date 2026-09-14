@@ -101,6 +101,19 @@ def analytic_exponents(
         profile /= n * (n + 1.0) * (n + 2.0)
     elif method == "uni":
         profile = q / n
+    elif method == "mix075":
+        front = q * (2.0 * n + 1.0 - q) / (n * (n + 1.0))
+        bm = q * (q + 1.0) * (3.0 * n + 2.0 - 2.0 * q)
+        bm /= n * (n + 1.0) * (n + 2.0)
+        profile = 0.25 * bm + 0.75 * front
+    elif method == "tailspline":
+        if depth != 1.0:
+            raise ValueError("TailSpline is parameter-free and requires depth=1")
+        # Exact finite-grid one-sided minimum-bending solution.  This is not
+        # the asymptotic 0.25*BM + 0.75*front approximation: its finite-grid
+        # front weight is 3n/[2(2n+1)].
+        profile = q * (3.0 * n * n + 3.0 * n + 1.0 - q * q)
+        profile /= n * (n + 1.0) * (2.0 * n + 1.0)
     else:
         raise ValueError(f"unsupported analytic exponent method: {method}")
     return depth * profile
@@ -263,6 +276,44 @@ def build_analytic(
         return values, float(official_gain if gain is None else gain), {
             **construction,
             "identity": "official static YaRN frequency map on a frozen checkpoint; no YaRN SFT",
+        }
+    if method == "tailspline":
+        if not math.isfinite(scale) or scale <= 1.0:
+            raise ValueError("TailSpline deployment scale must exceed one")
+        if depth != 1.0:
+            raise ValueError("TailSpline is parameter-free and requires depth=1")
+        if (low is None) != (high is None):
+            raise ValueError("low and high must be supplied together")
+        canonical_low, canonical_high = default_band(geometry)
+        if low is not None and (int(low), int(high)) != (canonical_low, canonical_high):
+            raise ValueError("TailSpline requires the canonical MrRoPE 32/1-turn boundaries")
+        canonical_gain = 1.0 + 0.1 * math.log(float(scale))
+        if gain is not None and not math.isclose(
+            float(gain), canonical_gain, rel_tol=0.0, abs_tol=1e-12,
+        ):
+            raise ValueError("TailSpline requires the shared YaRN/MrRoPE gain")
+        n = canonical_high - canonical_low
+        exponents = analytic_exponents(
+            method, int(geometry["pairs"]), low=canonical_low,
+            high=canonical_high, depth=1.0,
+        )
+        values = (
+            runtime_native.astype(np.float64)
+            * np.power(float(scale), -exponents)
+        ).astype(np.float32)
+        return values, canonical_gain, {
+            "method": "tailspline_exact_finite_grid",
+            "low": canonical_low,
+            "high": canonical_high,
+            "transition_gaps": n,
+            "tail_depth": 1.0,
+            "formula": "m_q=q*(3*n^2+3*n+1-q^2)/(n*(n+1)*(2*n+1))",
+            "increment_formula": "epsilon_q=3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1))",
+            "finite_grid_front_weight": 3.0 * n / (2.0 * (2.0 * n + 1.0)),
+            "boundary_rule": "canonical MrRoPE native-grid 32-turn/1-turn boundaries",
+            "gain_rule": "shared YaRN/MrRoPE 1+0.1*ln(scale) cos/sin amplitude",
+            "identity": "parameter-free exact finite-grid TailSpline Native-relative static table",
+            "fitted_coefficients": 0,
         }
     if (low is None) != (high is None):
         raise ValueError("low and high must be supplied together")
@@ -485,6 +536,140 @@ def build_gain_control(
     }
 
 
+def normalized_log_band_coordinates(
+    native_values: np.ndarray, *, low: int, high: int,
+) -> tuple[np.ndarray, float]:
+    """Return the clamped, actual-table log coordinate of one fixed band."""
+    native = np.asarray(native_values, dtype=np.float64)
+    if (
+        native.ndim != 1
+        or not 0 <= low < high < len(native)
+        or not np.isfinite(native).all()
+        or np.any(native <= 0.0)
+        or np.any(native[:-1] <= native[1:])
+    ):
+        raise ValueError("invalid Native table or fixed transport band")
+    span = float(math.log(native[low] / native[high]))
+    if not math.isfinite(span) or span <= 0.0:
+        raise ValueError("fixed transport band has no positive log-frequency span")
+    coordinates = np.log(native[low] / native) / span
+    return np.clip(coordinates, 0.0, 1.0), span
+
+
+def fixed_u_alpha(*, log_band_span: float, scale_from: float, scale_to: float) -> float:
+    """Unique coefficient preserving normalized within-band log frequency."""
+    if (
+        not math.isfinite(log_band_span)
+        or log_band_span <= 0.0
+        or not math.isfinite(scale_from)
+        or not math.isfinite(scale_to)
+        or not 1.0 < scale_from < scale_to
+    ):
+        raise ValueError("fixed-u transport requires A>0 and 1<S_from<S_to")
+    left = math.log(scale_from)
+    right = math.log(scale_to)
+    alpha = left * (log_band_span + right) / (right * (log_band_span + left))
+    if not 0.0 < alpha < 1.0:
+        raise AssertionError("fixed-u interpolation coefficient left (0,1)")
+    return float(alpha)
+
+
+def build_scale_transport_control(
+    config: dict,
+    parent: dict,
+    *,
+    scale_from: float,
+    scale_to: float,
+    low: int,
+    high: int,
+    mode: str,
+    gain: float | None = None,
+) -> tuple[np.ndarray, float, dict]:
+    """Move one saved parent table to a larger scale at fixed ``m`` or fixed ``u``.
+
+    Both arms preserve the parent's band, Native prefix, and fully scaled
+    suffix.  By default they also preserve its gain; an explicit common target
+    gain can be frozen for a matched final-method comparison.
+    """
+    geometry = model_geometry(config)
+    if (
+        parent.get("status") != TABLE_FORMAT
+        or parent.get("model_geometry") != geometry
+        or float(parent.get("scale", float("nan"))) != float(scale_from)
+    ):
+        raise ValueError("transport parent has another format, geometry, or source scale")
+    parent_values, parent_gain = validate_table(
+        find_table(parent), pairs=int(geometry["pairs"]),
+    )
+    if tensor_sha256(parent_values) != parent.get("table_sha256_float32"):
+        raise ValueError("transport parent table differs from its receipt hash")
+    native = runtime_native_inv_freq(geometry).astype(np.float64)
+    parent_exponents = exponents_from_table(parent_values, native, scale_from)
+    coordinates, span = normalized_log_band_coordinates(native, low=low, high=high)
+    tolerance = 2e-6
+    if (
+        np.max(np.abs(parent_exponents[: low + 1])) > tolerance
+        or np.max(np.abs(parent_exponents[high:] - 1.0)) > tolerance
+    ):
+        raise ValueError("transport parent does not have the declared Native prefix and full tail")
+    if mode == "fixed_m":
+        target_exponents = parent_exponents.copy()
+        alpha = 1.0
+    elif mode == "fixed_u":
+        alpha = fixed_u_alpha(
+            log_band_span=span, scale_from=scale_from, scale_to=scale_to,
+        )
+        target_exponents = alpha * parent_exponents + (1.0 - alpha) * coordinates
+    else:
+        raise ValueError("transport mode must be fixed_m or fixed_u")
+    if (
+        np.any(np.diff(target_exponents) < -2e-10)
+        or target_exponents.min() < -2e-10
+        or target_exponents.max() > 1.0 + 2e-10
+    ):
+        raise AssertionError("scale transport left the monotone exponent family")
+    target_exponents = np.clip(target_exponents, 0.0, 1.0)
+    target_values = (
+        native * np.power(float(scale_to), -target_exponents)
+    ).astype(np.float32)
+    target_gain = float(parent_gain if gain is None else gain)
+    validate_table(
+        {"values_float32": target_values, "gain": target_gain},
+        pairs=int(geometry["pairs"]),
+    )
+    parent_u = (
+        span * coordinates + math.log(scale_from) * parent_exponents
+    ) / (span + math.log(scale_from))
+    target_u = (
+        span * coordinates + math.log(scale_to) * target_exponents
+    ) / (span + math.log(scale_to))
+    return target_values, target_gain, {
+        "method": f"scale_transport_{mode}",
+        "scale_from": float(scale_from),
+        "scale_to": float(scale_to),
+        "low": int(low),
+        "high": int(high),
+        "actual_log_band_span": span,
+        "alpha": float(alpha),
+        "parent_table_sha256_float32": tensor_sha256(parent_values),
+        "parent_exponents": parent_exponents.tolist(),
+        "target_exponents": target_exponents.tolist(),
+        "actual_native_log_coordinates": coordinates.tolist(),
+        "max_normalized_u_residual": (
+            float(np.max(np.abs(target_u - parent_u))) if mode == "fixed_u" else None
+        ),
+        "parent_gain": float(parent_gain),
+        "target_gain": target_gain,
+        "same_gain_as_parent": target_gain == float(parent_gain),
+        "same_native_prefix_and_full_target_tail": True,
+        "identity": (
+            "unique fixed-band normalized log-frequency coordinate transport"
+            if mode == "fixed_u"
+            else "same parent Native-relative exponents at the target scale"
+        ),
+    }
+
+
 def build_bm_skew_control(
     config: dict, *, scale: float, low: int, high: int, skew: float, gain: float,
 ) -> tuple[np.ndarray, float, dict]:
@@ -586,7 +771,10 @@ def main() -> None:
     analytic.add_argument("--config", type=Path, required=True)
     analytic.add_argument(
         "--method",
-        choices=("native", "yarn", "mrpro", "mrpro_frontloaded", "bm", "uni", "c42"),
+        choices=(
+            "native", "yarn", "mrpro", "mrpro_frontloaded", "bm", "uni",
+            "mix075", "tailspline", "c42",
+        ),
         required=True,
     )
     analytic.add_argument("--scale", type=float, required=True)
@@ -628,6 +816,16 @@ def main() -> None:
     gain_control.add_argument("--scale", type=float, required=True)
     gain_control.add_argument("--gain", type=float, required=True)
 
+    scale_transport = subparsers.add_parser("scale-transport")
+    scale_transport.add_argument("--config", type=Path, required=True)
+    scale_transport.add_argument("--parent", type=Path, required=True)
+    scale_transport.add_argument("--scale-from", type=float, required=True)
+    scale_transport.add_argument("--scale-to", type=float, required=True)
+    scale_transport.add_argument("--low", type=int, required=True)
+    scale_transport.add_argument("--high", type=int, required=True)
+    scale_transport.add_argument("--mode", choices=("fixed_m", "fixed_u"), required=True)
+    scale_transport.add_argument("--gain", type=float)
+
     bm_skew = subparsers.add_parser("bm-skew")
     bm_skew.add_argument("--config", type=Path, required=True)
     bm_skew.add_argument("--scale", type=float, required=True)
@@ -649,7 +847,10 @@ def main() -> None:
     wrap.add_argument("--source-table", type=Path, required=True)
     wrap.add_argument("--scale", type=float, required=True)
 
-    for subparser in (analytic, depth, tail, tail_cap, mix, gain_control, bm_skew, c42_order, wrap):
+    for subparser in (
+        analytic, depth, tail, tail_cap, mix, gain_control, scale_transport,
+        bm_skew, c42_order, wrap,
+    ):
         subparser.add_argument("--candidate-id", required=True)
         subparser.add_argument("--model-id", required=True)
         subparser.add_argument("--role", choices=("candidate", "baseline", "control", "native"), required=True)
@@ -706,6 +907,13 @@ def main() -> None:
             config, parent, scale=args.scale, gain=args.gain,
         )
         source = str(args.parent)
+    elif args.command == "scale-transport":
+        parent = read_json(args.parent)
+        values, gain, construction = build_scale_transport_control(
+            config, parent, scale_from=args.scale_from, scale_to=args.scale_to,
+            low=args.low, high=args.high, mode=args.mode, gain=args.gain,
+        )
+        source = str(args.parent)
     elif args.command == "bm-skew":
         values, gain, construction = build_bm_skew_control(
             config, scale=args.scale, low=args.low, high=args.high,
@@ -739,7 +947,8 @@ def main() -> None:
         source = str(args.source_table)
     receipt = make_receipt(
         candidate_id=args.candidate_id, model_id=args.model_id, role=args.role,
-        scale=args.scale, geometry=geometry, values=values, gain=gain,
+        scale=(args.scale_to if args.command == "scale-transport" else args.scale),
+        geometry=geometry, values=values, gain=gain,
         construction=construction, source=source,
         parent_candidate_id=args.parent_candidate_id,
         changed_variables=args.changed_variable,
