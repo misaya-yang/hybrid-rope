@@ -156,8 +156,8 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "af3573e277c1426d7e28b92c67480ca3e9e8a026c52e0099b8c820b60fbd6dc6",
-          "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
+          "sha256": "c7a8a8e59ed488a57ee406dc9c45b485668dee4b3dfc0b14771806f21d6239ca",
+          "revision_note": "2026-09-14 design exposition: density concentration, slow-tail cost and spacing interpretation clarified; formulas and evidence unchanged."
         }
       ]
     },

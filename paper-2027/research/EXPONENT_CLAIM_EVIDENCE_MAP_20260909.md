@@ -23,6 +23,7 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 | C08 继续学习 | 750M共享起点续训、完整长度PPL与40-case生成 | 学习已有模型的新分配可影响生成 | §6.1、Table1、App. larger-scale |
 | C09 适配与读出 | 8B PPL/来源使用、同adapter任务结果、独立516-step后续 | 区分学到长程来源使用与任务转换；保留整组证据 | §6末指针、App. Llama；完整结果在附录 |
 | C10 成熟模型内点效应 | OLMo/Qwen同支持冻结干预 | 与学习期C01连接，扩展至固定权重和任务指标 | §3.2、App. frozen |
+| 等总位移下的形状作用 | BM–Uni同端点、band、gain及总log位移，六任务48输入的16K开发面板分数51.32/32.12% | 总位移不能解释该开发小面板分数差；不是TailSpline机制归因或自然QA复现 | §3等总位移段、App. four-method-control；C42开发对照另列附录 |
 | C11 实际部署 | BM构造、同倍率确认、五任务自然QA | 从纯作用到一个有用分配实例 | §6.3、Table2、App. BM |
 | C12 离散安装 | Gemma K128 index/direct gap +6.19 | 连续profile安装到有限网格仍是设计选择 | §6末指针、App. placement |
 | C13 完整配置 | Qwen0.5B full13 +6.09，32K近等 | 频率表与振幅的实际系统收益 | §6末指针、App. index |
@@ -94,7 +95,7 @@ C01/04/06/07/08/09/10/11/12/13/14 的 owner 沿用 PAPER_REVISION_HANDOFF_202609
 | 完整位置对象是sin/cos二维子空间 | §4.1 `Q=S_omega^(-1/2) H S_nu^(-1/2)`、`c=||Q||_F^2/2` | `appendix/a1_proofs.tex`给完整trigonometric Gram与相位不变性；foundation report §2保存数值检查。 |
 | 平均canonical collision关联有效rank | §4.1 `r2=2K/[1+(K-1)c_bar]` | 同一block-whitened Gram的trace恒等式，完整证明在A1；不是raw entropy rank或LM loss。 |
 | 慢频率共享位置子空间 | §4.2 `V_omega→span{1,Delta}`；`2-||Q||²=O(epsilon⁴)` | Uniform[0,L]下证明与展开；标准k/K网格K64,b500K,L4096有23慢pair、r2=2.00013。endpoint-normalized网格的24pair是另一配置。 |
-| Cosh是明确变分目标的闭式解 | §4.3平方密度+min(phi,psi) interaction；rho_tau、inverse CDF | alpha>0,beta≥0、正C²、单位积分；严格凸与边界条件导出cosh。正文一次说明surrogate，完整推导与tau规则在A1。 |
+| Cosh是明确变分目标的闭式解 | §5.1平方密度+累计慢尾质量平方；rho_tau、inverse CDF | alpha>0,beta≥0、单位积分；严格凸与边界条件导出正cosh解。目标是受几何启发的设计先验，不等于full-pair overlap；Green核、间隔坐标等价式和tau规则在A1。 |
 | 成熟表的指数位移统一三种操作 | §6.1 `d=log(omega_N/omega')`；频率混合、log-shift、mixed-radix各自公式 | 频率混合是`-log(1-w+w/s)`，不能把w误当log-shift的m；radix乘积取log成为sum。 |
 | BM平滑的是radix增量 | 附录A7，epsilon_q=6q(N+1-q)/[N(N+1)(N+2)]，累加得三次m_q | `ROPE_MRPRO_BM_CANDIDATE_20260908.json`保存OLMo N18、Qwen N17、逐项exponents；绘图代码逐项断言相等。 |
 | finite-grid profile placement有不同构造 | A7参考K64插值与target local-gap直接计算 | `export_frozen_coupling_transport.py`；K128/K32两份confirmation identity逐字段核对，gain在每一比较内一致。Gemma reference4K是operating reference。 |
@@ -110,7 +111,7 @@ C01/04/06/07/08/09/10/11/12/13/14 的 owner 沿用 PAPER_REVISION_HANDOFF_202609
 | `fig_8b_length_curve` | 在适配窗口之外发生什么？完整8/16/32K PPL曲线显示长程收益与窗口内成本。 | 两条有序长度曲线，log-PPL轴；24 packs/length | Top15 #2；300-step pair，不能与516-step RULER后续pair混用。 |
 | `fig_weight_table_crossing` | 为什么第二阶段相对native表调整？权重偏好与其训练表相容的运行表。 | 两个2×2矩阵；左标PPL，右标tail NLL；阴影统一表示diagonal-relative ΔNLL | Top15 #9；50M来自报告§5.2，151M来自`small_model_crossing`，不引用Qwen K32 receipt。 |
 | `fig_bm_natural_qa` | 指数调整能否在自然输入获益？五任务均值均增加，macro21.62→25.44%。 | 五任务+task-equal mean的paired dot；样本166/173/119/61/112 | Top15 #6；对778个row_id去重、重算两length strata逐任务均值，再绘631长输入。 |
-| `fig_bm_exponent_profiles` | BM与MrPro究竟改了什么？同边界/总量，增量向band中间重分配。 | 两个离散transition width的cumulative profile，N18/N17 | 直接对比recorded exponent arrays；放附录，数值差异不是新的模型实验。 |
+| `fig_bm_exponent_profiles` | BM与MrPro同端点、band和增量质量，但总log位移不同；BM与Uni才等总log位移。 | 两个离散transition width的cumulative profile，N18/N17 | K64/[14,32]的sum m：BM/Uni=40.5，Pro=37⅔；图在附录，形状差异不自动解释任务机制。 |
 | `table_index_full13` / `table_coordinate_confirmation` | 静态表的breadth及不同placement | 分任务官方RULER分数/配对差值CI | macro按task均分；K32两个长度用97.5% CI，K128用95%；旧pilot不pool。 |
 | `table_bm_tasks` / `table_bm_qa_all` | 保留模型、任务与生成端点细节 | 三模型六任务分项；自然QA完整输出F1%与EOS计数 | 不把FWE/VT部分分数称exact accuracy；不从generation_config默认值猜实际cap。 |
 | `table_evq_ramp` | 训练时分配与后续固定scaler的组合 | 四臂、三训练seed；PPL与teacher-forced PK分列 | 只使用full-sequence summary；不拼接per-document PPL与早期s4单seed数据。 |
@@ -150,3 +151,7 @@ Figure builder重算分任务均值、样本数与部分记录一致性，并绑
 摘要首句、引言首段及三个贡献以内部指数分配z为同一一级对象。§3回答独立价值，§4回答供给的位置结构，§6回答构造的学习与零训练实用价值。几何节末显式连接“几何刻画—fixed-support识别—模型验证”，不把overlap当任务中介。
 
 附录入口新增protocol glossary，并移除实验细节里重复的导航表；保留tab:evidence-map标签作为同一术语表入口。学习、适配、冻结的权重状态、构表方式和证据职责分列。讨论集中保留Llama PPL/QA、OLMo cap、Qwen BM及in-window未来方向。原始数字、图源、区间和来源身份均未改变。
+
+## 设计认识强化
+
+等总位移对照由§6前移至§3，按已记录小面板呈现，完整任务表、C42开发身份与来源保持附录。§5以相邻log-frequency间隔连接两种构造，分别说明Cosh集中/慢尾代价、TailSpline单侧衔接及更大入口/更小尾端取舍；不合并目标、不宣称任务最优。Fig3标出两端跳变，Fig2明确两个面板的问题。摘要的NIAH/PPL收益限定为跨长度汇总；局部代价完整留在§6，结论提炼可复用设计认识。

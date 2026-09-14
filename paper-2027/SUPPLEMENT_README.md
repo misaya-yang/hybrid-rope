@@ -48,3 +48,15 @@ supports manuscript rebuilding and the listed numerical checks.
 Run `make_allocation_value.py` last if also running legacy figure builders. TailSpline inputs are reported aggregates with original-source identities; this check independently verifies discrete optimization and AUC arithmetic, not raw generation.
 
 `figs/allocation_design.py` includes the model-independent TailSpline constructor (native frequency array, native length, scale), plus independent checks of the finite objective and density-to-gap identity. It does not load weights or execute model evaluation.
+
+The constructor returns the FP32 table, cosine/sine gain and canonical band.
+It uses the public grid and reference length to determine the 32/1-turn band,
+evaluates the finite profile in O(K) work, and installs before prefill. The table
+and gain remain fixed across layers and input lengths for the declared scale.
+Scale 1 returns the native FP32 table and unit gain; an unavailable canonical
+transition raises an error rather than choosing a different boundary rule.
+
+The main figure builder also checks the BM-Uni equal-total-displacement identity.
+BM and MrPro share endpoint displacement and increment mass but have different
+total log-frequency displacement. Figure 3's entry/tail annotations are exact
+construction properties, not separately identified causes of task gains.

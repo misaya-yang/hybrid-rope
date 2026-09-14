@@ -7,7 +7,7 @@ The increments have a direct spectral meaning. For a geometric native grid with 
 x'_{l+q}-x'_{l+q-1}=c+\epsilon_q\log s.
 \label{eq:increment-log-gap}
 \end{equation}
-Their unit sum allocates exactly $\log s$ of extra span across the band. Beyond it, $m=1$ is constant, so the extra gap returns to zero.
+Their unit sum allocates exactly $\log s$ of extra span across the band. Beyond it, constant displacement $m=1$ preserves native adjacent gaps: the extra gap returns to zero. The remaining choice is how to reach this junction.
 
 MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$. We instead smooth the transition into the fully interpolated tail, whose subsequent increments are zero:
 \begin{equation}
@@ -15,7 +15,7 @@ MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$. We instead smooth 
 \sum_{q=1}^{n-1}(\epsilon_{q+1}-\epsilon_q)^2+\epsilon_n^2.
 \label{eq:tailspline-objective}
 \end{equation}
-This one-sided objective penalizes internal changes and the terminal jump. It leaves the high-frequency entry unpenalized, an explicit boundary prior rather than a fitted model statistic.
+The first term smooths neighboring extra gaps; the second matches the low-frequency junction. Leaving the high-frequency entry unpenalized prioritizes the tail connection while preserving the high-frequency outer band. This is the chosen boundary prior.
 \begin{theorem}[Finite-grid TailSpline]\label{thm:tailspline}
 The unique minimizer of Eq.~\eqref{eq:tailspline-objective} has positive increments and cumulative profile
 \begin{equation}
@@ -24,6 +24,7 @@ m_q^{\rm TS}=\frac{q(3n^2+3n+1-q^2)}{n(n+1)(2n+1)}.
 \label{eq:tailspline}
 \end{equation}
 \end{theorem}
-The quadratic objective is strictly convex; solving its tridiagonal stationarity system gives Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the symmetric entry penalty $\epsilon_1^2$ yields BM, whose increments are proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). TailSpline reduces the terminal gap jump relative to MrPro by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$. Figure~\ref{fig:tailspline-main}a includes the two outer zero-increment regions so both entry and tail jumps are visible. This is a construction guarantee, whose task consequences are tested below.
+Strict convexity and the tridiagonal stationarity system give Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the entry penalty $\epsilon_1^2$ yields the symmetric construction BM, with increments proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). Relative to MrPro, TailSpline accepts a larger entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$ (Fig.~\ref{fig:tailspline-main}a). These guarantees solve the declared objectives; task value is tested below.
 
-Install $\omega'_k=\omega_k^Ns^{-m_k}$ before prefill and retain it across all layers and input lengths for the declared $s$. We use $g=1+0.1\ln s$, matched to the baseline. Neither construction reads weights, activations or calibration outputs; the boundary rule uses only the native grid and reference length. The objectives prove construction properties; the following experiments test task value.
+\paragraph{Installation.}
+(1) Read the public native grid, reference length and scale $s$; (2) compute the $32/1$-turn band; (3) evaluate $m_k$, $\omega'_k=\omega_k^Ns^{-m_k}$ and $g=1+0.1\ln s$; (4) install before prefill, retaining one table across layers and input lengths. The baseline shares $g$. Construction costs $O(K)$ and leaves the rotary computation unchanged. Neither constructor reads weights, activations or calibration outputs.

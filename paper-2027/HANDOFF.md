@@ -6,4 +6,6 @@ Current scope and revision record: [revision brief](REVISION_BRIEF.md). Scientif
 
 Run `figs/make_allocation_value.py` after legacy figure generators. Its portable inputs include report-backed TailSpline aggregates; original model streams remain separate. Range, crossing and permutation evidence has moved intact to the appendix. Previous three-discovery receipts are historical.
 
+The design-focused revision moves the BM-Uni equal-displacement control to Section 3, explains both objectives through frequency spacing, and annotates the entry/tail trade-off in Figure 3. BM-Pro shares endpoints and increment mass, not total displacement. Task numbers and constructor interfaces are unchanged; local costs remain in the results section.
+
 Final build: 9 scientific-body pages, 55 total pages; three main figures and two main tables. Undefined references/citations and overfull boxes: zero.

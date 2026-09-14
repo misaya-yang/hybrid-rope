@@ -73,13 +73,13 @@ def learning():
     fig,axes=plt.subplots(1,2,figsize=(7.25,3.0),gridspec_kw={'wspace':.45})
     ws=256*np.exp(-np.log(256)*np.arange(32)/32);g=white(ws)
     a=np.array([[.5*np.sum(g[2*i:2*i+2,2*j:2*j+2]**2) for j in range(32)]for i in range(32)])
-    ax=axes[0];im=ax.imshow(a,origin='lower',vmin=0,vmax=1,cmap='Blues',aspect='auto');ax.add_patch(Rectangle((23.5,23.5),8,8,fill=False,edgecolor=ORANGE,lw=1.2));ax.set(xlabel='Frequency-pair index',ylabel='Frequency-pair index');ax.set_title('(a) Full-pair positional overlap',loc='left');fig.colorbar(im,ax=ax,fraction=.045,pad=.03)
+    ax=axes[0];im=ax.imshow(a,origin='lower',vmin=0,vmax=1,cmap='Blues',aspect='auto');ax.add_patch(Rectangle((23.5,23.5),8,8,fill=False,edgecolor=ORANGE,lw=1.2));ax.set(xlabel='Frequency-pair index',ylabel='Frequency-pair index');ax.set_title('(a) Which rotary pairs overlap?',loc='left',fontsize=8.5);fig.colorbar(im,ax=ax,fraction=.045,pad=.03)
     ax=axes[1];mla=D['mla'];ls=mla['eval_lengths']
     for key,col,style,label in [('GEO',BLUE,'-','Geo'),('EVQ',ORANGE,'-','Cosh'),('GEO+YaRN(s=4)',BLUE,'--','Geo + blend'),('EVQ+YaRN(s=4)',ORANGE,'--','Cosh + blend')]:
         sample=np.array([[mla['extended'][key][str(seed)][str(l)] for l in ls]for seed in mla['seeds']]);vals=sample.mean(0)
         if key in ['GEO','EVQ']:ax.fill_between(np.array(ls)/1024,sample.min(0),sample.max(0),color=col,alpha=.10,linewidth=0)
         ax.plot(np.array(ls)/1024,vals,style,color=col,marker='o',ms=3,label=label)
-    ax.set(xlabel='Evaluation length (K tokens)',ylabel='PPL',xticks=[8,16,24,32]);ax.set_title('(b) Three-seed MLA extrapolation',loc='left');ax.legend(frameon=False,fontsize=7.5);axis_style(ax)
+    ax.set(xlabel='Evaluation length (K tokens)',ylabel='PPL',xticks=[8,16,24,32]);ax.set_title('(b) Does allocation help after learning?',loc='left',fontsize=8.5);ax.legend(frameon=False,fontsize=7.5);axis_style(ax)
     fig.subplots_adjust(left=.08,right=.99,bottom=.22,top=.87);finish(fig,'fig_allocation_learning')
 
 def tailspline():
@@ -89,8 +89,14 @@ def tailspline():
     for vals,col,label in [(2*q/(n*(n+1)),BLUE,'MrPro'),(6*q*(n-q+1)/(n*(n+1)*(n+2)),'#009E73','BM'),(3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1)),ORANGE,'TailSpline')]:
         top.plot(np.arange(n+2),np.r_[0,vals,0],color=col,lw=1.6,marker="o",ms=2.5,label=label)
     top.set(xlabel='Gap index (0 and 18: unchanged outer gaps)',ylabel='Extra log gap / log s',xticks=[0,1,5,9,13,17,18])
-    top.set_title('(a) Boundary construction: distribution of transition increments',loc='left',fontsize=9)
-    top.legend(frameon=False,ncol=3,loc='upper center',fontsize=8);top.axvspan(-.2,.5,color='#F1F3F5',zorder=0);top.axvspan(17.5,18.2,color='#F1F3F5',zorder=0);axis_style(top)
+    top.set_title('(a) Extra log gaps: the boundary trade-off',loc='left',fontsize=9)
+    top.set_ylim(-.004,.15)
+    top.legend(frameon=False,ncol=3,loc='upper center',fontsize=8)
+    top.annotate('Larger entry jump',xy=(1,3/(2*n+1)),xytext=(2.6,.112),fontsize=7.5,color=ORANGE,
+                 arrowprops=dict(arrowstyle='->',color=ORANGE,lw=.8))
+    top.annotate('Smaller tail jump',xy=(n,6/((n+1)*(2*n+1))),xytext=(11.1,.025),fontsize=7.5,color=ORANGE,
+                 arrowprops=dict(arrowstyle='->',color=ORANGE,lw=.8))
+    top.axvspan(-.2,.5,color='#F1F3F5',zorder=0);top.axvspan(17.5,18.2,color='#F1F3F5',zorder=0);axis_style(top)
     axes=np.array([[fig.add_subplot(gs[r+1,c]) for c in range(3)] for r in range(2)])
     for row,(key,name) in enumerate([('tailspline','Llama'),('tailspline_olmo','OLMo')]):
         t=D[key];x=np.array(t['lengths'])/1024

@@ -1,16 +1,16 @@
 \section{Explicit Allocation Constructions}
 \label{sec:allocation-methods}
-We exploit the allocation freedom $z$ in two settings: a model can learn a new allocation from training data, or a frozen model can receive a native-relative redistribution. Both change adjacent log-frequency intervals. The first designs a density and samples its quantiles; the second distributes a prescribed extension across a transition band.
+Both constructions design adjacent log-frequency intervals. During learning, we choose a density whose quantiles place the finite frequencies. For frozen deployment, we distribute additional span across a native transition band. The common object is frequency spacing; the objectives reflect these different settings.
 \subsection{An analytic construction from a tail-energy prior}
 \label{sec:construction}
 
-During learning, a model can adapt to a supplied allocation. The overlap analysis motivates spreading its finite rotary budget across scales while controlling concentration toward the slow end. We express this motivation as a geometry-inspired, weight-independent density-design prior, using a density over normalized exponent space $[0,1]$. Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider the convex design criterion
+During learning, a model can adapt to the supplied allocation. Finite-window overlap motivates avoiding excessive concentration, especially among slow pairs. We encode this preference as a density-design prior over normalized exponents $[0,1]$, where larger exponents denote slower frequencies. Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider
 \begin{equation}
 \Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
 \qquad \text{s.t. } \int_0^1\rho=1,\ \rho\ge0.
 \label{eq:Capp}
 \end{equation}
-The first term penalizes concentration; the second penalizes cumulative slow-tail mass. Their balance selects how density shifts toward smaller exponents. The tail term is the quadratic form of the Dirichlet--Neumann Green kernel $\min(\phi,\psi)$ (Appendix~\ref{sec:proofs}).
+With unit mass, the density-square term favors spreading frequencies. Moving mass toward the slow end increases the tail mass over the thresholds it crosses, raising the second term. Their balance favors faster frequencies without allowing arbitrary concentration. This is a geometry-inspired prior, not an identity for full-pair overlap. Appendix~\ref{sec:cosh-gap-form} rewrites it exactly in quantile-spacing coordinates.
 
 For $\alpha>0$, $\beta\ge0$, this criterion has a unique positive minimizer, $\rho_\tau(\phi)=\tau\cosh[\tau(1-\phi)]/\sinh\tau$, where $\tau=\sqrt{\beta/\alpha}$. Its inverse CDF gives
 \begin{equation}
