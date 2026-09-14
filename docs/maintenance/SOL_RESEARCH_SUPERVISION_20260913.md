@@ -113,3 +113,7 @@ OLMo父gain候选4/16/32K为61.16/37.96/15.00，AUC41.87，BM20.28；同表父ga
 交接owner：[理论与实验阶段报告](../research/next_stage_20260912/THEORY_AND_EXPERIMENT_PAUSE_REPORT_20260914.md)。详细推导：[功能约束与z迁移](../research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md)。CPU已验证mix逐槽排序、固定band内u的唯一倍率迁移、功能相位区间例子和1000组区间约束；实际Native旋转上界全部饱和，不能用来预测任务恢复，已明确退出默认改进队列。功能输入仍未识别，不宣称理论最优表完成。
 
 Qwen累计18/格AUC79.72，BM75.84，差+3.88pp区间[+0.81,+6.93]；MrPro/C42差区间跨0，独立追加块三者均跨0。Native累计32K差+6.51pp区间[+1.45,+11.88]。均为Sol报告，未由本任务复算raw。已分别保存正结果、代价与选择暴露边界。
+
+## 2026-09-14 01:22 UTC 收尾复核
+
+快照revision46，cursor `b2ba8cfa-56bf-4bb0-b25f-70979ce8e626:46`，Sol任务idle、该轮completed且无错误。已报告文档、A32–A35及关键报告同步完成，提交并推送`d4bf5587`至`origin/09_09`；本地HEAD确认是该提交，未另查远端。Sol报告服务器仍开机、GPU空闲、无新实验。没有新科学结果或需重复发送的纠偏，遵守暂停状态。累计面板正证据与独立块未确认的区别继续以阶段报告为准。
