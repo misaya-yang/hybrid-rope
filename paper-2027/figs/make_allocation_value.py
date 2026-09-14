@@ -147,6 +147,8 @@ def method_overview():
     # An editable text-preserving SVG accompanies the print PDF.
     with plt.rc_context({'svg.fonttype':'none'}):
         fig.savefig(HERE/'fig_method_overview.svg',bbox_inches='tight',pad_inches=.035)
+    svg=HERE/'fig_method_overview.svg'
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
 
 def overview():
     fig,axes=plt.subplots(1,3,figsize=(7.25,2.7))
