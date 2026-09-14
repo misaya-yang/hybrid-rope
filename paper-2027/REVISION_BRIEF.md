@@ -4,18 +4,21 @@
 
 固定支持实验识别z独立作用；完整方法可联合改变范围、band、终点和gain，收益归完整方法。窗口内增强是后续目标，M4联合改善是初步证据。
 
-## 当前决策：Pro锚点与作者纠正
+## 当前决策：range交互、质心等价与TailSpline形状对照
 
-本轮以已完成证据定稿；正文不超过9页，默认五图两表，数量服从论证。
-151.9M按matched geometric control识别内部分配的作用与收益：只动30内点，三seed的2×/4×/8× NLL均下降；FMRoPE只说明几何配置来源。作者最新纠正：target-matched是当时为FMRoPE比较设置的额外评价条件，不前置为本稿主线或allocation收益边界；历史数据保留附录。§3.1及Fig2突出同支持下的明确外推收益。§4保留几何图，§6单独展示MLA；TailSpline主图简化为boundary与两模型Full-13，正文保留Llama短长度PPL代价、QA family −1.25pp和OLMo cap-hit。
+本轮按作者最新要求修复三项：Fig2(a)用target-matched三seed响应替换重复端点示意，与(b)保留训练支持的收益并列；§3.1、引言与结论说明所测allocation排序依赖support policy。FMRoPE仍只注明几何配置来源，不改实验数字。
 
-新标准Transformer 350M三seed fixed-support仅设条件接入口：正文冻结前完成并核对实际配对身份后，作为§3.1紧凑scale confirmation接入，完整协议及逐seed结果入固定支持附录；不预写结果、不混用历史MLA文件、不跨规模合并seed。未完成时不阻塞现有证据交付；本轮不启动实验。
+§3.2删除“额外固定increment centroid”的错误解释。固定band、倍率及单位increment mass时，Σm=n−μ，等总位移已固定质心；C42/C42V24测试同总位移下更高阶increment shape。附录给恒等式与有限求和推导。
 
-原始3分Reviewer 27bE回查：官方作者导出位于历史分支`main_0726`的`rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md`，Part IV，rating 3、confidence 4。其R27bE.1/.4针对Cosh形状、τ选择及理论链的具体归因。作者最终明确本稿此处只需建立allocation有效：相同频率端点和训练配置下，中间30个频率的重新分配在三seed改善外推NLL。控制条件简述，保留明确收益，不把该实验扩大为对所有形状/理论问题的回答；M4已有替代形状结果按原身份保留。
+§5.2与TailSpline附录加入T−C=(1−w)(BM−Uni)、C构造、反对称累计profile差和证明；CPU用精确有理数核验n=1/2/3/4/17/18/32/64。现有T/P结果保持原值，未据此宣称单侧边界机制成立。当前本地与GitHub main（45e1ed9快照）均未登记E1完整任务报告；作者要求找不到就不阻塞，因此本轮只接入可验证数学，不声称实验未完成或补造其结果。
 
-新版Pro写作计划（§6–8）的选择性吸收：引言改为具体问题→已有工作与增量→识别结果→结构与构造→用途和贡献；151.9M段落结果前置；构造节用“学习可适应新基、冻结部署沿用已学频率—坐标关联”正面解释两条路线；Table1各分块直接标注Geo/Native及seed身份。几何/MLA分图、简化部署图、语义图引用、局部代价已落实。E1的T/P/C图与推论、新clean RULER/QA主表依赖额外完整材料，本轮不据计划文字新增结论；BM自然QA主表保留。按作者最新决定，retarget不重新前置；附录不为这份新计划全量重排。
+正文上限9页，五图两表，图数服从论证。零训练是主要实用落点；Cosh学习与适配按原协议支撑allocation的用途。350M等新结果仍只在完整报告可用时接入，不启动模型或GPU实验。下方记录保留各自历史身份。
 
-本节为当前决定，下方改稿记录保留各自历史身份。交付验收回执见本轮末尾。
+## 一轮独立审稿与优化
+
+完成一次新上下文、仅PDF的独立审稿，输入未包含源码、对话或旧评语；[原始意见](research/pdf-review-rounds/20260914_range_shape/r01/review.md)给出6/10、弱接收倾向，核心数学复核未发现错误。该评分针对优化前的冻结稿；未追加第二轮评分。
+
+已按[处理记录](research/pdf-review-rounds/20260914_range_shape/r01/disposition.md)完成一轮修正：BM/MrPro确认与同输入Uni/YaRN追加控制分别标注；正文明确RULER面板经过深度选择和前缀填充，附录写明filler及token生成规则；正文补同一Q/K-only RULER适配的原生/长端权衡；Fig5标题只归于已测TailSpline表相对MrPro的收益；构造节明确两个独立设计先验。缺少的四单元绝对NLL、padding分布、E1和额外同面板基线未凭空补齐，不启动模型评估。
 
 ## 当前正文
 
@@ -101,7 +104,7 @@ Final build: 9 scientific-body pages, 55 total pages; three main figures and two
 
 整体修订验收：9页正文、55页总稿；四图两表。图3与学习段同页，零训练图不再提前插入学习结果；相关工作和结论保持完整段落。71个公式/正式命题环境内容保持一致，实验数值表未改。PDF逐页与受影响附录检查、源码包独立解包编译通过，0未定义引用、0溢出。
 
-## 本轮交付回执：写作锚点与新版Pro建议
+## 上一轮交付回执：写作锚点与新版Pro建议
 
 最终主文9页，总稿56页；五张主图、两张主表。使用现有Tectonic完成本地与源码包独立构建，0未定义引用/文献、0 overfull、匿名和嵌入字体检查通过；标题文本保持，仅固定换行避免引擎将RoPE单词孤立成行。逐页检查全部主文和受影响的固定端点/TailSpline附录，并修复结果段被图打断的跨页问题。
 
@@ -119,3 +122,17 @@ Final build: 9 scientific-body pages, 55 total pages; three main figures and two
 | 文档与证据 | 主张映射、相关资产位置、生成输入及当前导航已同步；未运行模型、未提交或推送 |
 
 文档检查124份受管文档、1592条本地链接、41项资产；仅剩原有两项来源快照差异：`research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md`与仓库根下`docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md`。本轮有意修改的构造正文和图源快照已更新，未改写这两项历史身份。
+
+## 本轮交付回执：range与等位移形状修正
+
+基线`dadc2174`。完成Fig2(a)替换及§3.1范围政策对照；§3.2和C42附录修复质心重复计数；§5.2/Appendix H.2给出T/C分解、C定义和闭式差分。累计profile差关于q→n−q反对称；没有把该性质误写成increment差反对称。E1完整任务报告未在当前本地或远端main快照中定位；按作者要求不继续阻塞，不把CPU构造核验写成任务机制验证。
+
+验证：正文9页、总稿56页、五图两表；0未定义引用/文献、0 overfull，匿名与嵌入字体检查通过。主文逐页及受影响附录检查完成。71个已有公式/正式命题环境原样保留，新增4个恒等式/构造公式；原图源观测及两张主表数字不变。精确有理数核验覆盖n=1/2/3/4/17/18/32/64，另核对两种support政策的图源均值。源码包93项论文依赖＋31项运行代码，124项manifest核对、独立解包CPU核验和编译通过。
+
+文档检查仍仅有此前的有限窗receipt与fixed-u结果两项来源快照差异，没有本轮新增错误。未运行模型实验、未修改运行表、未提交或推送。
+
+## 独立审稿后优化验收
+
+一次PDF-only审稿＋一次优化完成；原始评分6/10仅针对冻结输入。主文9页、总稿56页，五图两表；75个公式/正式命题环境和原图表数据保持不变。正文新呈现的Q/K-only RULER三长度差值从原owner重算一致。修订后的主文及受影响附录已逐页检查，0未定义引用/文献、0 overfull，匿名及字体检查通过；124项源码包manifest和独立解包构建通过。源映射有意修改的快照已更新，文档检查仍仅剩原有两项历史快照差异。未运行模型实验、未提交或推送。
+
+本轮完整记录：[审稿](research/pdf-review-rounds/20260914_range_shape/r01/review.md)、[处理](research/pdf-review-rounds/20260914_range_shape/r01/disposition.md)、[验证](research/pdf-review-rounds/20260914_range_shape/r01/validation.json)。

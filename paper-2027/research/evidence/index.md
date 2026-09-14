@@ -21,7 +21,7 @@
 | A13 / P1 | **selective-QK自然QA**：位置相关适配能否改善自然输出 | 匹配独立适配摘要；§6末指针 / a6 | [metrics.json](../../../rebuttal/rebuttal_0723/theory_results/olmo2_qk_phase_adaptation_20260729/metrics.json) (tracked) |
 | A14 / P1 | **BM自然QA及四方法匹配**：成熟构造的任务价值 | QA逐行重算；匹配摘要；§6.3 / Table2 / a7,a9 | [ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json](../../../docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json) (tracked)<br>[ROPE_OLMO_BM_RESULT_20260908.json](../../../docs/research/ROPE_OLMO_BM_RESULT_20260908.json) (tracked)<br>[ROPE_MRPRO_BM_CANDIDATE_20260908.json](../../../docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json) (tracked) |
 | A15 / P1 | **C2紧凑profile迁移**：有效配置能否用低维结构描述 | CPU构造和GPU回执；§6末指针 / a9 | [LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json](../attention-aware-retrofit/evidence/LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json) (tracked) |
-| A16 / P1 | **C42同总量形状对**：相同总位移与质心是否仍有结构 | 350开发raw rows；另16文档NLL；§3末指针 / a9 | [ctl_C42.jsonl](../../../ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42.jsonl) (tracked)<br>[ctl_C42V24.jsonl](../../../ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42V24.jsonl) (tracked)<br>[coverage_theory_20260911.py](../../../ds_workspace/recon_20260910/code/coverage_theory_20260911.py) (tracked)<br>[HEADLINE_20260911.md](../../../ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md) (tracked) |
+| A16 / P1 | **C42同总量形状对**：同总位移下的高阶increment形状 | 350开发raw rows；另16文档NLL；§3末指针 / a9 | [ctl_C42.jsonl](../../../ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42.jsonl) (tracked)<br>[ctl_C42V24.jsonl](../../../ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42V24.jsonl) (tracked)<br>[coverage_theory_20260911.py](../../../ds_workspace/recon_20260910/code/coverage_theory_20260911.py) (tracked)<br>[HEADLINE_20260911.md](../../../ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md) (tracked) |
 | A17 / P1 | **有限网格placement**：连续profile如何安装到不同K | 预注册确认回执；§6末指针 / a7 | [K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json](../attention-aware-retrofit/evidence/K128_COORDINATE_CONFIRMATION_RECEIPT_20260901.json) (tracked)<br>[K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json](../attention-aware-retrofit/evidence/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RECEIPT_20260901.json) (tracked) |
 | A18 / P2 | **454M四臂组合**：分配与部署算子怎样组合 | 三seed表摘要；a2 | [table2_evq_yarn_454m_passkey_10pct.json](../../../data/curated/table2_evq_yarn_454m_passkey_10pct.json) (tracked) |
 | A19 / P2 | **1.485B released与from-init**：更大模型中的分配后果 | 报告与文档配对；a6 | [OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md](../../../rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md) (tracked) |
@@ -47,7 +47,7 @@
 | A34 | Qwen2.5-1.5B S=2冻结确认：开发低6、独立追加12及累计18 | [结果owner](../../../docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md)；Core-6×32/48/64K；累计AUC对BM区间为正、Native 32K正差；对MrPro/C42未确认 |
 | A35 | 功能相位区间的条件构造与band内固定坐标倍率迁移 | [推导](../../../docs/research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md)、[CPU核验](../../../docs/research/next_stage_20260912/rope_design_theorems_cpu_20260913.json)；条件数学与变量控制，不是任务最优表或GPU胜利 |
 | A36 | OLMo S=4→8 fixed-u倍率迁移反事实 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md)；Core-6×4/16/32K×6行/格；同prompt/gain的fixed-u AUC显著低于fixed-m，终止该迁移分支 |
-| A37 | TailSpline精确有限网格构造 | [方法与评测合同](../../../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py)；one-sided唯一解是TailSpline、symmetric唯一解是BM；CPU不选择边界条件 |
+| A37 | TailSpline精确有限网格构造及同位移T/C分解 | [方法与评测合同](../../../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py)；one-sided唯一解是TailSpline、symmetric唯一解是BM；CPU不选择边界条件 |
 | A38 | YaRN–MrPro等剂量单交叉后移对照 | [理论审计](../../../docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py)；`n=17`唯一`S*=7.51324282212058`、等总log位移、单交叉；尚无模型性能结论 |
 | A39 | TailSpline–MrPro Llama S4经典两臂判决 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)；Full-13与PPL46全量配对raw；Full-13 `+3.20pp`、NIAH `+3.75pp`、PPL AUC `−0.00449`，3/3方向通过；跨模型见A40，机制仍待解混 |
 | A40 | TailSpline–MrPro OLMo S4跨模型确认 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)；Full-13与PPL46全量配对raw；Full-13 `+49.23pp`、NIAH `+64.45pp`、PPL AUC `−3.853`，13任务差全部为正；机制仍混入总剂量 |
@@ -69,7 +69,7 @@
 - **A13**：与EOS/8B不同adapter和协议。
 - **A14**：自然QA631长层与48长RULER提示不混；F1含触顶响应。
 - **A15**：无Qwen重拟合；native窗口代价保留。
-- **A16**：开发发现，不等于独立泛化确认。
+- **A16**：开发发现，不等于独立泛化确认；固定band、倍率与单位increment mass时，质心由总位移决定。
 - **A17**：K与checkpoint共变；full13为table×amplitude联合收益。
 - **A18**：repo fixed-ramp不是officialYaRN；PK为teacher-forced。
 - **A19**：from-init trainer差异与released配对分开。

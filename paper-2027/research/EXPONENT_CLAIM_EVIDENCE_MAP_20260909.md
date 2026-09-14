@@ -15,17 +15,17 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 | 认识 | 本项发现与作用 | 相邻成果的联系 | 当前稿件位置 |
 |---|---|---|---|
 | 研究对象 | x=a+Rz 分离端点与内部位置；pi 分离槽指派 | 为纯内部干预和冻结安装定义对象 | 主文 §2 |
-| C01 独立作用 | 151.9M 三 seed：matched support下只动30内点，2×/4×/8× NLL均改善；几何对照配置源自FMRoPE | 给几何分析一个实际需要解释的变量 | §3.1、Fig.2、App. exact-range |
+| C01 独立作用 | 151.9M 三 seed：matched support下只动30内点，2×/4×/8× NLL均改善；几何对照配置源自FMRoPE | 给几何分析一个实际需要解释的变量 | §3.1、Fig.2a/b（两种support policy）、App. exact-range |
 | C02 位置对象 | 完整 sin/cos 子空间、canonical overlap、rank 恒等式 | 把点位差异转成位置方向分配 | §4.1、Fig.3、App. A |
 | C03 有限窗结构 | 核心 b256 网格最慢8对 r2=2.11474 | 使位置基分析落到核心训练参数，非模型loss中介效应证明 | §4.2、Fig.3、App. finite-window-rank |
-| C04 学得兼容 | 两尺度 crossing、运行范围反转、同谱置换与补偿恒等式 | 将位置基与权重使用联系，动机转入成熟部署 | 附录兼容性整节及原交叉图 |
+| C04 学得兼容 | 两尺度 crossing、运行范围反转、同谱置换与补偿恒等式 | 将位置基与权重使用联系，动机转入成熟部署 | range policy在§3.1/Fig.2；完整兼容性在附录 |
 | C05 可构造性 | Cosh 明示密度目标、唯一解、逆CDF、端点锚定 | 从对象和设计偏好到一个可安装实例 | §5.1、App. A |
 | C06 多形状价值 | M4：7/12 reference、10/12 preassigned1.25、9/12 Exp | 主变量价值超出一条曲线；Cosh/Exp差异按区间呈现 | §3多形状段、App. B |
 | C07 旋转预算 | 432M MLA三seed，完整8/16/24/32K曲线与共享blend | 学习期构造在少pair架构的实际价值 | §6.1、Fig.4、Table1、App. MLA |
 | C08 继续学习 | 750M共享起点续训、完整长度PPL与40-case生成 | 学习已有模型的新分配可影响生成 | §6.1、Table1、App. larger-scale |
 | C09 适配与读出 | 8B PPL/来源使用、同adapter任务结果、独立516-step后续 | 区分学到长程来源使用与任务转换；保留整组证据 | §6末指针、App. Llama；完整结果在附录 |
 | C10 成熟模型内点效应 | OLMo/Qwen同支持冻结干预 | 与学习期C01连接，扩展至固定权重和任务指标 | §3.2、App. frozen |
-| 等总位移下的形状作用 | BM–Uni同端点、band、gain及总log位移，六任务48输入的16K开发面板分数51.32/32.12% | 总位移不能解释该开发小面板分数差；不是TailSpline机制归因或自然QA复现 | §3等总位移段、App. four-method-control；C42开发对照另列附录 |
+| 等总位移下的形状作用 | BM–Uni同端点、band、gain及总log位移，六任务48长输入的追加对照分数51.32/32.12%，使用BM/MrPro确认输入 | 总位移不能解释该追加对照分数差；不是TailSpline机制归因或自然QA复现 | §3等总位移段、App. four-method-control；C42开发对照另列附录 |
 | C11 实际部署 | BM构造、同倍率确认、五任务自然QA | 从纯作用到一个有用分配实例 | §6.3、Table2、App. BM |
 | C12 离散安装 | Gemma K128 index/direct gap +6.19 | 连续profile安装到有限网格仍是设计选择 | §6末指针、App. placement |
 | C13 完整配置 | Qwen0.5B full13 +6.09，32K近等 | 频率表与振幅的实际系统收益 | §6末指针、App. index |
@@ -36,6 +36,8 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 
 | 主张 | 身份 | 正文 |
 |---|---|---|
+| 位移与increment质心等价 | 固定band、倍率、单位increment mass；Σm=n−μ，质心不是额外独立控制 | §3.2、C42附录 |
+| TailSpline同位移形状对照 | T−C=(1−w)(BM−Uni)精确恒等式与C构造；不含E1任务结论 | §5.2、TailSpline附录 |
 | TailSpline有限网格唯一解 | 声明的单侧差分能量；CPU独立KKT核验 | §5.2、证明附录 |
 | Llama零训练收益 | A39，共同端点/band/gain/权重下比较内部分配，报告聚合 | 摘要、§6.2、Fig.5b |
 | OLMo零训练确认 | A40，同样固定外部条件，exact表在本次输出前冻结 | 摘要、§6.2、Fig.5c |
@@ -48,7 +50,7 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 
 ## 本轮图表与证据职责
 
-- Fig.2保留同端点示意、151.9M三seed fixed-support收益及冻结同支持结果；FMRoPE只注明几何配置来源。历史target-matched评价是当时的方法比较设置，保留附录，不前置为allocation收益边界。
+- Fig.2(a)显示target-matched三seed响应，(b)保留训练支持的收益，(c)冻结同支持任务；两种support政策在§3.1共同呈现。FMRoPE只注明几何配置来源。
 - Fig.3在§4展示full-pair overlap与慢频块effective rank；Fig.4在§6展示三seed MLA曲线，两者不再共用面板。
 - Fig.5保留边界增量及两模型Full-13曲线；已有报告的AUC区间写入可移植图源，未构造逐长度区间。NIAH/PPL分解进入TailSpline附录；Llama 8/16K PPL代价、QA family −1.25pp与OLMo 133/390、142/390 cap-hit保留正文。
 - 新标准Transformer 350M若在正文冻结前完成三seed fixed-support对照，仅作为§3.1的scale confirmation接入，完整协议及逐seed结果入固定支持附录。未完成时不写论文占位，不混用历史MLA文件，不跨规模合并seed；当前尚未据此新增主张或资产。
@@ -174,3 +176,7 @@ Fig1新增公式生成的方法总览，原三张实证图顺延为Fig2–4；�
 ## 整体审读后的论证分工
 
 固定支持训练识别z的学习价值；TailSpline–MrPro在共同外部频段、端点、band、gain与权重下直接检验内部z；BM–Uni等总位移对照进一步分离总位移与更细形状。固定支持时总log位移由z决定，不能把它当成z之外的另一项改动来削弱前两类结果。跨表/槽位实验仍在附录解释学得的频率—坐标关联，不在理论到构造的正文过渡中插入失败分数。
+
+## 独立审稿后的一轮修正
+
+[PDF-only审稿与逐项处理](pdf-review-rounds/20260914_range_shape/r01/disposition.md)：BM–Uni作为BM/MrPro确认面板上的追加控制；明确主RULER的prefix padding规则；正文补同一Q/K-only RULER适配的原生/长端差值；Fig5标题归收益于已测TailSpline表。四单元绝对NLL、padding分布与新增同面板基线/E1未凭空补齐。

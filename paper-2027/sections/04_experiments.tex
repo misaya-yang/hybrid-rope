@@ -29,11 +29,11 @@ The OLMo pair in Table~\ref{tab:training-models} produces complete answers after
 \label{sec:tailspline-evaluation}
 We compare exact finite-grid TailSpline and MrRoPE-Pro on frozen Llama-$3$-$8$B-Instruct, using $s=4$, native window $8192$, band $[18,35]$, and common gain $1+0.1\ln4$.
 
-Each method installs one static table. The arms differ in interior allocation while sharing the outer frequency bands, endpoints, gain, weights, inputs and decoder. A depth-balanced RULER-13 panel has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). NIAH depth selection and fixed-budget padding use no model outputs (Appendix~\ref{sec:tailspline-implementation}). PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents ($138$ rows per arm) \citep{azerbayev2022proofpile,rae2019compressive}.
+Each method installs one static table. The arms differ in interior allocation while sharing the outer frequency bands, endpoints, gain, weights, inputs and decoder. Their total displacement also differs; the equal-displacement control in Appendix~\ref{sec:tailspline-dose-control} defines a separate shape contrast, whose task effect is not reported here. The depth-selected, prefix-padded RULER-13 panel has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). NIAH depth selection and fixed-budget padding use no model outputs (Appendix~\ref{sec:tailspline-implementation}). PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents ($138$ rows per arm) \citep{azerbayev2022proofpile,rae2019compressive}.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_tailspline_main.pdf}
-\caption{\textbf{Boundary design improves frozen-model task scores.} (a) At $n=17$, TailSpline trades a larger entry jump for a smaller tail jump. (b,c) Depth-balanced RULER-13 curves; annotations give log-length AUC differences and paired $95\%$ intervals, not per-length intervals. Arms share band, endpoints, gain and inputs within each model. NIAH/PPL responses are in Appendix~\ref{sec:tailspline-details}.}
+\caption{\textbf{TailSpline improves over MrPro on the matched panels.} (a) At $n=17$, TailSpline trades a larger entry jump for a smaller tail jump. (b,c) Depth-balanced RULER-13 curves; annotations give log-length AUC differences and paired $95\%$ intervals, not per-length intervals. Arms share band, endpoints, gain and inputs within each model. NIAH/PPL responses are in Appendix~\ref{sec:tailspline-details}.}
 \label{fig:tailspline-main}
 \end{figure}
 
@@ -55,5 +55,5 @@ The complementary symmetric construction, BM, tests allocation design on natural
 
 BM's natural-QA result complements TailSpline's two-model confirmation and the equal-displacement control in \S\ref{sec:equal-displacement}. Small Qwen $128$K panels favor MrPro over BM ($78.13/70.83\%$ at $3$B and $84.44/71.11\%$ at $7$B), illustrating the different tested scopes of these constructions.
 
-Separate protocols broaden the evidence: a frozen Qwen-$0.5$B configuration improves $64$K RULER-13 over YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}); selective-Q/K adaptation improves long-input natural QA (Appendix~\ref{sec:olmo2-1b}); Video DiT shows temporal extrapolation gains (Appendix~\ref{sec:video-dit}).
+In a separate OLMo Q/K-only RULER adaptation, Cosh-minus-Native macro is $-29.75/+29.61/+4.65$ points at $4/8/16$K, showing the native/extended-length trade-off (Appendix~\ref{sec:olmo2-1b}). Frozen Qwen-$0.5$B also improves $64$K RULER-13 over YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}).
 \label{sec:interval-main}

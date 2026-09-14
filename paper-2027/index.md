@@ -26,3 +26,7 @@ python3 paper-2027/package_source.py
 源包按`package_source.py`的实际依赖收集，不包含内部research、Pro指导或全仓库原始实验流。2026-09-14已更新TeX/PDF与源码包，并在解包目录运行五项CPU核验并独立编译；未运行模型实验。
 
 当前写作锚点修订：151.9M保留固定支持下的三seed外推收益，几何对照配置仅注明FMRoPE来源；Fig3几何与Fig4学习分开，Fig5简化为边界与两模型Full-13，代价留正文。正文9页、五图两表；最新处理与验收见[修订目标](REVISION_BRIEF.md)。
+
+最新range/shape修正：Fig2并列retarget与保留训练support的结果，§3.2修复总位移/质心重复计数，§5.2及附录加入TailSpline同位移T/C分解。E1实测未在当前可用报告中定位，不据数学恒等式宣称任务机制已验证。
+
+已完成[一轮独立PDF审稿](research/pdf-review-rounds/20260914_range_shape/r01/review.md)及[一轮优化处理](research/pdf-review-rounds/20260914_range_shape/r01/disposition.md)，原始意见、冻结PDF和修改后验收分开保存。

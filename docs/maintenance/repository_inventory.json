@@ -9839,6 +9839,26 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/paper.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/index.md",
       "area": "paper-2027",
       "category": "navigation"

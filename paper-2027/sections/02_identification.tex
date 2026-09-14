@@ -7,9 +7,11 @@ Within each of three seeds, architecture, initialization, token order, optimizer
 
 With the training support retained at evaluation, mean Cosh-minus-Geo tail NLL is $+0.026$ at the training length and $-0.281/-0.176/-0.146$ at $512/1024/2048$ tokens. All three paired seeds improve at every extended length (Fig.~\ref{fig:spectral-budget-overview}b).
 
+Retargeting both supports to $b=L_{\rm eval}$ while retaining each trained checkpoint and normalized allocation reverses the ordering: Cosh-minus-Geo NLL becomes $+0.060/+0.227/+0.460$, with all three seeds favoring Geo (Fig.~\ref{fig:spectral-budget-overview}a). Allocation is a useful design variable, and its preferred setting depends on the support policy.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
-\caption{\textbf{Interior allocation improves extrapolation and frozen tasks.} (a) The matched geometric control (Geo) and anchored Cosh share both sampled endpoints and $32$ rotary pairs. (b) Cosh-minus-Geo tail NLL at the training length ($1\times=256$) and three extended lengths; thin lines show the three paired seeds, the thick line their mean. (c) OLMo's nine held-out and Qwen's four development tasks, with $20$ inputs/task; arms share endpoints, amplitude, weights and inputs.}
+\caption{\textbf{Allocation gains depend on the support policy.} (a,b) Cosh-minus-Geo tail NLL for the same three paired $151.9$M models: retargeted support ($b=L_{\rm eval}$) versus retained training support ($b=256$). Thin lines show seeds; thick lines their means; $1\times=256$ tokens. Geo is the matched geometric control. (c) Frozen matched-support tasks: OLMo's nine held-out and Qwen's four development tasks, $20$ inputs/task, with shared endpoints, amplitude, weights and inputs within each model.}
 \label{fig:spectral-budget-overview}
 \end{figure}

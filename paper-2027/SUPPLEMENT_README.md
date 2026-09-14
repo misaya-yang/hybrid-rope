@@ -70,3 +70,8 @@ The main displays separately show fixed-support controls, full-pair geometry,
 MLA learning and frozen deployment. Reported TailSpline AUC intervals are
 stored in `allocation_value_inputs.json`; they are not pointwise confidence
 bands. The NIAH/PPL decomposition is retained in `fig_tailspline_details.pdf`.
+
+The constructor's CPU verification also checks the displacement/centroid identity
+and the exact equal-displacement contrast `T-C=(1-w)(BM-Uni)`, including the
+`n=1,2` degenerate cases. This validates the control construction, not an E1
+task-score result. Figure 2 uses both recorded support-policy conditions.

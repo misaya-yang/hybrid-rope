@@ -156,28 +156,21 @@ def method_overview():
 
 def overview():
     fig,axes=plt.subplots(1,3,figsize=(7.25,2.45))
-    ax=axes[0];u=(np.arange(32)+.5)/32
-    quant=1-np.arcsinh((1-u)*np.sinh(4))/4
-    z=(quant-quant[0])/(quant[-1]-quant[0])
-    for values,y,color,label in [(np.linspace(0,1,32),.7,BLUE,'Geo'),(z,.25,ORANGE,'Cosh')]:
-        ax.scatter(values,np.full(32,y),s=8,color=color)
-        ax.scatter([0,1],[y,y],s=25,facecolor='white',edgecolor=INK)
-        ax.text(.03,y+.12,label,color=color,fontsize=9)
-    ax.set(xlim=(-.05,1.05),ylim=(0,1),xlabel='Normalized exponent',yticks=[])
-    ax.spines[['left','right','top']].set_visible(False)
-    ax.set_title('(a) Matched endpoints',loc='left',fontsize=9)
-    ax=axes[1];lengths=[256,512,1024,2048];block=D['range']['fixed_training_range']
-    values=np.array([[block[str(length)]['seed_values'][str(seed)]
-                      for length in lengths] for seed in [42,137,256]])
-    assert np.all(values[:,1:]<0)
-    for row in values:
-        ax.plot(range(4),row,color='#AFB7BD',lw=.85,marker='o',ms=2)
-    ax.plot(range(4),values.mean(0),color=ORANGE,lw=1.8,marker='D',ms=3)
-    ax.axhline(0,color=INK,lw=.7)
-    ax.set(xticks=range(4),xticklabels=['1x','2x','4x','8x'],
-           xlabel='Eval. / train length',ylabel='Cosh - Geo tail NLL')
-    ax.set_title('(b) Three-seed fixed support',loc='left',fontsize=9)
-    axis_style(ax)
+    lengths=[256,512,1024,2048]
+    for ax,key,title,color in zip(axes[:2],['target_matched_range','fixed_training_range'],
+                                  ['(a) Retargeted support','(b) Retained training support'],[BLUE,ORANGE]):
+        block=D['range'][key]
+        values=np.array([[block[str(length)]['seed_values'][str(seed)]
+                          for length in lengths] for seed in [42,137,256]])
+        assert np.all(values[:,1:]>0) if key=='target_matched_range' else np.all(values[:,1:]<0)
+        for row in values:
+            ax.plot(range(4),row,color='#AFB7BD',lw=.85,marker='o',ms=2)
+        ax.plot(range(4),values.mean(0),color=color,lw=1.8,marker='D',ms=3)
+        ax.axhline(0,color=INK,lw=.7)
+        ax.set(xticks=range(4),xticklabels=['1x','2x','4x','8x'],
+               xlabel='Eval. / train length',ylabel='Cosh - Geo tail NLL',ylim=(-.52,.76))
+        ax.set_title(title,loc='left',fontsize=9)
+        axis_style(ax)
     ax=axes[2];keys=['same_support_geometric','nearest_movement_profile_ramp','derived']
     for i,(key,color,label) in enumerate(zip(keys,[BLUE,'#009E73',ORANGE],['Uniform','Ramp','Derived'])):
         values=[D['frozen'][model]['macro'][key]*100

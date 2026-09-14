@@ -1,0 +1,16 @@
+{
+  "round": 1,
+  "mode": "PDF_ONLY",
+  "sha256": "2c1e9f9988b398897181b5f2511e85b260822a01ad25ed7b66125e195da5ab6c",
+  "input": "paper.pdf",
+  "prior_reviews_provided": false,
+  "conversation_provided": false,
+  "source_access_allowed": false,
+  "main_text_pages": 9,
+  "total_pages": 56,
+  "manuscript_state": "current completed range/shape revision; uncommitted working tree preserved",
+  "reviewer_agent_task": "independent_paper_reviewer",
+  "review_complete": true,
+  "review_score": 6,
+  "review_confidence": 4
+}

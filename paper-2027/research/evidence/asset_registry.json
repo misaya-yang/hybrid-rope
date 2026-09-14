@@ -10,7 +10,7 @@
       "question": "相同实际support与训练配置下，只改变30个interior z能否改善外推",
       "evidence_grade": "三seed配对；带raw hash摘要",
       "manuscript_location": "§3.1 / Fig2 / a5",
-      "interpretation": "三seed的2×/4×/8× NLL均改善；几何对照配置源自FMRoPE，不作方法胜负比较。绝对四格NLL尚未追回，配对差已确认",
+      "interpretation": "保留训练support时三seed的2×/4×/8× NLL均改善；target-matched时排序反转，说明所测排序依赖support policy。几何配置源自FMRoPE，不作方法排名；绝对四格NLL尚未追回，配对差已确认",
       "sources": [
         {
           "path": "paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.json",
@@ -156,8 +156,8 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "45d6e2f0662605610a77f55ed4a9d7123df3e7aeff82bff1fa6f0cee2504ab88",
-          "revision_note": "2026-09-14 writing-anchor revision: exposition/figure organization and existing report-backed AUC intervals; original observations and constructions unchanged."
+          "sha256": "292b4ce7ff7ca4dbe75715c70b3900a135a2cbc2db24d9037e00e1601831f85e",
+          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
         }
       ]
     },
@@ -328,10 +328,10 @@
       "id": "A16",
       "name": "C42同总量形状对",
       "priority": "P1",
-      "question": "相同总位移与质心是否仍有结构",
+      "question": "相同总位移下更高阶increment形状是否仍影响任务",
       "evidence_grade": "350开发raw rows；另16文档NLL",
       "manuscript_location": "§3末指针 / a9",
-      "interpretation": "开发发现，不等于独立泛化确认",
+      "interpretation": "开发面板；固定band和倍率时质心由总位移确定，不是额外独立控制",
       "sources": [
         {
           "path": "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42.jsonl",
@@ -849,6 +849,19 @@
           "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
           "availability": "local-untracked",
           "sha256": "d1506c172a75baa095257b56e478cb5c7d699c82df7e7a132b2488d112b1c7af"
+        },
+        {
+          "path": "paper-2027/appendix/a10_tailspline.tex",
+          "availability": "tracked",
+          "sha256": "55e231a4ad78c04787d5d031a3430ab7685df4e816ef212d019a1c145dfdfc31",
+          "role": "Exact matched-displacement T-C identity and centroid equivalence; mathematical verification only, no E1 task scores.",
+          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
+        },
+        {
+          "path": "paper-2027/figs/allocation_design.py",
+          "availability": "tracked",
+          "sha256": "12e0ffc60f62b5a517fe2c8b47411819ec2398925defe194a7458fcbcf365f37",
+          "role": "Exact matched-displacement T-C identity and centroid equivalence; mathematical verification only, no E1 task scores."
         }
       ]
     },
