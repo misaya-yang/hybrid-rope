@@ -42,6 +42,10 @@
 | A29 | 固定表区间开发对照：Llama两表端点相同、中段不同；OLMo324行mini权衡 | [记录汇总](../../figs/interval_development_inputs.json)、[结果owner](../../../docs/research/next_stage_20260912/BAND_NEXT_STAGE_RESULT_20260913.md)；report-backed，非本次raw复核；§5.3、App.H |
 | A30 | 区间深度条件解、加权解与周期反例 | [证明](../../sections/05_threeband.tex)、[独立校验](../../figs/verify_interval_design.py)；条件数学，不是已验证模型方法；§5.3、App.H |
 | A31 | Llama S=4固定表同口径区间确认：log-gain中点相对BM/MrPro/C42的AUC与worst提升、Native FWE反例及两条修复路线的收束 | [结果owner](../../../docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md)；Core-6×8/16/32K×12行/格完全配对；后续full-z CAL和shape×gain哨兵为开发证据；非跨benchmark SOTA；当前正文尚未据此改写 |
+| A32 | Llama S=8冻结经验规则迁移：共同32K桥接、64K强对照与Native代价 | [结果owner](../../../docs/research/next_stage_20260912/LLAMA_S8_SCALE_TRANSFER_RESULT_20260913.md)；Core-6低6；64K优于MrPro、与BM持平，Native 8K显著退化；未形成匹配区间AUC |
+| A33 | OLMo S=8冻结经验规则迁移：4/16/32K采样区间及两个gain点 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md)；Core-6低6；完整配置AUC优于BM/MrPro，绝对32K低且Native未测 |
+| A34 | Qwen2.5-1.5B S=2冻结确认：开发低6、独立追加12及累计18 | [结果owner](../../../docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md)；Core-6×32/48/64K；累计AUC对BM区间为正、Native 32K正差；对MrPro/C42未确认 |
+| A35 | 功能相位区间的条件构造与band内固定坐标倍率迁移 | [推导](../../../docs/research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md)、[CPU核验](../../../docs/research/next_stage_20260912/rope_design_theorems_cpu_20260913.json)；条件数学与变量控制，不是任务最优表或GPU胜利 |
 
 ## 使用时的解释边界
 
@@ -74,6 +78,10 @@
 - **A27**：350/180不可拼接交互；局部反例非普遍定律。
 - **A28**：成熟phase-shell oracle非scratch matched比较；门失败与后续recovery分开。
 - **A31**：AUC/worst强结果与Native FWE负格同时保留；开发暴露面板不冒充最终独立SOTA。
+- **A32**：只支持当前64K端点和8K Native配对；经验band、0.75和gain未由理论推出。
+- **A33**：候选与基线是frequency×gain完整配置比较；两个candidate gain点不能证明普遍校准规律。
+- **A34**：累计18含已开封低6；独立追加块三项AUC差均跨0，C42的64K/worst点估计更高。
+- **A35**：功能区间给定后才可解析求表；当前缺逐行、角色限定signed C输入，Native旋转误差界在实际中频槽已饱和。
 
 ## 添加或更正结果
 

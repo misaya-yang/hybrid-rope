@@ -3,9 +3,10 @@
 更新：2026-09-13。这里实现
 `fixed_rope_three_interfaces_execution_plan_20260913.md` 中可直接执行的部分，但按当前
 论文目标重排了优先级：先确认已经出现强开发信号的 Llama Solver 固定表，再做
-band、profile depth 和 transition 的机制干预。当前状态是 **代码完成、目标 GPU
-环境已验证并完成多轮 OLMo/Llama S=4 实验**。当前结果owner见
-[Llama S=4与三接口报告](../../docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md)；
+band、profile depth 和 transition 的机制干预。当前状态是 **代码完成，目标 GPU
+环境已完成OLMo/Llama/Qwen多轮实验，本轮队列已自然结束**。阶段总判决见
+[理论与实验阶段报告](../../docs/research/next_stage_20260912/THEORY_AND_EXPERIMENT_PAUSE_REPORT_20260914.md)，
+Llama S4细节见[结果owner](../../docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md)；
 不得再按本页早期“未运行”状态重复启动旧队列。
 
 研究层总判断见
@@ -62,6 +63,9 @@ band、profile depth 和 transition 的机制干预。当前状态是 **代码�
 - `matched_point_report.py`：为单一目标长度生成同prompt、task-equal、配对bootstrap报告。
 - `../llama3_60dir_20260911/prepare_planb_panel.py`：旧Llama严格身份合同保持默认不变；
   新增显式generic checkpoint模式和任务子集，用于生成OLMo S8缺失的32K冻结输入。
+- `../olmo_recovery_20260912/recovery_v2_eval.py`：支持`--batch-size`对相邻等长、等输出
+  上限样本做Flash-SDPA批量greedy；本轮Qwen队列未传该参数而使用默认1，后续小模型
+  应先用2/4短canary冻结最大稳定批量，Llama 64K仍保持单条。
 
 checkpoint Q/K capture、finite circular replay 和 active-set/QP 基础实现继续复用
 [`checkpoint_attention_replay_20260913`](../checkpoint_attention_replay_20260913/index.md)。
@@ -89,6 +93,13 @@ checkpoint Q/K capture、finite circular replay 和 active-set/QP 基础实现�
   正负结果和解释边界统一保留在结果owner中。
 - Llama FWE局部transition与full-z一阶修复均未把首token margin推过0；full-z QP还
   越出`m∈[0,1]`预算，因此没有追加自由生成或扩大步长。
+- Llama S8在64K相对MrPro为`+4.95pp`且区间为正，与BM持平；Native 8K为
+  `-15.83pp`且区间为负，因此只形成端点Pareto点，没有匹配区间解。
+- OLMo S8父gain候选在4/16/32K采样网格的AUC为41.87，BM/MrPro为20.28/6.02；
+  绝对32K仅15且Native未测。
+- Qwen S2累计18行/格AUC为79.72，BM/MrPro/C42为75.84/77.58/77.43；仅相对BM的
+  95%区间为正。独立追加12行块三项差值均跨0；Native 32K累计差`+6.51pp`且区间
+  为正。详见[Qwen owner](../../docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md)。
 
 ## 原始冻结队列（历史计划）
 
@@ -104,9 +115,11 @@ checkpoint Q/K capture、finite circular replay 和 active-set/QP 基础实现�
    Solver/BM/MrPro 的 low rows 从第一阶段相同 table/prompt 输出复用。
 5. `checkpoint_replay`：仅在 R0/R1 通过后执行，当前合同保留阶段但不自动产生 GPU job。
 
-## 服务器完整开机后的命令
+## 历史启动命令（当前不得自动重放）
 
-先做极轻量检查：
+以下命令只保留可复现性。本轮队列已完成；没有新的作者指令时不得据此重启旧queue。
+
+当未来明确恢复同一队列时，先做极轻量检查：
 
 ```bash
 cd /root/autodl-tmp/hybrid-rope
@@ -125,9 +138,8 @@ python -m experiments.fixed_rope_three_interfaces_20260913.night_run \
   --execute
 ```
 
-不要在当前无卡容器或本地弱机上运行这些测试来冒充服务器验收。实际启动后由 15 分钟
-heartbeat 检查 `night_status.json`、各 job 的 `live.json/status.json`、GPU 利用率、
-显存和磁盘；异常时先区分工程失败、身份失败和真实任务结果，不自动筛掉后续候选。
+不要在当前无卡容器或本地弱机上运行这些测试来冒充服务器验收。旧heartbeat已不是
+当前执行合同；异常时仍需区分工程失败、身份失败和真实任务结果，不自动筛掉候选。
 
 ## 结果边界
 

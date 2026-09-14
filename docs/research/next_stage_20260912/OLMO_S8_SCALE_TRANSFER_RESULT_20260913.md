@@ -7,7 +7,7 @@
 
 模型为`OLMo-2-0425-1B-Instruct`，Native长度`L=4096`。冻结OLMo S4阶段的band
 `[14,31]`和`mix075=0.25 BM+0.75 front-loaded`，只把部署倍率改为S8，slow端完整
-`/8`。比较两个gain：
+`/8`。`0.75`是前序开发冻结的经验系数，不是由当前理论唯一推出。比较两个gain：
 
 - `g=1.099065`：从Llama得到的统一log中点规则；
 - `g=1.138629`：保持OLMo S4父表的实际gain，用于隔离频率倍率迁移。
@@ -43,7 +43,8 @@ static-YaRN的AUC与worst区间也均为正。
 4K/16K/32K分别提高`+5.37/+6.57/+3.15pp`，AUC提高`+5.60pp`。逐任务有反转，
 但总曲线一致改善。因此：
 
-- 可迁移的正证据主要属于频率allocation；
+- 同一候选频率表内，两个gain的差异得到直接识别；候选相对BM/MrPro仍是完整
+  `frequency × gain`配置比较，不能把全部正差归为纯频率因果效应；
 - Llama选择出的log中点gain规则在该OLMo面板上不是两个已测gain中的较优配置；
 - 现有两点不足以证明该规则完全不迁移或“必须”逐checkpoint校准，只证明gain不能在
   未经对照时与transition形状捆成已验证的通用公式。
@@ -66,5 +67,5 @@ static-YaRN的AUC与worst区间也均为正。
 - raw runs：同一根目录`runs/olmo_*_s8_*`。
 - 数据准备：`experiments/llama3_60dir_20260911/prepare_planb_panel.py`的显式generic模式。
 
-下一步优先完成Qwen第三checkpoint冻结迁移；Native 4K只需复用/补同prompt一次，不
-应触发新的OLMo band或gain sweep。
+本轮GPU实验到此停止。Native 4K仍是未测边界；若未来因新benchmark重新开启，只需
+补匹配Native，不应触发新的OLMo band或gain sweep。

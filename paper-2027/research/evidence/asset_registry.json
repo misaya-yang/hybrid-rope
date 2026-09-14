@@ -689,6 +689,130 @@
           "sha256": "61da4364c796c9b1faa6380a6f5a96c2188be477a96a11b224d88d6335ef1928"
         }
       ]
+    },
+    {
+      "id": "A32",
+      "name": "Llama S8冻结经验规则迁移",
+      "priority": "P1",
+      "question": "冻结S4经验分配迁到S8后能否保持共同长度并改善64K强对照",
+      "evidence_grade": "Core-6低6；共同32K桥接；64K三对照；Native 8K同prompt",
+      "manuscript_location": "next-stage owner; current manuscript claim not yet changed",
+      "interpretation": "64K相对MrPro区间为正、与BM宏平均持平且任务族反转；Native 8K显著退化；未形成匹配区间AUC",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/LLAMA_S8_SCALE_TRANSFER_RESULT_20260913.md",
+          "availability": "tracked",
+          "sha256": "7ff1652bad0305b8c2885bdff1f777e438f67eb8652bd82c849b3b40d9ef3c42"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s4_to_s8_mix075_scale_transfer_audit.json",
+          "availability": "local-ignored",
+          "sha256": "8f754470cbb165519b765ca953e064e65828958ed442f8e404a31b654cdbe4b2"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s8_mix075_vs_mrpro_yarn_bm_core6_64k6.json",
+          "availability": "local-ignored",
+          "sha256": "10bb7fdef12a9c06141504b64f2025b6c1cf86905356176b0e2c3b68fb6e774e"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s8_mix075_vs_native_core6_8k6.json",
+          "availability": "local-ignored",
+          "sha256": "3d2b16c26022c3b39245abd76564dc115e4e3e260b5520c17741c0e96bec777a"
+        }
+      ]
+    },
+    {
+      "id": "A33",
+      "name": "OLMo S8冻结经验规则迁移",
+      "priority": "P1",
+      "question": "冻结OLMo经验分配迁到S8后能否提高4K到32K采样区间质量",
+      "evidence_grade": "Core-6三长度6行每格；两个candidate gain；BM/MrPro/static-YaRN配对",
+      "manuscript_location": "next-stage owner; current manuscript claim not yet changed",
+      "interpretation": "父gain完整配置的采样AUC相对BM/MrPro区间为正；绝对32K仍低、Native未测；不作纯频率归因",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md",
+          "availability": "tracked",
+          "sha256": "c307a5e4c88d8fb05192edaee1acd230d0ac6e6adfce5fc09b74033fcfabc93e"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/olmo_s8_mix075_g4standard_vs_mrpro_yarn_bm_core6_4k16k32k6.json",
+          "availability": "local-ignored",
+          "sha256": "c5747f45295e2cd9388549d45a55c9efc98bfbf0e1841ff3fc9c70099ba9dcd4"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/olmo_s8_mix075_vs_mrpro_yarn_bm_core6_4k16k32k6.json",
+          "availability": "local-ignored",
+          "sha256": "77226b50c5f385d1e4b0977bc3fe237024b84923a973e096dd67deb1dd336a3e"
+        }
+      ]
+    },
+    {
+      "id": "A34",
+      "name": "Qwen S2固定表冻结确认",
+      "priority": "P1",
+      "question": "冻结经验表能否在Native到2倍长度的采样区间超过强对照并保持Native",
+      "evidence_grade": "Core-6三长度；低6开发块与独立追加12分别报告；累计18；Native 32K同prompt",
+      "manuscript_location": "next-stage owner; current manuscript claim not yet changed",
+      "interpretation": "累计AUC相对BM区间为正且Native 32K正差；独立追加块三对照均跨0；相对MrPro/C42未确认",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md",
+          "availability": "tracked",
+          "sha256": "9e181396c1e1e83259f5a5feb5c2410f1fd20a0b5d93297dacce503de9935708"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/qwen15_s2_mix075_vs_mrpro_yarn_bm_c42_core6_32k48k64k6.json",
+          "availability": "local-ignored",
+          "sha256": "a0fa5d190c77150cac0c16c520398063d15e53e108e60fccc25624023e1102c6"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/qwen15_s2_mix075_vs_mrpro_bm_c42_core6_block12_rows6_17.json",
+          "availability": "local-ignored",
+          "sha256": "bd76b8cd8d135c43db96d1ab6541087a5ae5e33c48138a0468a1282459eb452f"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/qwen15_s2_mix075_vs_mrpro_bm_c42_core6_32k48k64k18.json",
+          "availability": "local-ignored",
+          "sha256": "d710cd37609784681911f1703137a6cb1cae47cda23ff3683b84eba99223f155"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/reports/qwen15_s2_mix075_vs_native_core6_32k18.json",
+          "availability": "local-ignored",
+          "sha256": "697a8f7d7917d5ac6ac9d71a6be354b5b0518539366e1ee72a08da10667bb9b4"
+        },
+        {
+          "path": "artifacts/fixed_rope_tail_20260913/tables/qwen15_s2_mix075_band22_39_g2mid_rule.json",
+          "availability": "local-ignored",
+          "sha256": "3a27954a11e954b386bece765ca7b9d5a193c191e0f351b847c3de622837fa98"
+        }
+      ]
+    },
+    {
+      "id": "A35",
+      "name": "功能相位区间与band内坐标迁移",
+      "priority": "P1",
+      "question": "怎样从已识别功能约束解析构表，并区分固定指数与固定band内分配的跨倍率迁移",
+      "evidence_grade": "条件定理、闭式构造与标准库CPU穷举/数值核验；无新增模型运行",
+      "manuscript_location": "next-stage theory owner; current manuscript claim not yet changed",
+      "interpretation": "功能区间给定后可求单调最小改动表；固定u迁移是变量控制而非性能最优；当前缺角色限定signed C输入且实际Native算子界饱和",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md",
+          "availability": "tracked",
+          "sha256": "463b9c5cfc117ab4c37c5f3aa2221e46b4ddd189d3d05c9e4ae417e9f81bbf73"
+        },
+        {
+          "path": "scripts/analysis/verify_rope_design_theorems.py",
+          "availability": "tracked",
+          "sha256": "e40b0cc6bde088d3e759e738bc0df13958ee3be4213a5270798929bc46f13df9"
+        },
+        {
+          "path": "docs/research/next_stage_20260912/rope_design_theorems_cpu_20260913.json",
+          "availability": "tracked",
+          "sha256": "c3a5ed753647fd38a181a0069aac0ebaed11667cddeec825ce3babbd16efd16a"
+        }
+      ]
     }
   ]
 }

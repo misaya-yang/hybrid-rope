@@ -1,15 +1,16 @@
 # Llama S8 冻结规则迁移结果
 
-2026-09-13。**状态：进行中。S4→S8共同32K桥接、S8候选8K/32K/64K和同口径
-MrPro/static-YaRN/BM 64K已完成；16K及三基线的8K/16K/32K、matched-gain MrPro和
-OLMo迁移仍在冻结队列中。未完成项不得由旧runner结果替代。**
+2026-09-13。**状态：本轮已收束。S4→S8共同32K桥接、S8候选8K/32K/64K、同口径
+MrPro/static-YaRN/BM 64K和Native 8K已完成；16K曲线及matched-gain机制臂未运行，
+不由旧runner结果替代，也不列为自动队列。**
 
 ## 1. 问题与冻结构造
 
 模型为`Meta-Llama-3-8B-Instruct`，Native长度`L=8192`。从已确认的S4候选冻结：
 
 - band `[16,34]`；
-- exponent allocation `m=0.25 m_BM+0.75 m_frontloaded`；
+- exponent allocation `m=0.25 m_BM+0.75 m_frontloaded`；`0.75`来自开发冻结，不是
+  理论唯一解；
 - full `/S` slow endpoint；
 - 一张表用于全部层和全部输入长度；
 - S8规则gain `sqrt(1+0.1 ln 8)=1.0990651274`；共同长度桥接另固定S4中点gain
@@ -64,8 +65,9 @@ single持平。不能把宏平均增益解释成所有功能共同改善。
 
 这是一项当前有效的8×端点正结果：优势主要来自tracking，并有少量multiquery/FWE
 增益；不是passkey或QA单项驱动。BM则由FWE/MK2支撑、VT只有20，候选与BM是明显
-任务族Pareto交换。它还不是完整区间结论，因为自然2×点16K和三基线的短端曲线尚未
-全部完成。
+任务族Pareto交换。它还不是完整区间比较，因为三基线的短端曲线没有运行；现有
+8/32/64K候选点可以定义一个稀疏采样曲线，但不能与只有64K的基线拼成AUC，更不能
+声称连续区间无深坑。
 
 ## 4. Native 8K保留
 
@@ -81,8 +83,8 @@ single持平。不能把宏平均增益解释成所有功能共同改善。
 - 不支持：跨模型通用、连续`[L,8L]`无深坑、Native保持、完整RULER SOTA，或把全部
   组合收益归因于transition形状。
 - FWE在32K随S8配置下降、64K也很弱，说明此前Native/aggregation缺口并未消失。
-- 64K候选与BM宏平均不可区分且任务族相反；是否有区间AUC优势必须等自然2×点和
-  三基线完整曲线，不能由端点外推。
+- 64K候选与BM宏平均不可区分且任务族相反；本轮停止前没有形成匹配区间AUC，不能
+  由端点外推。
 - 旧64K runner在当前36个prompts中只重合24个，且已有parity差异；只作历史旁证，
   不进入正式差值。
 
@@ -99,5 +101,5 @@ single持平。不能把宏平均增益解释成所有功能共同改善。
 - Native 8K报告：`/root/autodl-tmp/fixed_rope_three_interfaces_20260913/reports/llama_s8_mix075_vs_native_core6_8k6.json`
 - raw runs位于同一根目录`runs/llama_s8_*`与`runs/llama_mrpro_s8_core6_64k6/`。
 
-下一次更新必须追加16K、三基线的8K/16K/32K、四长度AUC及matched-gain MrPro；
-不能另起一个互相冲突的结果owner。
+若未来因新benchmark重新开启，应继续使用本owner并复用现有基线；当前未完成项是
+证据边界，不是已经授权的待跑队列。
