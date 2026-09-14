@@ -37,7 +37,7 @@ try:
     value = json.loads(path.read_text())
 except (OSError, json.JSONDecodeError):
     raise SystemExit(1)
-raise SystemExit(not (value.get("status") == "COMPLETE" and value.get("rows") == 490))
+raise SystemExit(not (value.get("status") == "COMPLETE" and int(value.get("rows", 0)) >= 190))
 PY
   do
     sleep 15
@@ -53,6 +53,25 @@ prepare_task_slice() {
     test "$(wc -l < "${target}.incomplete")" = 190
     mv "${target}.incomplete" "${target}"
   fi
+  /root/miniconda3/bin/python - "${target}" "${base_root}/assets/full13/rows.jsonl" "${task}" <<'PY'
+import json
+import sys
+
+target_path, base_path, task = sys.argv[1:]
+target = [json.loads(line) for line in open(target_path) if line.strip()]
+base = [
+    json.loads(line) for line in open(base_path) if line.strip()
+]
+base = [row for row in base if row["task"] == task and int(row["length_cap"]) == 32768]
+target_prompts = {row["prompt_sha256"] for row in target}
+base_prompts = {row["prompt_sha256"] for row in base}
+if len(target) != 190 or len(target_prompts) != 190 or {row["task"] for row in target} != {task}:
+    raise ValueError(f"invalid staged RULER-200 slice: {task}")
+if {int(row["length_cap"]) for row in target} != {32768} or len(base) != 10:
+    raise ValueError(f"invalid staged/base length coverage: {task}")
+if target_prompts & base_prompts:
+    raise ValueError(f"staged RULER-200 prompts overlap the frozen base10: {task}")
+PY
 }
 
 run_task_arm() {

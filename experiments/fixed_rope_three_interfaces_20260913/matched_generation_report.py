@@ -54,6 +54,8 @@ def normalize_arm(paths: list[Path]) -> list[dict]:
 
 
 def log_auc(curve: dict[int, float], lengths: list[int]) -> float:
+    if len(lengths) == 1:
+        return float(curve[lengths[0]])
     return sum(
         0.5 * (curve[left] + curve[right]) * math.log(right / left)
         for left, right in zip(lengths, lengths[1:])

@@ -12,7 +12,6 @@ from pathlib import Path
 import zipfile
 
 from scripts.data_prep.target_free_context_builder import (
-    load_longbench_prompt_assets,
     render_chat_prompt,
     row_sha256,
     sha256_file,
@@ -78,8 +77,9 @@ def main() -> None:
     from transformers import AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(args.model.resolve(), local_files_only=True)
+    source_model = Path(json.loads((frozen_dirs[0] / "manifest.json").read_text())["model_path"])
+    source_tokenizer = AutoTokenizer.from_pretrained(source_model, local_files_only=True)
     tokenizer_hash = tokenizer_tree_sha256(args.model.resolve())
-    prompts, _ = load_longbench_prompt_assets(args.download_root / "longbench")
     archive_path = args.download_root / "longbench/data.zip"
     raw_by_task = {}
     with zipfile.ZipFile(archive_path) as archive:
@@ -100,7 +100,16 @@ def main() -> None:
         source_id = str(original.get("_id", row_sha256(original)))
         if source_id != str(old["source_id"]):
             raise ValueError(f"source identity drift: {old['row_id']}")
-        content = prompts[task].format(context=original["context"], input=original["input"])
+        frozen_rendered = source_tokenizer.decode(
+            old["prompt_ids"], skip_special_tokens=False, clean_up_tokenization_spaces=False,
+        )
+        prefix = "<|endoftext|><|user|>\n"
+        suffix = "<|assistant|>\n"
+        if not frozen_rendered.startswith(prefix) or not frozen_rendered.endswith(suffix):
+            raise ValueError(f"frozen OLMo chat wrapper drift: {old['row_id']}")
+        content = frozen_rendered[len(prefix):-len(suffix)]
+        if original["context"] not in content or original["input"] not in content:
+            raise ValueError(f"frozen official prompt no longer contains source text: {old['row_id']}")
         prompt_ids, rendered = render_chat_prompt(tokenizer, content)
         budget = int(old["max_new_tokens"])
         if len(prompt_ids) + budget > 32768:
@@ -148,6 +157,7 @@ def main() -> None:
         "tokenizer_tree_sha256": tokenizer_hash,
         "source_archive": str(archive_path.resolve()),
         "source_archive_sha256": sha256_file(archive_path),
+        "source_prompt_recovery": "decode frozen source-verified OLMo chat prompt, remove exact OLMo wrapper, then apply Llama chat template",
         "inputs_sha256": sha256_file(rows_path),
         "scope": "Five-task official-template LongBench natural-QA subset on frozen source rows; not the full LongBench leaderboard.",
     }

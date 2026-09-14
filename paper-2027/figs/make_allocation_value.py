@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, FancyArrowPatch
 from make_story_figures import white
 from make_exponent_revision_figures import axis_style, finish, BLUE, ORANGE, INK, GRID
 HERE=Path(__file__).resolve().parent
@@ -51,6 +51,101 @@ def verify():
         assert bm==uni==F(n-1,2) and bm-pro==F(n-1,6)
     for values in D['llama_three_arm'].values():
         for v in values.values():assert abs(np.exp(v['nll'])-v['ppl'])<1e-8
+
+def method_overview():
+    """Analytic method schematic: exact quantiles and finite-grid profiles.
+
+    K=8 and tau=2 make the allocation illustration legible; n=17 is the
+    Llama transition width. No model observations or generated artwork enter.
+    """
+    tau=2.;k=8;u=(np.arange(k)+.5)/k
+    quant=1-np.arcsinh((1-u)*np.sinh(tau))/tau
+    z=(quant-quant[0])/(quant[-1]-quant[0]);geo=np.linspace(0,1,k)
+    assert len(z)==len(geo)==k and z[0]==0 and z[-1]==1
+    assert np.all(np.diff(z)>0) and np.all(z<=geo+1e-14)
+    n=17;indices=np.arange(-4,n+5);q=np.clip(indices,0,n)
+    ts=q*(3*n*n+3*n+1-q*q)/(n*(n+1)*(2*n+1))
+    bm=q*(q+1)*(3*n+2-2*q)/(n*(n+1)*(n+2))
+    for m in [ts,bm]:
+        assert np.all(np.diff(m)>=0) and np.all(m[indices<=0]==0)
+        assert np.all(m[indices>=n]==1)
+    fig=plt.figure(figsize=(7.25,3.5),facecolor='white')
+    ax=fig.add_axes([0,0,1,1]);ax.set(xlim=(0,1),ylim=(0,1));ax.axis('off')
+    teal='#008577';gray='#929BA4'
+    def label(x,y,s,**kw):
+        return ax.text(x,y,s,**({'color':INK,'fontsize':9,'va':'center'}|kw))
+    def arrow(start,end,color=INK,lw=1.,scale=10):
+        ax.add_patch(FancyArrowPatch(start,end,arrowstyle='-|>',mutation_scale=scale,
+                                    linewidth=lw,color=color,shrinkA=0,shrinkB=0))
+    label(.025,.955,'(a) Allocation beyond the base',fontsize=10.5,fontweight='bold')
+    label(.255,.825,r'$x_k=a+Rz_k$',fontsize=18,ha='center')
+    left,right=.095,.425
+    for values,y,color,name in [(geo,.635,BLUE,'Geometric'),(z,.425,ORANGE,'Reallocated')]:
+        ax.plot([left,right],[y,y],color=INK,lw=1.0)
+        xx=left+(right-left)*values
+        ax.vlines(xx[1:-1],y-.027,y+.027,color=color,lw=2.1)
+        ax.scatter(xx[[0,-1]],[y,y],s=32,facecolor='white',edgecolor=INK,lw=1.2,zorder=4)
+        ax.text(left,y+.068,name,color=color,fontsize=10,fontweight='bold',va='center')
+    for a,b in zip(geo[1:-1],z[1:-1]):
+        ax.plot([left+(right-left)*a,left+(right-left)*b],[.602,.458],
+                color=gray,lw=.7,ls=(0,(3,3)),zorder=0)
+    ax.vlines([left,right],.265,.685,color=gray,lw=.8,ls=(0,(3,3)),zorder=0)
+    arrow((left,.335),(right,.335),lw=.7,scale=8)
+    label(left,.30,'Fast',ha='center',fontsize=8)
+    label(right,.30,'Slow',ha='center',fontsize=8)
+    label(.26,.29,r'Normalized exponent $z$',ha='center',fontsize=8)
+    ax.plot([left,left,right,right],[.225,.245,.245,.225],color=INK,lw=.9)
+    label(.26,.195,'Same frequency range',ha='center',fontsize=9)
+    label(.255,.075,'Fixed endpoints, different spacing',ha='center',
+          fontsize=10,fontweight='bold')
+
+    label(.478,.53,'Design\nspacing',ha='center',fontsize=9.5,fontweight='bold',linespacing=1.4)
+    arrow((.468,.625),(.523,.775),lw=1.1,scale=11)
+    arrow((.468,.43),(.523,.285),lw=1.1,scale=11)
+
+    label(.54,.955,'(b) Learning: Cosh',fontsize=10.5,fontweight='bold')
+    ax.plot([.54,.98],[.915,.915],color=ORANGE,lw=1.1)
+    density=fig.add_axes([.55,.655,.145,.195])
+    phi=np.linspace(0,1,161);rho=tau*np.cosh(tau*(1-phi))/np.sinh(tau)
+    density.fill_between(phi,0,rho,color=ORANGE,alpha=.09)
+    density.plot(phi,rho,color=ORANGE,lw=1.6)
+    density.set(xlim=(0,1.04),ylim=(0,rho[0]*1.08));density.axis('off')
+    density.annotate('',xy=(1.04,0),xytext=(0,0),arrowprops=dict(arrowstyle='->',lw=.7,color=INK))
+    density.annotate('',xy=(0,rho[0]*1.08),xytext=(0,0),arrowprops=dict(arrowstyle='->',lw=.7,color=INK))
+    label(.552,.882,r'Density $\rho(\phi)$',fontsize=8.5)
+    label(.625,.609,'Density prior',ha='center',fontsize=8.5)
+    arrow((.705,.745),(.745,.745),lw=1.0)
+    xx=.765+.21*z
+    ax.plot([xx[0],xx[-1]],[.745,.745],color=INK,lw=.9)
+    ax.vlines(xx[1:-1],.718,.772,color=ORANGE,lw=1.8)
+    ax.scatter(xx[[0,-1]],[.745,.745],s=23,facecolor='white',edgecolor=INK,lw=1.,zorder=4)
+    label(.872,.84,'Analytic quantiles',fontsize=8.5,ha='center')
+    label(.872,.658,'Train with the table',fontsize=8.5,ha='center',fontweight='bold')
+
+    label(.54,.505,'(c) Zero training: TailSpline / BM',fontsize=10.5,fontweight='bold')
+    ax.plot([.54,.98],[.464,.464],color=teal,lw=1.1)
+    curve=fig.add_axes([.558,.145,.42,.215])
+    curve.axvspan(-4,0,color='#F0F2F4',zorder=0)
+    curve.axvspan(n,n+4,color='#F0F2F4',zorder=0)
+    curve.plot(indices,ts,color=ORANGE,lw=1.6,marker='o',ms=2.2,label='TailSpline')
+    curve.plot(indices,bm,color=teal,lw=1.4,ls='--',marker='s',ms=1.8,label='BM')
+    curve.axvline(0,color=gray,lw=.65,ls=':');curve.axvline(n,color=gray,lw=.65,ls=':')
+    curve.set(xlim=(-4,n+4),ylim=(-.06,1.09),xticks=[0,n],xticklabels=[r'$l$',r'$h$'],yticks=[0,1])
+    curve.tick_params(labelsize=7.5,length=2,pad=2)
+    curve.spines[['top','right']].set_visible(False)
+    curve.set_ylabel(r'$m_k$',rotation=0,labelpad=7,fontsize=9)
+    curve.yaxis.set_label_coords(-.052,.77)
+    curve.text(-2,1.20,'Keep',ha='center',fontsize=8,clip_on=False)
+    curve.text(n/2,1.20,'Redistribute',ha='center',fontsize=8,clip_on=False)
+    curve.text(n+2,1.20,r'Interpolate $/s$',ha='center',fontsize=8,clip_on=False)
+    curve.text(4.7,.78,'TailSpline',color=ORANGE,fontsize=8)
+    curve.text(10.4,.25,'BM',color=teal,fontsize=8)
+    label(.768,.069,r'Public grid, $L$, $s$ $\longrightarrow$ one static table',ha='center',fontsize=8.5)
+    label(.768,.016,'No weight updates or activation fitting',ha='center',fontsize=8)
+    finish(fig,'fig_method_overview')
+    # An editable text-preserving SVG accompanies the print PDF.
+    with plt.rc_context({'svg.fonttype':'none'}):
+        fig.savefig(HERE/'fig_method_overview.svg',bbox_inches='tight',pad_inches=.035)
 
 def overview():
     fig,axes=plt.subplots(1,3,figsize=(7.25,2.7))
@@ -142,4 +237,4 @@ OLMo matched adaptation & $4$K complete + EOS & $95/100$ & $100/100$ \\
     (HERE.parent/'tables/table_learning_main.tex').write_text(text)
 
 if __name__=='__main__':
-    verify();overview();learning();tailspline();table();print('Three main figures, learning table and TailSpline algebra verified.')
+    verify();method_overview();overview();learning();tailspline();table();print('Method overview, three evidence figures, learning table and TailSpline algebra verified.')

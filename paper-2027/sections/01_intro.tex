@@ -3,7 +3,13 @@
 
 A RoPE table makes two design choices: its sampled frequency support and the allocation $z$ of finite rotary pairs within it. Existing extensions often change both through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We isolate $z$, establish its extrapolation value, and use it to construct allocations for learning and zero-training deployment.
 
-With initialization, data, optimization and actual frequency endpoints fixed, moving only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Frozen-model controls also show gains at fixed support and differences at equal total displacement. Thus internal shape carries useful information beyond the range and amount of frequency change. Complete methods can exploit $z$ jointly with support, band, terminal scaling and amplitude.
+\begin{figure}[t]
+\centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
+\caption{\textbf{Allocation is a design freedom with learning and zero-training uses.} (a) Fixed endpoints leave internal spacing free. (b) Cosh turns a density prior into a finite table through quantiles. These illustrations use $K=8$, $\tau=2$ and endpoint anchoring. (c) Exact TailSpline and BM profiles at transition width $n=17$ redistribute extension between unchanged high frequencies and a tail scaled by $1/s$. All marks are computed from the stated formulas.}
+\label{fig:method-overview}
+\end{figure}
+
+With initialization, data, optimization and actual frequency endpoints fixed, moving only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Frozen-model controls also show gains at fixed support and differences at equal total displacement. Thus internal shape carries useful information beyond the range and amount of frequency change (Fig.~\ref{fig:method-overview}).
 
 Changing $z$ changes the positional basis: distinct frequencies can supply overlapping directions over a finite window. We characterize this structure and design frequency spacing in two settings: Cosh specifies a training-time table through a density objective; TailSpline smooths the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
 
