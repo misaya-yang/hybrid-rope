@@ -2314,6 +2314,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/reviews/index.md",
       "area": "docs",
       "category": "navigation"
@@ -4534,6 +4539,16 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_classic_assets_to_gpu.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_complete108_to_classic.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/chain_current_mix_to_tailspline.sh",
       "area": "experiments",
       "category": "code"
@@ -4619,7 +4634,7 @@
       "category": "code"
     },
     {
-      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_llama_ppl50.py",
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_llama_ppl46.py",
       "area": "experiments",
       "category": "code"
     },
@@ -13307,6 +13322,9 @@
     "docs/research/next_stage_20260912/OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md",
     "docs/research/next_stage_20260912/CATALOG_20260914.md",
     "experiments/fixed_rope_three_interfaces_20260913/CATALOG_20260914.md",
-    "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md"
+    "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md",
+    "docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md",
+    "paper-2027/NARRATIVE_GUIDE.md",
+    "paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md"
   ]
 }

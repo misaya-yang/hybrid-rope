@@ -1,7 +1,7 @@
 # Llama TailSpline经典评测资产审计与可续跑合同
 
 更新：2026-09-14。状态：**服务器与本地历史资产已只读审计；正确Core-6补齐与
-Full-13/PPL50流水线代码就绪，尚未由本文启动GPU。**
+Full-13/PPL46流水线代码就绪，尚未由本文启动GPU。**
 
 ## 1. 直接结论
 
@@ -13,7 +13,7 @@ Full-13/PPL50流水线代码就绪，尚未由本文启动GPU。**
   因而实际是72行，不能称三长度实验。
 
 现有Llama资产没有一套可直接复用为TailSpline最终经典评测的完整逐行基线。能够复用的
-是冻结checkpoint/tokenizer、pinned RULER生成器及其原始数据、50份长文源和部分历史
+是冻结checkpoint/tokenizer、pinned RULER生成器及其原始数据、46份长文源和部分历史
 prompt；不能把旧LoRA聚合、旧表结果或缺raw的摘要拼进当前零训练比较。
 
 ## 2. 已核对资产
@@ -47,7 +47,7 @@ prompt；不能把旧LoRA聚合、旧表结果或缺raw的摘要拼进当前零�
 
 ### PPL长文
 
-服务器已有50份带来源回执的长文：36份ProofPile test与14份PG19 test，manifest SHA256
+服务器已有46份带来源回执的长文：32份ProofPile test与14份PG19 test，manifest SHA256
 `1d60909bddc18a1626aaf8addc03cf0d6bd877b7e1b9615a40693405f89d73d0`。
 每份文本足够重新用当前Llama tokenizer冻结32K+1前缀。旧
 `llama_minimal_band_s4_20260913/lm.npy`只有2份PG19文档，虽确为Llama PPL资产，仍不足
@@ -77,17 +77,17 @@ prompt交集为0。
 
 1. 首次Full-13 RULER：8/16/32K均为10行/任务，共390行；六个单答案NIAH
    任务在每个长度对10/30/50/70/90各2行，选择不读取模型输出；
-2. PPL50：36 ProofPile + 14 PG19，每份冻结32769个Llama tokens，运行时评估
+2. PPL46：32 ProofPile + 14 PG19，每份冻结32769个Llama tokens，运行时评估
    8/16/32K前缀；按语料分别报告，并保留组合与source-equal诊断；
 3. 当前只生成TailSpline/MrPro两表，统一S4、canonical `[18,35]`、gain
    `1.138629436111989`，无lambda、band、gain、depth或混合搜索。
 
 `run_tailspline_llama_s4_classic.sh`只接受已完成资产，两臂顺序运行；每臂同一模型驻留
-完成390次生成与150个LM文档-长度格。`generations.jsonl`和`lm_rows.jsonl`按冻结顺序
+完成390次生成与138个LM文档-长度格。`generations.jsonl`和`lm_rows.jsonl`按冻结顺序
 append，已有文件必须是合同前缀才可续跑。
 
 `tailspline_llama_classic_report.py`最终核对表/gain/band、390行Full-13 cell、
-150行PPL、prompt集合与五深度覆盖，输出：
+138行PPL、prompt集合与五深度覆盖，输出：
 
 - token-weighted PPL及log-length PPL-AUC（越低越好），ProofPile/PG19分列；
 - Passkey（复用`niah_single_1`，不称独立数据）、八项NIAH task-equal AUC及五深度；
@@ -100,7 +100,7 @@ append，已有文件必须是合同前缀才可续跑。
 - 正确Core-6 108行/臂的现场组成耗时约：8K+32K 72行403秒，16K 36行144秒，
   合计约9.1分钟/臂。
 - 首次Full-13每臂prompt输入约7.41M tokens，是上述正确Core-6约2.05M的3.61倍；按
-  当前实测线性外推，生成约0.55小时/臂。50文档PPL增加150次forward；由旧2文档
+  当前实测线性外推，生成约0.55小时/臂。46文档PPL增加138次forward；由旧2文档
   PPL+36生成的219秒记录估计再加约0.3–0.7小时/臂。
 - 因此当前TailSpline/MrPro两臂保守预计约1.75–2.5 GPU小时。它是当前机器/runner的规划估计，首个完整
   TailSpline arm结束后必须以实际wall time更新，不能当成实测承诺。

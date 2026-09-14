@@ -4,6 +4,22 @@ The central object is finite RoPE allocation. The practical objective is useful 
 
 Preserve the fixed-support, geometry, learned-compatibility, BM, and learning-time evidence. Present mature fixed-table deployment before the Cosh learning-time construction. Distinguish established gains, development observations, conditional mathematics, and proposed predictors. Do not imply that recent training difficulties invalidate all historical EVQ results, or that restating the interval objective solves it.
 
+## Evidence roles in the paper
+
+| Argument | Main-text role | Supplementary role |
+|---|---|---|
+| Identify allocation | Fixed-support paired training and frozen-checkpoint controls; geometry characterizes the changed basis | Full seeds, lengths, within-window costs, multi-shape controls and proof assumptions |
+| Separate basis from learned use | Range retargeting, crossed weights/tables and slot assignment as distinct interventions | Complete crossing/assignment protocols; algebraic compensation is not a generation recovery experiment |
+| Demonstrate utility | Matched BM natural QA and learning-time constructions, each with its own method and protocol | Full curves, model reversals, continuation/adapter identities, placement and joint table/gain results |
+
+An exact TailSpline result may strengthen the utility argument but cannot inherit
+Cosh, BM or mix075 scores. Conditional energy optimality and task superiority are
+separate claims. A matched-total-shift shape control would narrow competing
+explanations, not by itself identify a unique causal role for tail smoothness.
+Use development failures where they qualify a claim; retain the rest as indexed
+exploration records. Do not pool PPL, F1, exact generation, or overlapping NIAH
+and Full-13 summaries into a single aggregate success measure.
+
 1. Write the positive argument: question, controlled finding, analysis, design,
    interpretation. Put actual experiment conditions next to the result.
 2. Use `x = a + R z` as a definition and a control for range. The contribution

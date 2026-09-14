@@ -5,7 +5,7 @@ repo_dir=/root/autodl-tmp/hybrid-rope
 experiment_root=/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_classic
 model_dir=/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct
 full13_dir="${experiment_root}/assets/full13"
-ppl_dir="${experiment_root}/assets/ppl50"
+ppl_dir="${experiment_root}/assets/ppl46"
 table_dir="${experiment_root}/tables"
 
 mkdir -p "${experiment_root}/runs" "${experiment_root}/logs" "${experiment_root}/reports"
@@ -66,19 +66,18 @@ for task in tasks[:6]:
             raise ValueError(f"refusing GPU launch: depth contract drift {task}/{length}")
 if (
     ppl.get("status") != "COMPLETE"
-    or ppl.get("contract") != "TAILSPLINE_LLAMA_PPL50_V1"
-    or ppl.get("documents") != 50
+    or ppl.get("contract") != "TAILSPLINE_LLAMA_PPL46_V1"
+    or ppl.get("documents") != 46
     or ppl.get("lengths") != list(lengths)
     or ppl.get("lm_array_sha256") != sha(lm_path)
 ):
-    raise ValueError("refusing GPU launch: PPL50 asset drift")
+    raise ValueError("refusing GPU launch: PPL46 asset drift")
 receipts = {
     name: json.loads((table_root / f"{name}.json").read_text())
-    for name in ("tailspline", "mrpro", "yarn", "bm")
+    for name in ("tailspline", "mrpro")
 }
 expected_sources = {
     "tailspline": "analytic:tailspline", "mrpro": "analytic:mrpro",
-    "yarn": "analytic:yarn", "bm": "analytic:bm",
 }
 for name, value in receipts.items():
     if value.get("source") != expected_sources[name]:
@@ -92,9 +91,9 @@ if {float(value["gain"]).hex() for value in receipts.values()} != {
     (1.0 + 0.1 * math.log(4.0)).hex()
 }:
     raise ValueError("refusing GPU launch: table gain drift")
-if len({value["table_sha256_float32"] for value in receipts.values()}) != 4:
-    raise ValueError("refusing GPU launch: comparison tables are not four distinct arrays")
-print(json.dumps({"status": "TAILSPLINE_LLAMA_CLASSIC_GPU_READY_V1", "rows": 390, "lm_rows": 150}))
+if len({value["table_sha256_float32"] for value in receipts.values()}) != 2:
+    raise ValueError("refusing GPU launch: TailSpline and MrPro tables are not distinct")
+print(json.dumps({"status": "TAILSPLINE_LLAMA_CLASSIC_GPU_READY_V1", "rows": 390, "lm_rows": 138}))
 PY
 
 run_arm() {
@@ -105,7 +104,7 @@ run_arm() {
 import json
 import sys
 status = json.load(open(sys.argv[1]))
-if status != {"status": "COMPLETE", "rows": 390, "lm_rows": 150}:
+if status != {"status": "COMPLETE", "rows": 390, "lm_rows": 138}:
     raise SystemExit(1)
 PY
   then

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Tokenize the existing 50-document held-out corpus for Llama PPL curves.
+"""Tokenize the existing 46-document held-out corpus for Llama PPL curves.
 
-This is CPU-only data preparation.  It preserves the 36 ProofPile-test and 14
+This is CPU-only data preparation.  It preserves the 32 ProofPile-test and 14
 PG19-test source identities already present on the server and creates one
 prefix-aligned 8K/16K/32K evaluation array.  It never reads model outcomes.
 """
@@ -17,8 +17,8 @@ import numpy as np
 
 
 LENGTHS = (8192, 16384, 32768)
-DOCUMENTS = 50
-DATASET_COUNTS = {"proofpile": 36, "pg19": 14}
+DOCUMENTS = 46
+DATASET_COUNTS = {"proofpile": 32, "pg19": 14}
 
 
 def sha_file(path: Path) -> str:
@@ -39,9 +39,9 @@ def validate_sources(source_root: Path, source_manifest: Path) -> list[dict]:
     payload = json.loads(source_manifest.read_text())
     docs = payload.get("docs")
     if not isinstance(docs, list) or len(docs) != DOCUMENTS:
-        raise ValueError("held-out source manifest must contain exactly 50 documents")
+        raise ValueError("held-out source manifest must contain exactly 46 documents")
     if Counter(record.get("dataset") for record in docs) != Counter(DATASET_COUNTS):
-        raise ValueError("held-out corpus must preserve the frozen 36 ProofPile/14 PG19 split")
+        raise ValueError("held-out corpus must preserve the frozen 32 ProofPile/14 PG19 split")
     seen = set()
     validated = []
     for index, record in enumerate(docs):
@@ -106,7 +106,7 @@ def prepare(
     np.save(array_path, np.stack(arrays), allow_pickle=False)
     manifest = {
         "status": "COMPLETE",
-        "contract": "TAILSPLINE_LLAMA_PPL50_V1",
+        "contract": "TAILSPLINE_LLAMA_PPL46_V1",
         "model": str(model),
         "model_config_sha256": sha_file(model / "config.json"),
         "tokenizer_sha256": sha_file(model / "tokenizer.json"),

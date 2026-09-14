@@ -38,9 +38,9 @@ while true; do
   done
   assets_ready=false
   if [[ -f "${classic_root}/assets/full13/manifest.json" ]] && \
-     [[ -f "${classic_root}/assets/ppl50/manifest.json" ]] && \
+     [[ -f "${classic_root}/assets/ppl46/manifest.json" ]] && \
      grep -q '"status": "COMPLETE"' "${classic_root}/assets/full13/manifest.json" && \
-     grep -q '"status": "COMPLETE"' "${classic_root}/assets/ppl50/manifest.json"; then
+     grep -q '"status": "COMPLETE"' "${classic_root}/assets/ppl46/manifest.json"; then
     assets_ready=true
   fi
   if [[ "${completion_ready}" == true && "${assets_ready}" == true ]]; then

@@ -125,10 +125,16 @@ cap及可直接判定的错词/错链类型。它只约束失败解释，不进�
 主判决看PPL、NIAH/passkey和full-RULER三个family-level endpoint的整体方向，不要求每个
 task或长度逐格获胜。Native、worst、EOS/cap和局部反转仍完整报告。
 
+NIAH/passkey与Full-13若共享raw，其family读数是重叠视角，不算独立的重复确认。
+Full-13表示任务覆盖，不自动表示样本未参与开发；结果注明样本暴露与追加选择过程。
+同文档多长度PPL和同语义蓝图多长度生成存在相关性，区间按实际独立单位处理。
+
 ### C. 共享数据的最小归因
 
-同gain、同band、同support比较TailSpline与MrPro/BM，确认收益来自新增allocation边界条件，
-而不是部署参数。各方法官方默认配置只能另列实用附表，不与纯频率归因混合。
+同gain、同band、同support比较当前TailSpline/MrPro两臂，识别整张allocation干预的作用。
+TailSpline同时改变累计log位移总量与细形状，因此这一比较不能单独确认尾端边界条件是
+收益原因。BM等后置对照不自动加入当前队列；官方默认配置另列实用比较。针对更强机制
+主张的同总log位移对照C及其限制见[审计处理](../reviews/PRO_AUDIT_DISPOSITION_20260914.md)，当前仅为可选方案。
 
 ## 6. 停止的路线
 

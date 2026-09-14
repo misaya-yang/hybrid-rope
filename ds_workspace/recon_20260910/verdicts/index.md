@@ -28,7 +28,7 @@
 - [QWEN3_SURVIVOR_RESULT_20260911.md](QWEN3_SURVIVOR_RESULT_20260911.md) — Qwen2.5-3B 幸存者移植筛选：**两臂皆败**——冻结迁移规则跨模型证伪，b 轴在移植后可分辨
 - [S8_RESULT_20260911.md](S8_RESULT_20260911.md) — s8 结果：长度轴在 32768 上**不可判**——所有臂全部塌成 0
 - [SIGNED_CONTROL_RESULT_20260911.md](SIGNED_CONTROL_RESULT_20260911.md) — Signed frequency control: a real OLMo effect concentrated in UUID completion
-- [STEP42_RESULT_20260911.md](STEP42_RESULT_20260911.md) — `step42` out-of-sample 判决：**不成立**（选择面板的 +7.26pp 反转）
+- [STEP42_RESULT_20260911.md](STEP42_RESULT_20260911.md) — 新面板未通过；[归因纠正](../../../docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md)：任务构成变化，不能仅归因噪声
 - [THIRD_MODEL_20260911.md](THIRD_MODEL_20260911.md) — 第三个模型：Qwen2.5-7B 确认了规则，并把趋势延伸到**负救援量**
 - [TRADEOFF_ASYMMETRY_20260911.md](TRADEOFF_ASYMMETRY_20260911.md) — TRADEOFF 的双重不对称（180 行面板的分解，事后机制分析）
 - [WALK_RESULT_AND_CONFIRM_PREREG_20260911.md](WALK_RESULT_AND_CONFIRM_PREREG_20260911.md) — 走线结果 + 内点的 out-of-sample 确认（预注册，写在确认读数之前）

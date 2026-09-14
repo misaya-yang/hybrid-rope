@@ -7,7 +7,7 @@ model_dir=/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct
 upstream=/root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream/RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a
 long_sources=/root/autodl-tmp/nongeometric_screen_20260909/long_sources
 full13_dir="${experiment_root}/assets/full13"
-ppl_dir="${experiment_root}/assets/ppl50"
+ppl_dir="${experiment_root}/assets/ppl46"
 table_dir="${experiment_root}/tables"
 
 mkdir -p "${experiment_root}/assets" "${table_dir}" "${experiment_root}/logs"
@@ -33,11 +33,11 @@ fi
 if [[ ! -f "${ppl_dir}/manifest.json" ]] || \
    ! grep -q '"status": "COMPLETE"' "${ppl_dir}/manifest.json"; then
   /root/miniconda3/bin/python -m \
-    experiments.fixed_rope_three_interfaces_20260913.prepare_llama_ppl50 \
+    experiments.fixed_rope_three_interfaces_20260913.prepare_llama_ppl46 \
     --model "${model_dir}" \
     --source-root "${long_sources}" \
     --source-manifest "${long_sources}/sources.json" \
-    --out "${ppl_dir}" >"${experiment_root}/logs/prepare_ppl50.log" 2>&1
+    --out "${ppl_dir}" >"${experiment_root}/logs/prepare_ppl46.log" 2>&1
 fi
 
 make_table() {
@@ -103,11 +103,11 @@ for task in tasks[:6]:
             raise ValueError(f"missing depth coverage: {task}/{length}/{observed}")
 if (
     ppl.get("status") != "COMPLETE"
-    or ppl.get("contract") != "TAILSPLINE_LLAMA_PPL50_V1"
-    or ppl.get("documents") != 50
+    or ppl.get("contract") != "TAILSPLINE_LLAMA_PPL46_V1"
+    or ppl.get("documents") != 46
     or ppl.get("lengths") != [8192, 16384, 32768]
 ):
-    raise ValueError("PPL50 prepared asset violates its frozen contract")
+    raise ValueError("PPL46 prepared asset violates its frozen contract")
 receipts = {
     name: json.loads((table_root / f"{name}.json").read_text())
     for name in ("tailspline", "mrpro")

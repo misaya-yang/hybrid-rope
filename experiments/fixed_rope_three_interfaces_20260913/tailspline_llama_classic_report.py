@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict paired report for the TailSpline Llama Full-13 + PPL50 contract."""
+"""Strict paired report for the TailSpline Llama Full-13 + PPL46 contract."""
 from __future__ import annotations
 
 import argparse
@@ -48,7 +48,7 @@ def parse_mapping(values: list[str], *, label: str) -> dict[str, Path]:
 def validate_arm(run: Path, receipt_path: Path) -> tuple[list[dict], list[dict]]:
     status = json.loads((run / "status.json").read_text())
     expected_rows = sum(COUNTS.values()) * len(TASKS)
-    expected_lm = 50 * len(LENGTHS)
+    expected_lm = 46 * len(LENGTHS)
     if status != {"status": "COMPLETE", "rows": expected_rows, "lm_rows": expected_lm}:
         raise ValueError(f"incomplete classic run {run}: {status}")
     generations = read_jsonl(run / "generations.jsonl")
@@ -93,7 +93,7 @@ def validate_arm(run: Path, receipt_path: Path) -> tuple[list[dict], list[dict]]
             )
             if observed != Counter({(depth,): 2 for depth in DEPTHS}):
                 raise ValueError(f"missing 10/30/50/70/90 depth coverage in {run}/{task}/{length}")
-    expected_lm_ids = [(document, length) for document in range(50) for length in LENGTHS]
+    expected_lm_ids = [(document, length) for document in range(46) for length in LENGTHS]
     if (
         len(lm_rows) != expected_lm
         or [(row.get("document"), row.get("length")) for row in lm_rows] != expected_lm_ids
@@ -142,9 +142,9 @@ def depth_summary(rows: list[dict]) -> dict:
 
 
 def ppl_summary(rows: list[dict], datasets: list[str]) -> dict:
-    if len(datasets) != 50:
-        raise ValueError("PPL manifest must map exactly 50 documents")
-    groups = {"combined": set(range(50))}
+    if len(datasets) != 46:
+        raise ValueError("PPL manifest must map exactly 46 documents")
+    groups = {"combined": set(range(46))}
     for dataset in sorted(set(datasets)):
         groups[dataset] = {index for index, value in enumerate(datasets) if value == dataset}
     result = {}
@@ -192,7 +192,7 @@ def ppl_bootstrap(
     rng = np.random.default_rng(seed)
     delta = np.empty(draws)
     for draw in range(draws):
-        sampled = rng.integers(0, 50, size=50)
+        sampled = rng.integers(0, 46, size=46)
         curves = []
         for mapping in (candidate_map, baseline_map):
             curve = {}
@@ -236,11 +236,11 @@ def main() -> None:
         raise ValueError("runs and receipts must cover exactly candidate and baselines")
     ppl_manifest = json.loads(args.ppl_manifest.read_text())
     if (
-        ppl_manifest.get("contract") != "TAILSPLINE_LLAMA_PPL50_V1"
-        or ppl_manifest.get("documents") != 50
+        ppl_manifest.get("contract") != "TAILSPLINE_LLAMA_PPL46_V1"
+        or ppl_manifest.get("documents") != 46
         or ppl_manifest.get("lengths") != list(LENGTHS)
     ):
-        raise ValueError("unexpected PPL50 manifest")
+        raise ValueError("unexpected PPL46 manifest")
     datasets = [record["dataset"] for record in ppl_manifest["document_records"]]
     loaded = {
         arm: validate_arm(path, receipts[arm])
@@ -324,7 +324,7 @@ def main() -> None:
         "candidate": args.candidate, "baselines": args.baseline,
         "tasks": list(TASKS), "lengths": list(LENGTHS),
         "rows_per_arm": sum(COUNTS.values()) * len(TASKS),
-        "lm_rows_per_arm": 50 * len(LENGTHS),
+        "lm_rows_per_arm": 46 * len(LENGTHS),
         "paired_prompts": len(prompts[args.candidate]),
         "summaries": summaries, "contrasts": contrasts,
         "confirmation_gate": {

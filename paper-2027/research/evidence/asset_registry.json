@@ -542,7 +542,7 @@
       "question": "简化选型解释怎样被检验",
       "evidence_grade": "报告和部分raw",
       "manuscript_location": "讨论/历史判决",
-      "interpretation": "350/180不可拼接交互；局部反例非普遍定律",
+      "interpretation": "350/180不可拼接交互；step42新面板失败成立，但缺少旧增益来源niah_single_3，任务构成与开发选择不可分，不能归因纯噪声或所有干预无方向；不构成C42/C42V24负复现。更正见docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md。",
       "sources": [
         {
           "path": "ds_workspace/recon_20260910/verdicts/NLL_VS_TASK_20260911.md",
@@ -842,7 +842,7 @@
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
           "availability": "local-untracked",
-          "sha256": "eeaae06f643650a7b269819d7aee70300a5441b4bffe5f3fc3412842c2b7614e"
+          "sha256": "acfe3dfd1bcddb4078ba8e1648ca439df9e73ed697c878b36011698332152bdb"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",

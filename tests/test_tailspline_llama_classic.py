@@ -3,7 +3,11 @@ import json
 
 import pytest
 
-from experiments.fixed_rope_three_interfaces_20260913.prepare_llama_ppl50 import (
+from experiments.fixed_rope_three_interfaces_20260913.build_mrrope_baseline_registry import (
+    discover,
+    summarize_source,
+)
+from experiments.fixed_rope_three_interfaces_20260913.prepare_llama_ppl46 import (
     validate_sources,
 )
 from experiments.fixed_rope_three_interfaces_20260913.tailspline_llama_classic_report import (
@@ -46,10 +50,10 @@ def test_depth_selector_freezes_10_30_50_70_90_without_model_outputs():
     assert all(row["depth_error_mean_abs"] == 0.0 for row in selected)
 
 
-def test_ppl50_source_validation_preserves_36_proofpile_14_pg19(tmp_path):
+def test_ppl46_source_validation_preserves_32_proofpile_14_pg19(tmp_path):
     docs = []
-    for index in range(50):
-        dataset = "proofpile" if index < 36 else "pg19"
+    for index in range(46):
+        dataset = "proofpile" if index < 32 else "pg19"
         path = tmp_path / f"{dataset}_{index}.txt"
         payload = f"held-out-{dataset}-{index}".encode()
         path.write_bytes(payload)
@@ -62,18 +66,18 @@ def test_ppl50_source_validation_preserves_36_proofpile_14_pg19(tmp_path):
     manifest = tmp_path / "sources.json"
     manifest.write_text(json.dumps({"docs": docs}))
     validated = validate_sources(tmp_path, manifest)
-    assert len(validated) == 50
-    assert sum(row["dataset"] == "proofpile" for row in validated) == 36
+    assert len(validated) == 46
+    assert sum(row["dataset"] == "proofpile" for row in validated) == 32
     (tmp_path / docs[0]["file"]).write_text("drift")
     with pytest.raises(ValueError, match="hash drift"):
         validate_sources(tmp_path, manifest)
 
 
 def test_ppl_report_is_token_weighted_and_document_paired():
-    datasets = ["proofpile"] * 36 + ["pg19"] * 14
+    datasets = ["proofpile"] * 32 + ["pg19"] * 14
     candidate = []
     baseline = []
-    for document in range(50):
+    for document in range(46):
         for length in LENGTHS:
             target_count = length - 1
             candidate.append({
@@ -87,11 +91,31 @@ def test_ppl_report_is_token_weighted_and_document_paired():
                 "whole_target_count": target_count,
             })
     summary = ppl_summary(candidate, datasets)
-    assert summary["combined"]["by_length"]["8192"]["documents"] == 50
-    assert summary["proofpile"]["by_length"]["32768"]["documents"] == 36
+    assert summary["combined"]["by_length"]["8192"]["documents"] == 46
+    assert summary["proofpile"]["by_length"]["32768"]["documents"] == 32
     assert summary["pg19"]["by_length"]["32768"]["documents"] == 14
     bootstrap = ppl_bootstrap(candidate, baseline, draws=30, seed=914)
     delta = bootstrap["delta_log_length_ppl_auc"]
     assert delta["mean"] < 0.0
     assert delta["interval95"][1] < 0.0
     assert delta["negative_is_better"] is True
+
+
+def test_mrrope_registry_discovers_complete_raw_without_moving_it(tmp_path):
+    run = tmp_path / "experiment" / "run_MrPro_s4"
+    run.mkdir(parents=True)
+    (run / "status.json").write_text(json.dumps({
+        "status": "COMPLETE", "rows": 1, "lm_rows": 0,
+    }))
+    (run / "generations.jsonl").write_text(json.dumps({
+        "task": "niah_single_1", "length_cap": 8192,
+        "prompt_sha256": "p", "ruler_official_score": 1.0,
+    }) + "\n")
+    found = discover(tmp_path)
+    assert found == [run]
+    record = summarize_source(tmp_path, run)
+    assert record["source_path"] == str(run)
+    assert record["rows_observed"] == 1
+    assert record["tasks"] == ["niah_single_1"]
+    assert record["lengths"] == [8192]
+    assert record["reuse_class"] == "raw_reusable_with_exact_matching_contract"
