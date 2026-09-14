@@ -2149,6 +2149,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/LLAMA_S8_SCALE_TRANSFER_RESULT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/LORA_HISTORY_BRIEF_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2164,12 +2169,22 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/PAPER_INTERVAL_DIRECTION_20260913.md",
       "area": "docs",
       "category": "document"
     },
     {
       "path": "docs/research/next_stage_20260912/PLAN_HISTORY_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md",
       "area": "docs",
       "category": "document"
     },
@@ -4489,6 +4504,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/matched_point_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/night_run.py",
       "area": "experiments",
       "category": "code"
@@ -4510,6 +4530,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/resident_eval.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/scale_transfer_audit.py",
       "area": "experiments",
       "category": "code"
     },

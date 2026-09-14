@@ -44,8 +44,9 @@ static-YaRN的AUC与worst区间也均为正。
 但总曲线一致改善。因此：
 
 - 可迁移的正证据主要属于频率allocation；
-- Llama选择出的log中点gain规则不跨checkpoint；
-- gain必须作为checkpoint条件配置或单独校准，不能与transition形状捆成通用公式。
+- Llama选择出的log中点gain规则在该OLMo面板上不是两个已测gain中的较优配置；
+- 现有两点不足以证明该规则完全不迁移或“必须”逐checkpoint校准，只证明gain不能在
+  未经对照时与transition形状捆成已验证的通用公式。
 
 ## 4. 解释边界
 

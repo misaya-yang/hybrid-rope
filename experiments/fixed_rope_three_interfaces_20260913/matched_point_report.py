@@ -77,6 +77,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--bootstrap-draws", type=int, default=20_000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260929)
+    parser.add_argument("--length", type=int, help="filter every source to this one registered length")
     parser.add_argument(
         "--allow-baseline-superset", action="store_true",
         help="filter baseline-only extra prompts to the candidate prompt set and report the dropped count",
@@ -90,6 +91,11 @@ def main() -> None:
         raise ValueError("sources must cover exactly candidate and baselines")
     arms = {name: normalize_arm(paths) for name, paths in sources.items()}
     source_row_counts = {name: len(rows) for name, rows in arms.items()}
+    if args.length is not None:
+        arms = {
+            name: [row for row in rows if int(row["length_cap"]) == args.length]
+            for name, rows in arms.items()
+        }
     if args.allow_baseline_superset:
         reference_prompts = {row["prompt_sha256"] for row in arms[args.candidate]}
         arms = {

@@ -97,3 +97,11 @@ CAL瓶颈6/9为EOS；改答案only后同方向复用旧失败，处理合理。�
 快照revision42。Sol报告Llama64K候选57.45、BM57.50、static YaRN0；候选相对MrPro正差区间[+2.22,+8.06]，具体MrPro均值本轮未读。候选VT强、FWE/MK2弱，8K76.94与Native12/格参考存在行数差。OLMo S8候选4/16/32K为55.79/31.39/11.85，MrPro8.33/5.56/2.78、YaRN8.80/5.56/5.56，BM在跑。均为任务报告，未独立复算raw。
 
 已反馈：8/32/64的指定网格AUC合法，16K不是因“完整”标签必须新增；同gain MrPro为额外归因控制，不是组合方法比较必需。Native用已有raw筛同prompt，无需重跑。绝对可用性与低地板基线相对提升分开；候选≈BM不证明Pareto前沿。优先完成跨模型队列，不把审查建议扩大为门禁。未干预健康作业。
+
+## 2026-09-14 00:20 UTC 每小时复核
+
+快照revision43，cursor `b2ba8cfa-56bf-4bb0-b25f-70979ce8e626:43`。定向读取最新轮及QWEN_S2_MIX075_RANGE_RESULT、OLMO_S8_SCALE_TRANSFER_RESULT两个owner；以下为报告证据，未独立复算raw。
+
+OLMo父gain候选4/16/32K为61.16/37.96/15.00，AUC41.87，BM20.28；同表父gain比中点gain AUC高5.60pp。Qwen S2低6候选32/48/64K为86.30/85.65/84.54，AUC85.61；对BM/C42/MrPro差+7.11/+5.83/+5.02pp，前二者配对区间正，MrPro跨0。同prompt Native32K差+10.28pp。追加12/格第二块候选AUC76.78、MrPro76.08，+0.70pp区间跨0，worst70.02/70.35；Sol已主动降级，BM/C42/Native确认继续中。
+
+已发增量反馈：同band不自动隔离transition，使用现有receipt写清gain及其余参数，不增跑归因门禁；OLMo父gain较优不证明统一规则无迁移价值或校准必需；区间效用是评价，不能替代z及三个构造问题。健康确认队列继续，追加块与累计分列，不追显著扩样。未操作远端作业。

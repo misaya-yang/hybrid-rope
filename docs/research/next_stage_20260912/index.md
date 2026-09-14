@@ -11,7 +11,8 @@
 | 最新下一阶段：8×与模型迁移 | [倍率与模型计划](SCALE_MODEL_TRANSFER_PLAN_20260913.md)，优先于继续同面板扩样/局部修复 |
 | Llama S8冻结规则迁移 | [进行中结果owner](LLAMA_S8_SCALE_TRANSFER_RESULT_20260913.md)：共同32K桥接与64K候选/MrPro已完成，其余冻结基线在队列 |
 | OLMo S8冻结allocation迁移 | [结果owner](OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md)：相对BM/MrPro的采样网格AUC正结果；统一gain不迁移；Native 4K待补 |
-| 当前理论与验证计划 | [定理优先：证明、构造、旧证据核查与执行顺序](THEOREM_FIRST_ROPE_DESIGN_20260913.md) |
+| Qwen1.5B S2冻结transition迁移 | [确认中结果owner](QWEN_S2_MIX075_RANGE_RESULT_20260913.md)：低6上平坦区间曲线、AUC超过BM/同band C42，Native 32K正差；额外12行冻结确认中 |
+| 当前理论缺口与作者纠正 | [已有证明尚未导出当前候选](THEOREM_FIRST_ROPE_DESIGN_20260913.md)：旧margin执行顺序已退出默认计划；完成当前确认，不追加猜表 |
 | 早期方向与背景 | [作者方向历史记录](PAPER_INTERVAL_DIRECTION_20260913.md)，以本页最新目标为准 |
 | 将强开发候选推进为可信比较 | [固定表确认流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md) |
 | 本轮同口径结果与负例 | [Llama S=4区间确认、Native反例与三接口判决](LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md) |
