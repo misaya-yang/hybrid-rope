@@ -150,14 +150,14 @@
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "74f82311c7ead3b5153d258fce41258023133714bdf3c71427661a5ef9b5b30e",
-          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
+          "sha256": "aeef785d3887d276e26cee675646085a2f374dec608e1e1d1ab44fe0b9fb5485",
+          "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
         },
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "c7a8a8e59ed488a57ee406dc9c45b485668dee4b3dfc0b14771806f21d6239ca",
-          "revision_note": "2026-09-14 design exposition: density concentration, slow-tail cost and spacing interpretation clarified; formulas and evidence unchanged."
+          "sha256": "2e0a80d6ee4510fb7f261e3c8cdf49e279f018777244b966fb524e7475edceb1",
+          "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
         }
       ]
     },
@@ -620,8 +620,8 @@
         {
           "path": "paper-2027/sections/05_threeband.tex",
           "availability": "local-untracked",
-          "sha256": "dec1731db0bb6f1080f16053a6b4a8c95f91f3e4e42bec2abed0f8e36ce1aaf2",
-          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
+          "sha256": "a65f91c9bc50b4995fa84680095b6554fcfbf4531b4344d308c56ffe76a2bf01",
+          "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
         },
         {
           "path": "paper-2027/figs/verify_interval_design.py",

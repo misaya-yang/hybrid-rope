@@ -38,4 +38,4 @@ Distinct slow frequencies therefore approach a shared two-dimensional positional
 
 
 \paragraph{Design implication.}
-Distinct frequencies need not supply independent finite-window directions, making their placement worth designing. Learned use also matters: exchanging the tables of two $50$M models raises PPL from $7.14/7.16$ to $76.20/23.05$ (Appendix~\ref{sec:compatibility}). A table learned during training need not be a drop-in replacement for frozen weights. Geometry motivates spacing objectives; it does not determine task loss. We evaluate density design during learning and native-relative boundary design in frozen deployment.
+A fixed set of rotary pairs can supply strongly overlapping positional directions. Allocation controls this concentration, while learning determines how the model combines these directions with content. This motivates two uses of frequency-spacing design: distribute the basis during learning, or redistribute extension relative to a frozen model's native table. Appendix~\ref{sec:compatibility} examines the learned frequency--coordinate associations through crossed-table and slot interventions.

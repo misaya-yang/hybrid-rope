@@ -16,7 +16,7 @@ For higher-is-better task quality $Q_\theta(r)$ at length $rL$, one useful inter
 A_{[1,S]}(\theta)=\frac1{\log S}\int_1^S Q_\theta(r)\,d\log r.
 \label{eq:interval-auc}
 \end{equation}
-This extended-window summary accompanies evaluations below $L$, native and endpoint values, the worst measured length, and task-family changes. Different tasks can have different valid short-input ranges. We do not extrapolate an AUC to one-token prompts or combine NLL and task accuracy into a single score. On a finite length grid, we use trapezoidal integration in log length. The measured minimum is not a certificate of the continuous interval minimum.
+This extended-window summary accompanies evaluations below $L$, native and endpoint values, the worst measured length, and task-family changes. Different tasks can have different valid short-input ranges. NLL and task accuracy retain their own units and aggregates. On a finite length grid, we use trapezoidal integration in log length. The measured minimum is not a certificate of the continuous interval minimum.
 
 Baseline curves use a fixed table under the same evaluation contract. A pointwise envelope of several baselines is an oracle reference for regret, not a deployable method that may switch tables. For RULER we score the complete generated response with the official task scorer; normalized full-answer exactness, EOS, cap exhaustion, and natural-QA response F1 are separate measurements. This distinction matters when a model produces the requested answer and then continues generating.
 
@@ -102,7 +102,7 @@ C42V24 $[14,31]$ &79.65&71.84&53.15&&&69.12\\
 \end{tabular}
 \end{table}
 
-These recorded summaries establish a reason to measure intermediate lengths and task families. They do not establish a universal band, a validated soft-depth method, or a complete causal explanation of generation. The large effect of changing a band in one checkpoint is also not evidence that the same slot indices transfer to another checkpoint.
+These comparisons show that intermediate lengths and task families reveal effects hidden by endpoint scores. They motivate evaluating each installed profile over its intended deployment interval.
 
 \subsection{Frequency interactions in attention}
 \label{sec:interval-replay}

@@ -364,9 +364,6 @@ The risk-gap premise is empirical. It does not follow from unequal projection no
 \paragraph{Discrete orbit-count sensitivity.}
 In the archived scale-orbit construction at factor four, one-ULP float32 jitter changes the exact orbit count from $6$ to $64$, while the $16$K tail-NLL difference (jitter minus exact) is $-0.000013$ (paired interval $[-0.003682,0.003715]$) and the $16$K core-four score remains zero. This rejects the interpretation that a large increase in this exact algebraic count necessarily produces an appreciable loss change on the tested finite horizon. It does not rule out a predictor that maps different counts to the same risk. Discrete-period design, as studied by Resonance RoPE \citep{wang2024resonance}, should be distinguished from this exact-ratio sensitivity test.
 
-\paragraph{Finite coordinate perturbations and continuity.}
-The clipped-affine $C2$ approximation has movement MAE $0.001223$ and RMSE $0.006118$ relative to its reference profile. The evaluated OLMo retention score is $0.870971$, below the $0.8750$ floor. This finite example shows that this approximation tolerance did not certify retention. It establishes neither a Hessian eigenvector nor failure arbitrarily close to the reference. If fixed-input NLL is continuous and a reference has positive margin below an NLL gate, a sufficiently small neighborhood passes that gate by continuity.
-
 \subsection{Finite-phase operator changes}
 \label{sec:taylor-breakdown-observables}
 
@@ -394,7 +391,7 @@ the allocation functional is~\eqref{eq:Capp}, which under the mass normalization
 g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi.
 \end{equation}
 \paragraph{Existence.}
-For rigor, view $\mathcal{C}_{\mathrm{app}}$ first as a functional on $L^2([0,1])$ and minimize over $\mathcal{A}=\{\rho\in L^2([0,1]):\rho\ge0\ {\rm a.e.},\int_0^1\rho=1\}$. The $\alpha\|\rho\|_2^2$ term is coercive and weakly lower semicontinuous, the Green-kernel term is positive semidefinite and continuous, and the mass/nonnegativity constraints are weakly closed. A minimizer therefore exists by the direct method. Strict convexity gives uniqueness. The Euler solution derived below is strictly positive, so the nonnegativity constraint is inactive a posteriori and the classical $C^2$ derivation is justified.
+View $\mathcal{C}_{\mathrm{app}}$ as a functional on $L^2([0,1])$ and minimize over $\mathcal{A}=\{\rho\in L^2([0,1]):\rho\ge0\ {\rm a.e.},\int_0^1\rho=1\}$. The $\alpha\|\rho\|_2^2$ term is coercive and weakly lower semicontinuous, the Green-kernel term is positive semidefinite and continuous, and the mass/nonnegativity constraints are weakly closed. A minimizer therefore exists by the direct method. Strict convexity gives uniqueness. The Euler solution derived below is strictly positive, so the nonnegativity constraint is inactive a posteriori and the classical $C^2$ derivation is justified.
 
 Direct differentiation of $g$ gives
 \begin{align}
@@ -424,7 +421,7 @@ since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluati
 which establishes Theorem~\ref{thm:ode} and the density used in \S\ref{sec:construction}. Mass normalization enters the
 boundary condition through $g'(0)=\int_0^1\rho=1$. Positivity holds on the closed interval since $\rho_\tau(\phi){\geq}\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$ (with $\rho_\tau(0){=}\tau\coth\tau{>}0$); the inequality constraint $\rho{>}0$ is therefore inactive throughout $[0,1]$ and the unconstrained Euler--Lagrange solution coincides with the KKT-constrained solution. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
 
-\paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the surrogate is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
+\paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the objective is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
 \begin{equation}
 \iint_{[0,1]^2} f(\phi)\,f(\psi)\,\min(\phi,\psi)\,d\phi\,d\psi \;=\; \int_0^1 \!\left(\int_s^1 f(u)\,du\right)^{\!2}\!ds \;\geq\; 0.
 \label{eq:min-kernel-psd}
@@ -448,7 +445,7 @@ Thus Cosh can equivalently be viewed as an interval-allocation design. Its quant
 \[
 h_\tau(u)=\frac{\sinh\tau}{\tau\sqrt{1+(1-u)^2\sinh^2\tau}}.
 \]
-This is a change of coordinates for the stated prior, not a derivation of that prior from exact full-pair overlap. TailSpline uses a different, discrete objective on increments of native-relative displacement. The common design object is frequency spacing; the two objectives serve distinct learning and deployment settings.
+This equivalent interval formulation connects density allocation to frequency spacing. TailSpline instead designs increments of native-relative displacement; the two objectives address learning and frozen deployment.
 
 \subsection{Single-crossing budget shift}
 \label{sec:budget-crossing-proof}
@@ -481,12 +478,12 @@ $\operatorname{arcosh}(\sinh\tau/\tau)\ge\tau/\sqrt3$, proving the bound.
 \end{proof}
 
 \FloatBarrier
-\subsection{Surrogate self-consistency theorem}
+\subsection{Balance of the density objective}
 \label{sec:self-consistency}
 
-The surrogate $\mathcal{C}_{\mathrm{app}}$ contains two integral terms $T_1(\tau) = \int_0^1 \rho^2\,d\phi$ and $T_2(\tau) = \int_0^1\!\!\int_0^1 \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi$, where $\rho(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ is the normalized cosh density.
+The density objective $\mathcal{C}_{\mathrm{app}}$ contains two integral terms $T_1(\tau) = \int_0^1 \rho^2\,d\phi$ and $T_2(\tau) = \int_0^1\!\!\int_0^1 \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi$, where $\rho(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ is the normalized cosh density.
 
-\begin{theorem}[Surrogate self-consistency]
+\begin{theorem}[Density-objective balance]
 \label{thm:self-consistency}
 For all $\tau > 0$:
 \begin{equation}

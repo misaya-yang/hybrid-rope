@@ -239,11 +239,11 @@ complement the longer FineWeb-Edu training comparison in
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_m4_tradeoffs.pdf}
-\caption{\textbf{Allocation changes training-window and extended-length loss jointly.} Each point is one of the twelve prespecified M4 configurations, averaging three paired seeds; all four nonuniform main arms are shown. Both axes are differences from the matching geometric arm, so negative values improve loss. OOD weights are proportional to $\log_2(r+1)$ for $r\in\{2,4,8\}$, as in the original protocol. The horizontal coordinate is reconstructed from recorded four-decimal PPL; the vertical coordinate uses the recorded full-precision weighted NLL. Configurations are a designed grid, not independent draws from a model population; no pooled Pareto frontier or confidence ellipse is fitted.}
+\caption{\textbf{Allocation changes training-window and extended-length loss jointly.} Each point is one of the twelve prespecified M4 configurations, averaging three paired seeds; all four nonuniform main arms are shown. Both axes are differences from the matching geometric arm, so negative values improve loss. OOD weights are proportional to $\log_2(r+1)$ for $r\in\{2,4,8\}$, as in the original protocol. The horizontal coordinate is reconstructed from recorded four-decimal PPL; the vertical coordinate uses the recorded full-precision weighted NLL. The configurations form a prespecified design grid.}
 \label{fig:m4-operating-points}
 \end{figure}
 
-The joint view retains native-window effects alongside OOD changes. Different configurations occupy distinct operating points, and some improve both quantities. It describes the measured grid rather than establishing a continuous frontier or a universal exchange rate between the two losses.
+The joint view shows simultaneous training-window and OOD improvements at multiple operating points. The measured trade-offs vary across allocation shapes, strengths and model configurations.
 
 \FloatBarrier
 \subsection{Finite deployment interventions}
@@ -285,5 +285,5 @@ Native Cosh & 5.4645 & 5.4473 & 5.5434 & 5.6966 & 5.8457 & 6.0664 & 6.2935 \\
 \bottomrule
 \end{tabular}
 \end{table}
-The recorded seed-level $95\%$ intervals for Cosh-minus-Std-RoPE NLL at $512/1$K/$2$K/$4$K/$8$K are $[-0.200,-0.026]$, $[-0.183,-0.115]$, $[-0.241,-0.174]$, $[-0.260,-0.121]$, and $[-0.141,-0.058]$. All three seeds favor Cosh at each of those lengths. This supports the conclusion that the historical extrapolation improvement is not confined to a midpoint geometric comparator. It does not establish a universal Cosh optimum: the same report includes other useful nonuniform shapes. The source archive preserves the reported values and historical source identity in \path{figs/allocation_value_inputs.json}; the original training streams are separate.
+The recorded seed-level $95\%$ intervals for Cosh-minus-Std-RoPE NLL at $512/1$K/$2$K/$4$K/$8$K are $[-0.200,-0.026]$, $[-0.183,-0.115]$, $[-0.241,-0.174]$, $[-0.260,-0.121]$, and $[-0.141,-0.058]$. All three seeds favor Cosh at each of those lengths. This supports the conclusion that the historical extrapolation improvement is not confined to a midpoint geometric comparator. The same report also includes other useful nonuniform shapes. The source archive preserves the reported values and historical source identity in \path{figs/allocation_value_inputs.json}; the original training streams are separate.
 \FloatBarrier

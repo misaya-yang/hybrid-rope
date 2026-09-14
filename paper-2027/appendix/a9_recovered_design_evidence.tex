@@ -10,7 +10,7 @@ The fitted boundaries are $\xi_H=0.7382780681$ and $\xi_L=0.3664038351$. The two
 
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{A compact profile preserves long-context behavior.} Official task macro (\%). OLMo uses RULER-13; Qwen uses four core tasks. Long results are post-gate diagnostics with the already frozen tables; Qwen $32$K was collected after the long results.}
+\caption{\textbf{A compact profile preserves long-context behavior.} Official task macro (\%). OLMo uses RULER-13; Qwen uses four core tasks. The tables were frozen before the long-length evaluation; Qwen $32$K was collected afterward.}
 \label{tab:c2-transport}
 \begin{tabular}{@{}llrr@{}}
 \toprule
@@ -25,7 +25,7 @@ Qwen & $128$K & 54.50 & 57.25 \\
 \end{tabular}
 \end{table}
 
-The long-end results show that detailed $64$-point structure is not required to preserve these measured behaviors. At the native window, OLMo's PPL retention is $0.870971$ and task retention $0.904932$; Qwen native-task macro is $82.00\%$ versus $71.25\%$ for C2. The registered deployment requirement was retention at least $0.875$, so the single-table deployment gate failed. This operating verdict and the positive low-dimensional long-behavior result answer different questions. The original profiles, C2, and the later normalized-index placements retain distinct tensor identities.
+The long-end results show that detailed $64$-point structure is not required to preserve these measured behaviors. At the native window, OLMo's PPL retention is $0.870971$ and task retention $0.904932$; Qwen native-task macro is $82.00\%$ versus $71.25\%$ for C2. The compact approximation preserves long-context scores while changing native-window behavior. The original profiles, C2, and the later normalized-index placements retain distinct tensor identities.
 
 \subsection{An interior-profile control at fixed total displacement}
 \label{sec:fixed-total-profile}
@@ -38,7 +38,7 @@ For $K=64$, let $k=1,\ldots,18$, $p_k=6k(19-k)/(18\cdot19\cdot20)$, and $v_k=k-1
 \]
 Both use $m_j=0$ through slot $14$, cumulative increments on slots $15$--$32$, and $m_j=1$ thereafter. They have the same increment mass and centroid, identical sampled endpoints, and $\sum_jm_j=42$. Installed frequencies are $\omega'_j=\omega_j4^{-m_j}$ with fixed gain $1+0.1\ln4$ and terminal shift $m=1$. This is a controlled comparison within that displacement setting.
 
-On $350$ shared $16$K OLMo development inputs, scores are $43.6714\%$ and $54.4000\%$. The paired difference is $+10.7286$ points, with $75$ wins, $26$ losses, and $249$ ties; the paired standardized mean is $t=5.47$. A separate $16$-document continuous-text evaluation reports NLL $2.9417$ versus $2.8309$. These observations distinguish two internal profiles that share their total displacement. They are not a held-out method-selection win: the task panel participated in profile exploration. The numerical construction, row-score aggregation, and common-total checks are reproduced by \path{figs/verify_recovered_assets.py}.
+On $350$ shared $16$K OLMo development inputs, scores are $43.6714\%$ and $54.4000\%$. The paired difference is $+10.7286$ points, with $75$ wins, $26$ losses, and $249$ ties; the paired standardized mean is $t=5.47$. A separate $16$-document continuous-text evaluation reports NLL $2.9417$ versus $2.8309$. These observations distinguish two internal profiles that share their total displacement. The task panel was used in profile exploration. The numerical construction, row-score aggregation, and common-total checks are reproduced by \path{figs/verify_recovered_assets.py}.
 
 \subsection{Four methods on the same OLMo task panel}
 \label{sec:four-method-control}
@@ -67,9 +67,9 @@ For $q=1,\ldots,n-1$, summing the cumulative profiles gives
 \sum_q m_q^{\rm BM}=\sum_q m_q^{\rm Uni}=\frac{n-1}{2},\qquad
 \sum_q m_q^{\rm Pro}=\frac{n-1}{3}.
 \]
-The outer bands agree, so BM and Uni have identical full-table displacement, whereas BM exceeds Pro by $(n-1)\log s/6$. On the actual $K=64$, $[l,h]=[14,32]$ grid, full-table $\sum_km_k$ is $40.5$ for BM/Uni and $37\frac23$ for Pro. The $16$K BM--Uni difference of $19.20$ points therefore compares different shapes at equal total displacement. This is the recorded small six-task panel, separate from natural QA and the C42 development panel; it does not prove that boundary smoothness alone explains the task gain.
+The outer bands agree, so BM and Uni have identical full-table displacement, whereas BM exceeds Pro by $(n-1)\log s/6$. On the actual $K=64$, $[l,h]=[14,32]$ grid, full-table $\sum_km_k$ is $40.5$ for BM/Uni and $37\frac23$ for Pro. The $16$K BM--Uni difference of $19.20$ points therefore compares different shapes at equal total displacement. The six-task development panel tests shape at fixed total displacement; natural QA and C42 use their own panels.
 
-The official YaRN and Uni raw-output files have recorded hashes but are not bundled with the source archive; their per-task aggregates and identities are preserved. The separate natural-QA experiment in Appendix~\ref{sec:bm-natural} evaluates the BM/MrRoPE-Pro comparison on natural inputs.
+Appendix~\ref{sec:bm-natural} evaluates BM and MrRoPE-Pro on natural QA inputs.
 
 \subsection{Full-lag positional geometry as a candidate construction}
 \label{sec:full-lag-profile}

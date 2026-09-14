@@ -15,10 +15,10 @@ Adding $\epsilon_1^2$ yields the symmetric objective, with unique solution
 m_q^{\rm BM}=\frac{q(q+1)(3n+2-2q)}{n(n+1)(n+2)}.
 \label{eq:bm-formula}
 \end{equation}
-Both profiles are monotone with $m_0=0,m_n=1$. The proof determines the solution given a boundary prior; it does not select that prior by task accuracy. The portable CPU check independently solves the constrained tridiagonal system and compares it with each closed form.
+Both profiles are monotone with $m_0=0,m_n=1$. The portable CPU check independently solves the constrained tridiagonal system and verifies each closed form.
 
 \paragraph{What the objective smooths.}
-On the geometric native grid, Eq.~\eqref{eq:increment-log-gap} makes each change between neighboring log gaps equal to $(\epsilon_{q+1}-\epsilon_q)\log s$. The terminal change is $-\epsilon_n\log s$ because the fully interpolated tail has constant displacement. Thus $(\log s)^2$ times Eq.~\eqref{eq:tailspline-objective} is exactly the squared log-gap variation within the transition and at its low-frequency junction. The high-frequency junction is deliberately unpenalized. This statement concerns spectral geometry, not a measured attention-loss mediator.
+On the geometric native grid, Eq.~\eqref{eq:increment-log-gap} makes each change between neighboring log gaps equal to $(\epsilon_{q+1}-\epsilon_q)\log s$. The terminal change is $-\epsilon_n\log s$ because the fully interpolated tail has constant displacement. Thus $(\log s)^2$ times Eq.~\eqref{eq:tailspline-objective} is exactly the squared log-gap variation within the transition and at its low-frequency junction. The high-frequency junction is deliberately unpenalized.
 
 At the terminal gap,
 \[
@@ -52,11 +52,11 @@ PPL TailSpline & 5.295283 & 4.530318 & 4.110622 \\
 \FloatBarrier
 Family AUC differences are retrieval $+3.750$ points, tracking $+6.500$, aggregation approximately $+3.792$, and QA $-1.250$. Multikey-2 improves by $22.5$ points; QA-1 and multikey-1 each decrease by $5.0$. Out of $390$ inputs, TailSpline and MrPro respectively have $30$ and $37$ empty outputs, $388$ and $384$ EOS-terminated outputs, and $2$ and $6$ budget-limited outputs. Task scores include partial credit.
 
-The portable input \path{figs/allocation_value_inputs.json} records reported aggregates and original source identities. Original generation and LM streams are maintained separately. The packaged frequency constructor computes the native-grid boundaries and FP32 table from public base, pair count, native length and scale; no model object is required. Regeneration checks aggregate arithmetic and algebra, not a new model execution. TailSpline and MrPro also differ in total log-frequency displacement: this comparison tests complete profiles, not boundary regularization as an isolated task mechanism.
+The portable input \path{figs/allocation_value_inputs.json} records the aggregates and source identities. The packaged constructor computes the boundaries and FP32 table from the public native grid, reference length and scale. TailSpline and MrPro share their outer bands, endpoints and gain, so their matched comparison tests interior allocation. Their total log-frequency displacement also differs; at fixed support this is a statistic of $z$. The equal-total controls in Appendix~\ref{sec:four-method-control} further isolate shape at fixed displacement.
 \FloatBarrier
 
 \subsection{Prospective OLMo confirmation}
-The OLMo-$2$-0425-$1$B-Instruct comparison uses original window $4096$, canonical band $[14,32]$, $s=4$ and the same gain as Llama. Generation batch size is four. The methods and data were frozen before reading outputs from this experiment; historical BM/front-loaded work on OLMo had informed the direction. This is prospective confirmation of the exact table, not an untouched-model blind test. Its tokenized prompts are not paired with Llama's prompts across models.
+The OLMo-$2$-0425-$1$B-Instruct comparison uses original window $4096$, canonical band $[14,32]$, $s=4$ and the same gain as Llama. Generation batch size is four. The methods and data were frozen before reading outputs from this experiment; historical BM/front-loaded work on OLMo had informed the direction. Each model has its own tokenized panel and within-model paired comparison.
 \begin{table}[ht]
 \centering\small
 \caption{Complete OLMo length responses under the frozen two-arm contract.}

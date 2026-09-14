@@ -1,21 +1,21 @@
 \section{Introduction}
 \label{sec:intro}
 
-A RoPE table distributes a finite set of rotary frequencies across a chosen range. How should those frequencies be placed to improve extrapolation? Existing extensions change their placement through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We identify the independent value of internal allocation $z$ and derive explicit constructions that improve learning and zero-training deployment.
+Standard RoPE ties frequency placement to a geometric grid: changing the base changes the range but leaves normalized spacing uniform. Internal exponent allocation $z$ opens this spacing to design. Existing extensions alter it through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We isolate the value of allocation and derive explicit constructions that improve language modeling, retrieval and natural QA during learning and zero-training deployment.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
-\caption{\textbf{Allocation is a design freedom with learning and zero-training uses.} (a) Fixed endpoints leave internal spacing free. (b) Cosh turns a density prior into a finite table through quantiles. These illustrations use $K=8$, $\tau=2$ and endpoint anchoring. (c) Exact TailSpline and BM profiles at transition width $n=17$ redistribute extension between unchanged high frequencies and a tail scaled by $1/s$. All marks are computed from the stated formulas.}
+\caption{\textbf{Allocation is a design freedom with learning and zero-training uses.} (a) Fixed endpoints leave internal spacing free. (b) Cosh turns a density prior into a finite table through quantiles. These illustrations use $K=8$, $\tau=2$ and endpoint anchoring. (c) Exact TailSpline and BM profiles at $n=17$ redistribute extension between unchanged high frequencies and a tail scaled by $1/s$. The two routes use distinct objectives to design frequency spacing.}
 \label{fig:method-overview}
 \end{figure}
 
-With initialization, data, optimization and actual frequency endpoints fixed, moving only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Frozen-model controls also show gains at fixed support and differences at equal total displacement. Thus internal shape carries useful information beyond the range and amount of frequency change (Fig.~\ref{fig:method-overview}).
+Controlled experiments identify this value. With initialization, data, optimization and actual frequency endpoints fixed, moving $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Frozen-model controls show gains at fixed support and differences at equal total displacement. Internal shape therefore matters beyond the range and amount of frequency change (Fig.~\ref{fig:method-overview}).
 
 Changing $z$ changes the positional basis: distinct frequencies can supply overlapping directions over a finite window. We characterize this structure and design frequency spacing in two settings: Cosh specifies a training-time table through a density objective; TailSpline smooths the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
 
-The resulting benefits reach beyond a small controlled experiment. Cosh improves multi-seed MLA extrapolation and $750$M continued training. TailSpline improves frozen Llama-$3$-$8$B and OLMo on RULER-13 and NIAH, while the symmetric boundary-matched construction (BM) raises frozen OLMo's five-task natural-QA F1 from $21.62$ to $25.44$. Our contributions are:
+Cosh improves multi-seed MLA and $750$M continued training. TailSpline improves frozen Llama-$3$-$8$B and OLMo on RULER-13 and NIAH; the symmetric construction BM raises OLMo's five-task natural-QA F1 from $21.62$ to $25.44$. Our contributions are:
 \begin{itemize}
-\item \textbf{Identification.} Fixed-support training establishes the extrapolation value of $z$; frozen controls distinguish internal shape from range and total displacement.
-\item \textbf{Characterization and construction.} Full-pair geometry describes the positional structure changed by $z$; density and boundary objectives yield explicit Cosh and TailSpline allocations.
-\item \textbf{Learning and zero-training validation.} Matched evaluations establish language-modeling, retrieval and natural-QA gains, with training, adaptation and frozen protocols distinguished.
+\item \textbf{Allocation as a design variable.} Matched interventions demonstrate the value of internal frequency placement beyond range and total displacement.
+\item \textbf{Structure and analytic designs.} Full-pair geometry characterizes finite-window overlap; density and boundary objectives yield closed-form Cosh and TailSpline tables.
+\item \textbf{Learning and zero-training gains.} The constructions improve language modeling, retrieval and natural QA across training, continuation and frozen deployment.
 \end{itemize}
