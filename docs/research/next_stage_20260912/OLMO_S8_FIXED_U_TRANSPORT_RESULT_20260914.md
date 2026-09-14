@@ -52,7 +52,7 @@ fixed-u在当前OLMo机制判别块上降低了全区间AUC，理论新增的sca
 
 ## 原始证据
 
-服务器：`ssh -p 37849 root@connect.westc.seetacloud.com`。
+服务器：`ssh -p 37849 [REDACTED_EMAIL]`。
 
 - 根目录：`/root/autodl-tmp/today_rope_plan_20260914/olmo_fixed_u_decisive/`；
 - 配对报告：`reports/fixed_u_vs_fixed_m_existing6.json`，文件SHA256

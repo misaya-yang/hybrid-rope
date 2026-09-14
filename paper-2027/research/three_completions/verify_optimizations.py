@@ -56,7 +56,7 @@ def kappa_of_sd(sd):
     return np.sum(wts*np.minimum(sd**2,varU))/np.sum(wts*ns*varU/ (ns*varU).sum()*(ns*varU).sum())
 # simpler: kappa = sum_n p_n Var_mu_n / sum_n p_n n Var_U_n  with p_n uniform over the 5 positions
 p=np.ones(5)/5
-f=lambda sd: (p@np.minimum(sd**2,varU))/(p@(ns*varU)) - 4.6476e-4
+f=lambda sd: ([REDACTED_EMAIL](sd**2,varU))/(p@(ns*varU)) - 4.6476e-4
 sd_star=brentq(f,1.0,2000.0)
 print("   uniform-over-query-position aggregation => implied common sd_mu = %.1f tokens"%sd_star)
 print("   (falsifiable: recompute sd of the attention-weighted distance distribution from the")

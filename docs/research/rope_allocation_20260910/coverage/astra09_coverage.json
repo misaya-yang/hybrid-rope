@@ -4,7 +4,7 @@
   "read_method": "Literal contiguous 30000-character pages, Chinese route review split into 15000-character halves; truncated attempts re-read separately. Full token arrays included.",
   "files": [
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GAP_CAPPED_RESULT_20260908.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GAP_CAPPED_RESULT_20260908.json",
       "bytes": 69940,
       "characters": 69940,
       "sha256": "3d51d63c4e8be1a889c1cf841db8b5e291705ddc282b02f959e64b71f4cc7109",
@@ -25,7 +25,7 @@
       "full_text_in_context": true
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json",
       "bytes": 94519,
       "characters": 94519,
       "sha256": "98bc7b1d99a3d5cda627e83f4f4298989a6834629301f6a6519dc812ca5f1b2f",
@@ -50,7 +50,7 @@
       "full_text_in_context": true
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json",
       "bytes": 645972,
       "characters": 645972,
       "sha256": "48232e004655dfe255071a88661c6907d05b14caac4263fe7539e4c3eeae7337",
@@ -147,7 +147,7 @@
       "full_text_in_context": true
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_ROUTE_EVALUATION_20260909.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_ROUTE_EVALUATION_20260909.md",
       "bytes": 102976,
       "characters": 54285,
       "sha256": "420961e4378cafc303410aaca3025a3f35ef95d828460e042a7cea4032d0280d",
@@ -164,7 +164,7 @@
       "full_text_in_context": true
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md",
       "bytes": 118229,
       "characters": 118068,
       "sha256": "016dca185cf1b61d2f12d9a7b3655534e0ac25bb4dc5338f0bb874c3af1faa0e",
@@ -189,7 +189,7 @@
       "full_text_in_context": true
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/supporting_eval/eval_longbench.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/supporting_eval/eval_longbench.py",
       "bytes": 88648,
       "characters": 88496,
       "sha256": "4b80cf0bdea69119aa2216675ea88ad8a61390473417b16e8f543b45864a6c86",

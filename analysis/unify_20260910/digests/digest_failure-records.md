@@ -8,7 +8,7 @@
 
 ## 1. 来源清单
 
-| 文件（绝对路径均在 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/` 下） | 行数 | 字节 | 文件 mtime | 本轮读取方式 |
+| 文件（绝对路径均在 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/` 下） | 行数 | 字节 | 文件 mtime | 本轮读取方式 |
 | --- | ---: | ---: | --- | --- |
 | `docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md`（下称 SYNTHESIS） | 248 | 24,928 | 9月7日 23:21 | 全文 Read |
 | `docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md`（下称 REVIEW-0907） | 273 | 25,347 | 9月7日 22:49 | 全文 Read |

@@ -1,5 +1,5 @@
 import json, math, itertools
-d=json.load(open('/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/tables/ground_truth_tables.json'))
+d=json.load(open('/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=d['methods']
 def ax(name):
     m=M[name]['m_j']; dg=[m[g+1]-m[g] for g in range(63)]

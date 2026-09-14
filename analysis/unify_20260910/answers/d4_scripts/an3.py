@@ -1,5 +1,5 @@
 import json, math
-d=json.load(open('/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/tables/ground_truth_tables.json'))
+d=json.load(open('/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=d['methods']
 LN4=math.log(4); LNB64=math.log(1e6)/64; W=32768; L=131072; RN=math.exp(LNB64)
 def show(k):

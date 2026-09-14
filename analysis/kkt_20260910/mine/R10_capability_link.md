@@ -11,7 +11,7 @@
 本节先声明 **哪些数字在本机可独立复核、哪些只能引用文档**，以免下游把转述当一手证据。
 
 ### 0.1 缺失的原始数据目录（覆盖缺口）
-- `results/nongeometric_screen_20260909/`（远程 `/root/autodl-tmp/nongeometric_screen_20260909` 的同步副本）**本机不存在**。`analysis/unify_20260910/digests/digest_panel-results.md:3` 明确该 digest 的仓库根是 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`——**另一台机器**。
+- `results/nongeometric_screen_20260909/`（远程 `/root/autodl-tmp/nongeometric_screen_20260909` 的同步副本）**本机不存在**。`analysis/unify_20260910/digests/digest_panel-results.md:3` 明确该 digest 的仓库根是 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`——**另一台机器**。
 - `planned_controls/evidence_distances_20260910.json` **本机不存在**（digest_panel-results.md:56 全仓 find 无匹配）。
 - 后果：36 行 panel 的**逐行原始 JSONL** 与距离联表在本机无法一手复核。
 - 本机可用的**一手替代物**：
@@ -293,7 +293,7 @@ digest_panel-results.md §5.4 给出 128K 的 distance×method 表（89K/106K/12
 - `digests/digest_failure-records.md`、`digest_nongeo-code.md`、`digest_theory-0910.md`
 
 ### 不可读 / 缺失（已核）
-- `results/nongeometric_screen_20260909/` 及其中 `ruler.jsonl`、逐行 36 行 panel、`long_nll/`、`causal_cases/`、`transfer/`、`holdout_results/`：**本机不存在**（在另一台机器 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`）。
+- `results/nongeometric_screen_20260909/` 及其中 `ruler.jsonl`、逐行 36 行 panel、`long_nll/`、`causal_cases/`、`transfer/`、`holdout_results/`：**本机不存在**（在另一台机器 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`）。
 - `planned_controls/evidence_distances_20260910.json`：**本机不存在**。
 - `~/.codex/` 会话归档：按纪律**严格只读、未写入、未修改**；仅通过材料引文间接引用。
 

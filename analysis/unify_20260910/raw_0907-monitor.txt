@@ -49,7 +49,7 @@ Here is a list of plugins that are available but not installed.
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
 </recommended_plugins>
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Ask when the request is unclear or conflicts with skills or project AGENTS.md.
@@ -132,15 +132,15 @@ Here is a list of plugins that are available but not installed.
 
 </INSTRUCTIONS>
 <environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-07</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/07/01a07a9a-cf12-79d2-94e3-75b94a92b7e0</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/07/01a07a9a-cf12-79d2-94e3-75b94a92b7e0</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [2026-09-07T06:42:49.965Z] <user>
-阅读执行交接：/Users/misaya.yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA\_EXECUTION.md 以及服务器基本信息：ssh -p 27741 root\@connect.westc.seetacloud.com， 后续我会升级卡为5090，你严格按照交接迅速执行实验，监控实验即可
+阅读执行交接：/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA\_EXECUTION.md 以及服务器基本信息：ssh -p 27741 root\@connect.westc.seetacloud.com， 后续我会升级卡为5090，你严格按照交接迅速执行实验，监控实验即可
 
 
 [2026-09-07T06:43:02.854Z] <assistant>
@@ -159,7 +159,7 @@ Here is a list of plugins that are available but not installed.
 [2026-09-07T06:45:33.058Z] <assistant>
 已完成准备，当前不启动实验。
 
-- 已读取 [LUNA_EXECUTION.md](</Users/misaya.yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA_EXECUTION.md>)、项目 `HANDOFF/REVISION_BRIEF/协议`。
+- 已读取 [LUNA_EXECUTION.md](</Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA_EXECUTION.md>)、项目 `HANDOFF/REVISION_BRIEF/协议`。
 - 远端工作包已在位，`jobs.json` SHA256 与交接一致：`718fa8...664937`。
 - 当前服务器无 GPU：`nvidia-smi: No devices were found`，PyTorch `cuda_available=False`。
 - 无运行中的实验；E0/E1 全部 `NOT_STARTED`，E2/E3 按计划保持 `BLOCKED`。
@@ -474,7 +474,7 @@ MEMORY.md:406-419|note=[沿用项目对GPU实验准备、磁盘前置条件和�
   计算出来的保守保留上限。
 - 三个 arm 如果全部保留，确实会超过 90 GiB；但这不是说 GPU 本身需要 90 GiB。
 
-对应代码在 [train.py](</Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/train.py:74) 的 checkpoint guard。可以改成“只保留最终 checkpoint”或把中间 checkpoint offload，但那会改变恢复/证据契约，不能偷偷绕过。
+对应代码在 [train.py](</Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/train.py:74) 的 checkpoint guard。可以改成“只保留最终 checkpoint”或把中间 checkpoint offload，但那会改变恢复/证据契约，不能偷偷绕过。
 
 另外我刚才重新核验时 SSH 暂时返回 `connection refused`。下一步需要你指定：扩容/提供 offload 目录，还是授权我按“只保留最终 checkpoint”重建 E2 计划？
 
@@ -509,7 +509,7 @@ MEMORY.md:406-419|note=[沿用项目对实验准备、磁盘保留和未授权�
   - 只保存最终训练权重
   - 不保存 optimizer/RNG resume state
 
-相关代码见 [train.py](</Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/train.py:119)。
+相关代码见 [train.py](</Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/train.py:119)。
 
 这样单臂主要就是最终训练权重约 5.5 GiB 加少量元数据，三臂最终权重大约 16–18 GiB，和当前磁盘状况完全是另一回事。需要重建的是 checkpoint retention policy，不是扩容到 100 GiB。
 

@@ -49,7 +49,7 @@ Here is a list of plugins that are available but not installed.
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
 </recommended_plugins>
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Ask when the request is unclear or conflicts with skills or project AGENTS.md.
@@ -100,11 +100,11 @@ and failure records belong in project documents, not here.
 
 </INSTRUCTIONS>
 <environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-08</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/09/01a083b8-809c-7713-b51d-95bbf8e66c6e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/09/01a083b8-809c-7713-b51d-95bbf8e66c6e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [2026-09-09T01:11:55.031Z] <user>

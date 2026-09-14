@@ -5,27 +5,27 @@
   "omissions": [],
   "files": [
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/EVQ_COSH_THEORY.tex",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/EVQ_COSH_THEORY.tex",
       "lines_read": "1-378",
       "sha256": "87c38a17c26dff8ba4b6976724a0e6264bda3372f574de042a19d23a1b684209"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex",
       "lines_read": "1-561",
       "sha256": "803ce1cb49f039f4b8dcb2601aa2a3efb15a982157432df6749213e5726dd67f"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/budget_proofs.tex",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/budget_proofs.tex",
       "lines_read": "1-55",
       "sha256": "d36afe8194799545d375ae5dadff60d110fb9244e704bdcce64207b906549e1a"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md",
       "lines_read": "1-138",
       "sha256": "5db0209aa126669374ce8514e408fdd06e6f564e08bba77820581b2326ede254"
     }
   ],
   "gpu_jobs_launched": false,
   "runtime_or_paper_source_edited": false,
-  "report_path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol02.md"
+  "report_path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol02.md"
 }

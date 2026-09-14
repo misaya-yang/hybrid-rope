@@ -49,7 +49,7 @@ Here is a list of plugins that are available but not installed.
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
 </recommended_plugins>
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Ask when the request is unclear or conflicts with skills or project AGENTS.md.
@@ -100,11 +100,11 @@ and failure records belong in project documents, not here.
 
 </INSTRUCTIONS>
 <environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-08</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [2026-09-09T02:49:32.752Z] <assistant>
@@ -120,13 +120,13 @@ and failure records belong in project documents, not here.
 只读核验完成，发现 1 个实质正文问题、2 个标注/溯源问题。
 
 1. **必须修：454M 比较身份错误**  
-   [04_experiments.tex:80](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:80) 将旧实验写为 “YaRN-style scaling”。该实验实际使用仓库自定义 fixed-index、固定 \(s=8\) 的 range operator，并非 Transformers 官方 YaRN。`157.7/107.5` 数值及三种子身份正确，但当前 [a2_experiment_details.tex:83](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a2_experiment_details.tex:83) 没有承诺的 454M scaler/protocol，正文的 appendix 指针也不成立。建议删除该段；若保留，明确称为 “repository fixed-index operator at \(s=8\)” 并恢复对应协议，不能写成 YaRN。
+   [04_experiments.tex:80](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:80) 将旧实验写为 “YaRN-style scaling”。该实验实际使用仓库自定义 fixed-index、固定 \(s=8\) 的 range operator，并非 Transformers 官方 YaRN。`157.7/107.5` 数值及三种子身份正确，但当前 [a2_experiment_details.tex:83](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a2_experiment_details.tex:83) 没有承诺的 454M scaler/protocol，正文的 appendix 指针也不成立。建议删除该段；若保留，明确称为 “repository fixed-index operator at \(s=8\)” 并恢复对应协议，不能写成 YaRN。
 
 2. **脚本溯源缺口**  
-   [make_exponent_revision_figures.py:188](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_exponent_revision_figures.py:188) 硬编码 BM 公式和 \(N=18/17\)，但 source receipt 未纳入定义 owner `docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json`。数值核验正确：OLMo \((l,h,N)=(14,32,18)\)，Qwen \((23,40,17)\)，两臂 gain 都是 `1.1386294361`。建议把 owner 加入 `SOURCES`，并从证据读取或断言这些参数。
+   [make_exponent_revision_figures.py:188](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_exponent_revision_figures.py:188) 硬编码 BM 公式和 \(N=18/17\)，但 source receipt 未纳入定义 owner `docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json`。数值核验正确：OLMo \((l,h,N)=(14,32,18)\)，Qwen \((23,40,17)\)，两臂 gain 都是 `1.1386294361`。建议把 owner 加入 `SOURCES`，并从证据读取或断言这些参数。
 
 3. **指标称呼需收紧**  
-   [make_exponent_revision_figures.py:226](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_exponent_revision_figures.py:226) 的 “task accuracy” 会把 FWE/VT 等部分得分读成逐例 exact accuracy；建议改为 “official RULER task score (%)”。[make_exponent_revision_figures.py:241](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_exponent_revision_figures.py:241) 生成的 natural-QA 表把 F1 乘了 100，但列名未标 `%`，建议改为 `F1 (\%)`。正文 [04_mature.tex:54](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 也可用 “RULER macro score” 统一口径。
+   [make_exponent_revision_figures.py:226](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_exponent_revision_figures.py:226) 的 “task accuracy” 会把 FWE/VT 等部分得分读成逐例 exact accuracy；建议改为 “official RULER task score (%)”。[make_exponent_revision_figures.py:241](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_exponent_revision_figures.py:241) 生成的 natural-QA 表把 F1 乘了 100，但列名未标 `%`，建议改为 `F1 (\%)`。正文 [04_mature.tex:54](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 也可用 “RULER macro score” 统一口径。
 
 其余重点均与 evidence 一致：
 

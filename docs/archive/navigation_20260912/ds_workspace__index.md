@@ -38,7 +38,7 @@ ds_workspace/
     ├── _reports/          （7 份子代理深报告）
     ├── _archive_20260911/ （23 份被后续结果覆盖的早期文档）
     ├── design/ · recon/
-    └── （服务器原始数据：ssh -p 27741 root@connect.westc.seetacloud.com
+    └── （服务器原始数据：ssh -p 27741 [REDACTED_EMAIL]
         /root/autodl-tmp/phase1_20260910/ 与 /root/autodl-tmp/rope_decision_20260911/）
 ```
 

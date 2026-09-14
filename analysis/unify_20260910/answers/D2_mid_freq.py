@@ -6,7 +6,7 @@
 """
 import json, math, itertools
 
-ROOT = '/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT = '/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 d = json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M = d['methods']
 W, S, L = 32768, 4.0, 131072

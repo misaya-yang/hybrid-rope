@@ -4,9 +4,9 @@ YOUR ID: astra10
 YOUR TASK: Independent synthesis and falsification: reconcile all30-agent evidence into the strongest defensible unified theory and concrete allocation rule; test whether success conditions actually target128K behavior and what remains unproved.
 The listed corpus files are your full-text project coverage responsibility. For theory you may additionally inspect MrRoPE full paper, EVQ theory, newest6Pro attachment and completed reports of other agents; distinguish fully read from indexed files.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_TRANSITION_PROJECTION_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_NATURAL_RESULT_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_RESULT_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_SOL_HANDOFF_20260909.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data_prep/prepare_mixed_prior_dataset_v1.py
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_LOCAL_FAILURE_EVIDENCE_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_TRANSITION_PROJECTION_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_NATURAL_RESULT_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_RESULT_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_SOL_HANDOFF_20260909.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data_prep/prepare_mixed_prior_dataset_v1.py

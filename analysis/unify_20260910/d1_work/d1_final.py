@@ -1,5 +1,5 @@
 import json, math
-ROOT='/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT='/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 GT=json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=GT['methods']; C=GT['meta']['constants']
 W,S,b=C['W'],C['S'],C['base']; ln4=math.log(4); G0=math.log(b)/64

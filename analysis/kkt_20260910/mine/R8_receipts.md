@@ -16,7 +16,7 @@
 **连带后果（比上面两条更严重）**：
 
 - `experiments/nongeometric_screen/reference_tables.json` **也不存在**——而它是 `analysis/unify_20260910/tables/GROUND_README.md:22` 与 `ground_truth_tables.json` 里 `methods.{Native,MrPro,...}.sources` 用来锚定"部署 fp32 原生表"的**唯一本地依据**。也就是说，G1 地面真值表声称的"18/18 bit-exact"，其对照物在本机一台都不在。
-- `ground_truth_tables.json` 里 26 个 09-09 方法的分数来源写成 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/<method>/contract.json`（**另一台机器、另一个 checkout**）。例：`methods.E1_s28_less.sources`、`methods.E1_pair28_29.sources`、`methods.Smooth_MrBudget.sources`。
+- `ground_truth_tables.json` 里 26 个 09-09 方法的分数来源写成 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/<method>/contract.json`（**另一台机器、另一个 checkout**）。例：`methods.E1_s28_less.sources`、`methods.E1_pair28_29.sources`、`methods.Smooth_MrBudget.sources`。
 - 结论：**面板里除 MrPro／MrProBM／GapCapped 之外的 128K/32K 分数，在本机没有可打开的原始结果文件**。证据等级一律只能标 [部分证据-单源重建]。
 
 ### 0.1 `results/` 下另一条研究线的干扰（避免误认）

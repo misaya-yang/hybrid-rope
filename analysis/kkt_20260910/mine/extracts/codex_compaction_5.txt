@@ -405,7 +405,7 @@ Payload:
 
 
 ===== [compact#5:guardian_history:assistant] line 6671 =====
-已提交并推送：[3dc3527](https://github.com/misaya-yang/hybrid-rope/commit/3dc35278e256c27566250c6656d0d8d564f9cee4)。
+已提交并推送：[3dc3527](https://github.com/[REDACTED_AUTHOR]-yang/hybrid-rope/commit/3dc35278e256c27566250c6656d0d8d564f9cee4)。
 
 报告、代码及 CPU 核验结果已保存，工作区干净。研究已停止。
 

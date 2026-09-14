@@ -1,5 +1,5 @@
 import json, itertools
-d=json.load(open('/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/tables/ground_truth_tables.json'))
+d=json.load(open('/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=d['methods']
 names=['MrPro','E1_s28_less','LongBridgeSlower','FullLagP2_Transfer3B','E1_pair28_29','LongBridgeFaster','Smooth_MrBudget','MrUni','MrProBM','E7_local_projection','E1_s29_more','E1_s28_reverse_matched','E1_s29_plus_matched','HighGapToLong','E2_tail_more','E4_pair25_29']
 def feats(m,b,c):

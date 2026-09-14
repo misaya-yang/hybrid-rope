@@ -10,15 +10,15 @@
 
 | key | 文件（绝对路径） | 大小 | 行数 | user/assistant 消息数 | 活跃时段（UTC） | 性质 |
 |---|---|---|---|---|---|---|
-| 0819 | /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/08/19/rollout-2026-08-19T22-42-50-01a01d0c-bfa9-73d3-aedc-7e82f11f65d7.jsonl | 22,694 B | 4 | 0 | 2026-08-20T02:42:50Z 起 482 ms | 启动即被打断的空会话（无 user/assistant 内容） |
-| 0907-monitor | /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/07/rollout-2026-09-07T02-42-41-01a07a9a-cf12-79d2-94e3-75b94a92b7e0.jsonl | 4,252,461 B | 1006 | 62 | 2026-09-07T06:42:49Z → 08:37:29Z（约 1h55m） | LUNA 执行交接监控主会话（GPU 实验队列 E0–E2） |
-| 0908a | /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T21-11-41-01a083b8-809c-7713-b51d-95bbf8e66c6e.jsonl | 266,768 B | 41 | 4 | 2026-09-09T01:11:54Z → 01:12:16Z | "拉取最新代码" 小程序会话 |
-| 0908b | /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-48-51-01a08411-7461-7b52-acd6-6a1b272197e6.jsonl | 1,176,122 B | 154 | 4（另 4 条 developer、1 条 agent_message） | 2026-09-09T02:49:05Z → 02:56:58Z | 多代理子会话 `/root/citation_fact_check`（引用机制核查，只读） |
-| 0908c | /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-49-13-01a08411-c962-70e0-88b0-f543cf955956.jsonl | 8,150,906 B | 426 | 7（另 4 条 developer、3 条 agent_message，2 个 task） | 2026-09-09T02:49:26Z → 03:14:49Z | 多代理子会话 `/root/numeric_evidence_check`（数值/证据核查 + 454M 协议恢复，只读） |
+| 0819 | /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/08/19/rollout-2026-08-19T22-42-50-01a01d0c-bfa9-73d3-aedc-7e82f11f65d7.jsonl | 22,694 B | 4 | 0 | 2026-08-20T02:42:50Z 起 482 ms | 启动即被打断的空会话（无 user/assistant 内容） |
+| 0907-monitor | /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/07/rollout-2026-09-07T02-42-41-01a07a9a-cf12-79d2-94e3-75b94a92b7e0.jsonl | 4,252,461 B | 1006 | 62 | 2026-09-07T06:42:49Z → 08:37:29Z（约 1h55m） | LUNA 执行交接监控主会话（GPU 实验队列 E0–E2） |
+| 0908a | /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T21-11-41-01a083b8-809c-7713-b51d-95bbf8e66c6e.jsonl | 266,768 B | 41 | 4 | 2026-09-09T01:11:54Z → 01:12:16Z | "拉取最新代码" 小程序会话 |
+| 0908b | /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-48-51-01a08411-7461-7b52-acd6-6a1b272197e6.jsonl | 1,176,122 B | 154 | 4（另 4 条 developer、1 条 agent_message） | 2026-09-09T02:49:05Z → 02:56:58Z | 多代理子会话 `/root/citation_fact_check`（引用机制核查，只读） |
+| 0908c | /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-49-13-01a08411-c962-70e0-88b0-f543cf955956.jsonl | 8,150,906 B | 426 | 7（另 4 条 developer、3 条 agent_message，2 个 task） | 2026-09-09T02:49:26Z → 03:14:49Z | 多代理子会话 `/root/numeric_evidence_check`（数值/证据核查 + 454M 协议恢复，只读） |
 
-- 提取后的纯文本：`/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw_0819.txt`、`raw_0907-monitor.txt`、`raw_0908a.txt`、`raw_0908b.txt`、`raw_0908c.txt`。
+- 提取后的纯文本：`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw_0819.txt`、`raw_0907-monitor.txt`、`raw_0908a.txt`、`raw_0908b.txt`、`raw_0908c.txt`。
 - 0908b/0908c 的 NEW_TASK 任务正文（Payload）是 `encrypted_content`，本地不可解密；任务范围由子代理自己的开场白与最终报告还原。两者的 `<context_window>` developer 消息给出代理名：`/root/citation_fact_check`（context window id 01a08411-7461-…）、`/root/numeric_evidence_check`（01a08411-c962-…）。两者 environment 里的 visualization root 都是 `01a0806f-3df5-74b1-bc56-bf00d89d238e`，即父会话 = 09-08 晚间主研究线程（该线程同时在跑十轮 Sol PDF 审稿与 asset_* 子代理簇：`analysis/unify_20260910/raw_thread-main.txt:1070-1082` 的 subagents 名单，numeric_evidence_check 代号 Hooke）。
-- 交叉引用：本地交接文件 `/Users/misaya.yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA_EXECUTION.md`（3,933 B，2026-09-07 02:35）及配套 `jobs.json`（SHA256 `718fa8a950c0141a880bde093c0f1af7fe16b88e69265e3782044a1c1d664937`）、`input_preflight_final.json`、`protected.json`、`yarn_995db5b.py` 等均在盘上（本次 digest 只引用其头部条款）。
+- 交叉引用：本地交接文件 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA_EXECUTION.md`（3,933 B，2026-09-07 02:35）及配套 `jobs.json`（SHA256 `718fa8a950c0141a880bde093c0f1af7fe16b88e69265e3782044a1c1d664937`）、`input_preflight_final.json`、`protected.json`、`yarn_995db5b.py` 等均在盘上（本次 digest 只引用其头部条款）。
 - 仓库内 grep `jobs_e2_z_only|E0_report_1788764478|cross_audit_20260907|citation_fact_check|numeric_evidence_check` 在 docs/、paper-2027/ 下无命中（仅本次提取文件与主线程 roster 行）→ 这批改动的落盘文档不在 09-07/09-08 本地仓库快照里，E0/E1 结果文档归属主研究会话后续处理（[已验证]：grep 空结果）。
 
 ## 2. 任务时间线
@@ -32,7 +32,7 @@
 
 授权链：用户 06:42:49 指令（§6 原文）"严格按照交接迅速执行实验，监控实验即可"；交接文件 LUNA_EXECUTION.md 的 GPU 合约是 RTX 5090 ≥31 GiB，脚本化串行、失败即停、不自动重试。
 
-1. **预检（06:43–06:45）— 成功**。远端 `ssh -p 27741 root@connect.westc.seetacloud.com`：在线但 `nvidia-smi: No devices were found`，PyTorch `cuda_available=False`；执行包、`jobs.json`、计划 SHA（718fa8…664937）在位且匹配；E0/E1 全部 `NOT_STARTED`，E2/E3 按交接保持 `BLOCKED`；无运行中进程。未安装、未改文件、未启动作业。[已验证，06:45:33 汇报]
+1. **预检（06:43–06:45）— 成功**。远端 `ssh -p 27741 [REDACTED_EMAIL]`：在线但 `nvidia-smi: No devices were found`，PyTorch `cuda_available=False`；执行包、`jobs.json`、计划 SHA（718fa8…664937）在位且匹配；E0/E1 全部 `NOT_STARTED`，E2/E3 按交接保持 `BLOCKED`；无运行中进程。未安装、未改文件、未启动作业。[已验证，06:45:33 汇报]
 2. **硬件降级（06:50）**：5090 被占，用户改授权"本机执行…都是32Gb，只不过慢点"→ 实际机器为 **RTX 4080 SUPER，32760 MiB**，空闲无进程。原始 `jobs.json` 保持不动（交接把 GPU 型号写死为 5090，执行器会拒绝 4080），另建 **4080 override plan，SHA `df062bc5c13ff96abb5c6699c13615f1b7e533bbe40904abcb13c35851ebe6fb`**，只改硬件元数据、不改代码/数据/预算/停止规则。运行时 BF16+Flash SDPA 探针通过（06:53:11）。[已验证]
 3. **E0 执行（06:53 → 07:02，约 9 分钟）— 8/8 COMPLETE**：
    - `E0_native_controls`（exit 0，约 70 s）：binding / double_evidence / single_evidence 三项 `resolved=true`；deleted 控制原答案命中均为 0。
@@ -166,7 +166,7 @@ R_s(ω_k) = ω_k / ( s^{r_k} · T(s)^{r_k/2} ),  T(s)=1+0.07·log₂ s
 ## 6. 用户指令与纠正（原文引用）
 
 0907-monitor（raw_0907-monitor.txt）：
-- [06:42:49Z] "阅读执行交接：…LUNA_EXECUTION.md 以及服务器基本信息：ssh -p 27741 root@connect.westc.seetacloud.com， 后续我会升级卡为5090，你严格按照交接迅速执行实验，监控实验即可"
+- [06:42:49Z] "阅读执行交接：…LUNA_EXECUTION.md 以及服务器基本信息：ssh -p 27741 [REDACTED_EMAIL]， 后续我会升级卡为5090，你严格按照交接迅速执行实验，监控实验即可"
 - [06:43:43Z] "目前还没升级卡，你先了解清楚，准备好执行后，我会升级卡"
 - [06:48:07Z] "你不用确认，我还会给你假货吗，你稍等，马上开机"（→ agent 停止重复资格确认，直接启动）
 - [06:50:17Z] "有点尴尬，5090被用了，你就在本机执行吧，我开卡了，一样的，都是32Gb，只不过慢点"（4080 SUPER 授权）
@@ -180,7 +180,7 @@ R_s(ω_k) = ω_k / ( s^{r_k} · T(s)^{r_k/2} ),  T(s)=1+0.07·log₂ s
 - [08:00:33Z] "怎么可能要这么多，你搞笑吧"
 - [08:03:52Z] "你在搞笑吗？ 你训练什么模型？1.485B 个 FP32 参数 ≈ 5.53 GiB； 这个不是已经有了？ 你要这个干嘛？最终 optimizer/resume 状态； 你脑子呢/"
 - [08:07:41Z] "我真服了，astra写的太多了，我们不是AdamW吗？我们这个训练是训练什么？"
-- [08:09:07Z] "你把问题发给astra：codex://threads/01a07996-6df5-7a42-a906-aa1616b7361c 告诉它别那么蠢，不要保留这个那个的权重，过度发散这些逆天的设定和行为导致实验基本无法做 我先无卡模式开机了ssh -p 27741 root@connect.westc.seetacloud.com 你看着改"
+- [08:09:07Z] "你把问题发给astra：codex://threads/01a07996-6df5-7a42-a906-aa1616b7361c 告诉它别那么蠢，不要保留这个那个的权重，过度发散这些逆天的设定和行为导致实验基本无法做 我先无卡模式开机了ssh -p 27741 [REDACTED_EMAIL] 你看着改"
 
 0908a：
 - [01:11:55Z] "拉取最新代码"

@@ -1,4 +1,4 @@
-# RAW night01 — source: /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-49-30-01a08412-0bd1-7402-af02-19380e612a66.jsonl
+# RAW night01 — source: /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-49-30-01a08412-0bd1-7402-af02-19380e612a66.jsonl
 
 [09-08 22:49:30] <session_meta> id=01a08412-0bd1-7402-af02-19380e612a66 parent=01a0806f-3df5-74b1-bc56-bf00d89d238e agent_path=/root/argument_reader_check nick=Ampere model=None
 
@@ -55,7 +55,7 @@ Here is a list of plugins that are available but not installed.
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
 </recommended_plugins>
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Ask when the request is unclear or conflicts with skills or project AGENTS.md.
@@ -106,11 +106,11 @@ and failure records belong in project documents, not here.
 
 </INSTRUCTIONS>
 <environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-08</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [09-08 22:49:44] <agent_message from=/root to=/root/argument_reader_check>
@@ -143,20 +143,20 @@ Payload:
 
 确定需要处理的四点：
 
-1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
+1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
    “Under the usual geometric grid, the base sets the sampled log-frequency range; after fixing the endpoints, the normalized exponent allocation controls how a finite set of pairs covers that range.”
 
-2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
+2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
    “the 23 pairs … have Rényi-2 effective rank approximately two under a uniform separation prior.”  
    实际 span 通常仍是 46 维；这里测的是 block-whitened Gram 的 effective rank。
 
-3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
+3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
    “Together, the analysis and experiments establish exponent allocation as an analyzable design axis with measurable effects on long-context behavior.”  
    这样保留有效主张，同时不暗示 canonical-correlation geometry 已被证明是 PPL/RULER 改善的中介机制。
 
-4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
+4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
 
-一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
+一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
 
 最有说服力的部分是：固定端点、只动 30 个 interior exponents 的三种子干预；完整 sin/cos 子空间而非单一 cosine slice 的 canonical-correlation 定义；以及同时报告 range retarget reversal、8K 代价和 Qwen/OLMo profile reversal。这些反例式结果让“allocation 是独立且与 checkpoint/range 交互的设计轴”比单纯报 EVQ 增益更可信。冻结模型部分也没有把 displacement coordinate 本身当贡献；真正有分量的是 BM 的明确离散构造、自然 QA 验证与跨 checkpoint 的相反排序。
 
@@ -174,20 +174,20 @@ MEMORY.md:76-80|note=[used preference against unnecessary process constraints]
 
 确定需要处理的四点：
 
-1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
+1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
    “Under the usual geometric grid, the base sets the sampled log-frequency range; after fixing the endpoints, the normalized exponent allocation controls how a finite set of pairs covers that range.”
 
-2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
+2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
    “the 23 pairs … have Rényi-2 effective rank approximately two under a uniform separation prior.”  
    实际 span 通常仍是 46 维；这里测的是 block-whitened Gram 的 effective rank。
 
-3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
+3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
    “Together, the analysis and experiments establish exponent allocation as an analyzable design axis with measurable effects on long-context behavior.”  
    这样保留有效主张，同时不暗示 canonical-correlation geometry 已被证明是 PPL/RULER 改善的中介机制。
 
-4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
+4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
 
-一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
+一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
 
 最有说服力的部分是：固定端点、只动 30 个 interior exponents 的三种子干预；完整 sin/cos 子空间而非单一 cosine slice 的 canonical-correlation 定义；以及同时报告 range retarget reversal、8K 代价和 Qwen/OLMo profile reversal。这些反例式结果让“allocation 是独立且与 checkpoint/range 交互的设计轴”比单纯报 EVQ 增益更可信。冻结模型部分也没有把 displacement coordinate 本身当贡献；真正有分量的是 BM 的明确离散构造、自然 QA 验证与跨 checkpoint 的相反排序。
 
@@ -218,26 +218,26 @@ Payload:
 
 | 旧问题 | 实际 rebuttal 解法 | 现稿状态 |
 |---|---|---|
-| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
-| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
-| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
+| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
+| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
+| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
 | `RzWsa.3/.4、R27bE.2/.5`：RULER、1B–7B、base/head dimension | rebuttal 分成 scale tier 与 mechanistic tier | **已解决。** 现稿不拿 50.9M factorial 当 scale evidence；它负责 500K/1M、\(d_{\rm head}=32/64/128\) 的方向验证，成熟模型负责 scale。Qwen-3B/7B 的反结果也被保留，没有包装成普遍胜利。 |
-| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
-| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
-| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
+| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
+| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
+| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
 | `RDz6s.2`：optimized Geo+YaRN 可能缩小差距 | rebuttal 将结论收窄为 fixed-scaler substrate dependence | **部分解决，但已不构成对现稿主张的反驳。** 本文没有证明 tuned Geo+YaRN 无法追平，也不再提出该命题。正在恢复的 454M \(157.7\rightarrow107.5\) 是真实历史结果；只需按正确 fixed-index \(s=8\) scaler 写清 protocol，无需删结果或把临时源文件恢复状态当科学缺陷。 |
 
 AC 当时要求的三个决策门槛——清晰 novelty、direct control、stronger evaluation——现稿均已满足。因此从 3 分升到 5 分是基于实质变化，不是靠 rebuttal 话术。
 
 ### 最影响接收的三个剩余写作问题
 
-1. [01_intro.tex:40](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
+1. [01_intro.tex:40](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
    “motivates a **convex surrogate variational problem** for distributing exponents.”
 
-2. [01_intro.tex:61](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
+2. [01_intro.tex:61](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
    “derive and evaluate model-relative displacement profiles, including a boundary-matched intermediate-band construction, and show through matched RULER and natural-QA tests that useful allocation depends on checkpoint and target length.”
 
-3. [04_mature.tex:54](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
+3. [04_mature.tex:54](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
    “OLMo is the held-out nine-task confirmation; Qwen is the four-task development panel.”  
    这能提前化解 profile selection/cherry-picking 质疑，无需新实验。
 
@@ -261,26 +261,26 @@ MEMORY.md:76-80|note=[used preference against unnecessary process constraints]
 
 | 旧问题 | 实际 rebuttal 解法 | 现稿状态 |
 |---|---|---|
-| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
-| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
-| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
+| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
+| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
+| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
 | `RzWsa.3/.4、R27bE.2/.5`：RULER、1B–7B、base/head dimension | rebuttal 分成 scale tier 与 mechanistic tier | **已解决。** 现稿不拿 50.9M factorial 当 scale evidence；它负责 500K/1M、\(d_{\rm head}=32/64/128\) 的方向验证，成熟模型负责 scale。Qwen-3B/7B 的反结果也被保留，没有包装成普遍胜利。 |
-| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
-| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
-| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
+| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
+| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
+| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
 | `RDz6s.2`：optimized Geo+YaRN 可能缩小差距 | rebuttal 将结论收窄为 fixed-scaler substrate dependence | **部分解决，但已不构成对现稿主张的反驳。** 本文没有证明 tuned Geo+YaRN 无法追平，也不再提出该命题。正在恢复的 454M \(157.7\rightarrow107.5\) 是真实历史结果；只需按正确 fixed-index \(s=8\) scaler 写清 protocol，无需删结果或把临时源文件恢复状态当科学缺陷。 |
 
 AC 当时要求的三个决策门槛——清晰 novelty、direct control、stronger evaluation——现稿均已满足。因此从 3 分升到 5 分是基于实质变化，不是靠 rebuttal 话术。
 
 ### 最影响接收的三个剩余写作问题
 
-1. [01_intro.tex:40](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
+1. [01_intro.tex:40](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
    “motivates a **convex surrogate variational problem** for distributing exponents.”
 
-2. [01_intro.tex:61](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
+2. [01_intro.tex:61](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
    “derive and evaluate model-relative displacement profiles, including a boundary-matched intermediate-band construction, and show through matched RULER and natural-QA tests that useful allocation depends on checkpoint and target length.”
 
-3. [04_mature.tex:54](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
+3. [04_mature.tex:54](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
    “OLMo is the held-out nine-task confirmation; Qwen is the four-task development panel.”  
    这能提前化解 profile selection/cherry-picking 质疑，无需新实验。
 

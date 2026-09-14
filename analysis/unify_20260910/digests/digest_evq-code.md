@@ -1,7 +1,7 @@
 # digest evq-code
 
 任务：EVQ 恢复（experiments/evq_recovery/）与三个 CPU 审计脚本（QK 算子 Gram、softmax 混频、QK 加权源子空间）的代码级复盘——EVQ 相关管线现在到底能算什么、不能算什么；QK 加权 Gram 排序失败的具体数字表；无 GPU 条件下还能推进哪些检验。
-证据等级标注约定：[已验证]=本地代码/收据文件/已测数字直接支持；[部分证据]=有测量但范围/样本受限；[假设]=机制解释或未测推断。所有文件路径相对仓库根 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`。
+证据等级标注约定：[已验证]=本地代码/收据文件/已测数字直接支持；[部分证据]=有测量但范围/样本受限；[假设]=机制解释或未测推断。所有文件路径相对仓库根 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`。
 
 ---
 

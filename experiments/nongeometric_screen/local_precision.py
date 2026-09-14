@@ -32,7 +32,7 @@ def run(worker,job):
                 kp=d['key_positions'].float()[:,None]*freq
                 qa=(a*qp.cos()-b*qp.sin())*d['gain'];qb=(b*qp.cos()+a*qp.sin())*d['gain']
                 ka=(x*kp.cos()-y*kp.sin())*d['gain'];kb=(y*kp.cos()+x*kp.sin())*d['gain']
-                return (qa@ka.transpose(-1,-2)+qb@kb.transpose(-1,-2))/math.sqrt(128)
+                return ([REDACTED_EMAIL](-1,-2)+[REDACTED_EMAIL](-1,-2))/math.sqrt(128)
             fp32=absolute_score(new)-absolute_score(old)
             w=worker.model.model.layers[r['layer']].self_attn.o_proj.weight.float()
             base=d['baseline_output'].permute(1,0,2).reshape(q.shape[1],-1)@w.T

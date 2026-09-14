@@ -19,7 +19,7 @@
 
 - `rebuild_ground_truth_tables.py:31` 定义 `MIRROR = ROOT/'results/nongeometric_screen_20260909'`，其 `load_contract()`（:52-59）从 `MIRROR/results/<method>/contract.json` 读部署张量，`load_summary()`（:61-64）从同一镜像读 `summary.json`。
 - 实测：`/Users/yang/projects/hybrid-rope/results/nongeometric_screen_20260909` **不存在**（该目录下只有 `bm_transfer_*`、`olmo_fast_screen_*` 等 09-08 及更早目录）；全仓 `find` 也搜不到 `reference_tables.json`。
-- 因此 `ground_truth_tables.json` 里形如 `sha256_deployed == sha256_rebuilt` 的"逐位一致"声明，**在本机无法复现**（脚本现在跑不起来）。它的 `sources` 字段指向 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/...`，同样是本机不存在的另一个 checkout。
+- 因此 `ground_truth_tables.json` 里形如 `sha256_deployed == sha256_rebuilt` 的"逐位一致"声明，**在本机无法复现**（脚本现在跑不起来）。它的 `sources` 字段指向 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/...`，同样是本机不存在的另一个 checkout。
 - **后果**：T2 档的 26 个 09-09 非几何方法，其"32K/128K 分数"与"构造式 vs 部署张量 bit-exact"两项，本文只能标注为 **[部分证据-单源重建]**，除非该数字另有本地文档锚点（→ 升为 **[已验证-双源]**）。这是本文对 K2 拟合集最大的诚实性限制。
 
 ### 0.3 分级符号
@@ -279,7 +279,7 @@
 - `paper-2027/` 下 `.tex` 与 supplement——未动（用户纪律：Claude 只审稿不动 .tex）。
 - `outputs/`、`.tmp_sync/`、`internal/`、`rebuttal/`——未扫描。
 
-**本地缺失（重要）**：`results/nongeometric_screen_20260909/`（部署镜像，含 `reference_tables.json` 与 26 个 `<method>/{contract.json,summary.json,ruler.jsonl}`）；`planned_controls/evidence_distances_20260910.json`；`ROPE_GAP_CAPPED_CANDIDATE_20260908.json`；`/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`（另一 checkout）。**未访问任何网络、未访问 ~/.codex、未写入除本文件外的任何路径。**
+**本地缺失（重要）**：`results/nongeometric_screen_20260909/`（部署镜像，含 `reference_tables.json` 与 26 个 `<method>/{contract.json,summary.json,ruler.jsonl}`）；`planned_controls/evidence_distances_20260910.json`；`ROPE_GAP_CAPPED_CANDIDATE_20260908.json`；`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`（另一 checkout）。**未访问任何网络、未访问 ~/.codex、未写入除本文件外的任何路径。**
 
 ---
 

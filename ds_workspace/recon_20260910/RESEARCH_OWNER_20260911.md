@@ -56,7 +56,7 @@ The author requested continuous ownership of experiments and server monitoring o
    frequency parameters; do not silently substitute weight adaptation.
 
 Use the author's Pro proposal (attachment
-`/Users/misaya.yanghejazfs.com.au/.codex/attachments/fdc2bdde-9706-42b7-b7f0-36eaf43c2151/pasted-text.txt`)
+`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/fdc2bdde-9706-42b7-b7f0-36eaf43c2151/pasted-text.txt`)
 as guidance: preserve observed task repairs, reduce observed damage, compute
 full-model decision responses, and validate actual outputs. Local margins and
 geometric objectives are not substitutes for task results or generalization.
@@ -91,7 +91,7 @@ heartbeat. Its development-only plan/code remain as unvalidated preparation.
 
 ## Live operations
 
-- Host: `ssh -p 27741 root@connect.westc.seetacloud.com`.
+- Host: `ssh -p 27741 [REDACTED_EMAIL]`.
 - Existing raw campaign: `/root/autodl-tmp/phase1_20260910`.
 - Runtime: `/root/miniconda3/bin/python`; 32 GiB GPU.
 - Current task owns follow-up experiments and confirmed code repairs. Preserve

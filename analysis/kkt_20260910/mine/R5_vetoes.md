@@ -8,7 +8,7 @@
 
 **证据等级词表**（项目铁律）：`[已验证]`＝有可检索原始数据/数组/恒等式；`[部分证据]`＝开发面板、小样本、单 seed 或口径受限；`[假设]`＝未被匹配证据唯一支持；`[叙事-未验证]`＝只在报告/转述中出现、无可检索凭证。
 
-**引用约定**：`D:<file>:L###` 指 `digests/` 下某 digest 的行号；digest 内部再引一手文档时我保留其原路径名。**路径口径警告**：多数 digest 把仓库写成 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`，而本机实际工作目录是 `/Users/yang/projects/hybrid-rope/`——同一仓库两个挂载名，引用时勿当两个仓库（见 §5 矛盾 1）。
+**引用约定**：`D:<file>:L###` 指 `digests/` 下某 digest 的行号；digest 内部再引一手文档时我保留其原路径名。**路径口径警告**：多数 digest 把仓库写成 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`，而本机实际工作目录是 `/Users/yang/projects/hybrid-rope/`——同一仓库两个挂载名，引用时勿当两个仓库（见 §5 矛盾 1）。
 
 ---
 
@@ -438,7 +438,7 @@
 
 | # | 冲突 | 两侧来源 | 当前裁决 / 处理建议 |
 |---|---|---|---|
-| 1 | **仓库路径**：digest 写 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`，实际工作目录为 `/Users/yang/projects/hybrid-rope/` | 多数 digest 的来源清单 vs 本地环境 | 同一仓库两个挂载名。**引用时统一到 `/Users/yang/projects/hybrid-rope/`**，勿当两仓库。 |
+| 1 | **仓库路径**：digest 写 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`，实际工作目录为 `/Users/yang/projects/hybrid-rope/` | 多数 digest 的来源清单 vs 本地环境 | 同一仓库两个挂载名。**引用时统一到 `/Users/yang/projects/hybrid-rope/`**，勿当两仓库。 |
 | 2 | **"超出 D_j 进入未训练相位弧"** | `UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md` §1/§2 **vs** GLM/0452（槽 36–39 n_cyc=1.17/1.34/1.62/1.95，100% native 相位覆盖）与 GLM 复核"Native slots 36–39 already rotate >1 turn within W" | **否定 UNIFIED 一侧**：`r_j>1` 的槽超 D_j 后圆周已覆盖，"未见弧"只对 `r<1` 成立（`NEXT_DERIVATION` §1.4 L_far 段）。UNIFIED 是 8 份姊妹文档中**唯一未吸收该否定**的，其 §1/§2 正文需勘误。 |
 | 3 | **Smooth "差 9.79 分"聚合表述** | 早期报告 vs 面板 near/far 分解 | FLAG-3：**一律用 near/far 分解**（near 打平 87.2 vs 87.22，**全部损失在 far**）。 |
 | 4 | **"平滑度"禁入 F vs J[h] 的粗糙度项是"KKT 最优先复用件"** | `NEXT_DERIVATION` §5.1（禁平滑度入 F）**vs** 同文件 §4（`J[h]=(1/2)∫[α/h(u)+β(1−u)²h(u)]du` 为最优先复用件，其中第二项含 (1−u)²h） | **不矛盾但要写清**：§5.1 禁的是把**候选表的静态几何平滑度**当选择子/代理（Smooth 全赢全输是反例）；§4 的 β(1−u)²h 是泛函内部对**间隔 a_i 的凸惩罚**，有 KKT 边际含义。**推导文档必须显式声明这一区分**，否则是 P-20/V-A2 的复发。 |

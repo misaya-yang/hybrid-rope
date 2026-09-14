@@ -17,7 +17,7 @@ def run(worker,job):
     def scores(f):
         qr=phase_rotate(q,qp,f,table['gain']).float()
         kr=phase_rotate(k,kp,f,table['gain']).repeat_interleave(8,0).float()
-        return qr@kr.transpose(-1,-2)/math.sqrt(128)
+        return [REDACTED_EMAIL](-1,-2)/math.sqrt(128)
     base=scores(freq);valid=kp[None]<=qp[:,None];base.masked_fill_(~valid[None],-torch.inf)
     p=base.softmax(-1);vv=v.repeat_interleave(8,0).float();out=p@vv
     selected=torch.arange(0,64,2,device='cuda');targets=kp%7==0

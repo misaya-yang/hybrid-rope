@@ -7,7 +7,7 @@ No GPU. Pure CPU, python3 stdlib + json.
 """
 import json, math, os
 
-ROOT = '/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/'
+ROOT = '/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/'
 MIR = ROOT + 'results/nongeometric_screen_20260909/'
 THETA = 1e6; W = 32768; S = 4.0; L = 131072
 LN_S = math.log(S); LNB64 = math.log(THETA)/64

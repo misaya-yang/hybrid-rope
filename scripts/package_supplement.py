@@ -174,7 +174,7 @@ EXCLUDE_SUFFIXES = {
 }
 
 LEAK_PATTERNS = re.compile(
-    rb"misaya|yanghej|hejaz|sshpass|seetacloud|connect\.bjb|connect\.west|"
+    rb"[REDACTED_AUTHOR]|yanghej|hejaz|sshpass|seetacloud|connect\.bjb|connect\.west|"
     rb"@hejazfs|@privaterelay|/" + rb"Users/|/root/autodl-tmp|wandb\.ai|"
     rb"AKIA[0-9A-Z]{16}|hf_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|"
     rb"ghp_[A-Za-z0-9]{20,}|BEGIN OPENSSH PRIVATE KEY|BEGIN RSA PRIVATE KEY",

@@ -3,6 +3,6 @@ Active task: Derive a concrete, evidence-grounded frequency allocation rule unif
 YOUR ID: sol01
 YOUR TASK: MrRoPE full primary paper: reconstruct all math, mixed radix carry and progressive construction; find a rigorous allocation principle that actually follows, finite-index ambiguities, and how it could connect to EVQ.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CONSTRUCTION_ANALYSIS_20260908.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_TRANSITION_REVIEW_20260908.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CONSTRUCTION_ANALYSIS_20260908.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_TRANSITION_REVIEW_20260908.md

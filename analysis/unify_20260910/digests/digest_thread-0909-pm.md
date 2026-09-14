@@ -8,14 +8,14 @@
 
 | 项 | 路径 | 大小/行数 | 说明 |
 |---|---|---|---|
-| F1 原始 rollout | `/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/09/rollout-2026-09-09T21-44-01-01a088fc-7675-7932-b30d-232cae01ee86.jsonl` | 1,790,828 B / 73 行 | 会话 id `01a088fc…`，parent=主会话 `01a0806f…`，`source=subagent`，`agent_path=/root/current_manuscript_accept_review`（旧版 raw 提取显示其 nickname=Euler）。仅 1 user + 1 assistant 明文消息 |
-| F2 原始 rollout | `/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/10/rollout-2026-09-10T01-59-00-01a089e5-e681-75e1-819d-b3ffa379898c.jsonl` | 2,292,959 B / 653 行 | 会话 id `01a089e5…`，`forked_from=01a0806f…`，`agent_path=/root/parallel_plan_audit`；含 5 个 task_started、4 个 task_complete、1 条父会话 compacted 快照、6 条继承的 user 消息、4 条 assistant 明文消息、22 条 agent_message（正文加密） |
+| F1 原始 rollout | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/09/rollout-2026-09-09T21-44-01-01a088fc-7675-7932-b30d-232cae01ee86.jsonl` | 1,790,828 B / 73 行 | 会话 id `01a088fc…`，parent=主会话 `01a0806f…`，`source=subagent`，`agent_path=/root/current_manuscript_accept_review`（旧版 raw 提取显示其 nickname=Euler）。仅 1 user + 1 assistant 明文消息 |
+| F2 原始 rollout | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/10/rollout-2026-09-10T01-59-00-01a089e5-e681-75e1-819d-b3ffa379898c.jsonl` | 2,292,959 B / 653 行 | 会话 id `01a089e5…`，`forked_from=01a0806f…`，`agent_path=/root/parallel_plan_audit`；含 5 个 task_started、4 个 task_complete、1 条父会话 compacted 快照、6 条继承的 user 消息、4 条 assistant 明文消息、22 条 agent_message（正文加密） |
 | 本地工作副本 | `analysis/unify_20260910/raw/rollout-0909-2144.jsonl`、`raw/rollout-0910-0159.jsonl` | 同上 | **访问事故记录**：提取期间对 `~/.codex` 的直接读取间歇性返回 ENOENT（同一命令内 `head` 成功、随后 `open()` 失败，8 次探测全失败，`find` 又可见文件）。最终用"find 定位＋立即 cp"于一次调用内原子完成复制（首试即成）。对 `~/.codex` 做批量提取时建议直接采用该原子模式 |
 | 提取件 | `analysis/unify_20260910/raw_thread-0909-pm.txt` | 59,893 B / 657 行 | user/assistant 明文 + task 边界 + agent_message 框架行（正文以 `[ENCRYPTED_CONTENT nB]` 标注）+ exec 命令行（截断 400 字符） |
 | 工具索引 | `analysis/unify_20260910/raw_thread-0909-pm_tools.txt` | 100,241 B | 全部 custom_tool_call 完整输入与 function_call 头部（send_message 仅记加密长度）；含两份 apply_patch 的完整新文件正文 |
 | 产物 1 | `docs/research/PARALLEL_NONGEOMETRIC_20X10_AUDIT_20260910.md` | 17,596 B / 127 行 | F2 轮 1 创建（06:05:12Z apply_patch #118）；git 状态为未跟踪 |
-| 产物 2 | `/Users/misaya.yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md` | 22,427 B / 227 行 | F2 轮 2 创建（06:12:19Z）、轮 3 修 §4D（06:14Z）。**注意 mtime = 02:28 EDT（06:28Z），晚于本线程末次编辑 06:14Z，说明此后另有写者（父会话/兄弟线程）改动过当前文件内容；引用具体句子时以本 digest 内嵌版本或 git 版为准** |
-| 产物 3 | `/Users/misaya.yanghejazfs.com.au/Desktop/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md` | 26,703 B / 247 行 | F2 轮 4 定稿（文件头自述"证据更新至 2026-09-10 08:42 UTC"，mtime 04:43 EDT = 08:43Z，与 task_complete 一致） |
+| 产物 2 | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md` | 22,427 B / 227 行 | F2 轮 2 创建（06:12:19Z）、轮 3 修 §4D（06:14Z）。**注意 mtime = 02:28 EDT（06:28Z），晚于本线程末次编辑 06:14Z，说明此后另有写者（父会话/兄弟线程）改动过当前文件内容；引用具体句子时以本 digest 内嵌版本或 git 版为准** |
+| 产物 3 | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md` | 26,703 B / 247 行 | F2 轮 4 定稿（文件头自述"证据更新至 2026-09-10 08:42 UTC"，mtime 04:43 EDT = 08:43Z，与 task_complete 一致） |
 | 关联（非本线程） | `docs/research/USER_PROMPT_TRANSCRIPT_20260909.md`（T2-P28，2026-09-09T00:45:05.060Z："你的好实验报告提交并推送代码吧，别找了"）、`USER_INTENT_GUIDE_20260909.md:50` | — | 任务简报所引"提交并推送代码吧别找了"**不在本二文件任何明文记录中**（对两份 jsonl grep `提交并推送`/`别找了` 均 0 命中）；该指令记录于主会话 T2 线程转录文档，本线程活动属其"之后"的活动 |
 
 **rate_limit 核查（任务简报疑点，如实记录）**：F2 文件 grep `rate_limit` 得 180 次、F1 得 20 次，但这是**同一 key 双计**：每条 `event_msg/token_count` 记录含 `"rate_limits"` 与 `"rate_limit_reached_type"` 两个字段名（F2 90 条 token_count × 2 = 180；F1 10 × 2 = 20）。逐条解析结果：两文件 `rate_limit_reached_type` **全部为 null**，weekly（window_minutes=10080）`used_percent` 从 F2 开始 30% 线性升至结束 39%（F1 恒 17%），credits 无、plan_type=pro。**结论：[已验证] 本二线程内未发生任何 API 级 rate-limit 拒绝或受阻重试；"180 次 rate_limit 疑似长时间受阻"为 grep 假阳性。** F2 真正的时间空洞是 06:14:25Z→08:06:34Z（112.1 分钟）的**空闲等待**：该区间两条记录之间无任何事件，线程未丢失进行中工作（轮 3 已完整交付；轮 4 的 NEW_TASK 08:06:34Z 到达后线程全部完成）。丢失/延迟的是**时间窗而非成果**；等待期间主会话在做什么本文件无证据。
@@ -128,7 +128,7 @@ E2 slow-tail_more（128K −9.722pp，12 条初筛）；E8 zero51（−13.889pp�
 ## 6. 用户指令与纠正（原文引用）
 
 继承自父会话的明文 user 消息（F2 #4–#14，时间戳为 fork 时刻 2026-09-10T05:59:00.504Z，真实发送时间见父转录）：
-> "有卡了，你去实验吧：ssh -p 27741 root@connect.westc.seetacloud.com"
+> "有卡了，你去实验吧：ssh -p 27741 [REDACTED_EMAIL]"
 
 > "现在情况如何？"
 

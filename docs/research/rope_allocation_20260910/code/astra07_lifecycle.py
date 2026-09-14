@@ -56,7 +56,7 @@ def main():
     f = rng.normal(size=(4, 5, 2)); b = rng.normal(size=(4, 5))
     p = softmax(rng.normal(size=(4, 5)))
     u, qstar = moment_fit(f,b,p)
-    q0 = softmax(b+f@np.array([.8,-.6]))
+    q0 = softmax([REDACTED_EMAIL]([.8,-.6]))
     residual = kl(p,q0)-kl(p,qstar)-kl(qstar,q0)
     assert abs(residual) < 1e-10
     row_residuals = np.sum(p*(np.log(p)-np.log(q0)),axis=1)-np.sum(p*(np.log(p)-np.log(qstar)),axis=1)-np.sum(qstar*(np.log(qstar)-np.log(q0)),axis=1)

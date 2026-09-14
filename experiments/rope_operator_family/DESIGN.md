@@ -268,7 +268,7 @@ MomentKV 已利用 key–value 矩补偿 evicted response，Attention Matching �
 
 ### 已确认的机器状态
 
-新机器为 `ssh -p 18164 root@connect.westd.seetacloud.com`。2026-09-09 的只读检查显示，无卡模式实际 cgroup 配额为 **0.5 CPU、2 GiB RAM**，数据盘约 **17.48 GiB** 可用；`/dev/nvidia*` 为空，直接执行 `nvidia-smi` 返回 exec-format error。主机显示的物理 CPU/内存并非该容器可用资源。
+新机器为 `ssh -p 18164 [REDACTED_EMAIL]`。2026-09-09 的只读检查显示，无卡模式实际 cgroup 配额为 **0.5 CPU、2 GiB RAM**，数据盘约 **17.48 GiB** 可用；`/dev/nvidia*` 为空，直接执行 `nvidia-smi` 返回 exec-format error。主机显示的物理 CPU/内存并非该容器可用资源。
 
 已有 Python 3.12.3、torch 2.8.0+cu128、transformers 4.57.6、NumPy 2.3.2、safetensors 0.7.0。Qwen 权重完整，路径 `/root/autodl-tmp/qwen25_1p5b_32k`，revision `989aa7980e4cf806f80c7fef2b1adb7bc71aa306`，文件 SHA256 与源码快照见 `evidence.json`。官方 TransMLA 的 requirements 与当前环境不同，接入使用独立环境或兼容适配，保留现有可用环境。
 

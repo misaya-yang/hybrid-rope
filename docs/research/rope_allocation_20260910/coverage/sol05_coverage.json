@@ -4,34 +4,34 @@
   "task": "Audit Pro proposals including newest6Pro full-row block calibration and derive a constructive correction",
   "full_files_read": [
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Round12_YaRN_Limits_and_Experiments_20260906.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Round12_YaRN_Limits_and_Experiments_20260906.md",
       "lines": 590,
       "coverage": "1-590"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Major_Revision_20260906.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Major_Revision_20260906.md",
       "lines": 333,
       "coverage": "1-333"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_NEXT_DAY_PLAN_20260906.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_NEXT_DAY_PLAN_20260906.md",
       "lines": 645,
       "coverage": "1-645"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt",
       "lines": 759,
       "coverage": "1-759"
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md",
       "lines": 72,
       "coverage": "1-72"
     }
   ],
   "additional_files_inspected": [
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/nongeometric_screen/pro_block_calibration.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/experiments/nongeometric_screen/pro_block_calibration.py",
       "coverage": "1-115",
       "purpose": "Verify full-key capture, query/head sampling, replay math, and matched-gain source state"
     }
@@ -43,7 +43,7 @@
     "Block-map boundary and randomized-origin distance calculation for S=4, M=4096",
     "KL chain-rule weighting example for a low-mass remote group"
   ],
-  "report": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol05.md",
+  "report": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol05.md",
   "decisive_finding": "Ordinary full-row KL is native-attention-mass weighted and therefore can ignore long-range conditional structure; fixed-origin last-token rows also miss block-boundary locality failures.",
   "constructive_rule": "A constrained stratum-balanced transported-row objective with a projected QP direction, deterministic exact-loss line search, and matched reverse control."
 }

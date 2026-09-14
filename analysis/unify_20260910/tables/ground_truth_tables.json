@@ -1392,7 +1392,7 @@
    "construction": "仅槽28：m28 := m27（0.098039→0.065359，gap27→28 挪 ln4*eps28≈0.04533）",
    "sources": [
     "experiments/nongeometric_screen/select.py:76-80 (proposals)",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s28_less/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s28_less/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -1834,7 +1834,7 @@
    "construction": "仅槽29：m29 := m30（后邻指数）",
    "sources": [
     "experiments/nongeometric_screen/select.py:76-80",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s29_more/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s29_more/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -2273,7 +2273,7 @@
    "construction": "同时刻双手术：m28:=m27 且 m29:=m30（s28_less⊕s29_more）→ eps28+eps29+eps30 集中入 gap28（\"双倍集中\"，1.46× 洞）——由部署张量逐位解码确认",
    "sources": [
     "results/nongeometric_screen_20260909/results/E1_pair28_29/contract.json 解码",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_pair28_29/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_pair28_29/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -2713,7 +2713,7 @@
    "construction": "槽40–63 频率 ×1e6^(-1/64) → 平台水平 4^{1.15572}≈÷4.931（违反 I2）",
    "sources": [
     "experiments/nongeometric_screen/select.py:87-89",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E2_tail_more/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E2_tail_more/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -3175,7 +3175,7 @@
    "construction": "nu_51 = 0（慢带单槽置零）",
    "sources": [
     "experiments/nongeometric_screen/select.py:90-92",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E8_zero51/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E8_zero51/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -3614,7 +3614,7 @@
    "construction": "槽25/29 共享 m=(m25+m29)/2=0.078431",
    "sources": [
     "experiments/nongeometric_screen/select.py:146-163",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E4_pair25_29/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E4_pair25_29/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -4053,7 +4053,7 @@
    "panel": "12行 (持平)",
    "construction": "槽28 反向镜像控制：部署反演 m28=0.132270（changed_slots=[28]）；候选式 2·m28−m27=0.130719 与部署不符，精确镜像公式未在本地已读代码中找到——仅部署张量为真值 [部分证据]",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s28_reverse_matched/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s28_reverse_matched/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -4488,7 +4488,7 @@
    "panel": "12行 (持平)",
    "construction": "槽29 镜像控制（部署 m29=0.094729，构造式未在已读文件中记录，仅部署值为真值）",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s29_plus_matched/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E1_s29_plus_matched/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -4924,7 +4924,7 @@
    "construction": "固定预算 B=16/3 的最小粗糙度 KKT 解增量 eps 累加（界 23/40，端点同 MrPro）",
    "sources": [
     "experiments/nongeometric_screen/smooth_budget.py construct()",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/Smooth_MrBudget/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/Smooth_MrBudget/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -5378,7 +5378,7 @@
    "construction": "过渡段均匀斜坡 m_j=(j-23)/17（24–39），外部与 MrPro 相同——GLM 复核已纠正 UNIFIED\"全表÷4\"表述",
    "sources": [
     "experiments/nongeometric_screen/smooth_budget.py:38 (uniform)",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/MrUni/contract.json",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/MrUni/contract.json",
     "docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md:11"
    ],
    "nu_used": "deployed",
@@ -5833,7 +5833,7 @@
    "construction": "gaps0–22 各减 ln(b)/64/23=0.009386（总抽 0.2158674），gaps36–39 各加 1/4（EVQ 字面运输；槽40+ 不动）",
    "sources": [
     "experiments/nongeometric_screen/gap_budget_transfer.py",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/HighGapToLong/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/HighGapToLong/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -6767,7 +6767,7 @@
    "construction": "MrPro 周期∈[32768,131072] 的槽（36–39）nu_j -= 1/131072（公共相位 −1 rad@128K）",
    "sources": [
     "experiments/nongeometric_screen/long_bridge.py",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/LongBridgeSlower/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/LongBridgeSlower/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -7209,7 +7209,7 @@
    "construction": "同幅反号 nu_j += 1/131072",
    "sources": [
     "experiments/nongeometric_screen/long_bridge.py",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/LongBridgeFaster/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/LongBridgeFaster/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -7650,7 +7650,7 @@
    "panel": "36行 (72.9167/81.6667)",
    "construction": "历史 FullLagP2 整表（1.5B 资产恢复，m31=0.998 完成、m32 起=1.0；QWEN15 候选文件与本表核对见对账）；gain=1+0.074*ln4",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/FullLagP2_Transfer3B/contract.json",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/FullLagP2_Transfer3B/contract.json",
     "docs/research/ROPE_QWEN15_FULL_LAG_P2_CANDIDATE_20260907.json",
     "docs/research/ROPE_RECOVERED_QWEN_P2_20260907.json"
    ],
@@ -8114,7 +8114,7 @@
    "panel": "36行 (98.3333/75.3472)",
    "construction": "MrPro 表 @ gain=1+0.074*ln4（表与 MrPro 同，幅度不同）",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/Control_Mr_gain074/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/Control_Mr_gain074/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -8550,7 +8550,7 @@
    "panel": "36行 (100/70)",
    "construction": "BM 表 @ gain .074",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E3_BM_gain074/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E3_BM_gain074/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -9003,7 +9003,7 @@
    "panel": "36行 (89.5833/58.8194)",
    "construction": "BM 表 @ gain 1",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E3_BM_gain1/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E3_BM_gain1/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {
@@ -9456,7 +9456,7 @@
    "panel": "36行 (90/68.6111)",
    "construction": "BM 方向局部响应约束投影（project.py；修正约束后 ≡ BM，历史部署表保留）",
    "sources": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E7_local_projection/contract.json"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/nongeometric_screen_20260909/results/E7_local_projection/contract.json"
    ],
    "nu_used": "deployed",
    "formula_vs_deployed": {

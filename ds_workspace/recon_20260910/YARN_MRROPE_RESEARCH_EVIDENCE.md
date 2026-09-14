@@ -384,7 +384,7 @@ held-out：**slower vs BM 翻负 −3.31pp（t=−1.47）**；faster 腿死于�
 
 ## 附录 A：完整实验索引（干预 → 文件 → 数据）
 
-**本地仓库**（`/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope`）：
+**本地仓库**（`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope`）：
 - 判决文档：`ds_workspace/recon_20260910/*.md`（51 份，见其 index.md §目录结构；本报告已覆盖全部主判决）
 - 表代数（参考实现）：`experiments/curvature_20260910/tables.py`（m 坐标、全部构造器、verify CLI）
 - 新算子（官方索引 vs 论文转数 YaRN、literal EVQ 两版）：`experiments/rope_decision_20260911/tables.py`
@@ -398,7 +398,7 @@ held-out：**slower vs BM 翻负 −3.31pp（t=−1.47）**；faster 腿死于�
 - 论文原文：`~/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md`；YaRN 官方：jquesnelle/yarn@995db5b（`scaled_rope/LlamaYaRNScaledRotaryEmbedding.py`）
 - 早期文档簇：`docs/research/ROPE_MRPRO_BM_*_20260908.*`、`analysis/unify_20260910/tables/ground_truth_tables.json`（38 方法部署表）
 
-**服务器**（`ssh -p 27741 root@connect.westc.seetacloud.com`，只读盘点 2026-09-11）：
+**服务器**（`ssh -p 27741 [REDACTED_EMAIL]`，只读盘点 2026-09-11）：
 - `/root/autodl-tmp/phase1_20260910/`：olmo_pro（condEVQ/step42 350）、s8_out（72×4）、walk_out（180×5）、olmo_gain（350×2）、olmo_gain2x2（a1_b64 350×2 + mrpro_g1p0 18）、olmo_ngain{,_h}（native 两 gain 350/180×2）、olmo_gsweep（350/350/83）、natural_out（391×5+summary）、holdout（72×4）、holdout180（180×4）、s42_out（六臂 180）、dose_L{4097,8193,16385}、cont* 全家（NLL 仪器）、qlev_L*、qwen4x_power（2 行）、olmo_lb（350×2）、olmo_lb_h（60/180）
 - `/root/autodl-tmp/rope_decision_20260911/`：probe_01、calibration_01/02、gain_only_01、fresh_72/（identity_check.json：72 新、零重叠 vs 2227 旧行/1337 唯一）、validation_{reference,methods}、validation_readout.json、validation_plan.json（SHA 6e91bf13…）
 - 运行时：`/root/miniconda3/bin/python`；磁盘 48G/68G 用量
@@ -423,7 +423,7 @@ EOF
 python3 ds_workspace/recon_20260910/audit/pro_decision_20260911/check_remote.py   # 经 ssh stdin，CPU only
 
 # 5. fresh_72 读数（equal-task macro + 配对 Welch 区间）
-ssh -p 27741 root@connect.westc.seetacloud.com "/root/miniconda3/bin/python -m experiments.rope_decision_20260911.read_validation --root /root/autodl-tmp/rope_decision_20260911"
+ssh -p 27741 [REDACTED_EMAIL] "/root/miniconda3/bin/python -m experiments.rope_decision_20260911.read_validation --root /root/autodl-tmp/rope_decision_20260911"
 
 # 6. LongBridge 350 腿配对读数（本报告 §3-L 数值的来源，可直接重跑）
 #    load olmo_lb/{nu_m6p104em05,nu_p6p104em05}.jsonl 按 row_id 配对，slow−fast

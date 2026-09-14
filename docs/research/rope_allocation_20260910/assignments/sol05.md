@@ -3,8 +3,8 @@ Active task: Derive a concrete, evidence-grounded frequency allocation rule unif
 YOUR ID: sol05
 YOUR TASK: Pro proposals full ingestion group3 including newest6Pro attachment: examine full-row block calibration mathematics, transport map assumptions, preserving local and long dependencies, and derive a concrete optimized rule or correction.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Round12_YaRN_Limits_and_Experiments_20260906.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Major_Revision_20260906.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_NEXT_DAY_PLAN_20260906.md
-/Users/misaya.yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Round12_YaRN_Limits_and_Experiments_20260906.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Major_Revision_20260906.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_NEXT_DAY_PLAN_20260906.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GLM_6PRO_REVIEW_AND_VALIDATION_20260910.md

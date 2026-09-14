@@ -697,35 +697,35 @@
       "sha256": "b567aede2e92bae684601581a17027c3cf0fc7b2aa353db079bbd18e5584d7e3"
     },
     {
-      "source": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/6f22c629-45a0-41e8-a383-4ad135436f7c/pasted-text.txt",
+      "source": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/6f22c629-45a0-41e8-a383-4ad135436f7c/pasted-text.txt",
       "archive": "source_inputs/mrrope_yarn_user_analysis.md",
       "kind": "user_supplied_analysis",
       "bytes": 16004,
       "sha256": "5c285cab5d502aaf71811a1b62d41a5c69e2aa0d7dbb8bcbaf56f2b13f2fff8d"
     },
     {
-      "source": "/Users/misaya.yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt",
+      "source": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/178672bd-38b0-450b-9158-1729d7d6c801/pasted-text.txt",
       "archive": "source_inputs/pro6_allocation_analysis.md",
       "kind": "user_supplied_analysis",
       "bytes": 27446,
       "sha256": "0265b989117af0580690f5ec5454455e3b7dfc2c7aff12ccbb570b55a748bf95"
     },
     {
-      "source": "/Users/misaya.yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md",
+      "source": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md",
       "archive": "source_inputs/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md",
       "kind": "historical_pro_question_attachment",
       "bytes": 22427,
       "sha256": "74873a85651f126d136f6eb832197ce901f3f734e28fc05a407a9745986ac61c"
     },
     {
-      "source": "/Users/misaya.yanghejazfs.com.au/Desktop/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md",
+      "source": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md",
       "archive": "source_inputs/RoPE_Allocation_Theory_Questions_for_Pro_20260910.md",
       "kind": "historical_pro_question_attachment",
       "bytes": 26703,
       "sha256": "bf89bfb871c117a41ecbed2dc881c104ef22b26b8cfb1305672f3049627ec4c6"
     },
     {
-      "source": "/Users/misaya.yanghejazfs.com.au/Desktop/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
+      "source": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
       "archive": "source_inputs/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
       "kind": "historical_pro_question_attachment",
       "bytes": 6765,

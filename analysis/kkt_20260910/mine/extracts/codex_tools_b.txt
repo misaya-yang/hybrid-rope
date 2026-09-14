@@ -26,11 +26,11 @@ python3 - <<'PY'
 for p in ['experiments/rotary_budget/train_budget.py','experiments/rotary_budget/eval_budget.py']:
  s=open(p).read().replace('from build_tables import','from runtime import validate as validate_runtime\nfrom build_tables import').replace('old.validate_cuda_runtime()','validate_runtime(old)');open(p,'w').write(s)
 PY
-scp -P 27741 experiments/rotary_budget/runtime.py experiments/rotary_budget/train_budget.py experiments/rotary_budget/eval_budget.py root@connect.westc.seetacloud.com:/root/autodl-tmp/rotary_budget_20260908/
+scp -P 27741 experiments/rotary_budget/runtime.py experiments/rotary_budget/train_budget.py experiments/rotary_budget/eval_budget.py [REDACTED_EMAIL]:/root/autodl-tmp/rotary_budget_20260908/
 [exit 0] 
 
 ===== [CMD] line 3455 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/rotary_budget_20260908")
 env=os.environ.copy();env["PYTORCH_CUDA_ALLOC_CONF"]="expandable_segments:True";env["TORCHINDUCTOR_CACHE_DIR"]=str(r/"inductor_cache");env["OMP_NUM_THREADS"]="8"
@@ -43,7 +43,7 @@ PY'
 
 
 ===== [CMD] line 3470 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 12 /root/autodl-tmp/rotary_budget_20260908/probe_mb8_02.log; ps -p 17018 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 12 /root/autodl-tmp/rotary_budget_20260908/probe_mb8_02.log; ps -p 17018 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
 [exit 0] {"completed_updates": 1, "input_tokens": 65536, "loss": 10.93706202507019, "lr": 7.874015748031495e-07, "grad_norm": 10.829479217529297, "seconds": 30.111201647669077, "tokens_per_second": 2176.465780636595}
 {"completed_updates": 2, "input_tokens": 131072, "loss": 10.915318250656128, "lr": 1.574803149606299e-06, "grad_norm": 10.832263946533203, "seconds": 0.8759835995733738, "tokens_per_second": 74814.18605544406}
 {"completed_updates": 3, "input_tokens": 196608, "loss": 10.871612071990967, "lr": 2.3622047244094487e-06, "grad_norm": 10.857950210571289, "seconds": 0.8778144381940365, "tokens_per_second": 74658.14772291726}
@@ -55,14 +55,14 @@ memory.used [MiB], utilization.gpu [%]
 
 
 ===== [CMD] line 3485 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 3 /root/autodl-tmp/rotary_budget_20260908/probe_mb8_02.log; ps -p 17018 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 3 /root/autodl-tmp/rotary_budget_20260908/probe_mb8_02.log; ps -p 17018 -o pid,etime'
 [exit 1] {"completed_updates": 9, "input_tokens": 589824, "loss": 10.229440212249756, "lr": 7.086614173228345e-06, "grad_norm": 8.315650939941406, "seconds": 0.8775470592081547, "tokens_per_second": 74680.8952435391}
 {"completed_updates": 10, "input_tokens": 655360, "loss": 10.13941216468811, "lr": 7.874015748031495e-06, "grad_norm": 6.9171342849731445, "seconds": 0.8775105439126492, "tokens_per_second": 74684.00289276036}
 {"arm": "G32", "seed": 42, "updates": 7629, "input_tokens": 499974144, "parameter_count": 151898880, "initial_trainable_sha256": "fb17648236fc6b976795f6f4985dc055421b0122fae594382c7cb99937872452", "row_order_sha256": "19c69384ef1ed9635517d78b42d077c338ebfe856d2d93348960928c684d1d1c", "train_semantic_sha256": "66ee82396750d2c2fe9ab0a678092383a46ad28290983d091bd83895d5f83e60", "validation_sha256": "f30d913567e54d8a00d4d25221eacf66af076f2eb1e19e6f1f807b2faaed7857", "table": [1.0, 0.6636012196540833, 0.44036659598350525, 0.2922278344631195, 0.1939227432012558, 0.12868736684322357, 0.08539710193872452, 0.05666962265968323, 0.03760603070259094, 0.02495540864765644, 0.016560440883040428, 0.010989528149366379, 0.007292664609849453, 0.00483942124992609, 0.0032114461064338684, 0.002131119603291154, 0.0014142135623842478, 0.0009384738514199853, 0.0006227724370546639, 0.0004132725589442998, 0.00027424818836152554, 0.00018199143232777715, 0.00012076973507646471, 8.014294871827587e-05, 5.3182957344688475e-05, 3.529227615217678e-05, 2.34199997066753e-05, 1.5541540051344782e-05, 1.0313385246263351e-05, 6.843975370429689e-06, 4.541670477919979e-06, 3.01385807688348e-06], "config": {"vocab_size": 50304, "hidden_size": 768, "num_layers": 12, "num_heads": 12, "head_dim": 64, "intermediate_size": 3072, "max_position_embeddings": 8192}, "optimizer": {"name": "AdamW", "betas": [0.9, 0.95], "weight_decay": 0.01, "peak_lr": 0.0006, "min_lr": 6e-05, "warmup": 762, "schedule": "original_cosine_final_step_floor", "clipping": 1.0}, "loss": "cross_entropy_on_batch_0_to_2046_predict_batch_1_to_2047", "precision": "FP32_master_BF16_autocast", "signature": "e42a0c39f6bcae3b5c937012439c17dfca31ed979a1ab0fc0283d01c71ff1014", "runtime": {"name": "NVIDIA GeForce RTX 4080 SUPER", "capability": [8, 9], "native_arch_listed": false, "compatible_cubins": ["sm_80", "sm_86"], "compiled_architectures": ["sm_70", "sm_75", "sm_80", "sm_86", "sm_90", "sm_100", "sm_120"], "total_memory_bytes": 33794359296, "torch": "2.8.0+cu128", "cuda": "12.8", "kernels": {"flash_sdp_enabled": true, "mem_efficient_sdp_enabled": false, "math_sdp_enabled": false, "cudnn_sdp_enabled": false}, "flash_forward_backward": "PASS", "compatibility_source": "https://docs.nvidia.com/cuda/ada-compatibility-guide/index.html"}, "micro_batch": 8, "compile_mode": "default", "status": "COMPLETE", "pid": 17018, "discarded": true, "adapter_code_sha256": {"build_tables.py": "51979f74dd25578f207c42e70b737b37aa31be4bd373c9da2cdafe304dd49f0a", "eval_inputs.py": "44f088b788660e6b92112bb7d2c9182a3f4705e84e188c0b7ddf7790bd4f483a", "train_budget.py": "40004a2ace1aeb3108b8ac4fea3bc8d3f0f3c981579902a42f540c3993d16c4c", "eval_budget.py": "169a22b28a166d56e0380862d41555ac5477012799f9652ac9d8ee21442a6bb1", "launch_probe.py": "d47d47eb6aa40b47877e8c7c341447a76cb34267877c03cff6b4c365ac734efa", "runtime.py": "747aa6828918625208e960e808e17ee1711d0d4c87e80db805bfcdcf8397ebb5"}, "original_trainer_code_sha256": "066f7176a6d48aa7d1f77308ae6803838025692d4bde61071a1e036ebf16a548", "elapsed_seconds": 38.01514718681574, "completed_updates": 10, "peak_cuda_bytes": 11182305280, "steady_tokens_per_second": 74649.81574553056, "conservative_tokens_per_second": 74513.70966140887, "estimated_18_arm_training_hours": 33.48796905971831, "step_seconds": [30.111201647669077, 0.8759835995733738, 0.8778144381940365, 0.8786764703691006, 0.879516001790762, 0.87
 ...[clipped 114 chars]
 
 ===== [CMD] line 3501 =====
-$ /bin/zsh -lc mkdir -p experiments/rotary_budget/evidence; scp -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/rotary_budget_20260908/probe_mb8_02/status.json experiments/rotary_budget/evidence/probe_mb8_02.json
+$ /bin/zsh -lc mkdir -p experiments/rotary_budget/evidence; scp -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/rotary_budget_20260908/probe_mb8_02/status.json experiments/rotary_budget/evidence/probe_mb8_02.json
 [exit 0] 
 
 ===== [CMD] line 3517 =====
@@ -141,7 +141,7 @@ The first result sought is a reproducible separation between source
 ...[clipped 6076 chars]
 
 ===== [CMD] line 3538 =====
-$ /bin/zsh -lc git status --short | head -20; ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv; df -h /root/autodl-tmp; find /root/autodl-tmp -maxdepth 3 -name config.json | head -18'
+$ /bin/zsh -lc git status --short | head -20; ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv; df -h /root/autodl-tmp; find /root/autodl-tmp -maxdepth 3 -name config.json | head -18'
 [exit 0] memory.used [MiB], utilization.gpu [%]
 0 MiB, 0 %
 Filesystem      Size  Used Avail Use% Mounted on
@@ -266,11 +266,11 @@ try:
 except Exception as e:
     (root.parent/'download_status.json').write_text(json.dumps({'status':'FAILED','error':str(e)}));raise
 PY
-scp -P 27741 experiments/position_observability/download_model.py /tmp/qwen35_08_metadata.json root@connect.westc.seetacloud.com:/root/autodl-tmp/
+scp -P 27741 experiments/position_observability/download_model.py /tmp/qwen35_08_metadata.json [REDACTED_EMAIL]:/root/autodl-tmp/
 [exit 0] 
 
 ===== [CMD] line 3575 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908");r.mkdir(exist_ok=True)
 f=open(r/"download.log","a")
@@ -281,7 +281,7 @@ PY'
 
 
 ===== [CMD] line 3606 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/download_status.json; tail -n 5 /root/autodl-tmp/position_observability_20260908/download.log; ps -p 18444 -o pid,etime,pcpu'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/download_status.json; tail -n 5 /root/autodl-tmp/position_observability_20260908/download.log; ps -p 18444 -o pid,etime,pcpu'
 [exit 0] {"status": "RUNNING", "pid": 18444, "revision": "2fc06364715b967f1860aea9cf38778875588b17"}{"file": "preprocessor_config.json", "status": "VERIFIED"}
 {"file": "tokenizer_config.json", "status": "VERIFIED"}
 {"file": "video_preprocessor_config.json", "status": "VERIFIED"}
@@ -351,7 +351,7 @@ def main():
 ...[clipped 3474 chars]
 
 ===== [CMD] line 3627 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/download_status.json; tail -n 4 /root/autodl-tmp/position_observability_20260908/download.log; ps -p 18444 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/download_status.json; tail -n 4 /root/autodl-tmp/position_observability_20260908/download.log; ps -p 18444 -o pid,etime'
 [exit 0] {"status": "RUNNING", "pid": 18444, "revision": "2fc06364715b967f1860aea9cf38778875588b17"}{"file": "tokenizer_config.json", "status": "VERIFIED"}
 {"file": "video_preprocessor_config.json", "status": "VERIFIED"}
 {"file": "tokenizer.json", "status": "VERIFIED"}
@@ -361,7 +361,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 3640 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls -lh /root/autodl-tmp/position_observability_20260908/model/*safetensors*; tail -n 3 /root/autodl-tmp/position_observability_20260908/download.log; ps -p 18444 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls -lh /root/autodl-tmp/position_observability_20260908/model/*safetensors*; tail -n 3 /root/autodl-tmp/position_observability_20260908/download.log; ps -p 18444 -o pid,etime'
 [exit 0] -rw-r--r-- 1 root root 312M Sep  9 03:50 /root/autodl-tmp/position_observability_20260908/model/model.safetensors-00001-of-00001.safetensors.partial
 -rw-r--r-- 1 root root  50K Sep  9 03:44 /root/autodl-tmp/position_observability_20260908/model/model.safetensors.index.json
 {"file": "video_preprocessor_config.json", "status": "VERIFIED"}
@@ -408,14 +408,14 @@ $ /bin/zsh -lc python3 - <<'PY'
 p='docs/research/ACTIVE_RESEARCH_GOAL.md'
 s=open(p).read();start=s.index('经用户授权，持续读取 ChatGPT 对话');end=s.index('\n## 交付与完成判定',start);s=s[:start]+s[end:];open(p,'w').write(s)
 PY
-ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls -lh /root/autodl-tmp/position_observability_20260908/model/*partial; cat /root/autodl-tmp/position_observability_20260908/download_status.json; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
+ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls -lh /root/autodl-tmp/position_observability_20260908/model/*partial; cat /root/autodl-tmp/position_observability_20260908/download_status.json; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
 [exit 0] -rw-r--r-- 1 root root 352M Sep  9 03:53 /root/autodl-tmp/position_observability_20260908/model/model.safetensors-00001-of-00001.safetensors.partial
 {"status": "RUNNING", "pid": 18444, "revision": "2fc06364715b967f1860aea9cf38778875588b17"}memory.used [MiB], utilization.gpu [%]
 0 MiB, 0 %
 
 
 ===== [CMD] line 3690 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import requests,time,concurrent.futures
 path="Qwen/Qwen3.5-0.8B/resolve/2fc06364715b967f1860aea9cf38778875588b17/model.safetensors-00001-of-00001.safetensors"
 def check(domain):
@@ -451,11 +451,11 @@ s=s.replace("model=AutoModelForImageTextToText.from_pretrained(a.model,dtype=tor
 s=s.replace("model_revision='2fc06364715b967f1860aea9cf38778875588b17',max_new_tokens=48","model_revision=getattr(config,'_commit_hash',None),model_config_sha256=hashlib.sha256((a.model/'config.json').read_bytes()).hexdigest(),max_new_tokens=48")
 open(p,'w').write(s)
 PY
-scp -P 27741 experiments/position_observability/smoke.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/position_observability/smoke.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 3746 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"qwen25_short_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8"
@@ -522,11 +522,11 @@ try:
 except Exception as e:
     (root/'download_status.json').write_text(json.dumps({'status':'FAILED','error':str(e),'resumed_at_byte':offset}));raise
 PY
-scp -P 27741 experiments/position_observability/finish_download.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/position_observability/finish_download.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 3767 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 6 /root/autodl-tmp/position_observability_20260908/qwen25_short_01.log; cat /root/autodl-tmp/position_observability_20260908/qwen25_short_01/status.json 2>/dev/null; ps -p 18875 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 6 /root/autodl-tmp/position_observability_20260908/qwen25_short_01.log; cat /root/autodl-tmp/position_observability_20260908/qwen25_short_01/status.json 2>/dev/null; ps -p 18875 -o pid,etime'
 [exit 1] {"row_id": "f3_r0_history", "output_text": "purple,silver", "text_exact": false, "ended_eos": true, "seconds": 0.0967579036951065}
 {"row_id": "f3_r1_marker_M7", "output_text": "purple", "text_exact": true, "ended_eos": true, "seconds": 0.05418349802494049}
 {"row_id": "f3_r1_marker_P2", "output_text": "code silver", "text_exact": false, "ended_eos": true, "seconds": 0.07497533410787582}
@@ -556,7 +556,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 3768 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"range_download.log","a")
@@ -567,7 +567,7 @@ PY'
 
 
 ===== [CMD] line 3775 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import json,collections,pathlib
 p=pathlib.Path("/root/autodl-tmp/position_observability_20260908/qwen25_short_01/outputs.jsonl")
 r=[json.loads(x) for x in p.read_text().splitlines()]
@@ -667,7 +667,7 @@ s=s.replace("result['full_exact_and_eos']=strict and result['ended_eos']","resul
 ...[clipped 625 chars]
 
 ===== [CMD] line 3793 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"qwen25_long_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8";env["TOKENIZERS_PARALLELISM"]="false"
@@ -678,7 +678,7 @@ PY'
 
 
 ===== [CMD] line 3794 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 5 /root/autodl-tmp/position_observability_20260908/range_download.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 5 /root/autodl-tmp/position_observability_20260908/range_download.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json'
 [exit 0] {"range_complete": [1409286144, 1476395007]}
 {"range_complete": [1744830464, 1746942599]}
 {"range_complete": [1476395008, 1543503871]}
@@ -687,7 +687,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 {"status": "RUNNING", "pid": 19025, "resumed_at_byte": 469762048, "workers": 8}
 
 ===== [CMD] line 3803 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 5 /root/autodl-tmp/position_observability_20260908/qwen25_long_01.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json; ps -p 19146,19025 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 5 /root/autodl-tmp/position_observability_20260908/qwen25_long_01.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json; ps -p 19146,19025 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
 [exit 0] {"row_id": "heldout_f1_L16384_r0_first", "output_text": "Unit ZX72 was first assigned the color silver.", "text_exact": false, "ended_eos": true, "seconds": 1.7884583249688148}
 {"row_id": "heldout_f1_L16384_r0_current", "output_text": "Unit ZX72 is currently assigned color yellow.", "text_exact": false, "ended_eos": true, "seconds": 1.7582864537835121}
 {"row_id": "heldout_f1_L16384_r0_history", "output_text": "Unit ZX72 was assigned color silver, then color yellow.", "text_exact": false, "ended_eos": true, "seconds": 1.8272095136344433}
@@ -701,7 +701,7 @@ memory.used [MiB], utilization.gpu [%]
 
 
 ===== [CMD] line 3817 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/range_download.log; ps -p 19025 -o pid,etime,pcpu'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/range_download.log; ps -p 19025 -o pid,etime,pcpu'
 [exit 0] {"range_complete": [603979776, 671088639]}
 {"range_complete": [536870912, 603979775]}
 {"range_complete": [738197504, 805306367]}
@@ -725,7 +725,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 3842 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 4 /root/autodl-tmp/position_observability_20260908/qwen25_long_01.log; cat /root/autodl-tmp/position_observability_20260908/qwen25_long_01/status.json; tail -n 4 /root/autodl-tmp/position_observability_20260908/range_download.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json; ps -p 19146,19025 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 4 /root/autodl-tmp/position_observability_20260908/qwen25_long_01.log; cat /root/autodl-tmp/position_observability_20260908/qwen25_long_01/status.json; tail -n 4 /root/autodl-tmp/position_observability_20260908/range_download.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json; ps -p 19146,19025 -o pid,etime'
 [exit 0] {"row_id": "heldout_f7_L16384_r1_marker_P2", "output_text": "Unit ZX78 was assigned color violet.", "text_exact": false, "ended_eos": true, "seconds": 1.7423421740531921}
 {"row_id": "heldout_f7_L16384_r1_first", "output_text": "Unit ZX78 was assigned color violet.", "text_exact": false, "ended_eos": true, "seconds": 1.7441813834011555}
 {"row_id": "heldout_f7_L16384_r1_current", "output_text": "Unit ZX78 is currently assigned color orange.", "text_exact": false, "ended_eos": true, "seconds": 1.7727308794856071}
@@ -804,11 +804,11 @@ if h.hexdigest()!='04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4
 os.replace(part,p)
 subprocess.run(['/root/miniconda3/bin/python','/root/autodl-tmp/download_model.py',str(r/'model'),'/root/autodl-tmp/qwen35_08_metadata.json'],check=True)
 PY
-scp -P 27741 experiments/position_observability/repair_ranges.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/position_observability/repair_ranges.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 3858 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,tarfile
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"repair_ranges.log","a")
@@ -821,7 +821,7 @@ PY'
 
 
 ===== [CMD] line 3863 =====
-$ /bin/zsh -lc scp -P 27741 root@connect.westc.seetacloud.com:/tmp/position_shortlong.tgz /tmp/position_shortlong.tgz
+$ /bin/zsh -lc scp -P 27741 [REDACTED_EMAIL]:/tmp/position_shortlong.tgz /tmp/position_shortlong.tgz
 [exit 0] 
 
 ===== [CMD] line 3873 =====
@@ -859,7 +859,7 @@ All distinct output templates:
 ...[clipped 2039 chars]
 
 ===== [CMD] line 3884 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 8 /root/autodl-tmp/position_observability_20260908/repair_ranges.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json; ps -p 19449 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 8 /root/autodl-tmp/position_observability_20260908/repair_ranges.log; cat /root/autodl-tmp/position_observability_20260908/download_status.json; ps -p 19449 -o pid,etime'
 [exit 1] {"file": "model.safetensors.index.json", "status": "VERIFIED"}
 {"file": "preprocessor_config.json", "status": "VERIFIED"}
 {"file": "merges.txt", "status": "VERIFIED"}
@@ -888,7 +888,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 3905 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"qwen35_short_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8"
@@ -899,7 +899,7 @@ PY'
 
 
 ===== [CMD] line 3926 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 6 /root/autodl-tmp/position_observability_20260908/qwen35_short_01.log; ps -p 19676 -o pid,etime; df -h / /root/autodl-tmp'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 6 /root/autodl-tmp/position_observability_20260908/qwen35_short_01.log; ps -p 19676 -o pid,etime; df -h / /root/autodl-tmp'
 [exit 0] {"row_id": "f3_r0_history", "output_text": "purple, silver\n", "text_exact": true, "ended_eos": true, "seconds": 0.2637242153286934}
 {"row_id": "f3_r1_marker_M7", "output_text": "purple\n", "text_exact": true, "ended_eos": true, "seconds": 0.2022290863096714}
 {"row_id": "f3_r1_marker_P2", "output_text": "silver\n", "text_exact": true, "ended_eos": true, "seconds": 0.20228465646505356}
@@ -935,7 +935,7 @@ modeling_minicpm.py 107699
 
 
 ===== [CMD] line 4007 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'head -n 5 /root/autodl-tmp/position_observability_20260908/qwen35_short_01.log; sed -n "656,708p" /root/miniconda3/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'head -n 5 /root/autodl-tmp/position_observability_20260908/qwen35_short_01.log; sed -n "656,708p" /root/miniconda3/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py'
 [exit 0] Loading weights:   0%|          | 0/473 [00:00<?, ?it/s]Loading weights: 100%|██████████| 473/473 [00:00<00:00, 6980.57it/s]
 {"row_id": "f0_r0_marker_M7", "output_text": "orange\n", "text_exact": true, "ended_eos": true, "seconds": 0.7296253591775894}
 {"row_id": "f0_r0_marker_P2", "output_text": "yellow\n", "text_exact": true, "ended_eos": true, "seconds": 0.20656805112957954}
@@ -1126,7 +1126,7 @@ s=s.replace("if a.background_shard:\n        from long_cases import prepare", "i
 s=s.replace("(a.context_tokens if a.background_shard else 1024)","(a.context_tokens if (a.background_shard or a.inputs_jsonl) else 1024)")
 open(p,'w').write(s)
 PY
-scp -P 27741 experiments/position_observability/smoke.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/position_observability/smoke.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4072 =====
@@ -1316,7 +1316,7 @@ J_C\le\frac{\|\bar q\|^2}{8}
 ...[clipped 3367 chars]
 
 ===== [CMD] line 4074 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"qwen35_long_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8"
@@ -1445,7 +1445,7 @@ def test_controls_match_counts_and_jensen_bound():
     np.testing.assert_array_equal(phase_groups(np.zeros(32)),np.repeat(np.arange(4),16))
 PY
 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest tests/test_psr_groups.py -q
-scp -P 27741 experiments/native_sparse_position/groups.py experiments/native_sparse_position/activation_audit.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/groups.py experiments/native_sparse_position/activation_audit.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] ============================= test session starts ==============================
 platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0
 rootdir: /Users/yang/projects/hybrid-rope
@@ -1486,7 +1486,7 @@ tests/test_psr_groups.py ..                                              [100%]
 
 
 ===== [CMD] line 4119 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 3 /root/autodl-tmp/position_observability_20260908/qwen35_long_01.log; ps -p 20053 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 3 /root/autodl-tmp/position_observability_20260908/qwen35_long_01.log; ps -p 20053 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
 [exit 0] {"row_id": "heldout_f7_L16384_r1_first", "output_text": "violet\n", "text_exact": true, "ended_eos": true, "seconds": 1.6876084506511688}
 {"row_id": "heldout_f7_L16384_r1_current", "output_text": "orange\n", "text_exact": true, "ended_eos": true, "seconds": 1.6834040395915508}
 {"row_id": "heldout_f7_L16384_r1_history", "output_text": "orange, violet\n", "text_exact": false, "ended_eos": true, "seconds": 1.7395523115992546}
@@ -1496,7 +1496,7 @@ memory.used [MiB], utilization.gpu [%]
 
 
 ===== [CMD] line 4126 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"psr_activation_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8"
@@ -1507,7 +1507,7 @@ PY'
 
 
 ===== [CMD] line 4144 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 8 /root/autodl-tmp/position_observability_20260908/psr_activation_01.log; cat /root/autodl-tmp/position_observability_20260908/psr_activation_01/status.json; ps -p 20334 -o pid,etime'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 8 /root/autodl-tmp/position_observability_20260908/psr_activation_01.log; cat /root/autodl-tmp/position_observability_20260908/psr_activation_01/status.json; ps -p 20334 -o pid,etime'
 [exit 1] Loading weights:   0%|          | 0/473 [00:00<?, ?it/s]Loading weights: 100%|██████████| 473/473 [00:00<00:00, 6503.48it/s]
 {"row_id": "heldout_f0_L16384_r0_marker_M7", "layer": 3, "counts": [13, 21, 9, 21], "records": [{"method": "RoPEMean", "remote_retained_mass": 0.7780768275260925, "headwise_value_relative_l2": 0.021434597671031952, "mean_signed_logmass_error": 1.4092087745666504, "mean_absolute_logmass_error": 1.4092087745666504, "per_head_retained_mass": [0.9394632577896118, 0.8098893165588379, 0.9793335795402527, 0.9313255548477173, 0.5202492475509644, 0.7826805114746094, 0.7323484420776367, 0.5293245911598206], "per_head_value_relative_l2": [0.01926800236105919, 0.013809391297399998, 0.0030131342355161905, 0.006624021101742983, 0.05994493514299393, 0.008607504889369011, 0.027944305911660194, 0.03226549178361893]}, {"method": "NoPEMean", "remote_retained_mass": 0.7717819809913635, "headwise_value_relative_l2": 0.021847832947969437, "mean_signed_logmass_error": 0.8473138809204102, "mean_absolute_logmass_error": 1.523526906967163, "per_head_retained_mass": [0.9400098323822021, 0.797872006893158, 0.9797140955924988, 0.9292708039283752, 0.520416796207428, 0.7661693096160889, 0.7250018119812012, 0.5158011317253113], "per_head_value_relative_l2": [0.018846023827791214, 0.014781441539525986, 0.002874969970434904, 0.006966261193156242, 0.060069069266319275, 0.009116574190557003, 0.02871076390147209, 0.033417556434869766]}, {"method": "PSR", "remote_retained_mass": 0.7820839881896973, "headwise_value_relative_l2": 0.02108553797006607, "mean_signed_logmass_error": 1.2067667245864868, "mean_absolute_logmass_error": 1.2067667245864868, "per_head_retained_mass": [0.9415498971939087, 0.8135387897491455, 0.9804377555847168, 0.9316468238830566, 0.5291851758956909, 0.7921178340911865, 0.7351299524307251, 0.533065676689148], "per_head_value_relative_l2": [0.018607614561915398, 0.013586185872554779, 0.0028920723125338554, 0.006638837046921253, 0.058970365673303604, 0.008398385718464851, 0.02755001187324524, 0.03204082325100899]}, {"method": "Contiguous", "remote_retained_mass": 0.7823463678359985, "headwise_value_relative_l2": 0.02114272490143776, "mean_signed_logmass_error": 1.1779708862304688, "mean_absolute_logmass_error": 1.1779708862304688, "per_head_retained_mass": [0.9395220875740051, 0.814071536064148, 0.979781448841095, 0.9316519498825073, 0.5319980382919312, 0.7937854528427124, 0.7355462312698364, 0.5324143171310425], "per_head_value_relative_l2": [0.019130341708660126, 0.013583444058895111, 0.0029434801544994116, 0.006702691316604614, 0.05877365916967392, 0.008376211859285831, 0.02755531296133995, 0.03207666426897049]}, {"method": "Random", "remote_retained_mass": 0.7795681953430176, "headwise_value_relative_l2": 0.021319298073649406, "mean_signed_logmass_error": 1.3396244049072266, "mean_absolute_logmass_error": 1.3396244049072266, "per_head_retained_mass": [0.9409565329551697, 0.8098543882369995, 0.9793798923492432, 0.9313040375709534, 0.5237165689468384, 0.7883974313735962, 0.7326908707618713, 0.5302457213401794], "per_head_value_relative_l2": [0.01885814592242241, 0.013824495486915112, 0.0030128052458167076, 0.006594588980078697, 0.05969773232936859, 0.00850655697286129, 0.02786390297114849, 0.032196156680583954]}]}
 {"row_id": "heldout_f0_L16384_r0_marker_M7", "layer": 15, "counts": [13, 21, 9, 21], "records": [{"method": "RoPEMean", "remote_retained_mass": 0.8808282017707825, "headwise_value_relative_l2": 0.015902619808912277, "mean_signed_logmass_error": 1.4736320972442627, "mean_absolute_logmass_error": 1.4736320972442627, "per_head_retained_mass": [0.9078831672668457, 0.9502657651901245, 0.9215039014816284, 0.8914841413497925, 0.916390895843
@@ -1526,11 +1526,11 @@ s=s.replace("'record_count':len(records),", "'model_type':config.model_type,'mod
 open(p,'w').write(s)
 PY
 .venv/bin/python -m py_compile experiments/native_sparse_position/activation_audit.py
-scp -P 27741 experiments/native_sparse_position/activation_audit.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/activation_audit.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4166 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os,tarfile
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"psr_qwen25_activation_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8"
@@ -1544,11 +1544,11 @@ PY'
 
 
 ===== [CMD] line 4169 =====
-$ /bin/zsh -lc scp -P 27741 root@connect.westc.seetacloud.com:/tmp/position_qwen35_results.tgz /tmp/position_qwen35_results.tgz
+$ /bin/zsh -lc scp -P 27741 [REDACTED_EMAIL]:/tmp/position_qwen35_results.tgz /tmp/position_qwen35_results.tgz
 [exit 0] 
 
 ===== [CMD] line 4186 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,json,collections
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 for name in ("psr_activation_01","psr_qwen25_activation_01"):
@@ -1665,11 +1665,11 @@ insert="""    # All-keys gather qualification on real prefix tokens: exact Dense
 s=s.replace(marker,insert+marker).replace("'block':64,'local':2048", "'all_key_gather_bitwise_logit_parity':parity,'block':64,'local':2048")
 open(p,'w').write(s)
 PY
-scp -P 27741 experiments/native_sparse_position/oracle_continuation.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/oracle_continuation.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4251 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python - <<'"'"'PY'"'"'
 import pathlib,subprocess,os
 r=pathlib.Path("/root/autodl-tmp/position_observability_20260908")
 f=open(r/"oracle_continuation_01.log","a");env=os.environ.copy();env["OMP_NUM_THREADS"]="8"
@@ -1698,7 +1698,7 @@ qwen35_audit_code_snapshot_matches True
 
 
 ===== [CMD] line 4262 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 8 /root/autodl-tmp/position_observability_20260908/oracle_continuation_01.log; ps -p 21063 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 8 /root/autodl-tmp/position_observability_20260908/oracle_continuation_01.log; ps -p 21063 -o pid,etime,pcpu; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv'
 [exit 0] {"row_id": "heldout_f2_L16384_r1_current", "method": "RoPEOracle", "output_text": "Violet", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.0455831959843636}
 {"row_id": "heldout_f2_L16384_r1_current", "method": "NoPEOracle", "output_text": "Violet", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.0988815315067768}
 {"row_id": "heldout_f3_L16384_r0_marker_P2", "method": "Dense", "output_text": "The color assigned in record [P2] is silver.", "text_exact": false, "ended_eos": true, "continuation_seconds": 0.7988879382610321}
@@ -1714,7 +1714,7 @@ memory.used [MiB], utilization.gpu [%]
 
 
 ===== [CMD] line 4298 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/oracle_continuation_01/status.json; tail -n 4 /root/autodl-tmp/position_observability_20260908/oracle_continuation_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/oracle_continuation_01/status.json; tail -n 4 /root/autodl-tmp/position_observability_20260908/oracle_continuation_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 21063,
@@ -1808,7 +1808,7 @@ class Oracle:
 ...[clipped 6928 chars]
 
 ===== [CMD] line 4308 =====
-$ /bin/zsh -lc scp -q -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/oracle_continuation_01/outputs.jsonl /tmp/oracle_outputs.jsonl
+$ /bin/zsh -lc scp -q -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/oracle_continuation_01/outputs.jsonl /tmp/oracle_outputs.jsonl
 [exit 0] 
 
 ===== [CMD] line 4315 =====
@@ -2160,7 +2160,7 @@ def audit(q,kr,v,qn,kn,positions,omega,block=64,local=2048,topk=32):
 ...[clipped 6863 chars]
 
 ===== [CMD] line 4330 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls /root/autodl-tmp; cat /root/autodl-tmp/olmo_fast_screen_20260908/prepared_natural_01/manifest.json | head -n 25'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls /root/autodl-tmp; cat /root/autodl-tmp/olmo_fast_screen_20260908/prepared_natural_01/manifest.json | head -n 25'
 [exit 0] bm_transfer_20260908
 bm_transfer_qwen7b_20260908
 claude_round11_olmo_20260905
@@ -2231,7 +2231,7 @@ sparse_memory_20260908
 
 
 ===== [CMD] line 4339 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'find /root/autodl-tmp -path "*/longbench/data.zip" -print; cat /root/miniconda3/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py | head -n 8'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'find /root/autodl-tmp -path "*/longbench/data.zip" -print; cat /root/miniconda3/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py | head -n 8'
 [exit 0] /root/autodl-tmp/hybrid-rope-target-free-real-data-v3/longbench/data.zip
 /root/autodl-tmp/hybrid-rope-target-free-real-data/longbench/data.zip
 #                🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
@@ -2406,7 +2406,7 @@ python3 -m py_compile experiments/native_sparse_position/oracle_native.py experi
 [exit 0] 
 
 ===== [CMD] line 4360 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/oracle_native.py experiments/native_sparse_position/natural_continuation.py experiments/native_sparse_position/prepare_natural.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/oracle_native.py experiments/native_sparse_position/natural_continuation.py experiments/native_sparse_position/prepare_natural.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4363 =====
@@ -2418,14 +2418,14 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4368 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/natural_continuation.py scripts/eval/longbench_metrics.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/natural_continuation.py scripts/eval/longbench_metrics.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4373 =====
 $ /bin/zsh -lc mkdir -p results/position_observability_20260908/oracle_continuation_01 results/position_observability_20260908/psr_qwen25_activation_01
 cp /tmp/oracle_outputs.jsonl results/position_observability_20260908/oracle_continuation_01/outputs.jsonl
 cp experiments/native_sparse_position/oracle_continuation.py results/position_observability_20260908/oracle_continuation_01/oracle_continuation.py
-scp -q -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/oracle_continuation_01/status.json results/position_observability_20260908/oracle_continuation_01/
+scp -q -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/oracle_continuation_01/status.json results/position_observability_20260908/oracle_continuation_01/
 [exit 0] 
 
 ===== [CMD] line 4378 =====
@@ -2483,12 +2483,12 @@ def main():
 ...[clipped 3538 chars]
 
 ===== [CMD] line 4381 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_natural.py --archive /root/autodl-tmp/hybrid-rope-target-free-real-data-v3/longbench/data.zip --models /root/autodl-tmp/rope_qwen_baseline_20260907/model /root/autodl-tmp/position_observability_20260908/model --output natural_inputs_01'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_natural.py --archive /root/autodl-tmp/hybrid-rope-target-free-real-data-v3/longbench/data.zip --models /root/autodl-tmp/rope_qwen_baseline_20260907/model /root/autodl-tmp/position_observability_20260908/model --output natural_inputs_01'
 [exit 0] {"hotpotqa": {"eligible": 103, "selected": 8, "source_member_sha256": "a0005ab2a1bc2ac3a70352dccbf96cccc4e0aac6bb677f6a55180fa51b92ef6f"}, "qasper": {"eligible": 10, "selected": 8, "source_member_sha256": "29aa07d2a63f36f4fb8e8cd200a3428ee3126d750bde6af1c8f9bc41c2366854"}, "multifieldqa_en": {"eligible": 61, "selected": 8, "source_member_sha256": "0aac182fd317dcf6d74f8e1e0f3e61029407435346c2e0b3ff9fb45ae49c5c3f"}}
 
 
 ===== [CMD] line 4384 =====
-$ /bin/zsh -lc scp -q -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/result.json results/position_observability_20260908/psr_qwen25_activation_01/
+$ /bin/zsh -lc scp -q -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/result.json results/position_observability_20260908/psr_qwen25_activation_01/
 [exit 0] 
 
 ===== [CMD] line 4387 =====
@@ -2538,7 +2538,7 @@ $ /bin/zsh -lc cat /Users/yang/.codex/automations/rope/automation.toml
 id = "rope"
 kind = "heartbeat"
 name = "位置编码核心实验与论文研究"
-prompt = "持续执行当前用户goal：现代稀疏/压缩/循环混合注意力的位置编码研究，先最solid核心结果后必要比较，不先六臂；思考与有价值实验并行，避免GPU空转和盲扫，不把中期交付当完成。读取docs/research/ACTIVE_RESEARCH_GOAL.md、最新owner与真实实验进程。Pro一次性读取任务已完成：对话回忆问题清单6aa02439-a010-83ea-be7c-cdc30d7302ba的回复90367e14-f0b9-4fd3-b9ce-87c84e648ef6已读取；新Markdown /Users/yang/Downloads/native_sparse_position_research_plan_20260908.md 已通过正常预览下载并存experiments/native_sparse_position/DESIGN_SOURCE.md。不要再定时轮询该回复，不向任何其他对话发消息。Pro提出PSR：固定实际频率、块B64、4组静态farthest-first相位分组，post-RoPE均值log-mixture筛选后精读原KV；须独立核对，不能自动执行其巨大基线矩阵。当前首要检查为Qwen3.5-0.8B真实Q/K上PSR对同counts连续/随机分组，先判定方法价值。服务器ssh -p27741 root@connect.westc.seetacloud.com，root /root/autodl-tmp/position_observability_20260908；psr_activation.pid记录正在启动的真实诊断句柄。已有Qwen2.5-3B与Qwen3.5-0.8B短/长完整输出检查均完成，保留格式/答案/EOS差别：3B长80条只有79条EOS，不能说全部终止；这些不是NoPE或PSR效果证明。数据与budget训练代码已备好但未启动六臂长训练。仅实质结果、失败、路线变化或需要用户行动时通知；未变安静。"
+prompt = "持续执行当前用户goal：现代稀疏/压缩/循环混合注意力的位置编码研究，先最solid核心结果后必要比较，不先六臂；思考与有价值实验并行，避免GPU空转和盲扫，不把中期交付当完成。读取docs/research/ACTIVE_RESEARCH_GOAL.md、最新owner与真实实验进程。Pro一次性读取任务已完成：对话回忆问题清单6aa02439-a010-83ea-be7c-cdc30d7302ba的回复90367e14-f0b9-4fd3-b9ce-87c84e648ef6已读取；新Markdown /Users/yang/Downloads/native_sparse_position_research_plan_20260908.md 已通过正常预览下载并存experiments/native_sparse_position/DESIGN_SOURCE.md。不要再定时轮询该回复，不向任何其他对话发消息。Pro提出PSR：固定实际频率、块B64、4组静态farthest-first相位分组，post-RoPE均值log-mixture筛选后精读原KV；须独立核对，不能自动执行其巨大基线矩阵。当前首要检查为Qwen3.5-0.8B真实Q/K上PSR对同counts连续/随机分组，先判定方法价值。服务器ssh -p27741 [REDACTED_EMAIL]，root /root/autodl-tmp/position_observability_20260908；psr_activation.pid记录正在启动的真实诊断句柄。已有Qwen2.5-3B与Qwen3.5-0.8B短/长完整输出检查均完成，保留格式/答案/EOS差别：3B长80条只有79条EOS，不能说全部终止；这些不是NoPE或PSR效果证明。数据与budget训练代码已备好但未启动六臂长训练。仅实质结果、失败、路线变化或需要用户行动时通知；未变安静。"
 status = "ACTIVE"
 rrule = "FREQ=MINUTELY;INTERVAL=30"
 target_thread_id = "01a08151-4eb4-7572-8865-b321956dda94"
@@ -2547,7 +2547,7 @@ updated_at = 1788900012546
 
 
 ===== [CMD] line 4402 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 8 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 8 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] Loading weights:   0%|          | 0/473 [00:00<?, ?it/s]Loading weights: 100%|██████████| 473/473 [00:00<00:00, 7075.40it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEOracle": true, "NoPEOracle": true}}
 {"row_id": "hotpotqa_82", "method": "Dense", "output_text": "Hawaii\n", "text_exact": true, "ended_eos": true, "continuation_seconds": 1.1668511368334293, "qa_f1": 1.0}
@@ -2790,7 +2790,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4420 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python -u natural_continuation.py --model /root/autodl-tmp/position_observability_20260908/model --inputs natural_inputs_01/inputs.jsonl --output natural_qwen35_01 > natural_qwen35_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python -u natural_continuation.py --model /root/autodl-tmp/position_observability_20260908/model --inputs natural_inputs_01/inputs.jsonl --output natural_qwen35_01 > natural_qwen35_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 21637
 Connection to connect.westc.seetacloud.com closed by remote host.
 
@@ -2800,7 +2800,7 @@ $ /bin/zsh -lc git diff --check -- paper-2027/HANDOFF.md docs/research/ACTIVE_RE
 [exit 0] 
 
 ===== [CMD] line 4428 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/status.json; tail -n 3 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/status.json; tail -n 3 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {
   "status": "RUNNING",
   "pid": 21638,
@@ -2849,12 +2849,12 @@ $ /bin/zsh -lc rg -n 'memory.*contract|semantic scientific' /Users/yang/.codex/m
 
 
 ===== [CMD] line 4443 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 1 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/status.json; wc -l /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/outputs.jsonl; ps -p 21638 -o pid=,etime=,args='
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 1 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/status.json; wc -l /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/outputs.jsonl; ps -p 21638 -o pid=,etime=,args='
 [exit 1] }72 /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/outputs.jsonl
 
 
 ===== [CMD] line 4452 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/status.json; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen35_01/status.json; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 21638,
@@ -2895,7 +2895,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 }
 
 ===== [CMD] line 4459 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import json,subprocess
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -2910,7 +2910,7 @@ PY
 
 
 ===== [CMD] line 4460 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/natural_qwen35_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/natural_qwen35_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4470 =====
@@ -3022,7 +3022,7 @@ $ /bin/zsh -lc python3 experiments/native_sparse_position/summarize_natural.py r
 
 
 ===== [CMD] line 4475 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/phase_content_audit.py experiments/native_sparse_position/groups.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/phase_content_audit.py experiments/native_sparse_position/groups.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4478 =====
@@ -3066,11 +3066,11 @@ Dense F1 0.256 EOS True "The document does not explicitly state which specific m
 ...[clipped 5884 chars]
 
 ===== [CMD] line 4481 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/natural_inputs_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/natural_inputs_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4482 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python phase_content_audit.py psr_activation_01 --output psr_activation_01/phase_content.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python phase_content_audit.py psr_activation_01 --output psr_activation_01/phase_content.json'
 [exit 0] {
   "Contiguous": {
     "native": 2.363581952890924,
@@ -3136,7 +3136,7 @@ except Exception as e:
 
 
 ===== [CMD] line 4490 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 3 /root/autodl-tmp/position_observability_20260908/natural_qwen25_01.log; wc -l /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/outputs.jsonl; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 3 /root/autodl-tmp/position_observability_20260908/natural_qwen25_01.log; wc -l /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/outputs.jsonl; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {"row_id": "qasper_196", "method": "RoPEOracle", "output_text": "Their highest MRR score was 0.6103 in one of the test batches for Factoid Question Answering task.", "text_exact": false, "ended_eos": true, "continuation_seconds": 2.085664711892605, "qa_f1": 0.11764705882352941}
 {"row_id": "qasper_196", "method": "NoPEOracle", "output_text": "Their highest MRR score was 0.6103 in one of the test batches for Factoid Question Answering task.", "text_exact": false, "ended_eos": true, "continuation_seconds": 2.0998674146831036, "qa_f1": 0.11764705882352941}
 {"row_id": "qasper_13", "method": "Dense", "output_text": "The document does not provide specific accuracy figures for the proposed system. It discusses F1 scores but does not explicitly state the F1 scores or accuracy for the proposed adversarial neural network model.", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.2882037945091724, "qa_f1": 0.08888888888888889}
@@ -3145,7 +3145,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 4502 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python phase_content_audit.py psr_qwen25_activation_01 --output psr_qwen25_activation_01/phase_content.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python phase_content_audit.py psr_qwen25_activation_01 --output psr_qwen25_activation_01/phase_content.json'
 [exit 0] {
   "Contiguous": {
     "native": 3.886309348897111,
@@ -3260,7 +3260,7 @@ $ /bin/zsh -lc ls -lh /tmp/minicpm41_source; rg -n 'sparse|import|use_nope|q_nor
 ...[clipped 3459 chars]
 
 ===== [CMD] line 4516 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'wc -l /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/outputs.jsonl; tail -n 2 /root/autodl-tmp/position_observability_20260908/natural_qwen25_01.log; df -h /root /root/autodl-tmp'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'wc -l /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/outputs.jsonl; tail -n 2 /root/autodl-tmp/position_observability_20260908/natural_qwen25_01.log; df -h /root /root/autodl-tmp'
 [exit 0] 51 /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/outputs.jsonl
 {"row_id": "multifieldqa_en_145", "method": "RoPEOracle", "output_text": "The relationships between catch per set (CPUE per set) and fishing behavior variables differ for different measures of catch per unit effort (CPUE). Specifically:\n\n- For unstandardized CPUE, there is a positive relationship with number of hooks, engine power, and number of sets.\n- When standardizing CPUE by the number of hooks (individuals per 100 hooks per set), the relationships change:\n  - CPUE of bottom longlines is significantly higher than that of surface longlines.\n  - There is a negative relationship between CPUE and these fishing behavior variables when CPUE is standardised by hook number.\n\nThis", "text_exact": false, "ended_eos": false, "continuation_seconds": 7.3292933367192745, "qa_f1": 0.2912621359223301}
 {"row_id": "multifieldqa_en_145", "method": "NoPEOracle", "output_text": "The relationships between catch per set (CPUE per set) and fishing behavior variables are different for different measures of catch per unit effort (CPUE). Specifically:\n\n- For unstandardized CPUE, there is a positive relationship with number of hooks, number of sets, and engine power, but a negative relationship with these variables when CPUE is standardized by hook number.\n- For standardised CPUE (individuals per 100 hooks per set), the relationships are reversed: bottom longlines exhibit a higher standardised CPUE, with negative relationships between catch per 100 hooks per set and number of hooks and frequency of", "text_exact": false, "ended_eos": false, "continuation_seconds": 7.446390151977539, "qa_f1": 0.2830188679245283}
@@ -3478,7 +3478,7 @@ modeling_minicpm.py official Git blob verified 9a1596165eada4c7e564feb54da021a39
 
 
 ===== [CMD] line 4540 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import importlib.util,subprocess
 for x in ('flash_attn','infllm_v2','triton'):
  print(x,importlib.util.find_spec(x))
@@ -3525,7 +3525,7 @@ tokenizer_config.json 2939
 
 
 ===== [CMD] line 4548 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/status.json; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen25_01/status.json; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 21973,
@@ -3596,7 +3596,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 }
 
 ===== [CMD] line 4555 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls /usr/local; ls /root/miniconda3/envs; find /usr/local /root/miniconda3 /opt -name nvcc -type f 2>/dev/null | head -n 10'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls /usr/local; ls /root/miniconda3/envs; find /usr/local /root/miniconda3 /opt -name nvcc -type f 2>/dev/null | head -n 10'
 [exit 0] bin
 cuda
 cuda-12
@@ -3613,7 +3613,7 @@ src
 
 
 ===== [CMD] line 4556 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/natural_qwen25_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/natural_qwen25_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4560 =====
@@ -3633,7 +3633,7 @@ python3 -m py_compile experiments/native_sparse_position/natural_extension.py
 [exit 0] 
 
 ===== [CMD] line 4564 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/natural_extension.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/natural_extension.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4569 =====
@@ -3708,7 +3708,7 @@ def fe
 ...[clipped 4338 chars]
 
 ===== [CMD] line 4578 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -3721,11 +3721,11 @@ PY
 
 
 ===== [CMD] line 4581 =====
-$ /bin/zsh -lc scp -q -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/psr_activation_01/phase_content.json results/position_observability_20260908/psr_activation_01/
+$ /bin/zsh -lc scp -q -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/psr_activation_01/phase_content.json results/position_observability_20260908/psr_activation_01/
 [exit 0] 
 
 ===== [CMD] line 4589 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/download_pinned.py experiments/native_sparse_position/assets/minicpm41_metadata.json root@connect.westc.seetacloud.com:/root/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/download_pinned.py experiments/native_sparse_position/assets/minicpm41_metadata.json [REDACTED_EMAIL]:/root/
 [exit 0] 
 
 ===== [CMD] line 4596 =====
@@ -3734,7 +3734,7 @@ $ /bin/zsh -lc git clone --depth 1 --branch feature_infer https://github.com/Ope
 
 
 ===== [CMD] line 4597 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess,shutil
 from pathlib import Path
 r=Path('/root/minicpm41_native_20260908');r.mkdir(exist_ok=False)
@@ -3747,7 +3747,7 @@ PY
 
 
 ===== [CMD] line 4602 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python -m venv --system-site-packages /root/minicpm41_native_20260908/runtime && /root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check "transformers==4.56.2" "tokenizers>=0.22,<0.23"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python -m venv --system-site-packages /root/minicpm41_native_20260908/runtime && /root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check "transformers==4.56.2" "tokenizers>=0.22,<0.23"'
 [exit 0] Looking in indexes: http://mirrors.aliyun.com/pypi/simple
 Collecting transformers==4.56.2
   Downloading http://mirrors.aliyun.com/pypi/packages/70/26/2591b48412bde75e33bfd292034103ffe41743cacd03120e3242516cd143/transformers-4.56.2-py3-none-any.whl (11.6 MB)
@@ -3784,7 +3784,7 @@ Successfully installed huggingface-hub-0.36.2 transformers-4.56.2
 
 
 ===== [CMD] line 4605 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen25_extension_01/status.json; tail -n 2 /root/autodl-tmp/position_observability_20260908/natural_qwen25_extension_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/natural_qwen25_extension_01/status.json; tail -n 2 /root/autodl-tmp/position_observability_20260908/natural_qwen25_extension_01.log'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 22466,
@@ -3868,7 +3868,7 @@ fdb1cbb78cfe174fde6e2fff7aeaef98a1089570	refs/heads/sz/cuda_graph
 
 
 ===== [CMD] line 4615 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 6 /root/minicpm41_native_20260908/download.log; /root/minicpm41_native_20260908/runtime/bin/python -c "import torch; print(torch.__version__,torch._C._GLIBCXX_USE_CXX11_ABI)"; /usr/local/cuda-12.8/bin/nvcc --version'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 6 /root/minicpm41_native_20260908/download.log; /root/minicpm41_native_20260908/runtime/bin/python -c "import torch; print(torch.__version__,torch._C._GLIBCXX_USE_CXX11_ABI)"; /usr/local/cuda-12.8/bin/nvcc --version'
 [exit 0] {"file": "added_tokens.json", "status": "VERIFIED"}
 {"file": "config.json", "status": "VERIFIED"}
 {"file": "configuration_minicpm.py", "status": "VERIFIED"}
@@ -3883,7 +3883,7 @@ Build cuda_12.8.r12.8/compiler.35583870_0
 
 
 ===== [CMD] line 4620 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess,json
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -3901,11 +3901,11 @@ $ /bin/zsh -lc git clone --depth 1 --branch main https://github.com/OpenBMB/infl
 [exit 0] 
 
 ===== [CMD] line 4628 =====
-$ /bin/zsh -lc scp -q -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/phase_content.json results/position_observability_20260908/psr_qwen25_activation_01/
+$ /bin/zsh -lc scp -q -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/phase_content.json results/position_observability_20260908/psr_qwen25_activation_01/
 [exit 0] 
 
 ===== [CMD] line 4631 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/natural_qwen25_extension_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/natural_qwen25_extension_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4633 =====
@@ -4024,7 +4024,7 @@ $ /bin/zsh -lc git -C /tmp/infllmv2_source_20260908 rev-parse HEAD; sed -n '240,
 setup(
     name='infllm_v2',
     version='0.0.0',
-    author_email="acha131441373@gmail.com",
+    author_email="[REDACTED_EMAIL]",
     description="infllm_v2 cuda implementation with flash attention and cutlass",
     packages=find_packages(),
     ext_modules=ext_modules,
@@ -4158,7 +4158,7 @@ $ /bin/zsh -lc python3 experiments/native_sparse_position/summarize_natural.py r
 
 
 ===== [CMD] line 4645 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 5 /root/minicpm41_native_20260908/download.log; tail -n 8 /root/minicpm41_native_20260908/flash_install.log; free -h; cat /root/autodl-tmp/position_observability_20260908/natural_qwen35_extension_01/status.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 5 /root/minicpm41_native_20260908/download.log; tail -n 8 /root/minicpm41_native_20260908/flash_install.log; free -h; cat /root/autodl-tmp/position_observability_20260908/natural_qwen35_extension_01/status.json'
 [exit 0] {"file": "model-00001-of-00004.safetensors", "ranges_complete": 128, "total_ranges": 593, "seconds": 82.68110376223922}
 {"file": "model-00001-of-00004.safetensors", "ranges_complete": 160, "total_ranges": 593, "seconds": 100.73427329212427}
 {"file": "model-00001-of-00004.safetensors", "ranges_complete": 192, "total_ranges": 593, "seconds": 117.48895628377795}
@@ -4232,7 +4232,7 @@ python3 -m py_compile experiments/native_sparse_position/mean_native.py experime
 [exit 0] 
 
 ===== [CMD] line 4653 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'CUDA_HOME=/usr/local/cuda-12.8 PATH=/usr/local/cuda-12.8/bin:$PATH MAX_JOBS=4 NVCC_THREADS=2 /root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check --no-build-isolation --no-deps flash-attn==2.8.3 > /root/minicpm41_native_20260908/flash_install.log 2>&1'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'CUDA_HOME=/usr/local/cuda-12.8 PATH=/usr/local/cuda-12.8/bin:$PATH MAX_JOBS=4 NVCC_THREADS=2 /root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check --no-build-isolation --no-deps flash-attn==2.8.3 > /root/minicpm41_native_20260908/flash_install.log 2>&1'
 [exit 255] Connection to connect.westc.seetacloud.com closed by remote host.
 
 
@@ -4290,7 +4290,7 @@ class Oracle:
 ...[clipped 1409 chars]
 
 ===== [CMD] line 4661 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'git clone --depth 1 --branch main https://github.com/OpenBMB/infllmv2_cuda_impl.git /root/minicpm41_native_20260908/infllmv2'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'git clone --depth 1 --branch main https://github.com/OpenBMB/infllmv2_cuda_impl.git /root/minicpm41_native_20260908/infllmv2'
 [exit 0] Cloning into '/root/minicpm41_native_20260908/infllmv2'...
 
 
@@ -4306,15 +4306,15 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4669 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/mean_native.py experiments/native_sparse_position/mean_continuation.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/mean_native.py experiments/native_sparse_position/mean_continuation.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4670 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/natural_qwen35_extension_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/natural_qwen35_extension_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4679 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 3 /root/minicpm41_native_20260908/download.log; tail -n 3 /root/minicpm41_native_20260908/flash_install.log; git -C /root/minicpm41_native_20260908/infllmv2 rev-parse HEAD'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 3 /root/minicpm41_native_20260908/download.log; tail -n 3 /root/minicpm41_native_20260908/flash_install.log; git -C /root/minicpm41_native_20260908/infllmv2 rev-parse HEAD'
 [exit 0] {"file": "model-00001-of-00004.safetensors", "ranges_complete": 480, "total_ranges": 593, "seconds": 279.2746248431504}
 {"file": "model-00001-of-00004.safetensors", "ranges_complete": 512, "total_ranges": 593, "seconds": 297.4713066443801}
 {"file": "model-00001-of-00004.safetensors", "ranges_complete": 544, "total_ranges": 593, "seconds": 314.318945735693}
@@ -4325,7 +4325,7 @@ Building wheels for collected packages: flash-attn
 
 
 ===== [CMD] line 4680 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess,json
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -4346,11 +4346,11 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4688 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/download_pinned.py root@connect.westc.seetacloud.com:/root/download_pinned_v2.py
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/download_pinned.py [REDACTED_EMAIL]:/root/download_pinned_v2.py
 [exit 0] 
 
 ===== [CMD] line 4689 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'git -C /root/minicpm41_native_20260908/infllmv2 submodule update --init --depth 1 csrc/cutlass > /root/minicpm41_native_20260908/submodule.log 2>&1'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'git -C /root/minicpm41_native_20260908/infllmv2 submodule update --init --depth 1 csrc/cutlass > /root/minicpm41_native_20260908/submodule.log 2>&1'
 [exit 0] 
 
 ===== [CMD] line 4695 =====
@@ -4462,7 +4462,7 @@ $ /bin/zsh -lc python3 experiments/native_sparse_position/summarize_natural.py r
 
 
 ===== [CMD] line 4698 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ps -eo pid,etime,args | rg "(setup.py|ninja|nvcc|download_pinned|mean_continuation)" | head -n 12; tail -n 3 /root/minicpm41_native_20260908/submodule.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ps -eo pid,etime,args | rg "(setup.py|ninja|nvcc|download_pinned|mean_continuation)" | head -n 12; tail -n 3 /root/minicpm41_native_20260908/submodule.log'
 [exit 0] bash: line 1: rg: command not found
 From https://github.com/zhangyan-didu/cutlass
  * branch            424c5a03220f58a56ddd754e0e2d4eabdf01c802 -> FETCH_HEAD
@@ -4470,7 +4470,7 @@ Submodule path 'csrc/cutlass': checked out '424c5a03220f58a56ddd754e0e2d4eabdf01
 
 
 ===== [CMD] line 4709 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import os,signal,subprocess,time,json
 from pathlib import Path
 r=Path('/root/minicpm41_native_20260908');pid=int((r/'download.pid').read_text())
@@ -4492,7 +4492,7 @@ PY
 
 
 ===== [CMD] line 4716 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import hashlib,json
 r=Path('/root/minicpm41_native_20260908/infllmv2');p=r/'setup.py';s=p.read_text();old=hashlib.sha256(p.read_bytes()).hexdigest()
@@ -4504,7 +4504,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4717 =====
-$ /bin/zsh -lc scp -q -r -P 27741 /tmp/minicpm41_source root@connect.westc.seetacloud.com:/root/minicpm41_native_20260908/source_check
+$ /bin/zsh -lc scp -q -r -P 27741 /tmp/minicpm41_source [REDACTED_EMAIL]:/root/minicpm41_native_20260908/source_check
 [exit 0] 
 
 ===== [CMD] line 4721 =====
@@ -4635,7 +4635,7 @@ width 6
 ...[clipped 5462 chars]
 
 ===== [CMD] line 4725 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mean_qwen25_01.log; tail -n 3 /root/minicpm41_native_20260908/download_v2.log; tail -n 6 /root/minicpm41_native_20260908/flash_install.log; tail -n 4 /root/minicpm41_native_20260908/kernel_install.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mean_qwen25_01.log; tail -n 3 /root/minicpm41_native_20260908/download_v2.log; tail -n 6 /root/minicpm41_native_20260908/flash_install.log; tail -n 4 /root/minicpm41_native_20260908/kernel_install.log'
 [exit 0] {"row_id": "multifieldqa_en_24", "method": "NoPEMean", "output_text": "The court in In re Ferguson concluded that the creation of deedshares was not sufficient to establish patent eligibility under Bilski. The court found that deedshares represented intangible legal ownership interests and did not result in a tangible transformation.", "text_exact": false, "ended_eos": true, "continuation_seconds": 3.95592924579978, "qa_f1": 0.11538461538461539}
 {"row_id": "multifieldqa_en_9", "method": "RoPEMean", "output_text": "The three synthetic types of vitamin K are vitamins K3 (menadione), K4, and K5.", "text_exact": false, "ended_eos": true, "continuation_seconds": 2.309270218014717, "qa_f1": 0.5555555555555556}
 {"file": "model-00002-of-00004.safetensors", "ranges_complete": 224, "total_ranges": 542, "seconds": 21.288826398551464}
@@ -4654,15 +4654,15 @@ Building wheels for collected packages: infllm_v2
 
 
 ===== [CMD] line 4728 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/minicpm41_native_20260908 && CUDA_HOME=/usr/local/cuda-12.8 PATH=/usr/local/cuda-12.8/bin:$PATH INFLLM_V2_CUDA_ARCHS=80 MAX_JOBS=4 runtime/bin/pip install --disable-pip-version-check --no-build-isolation --no-deps ./infllmv2 > kernel_install.log 2>&1'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/minicpm41_native_20260908 && CUDA_HOME=/usr/local/cuda-12.8 PATH=/usr/local/cuda-12.8/bin:$PATH INFLLM_V2_CUDA_ARCHS=80 MAX_JOBS=4 runtime/bin/pip install --disable-pip-version-check --no-build-isolation --no-deps ./infllmv2 > kernel_install.log 2>&1'
 [exit 1] 
 
 ===== [CMD] line 4736 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/normalizer_audit.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/normalizer_audit.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4743 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 for s in subprocess.check_output(['ps','-eo','pid,etimes,comm,args'],text=True).splitlines():
@@ -4674,7 +4674,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4744 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python normalizer_audit.py psr_qwen25_activation_01 --output psr_qwen25_activation_01/normalizer.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python normalizer_audit.py psr_qwen25_activation_01 --output psr_qwen25_activation_01/normalizer.json'
 [exit 0] {
   "RoPE": {
     "query_heads": 8.0,
@@ -4763,7 +4763,7 @@ class MiniCPMDynamicNTKScalingRotaryEmbedding(MiniCPMRotaryEmbedding):
 ...[clipped 10063 chars]
 
 ===== [CMD] line 4752 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/mean_qwen25_01/status.json; tail -n 2 /root/minicpm41_native_20260908/download_v2.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/mean_qwen25_01/status.json; tail -n 2 /root/minicpm41_native_20260908/download_v2.log'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 23364,
@@ -4835,12 +4835,12 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 4759 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/minicpm41_native_20260908/runtime/bin/python -c "from transformers.dynamic_module_utils import get_class_from_dynamic_module; c=get_class_from_dynamic_module(\"modeling_minicpm.MiniCPMForCausalLM\",\"/root/minicpm41_native_20260908/source_check\",local_files_only=True); print(c.__name__)"'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/minicpm41_native_20260908/runtime/bin/python -c "from transformers.dynamic_module_utils import get_class_from_dynamic_module; c=get_class_from_dynamic_module(\"modeling_minicpm.MiniCPMForCausalLM\",\"/root/minicpm41_native_20260908/source_check\",local_files_only=True); print(c.__name__)"'
 [exit 0] MiniCPMForCausalLM
 
 
 ===== [CMD] line 4766 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess,json
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -4854,7 +4854,7 @@ PY
 
 
 ===== [CMD] line 4769 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/mean_qwen25_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/mean_qwen25_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4774 =====
@@ -4913,7 +4913,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4777 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import subprocess
 r=Path('/root/minicpm41_native_20260908')
@@ -5033,7 +5033,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4792 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'sed -n "50,165p" /root/minicpm41_native_20260908/infllmv2/csrc/cutlass/include/cutlass/cuda_host_adapter.hpp; git -C /root/minicpm41_native_20260908/infllmv2/csrc/cutlass log -1 --oneline; tail -n 3 /root/minicpm41_native_20260908/download_v2.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'sed -n "50,165p" /root/minicpm41_native_20260908/infllmv2/csrc/cutlass/include/cutlass/cuda_host_adapter.hpp; git -C /root/minicpm41_native_20260908/infllmv2/csrc/cutlass log -1 --oneline; tail -n 3 /root/minicpm41_native_20260908/download_v2.log'
 [exit 0] 
 #if ((__CUDACC_VER_MAJOR__ >= 12) ||                               \
     ((__CUDACC_VER_MAJOR__ == 11) && (__CUDACC_VER_MINOR__ >= 8))) \
@@ -5126,7 +5126,7 @@ if ((CUDACC_VER_MAJOR > 12) || (CUDACC_VER_MAJOR == 12 && CUDACC_VER_MINOR >= 5)
 ...[clipped 1318 chars]
 
 ===== [CMD] line 4793 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python normalizer_audit.py psr_activation_01 --output psr_activation_01/normalizer.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /root/miniconda3/bin/python normalizer_audit.py psr_activation_01 --output psr_activation_01/normalizer.json'
 [exit 0] {
   "RoPE": {
     "query_heads": 4.0,
@@ -5150,14 +5150,14 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 4800 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mean_qwen35_01.log; wc -l /root/autodl-tmp/position_observability_20260908/mean_qwen35_01/outputs.jsonl'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mean_qwen35_01.log; wc -l /root/autodl-tmp/position_observability_20260908/mean_qwen35_01/outputs.jsonl'
 [exit 0] {"row_id": "multifieldqa_en_109", "method": "RoPEMean", "output_text": "The electron correlation parameter, $\\Gamma_e$, is defined as the ratio of the average unscreened electron-electron potential energy to the electron kinetic energy, given by the equation $\\Gamma_e = \\frac{e^2}{4\\pi \\epsilon_0 a_{ws}}\\frac{1}{k_B T_e}$.\n", "text_exact": false, "ended_eos": true, "continuation_seconds": 3.4136099368333817, "qa_f1": 0.5789473684210527}
 {"row_id": "multifieldqa_en_109", "method": "NoPEMean", "output_text": "The electron correlation parameter, $\\Gamma_e$, is defined as the ratio of the average unscreened electron-electron potential energy to the electron kinetic energy, given by the equation $\\Gamma_e = \\frac{e^2}{4\\pi \\epsilon_0 a_{ws}}\\frac{1}{k_B T_e}$.\n", "text_exact": false, "ended_eos": true, "continuation_seconds": 3.5295407734811306, "qa_f1": 0.5789473684210527}
 46 /root/autodl-tmp/position_observability_20260908/mean_qwen35_01/outputs.jsonl
 
 
 ===== [CMD] line 4807 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import hashlib,json,subprocess
 r=Path('/root/minicpm41_native_20260908/infllmv2');p=r/'csrc/cutlass/include/cutlass/cuda_host_adapter.hpp';s=p.read_text();before=hashlib.sha256(p.read_bytes()).hexdigest()
@@ -5170,7 +5170,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4814 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess,os
 from pathlib import Path
 r=Path('/root/minicpm41_native_20260908')
@@ -5183,7 +5183,7 @@ PY
 
 
 ===== [CMD] line 4815 =====
-$ /bin/zsh -lc scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/mean_qwen35_01 results/position_observability_20260908/
+$ /bin/zsh -lc scp -q -r -P 27741 [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/mean_qwen35_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 4822 =====
@@ -5203,7 +5203,7 @@ PY
 
 
 ===== [CMD] line 4823 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 3 /root/minicpm41_native_20260908/download_v2.log; tail -n 6 /root/minicpm41_native_20260908/kernel_install_fixed.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 3 /root/minicpm41_native_20260908/download_v2.log; tail -n 6 /root/minicpm41_native_20260908/kernel_install_fixed.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {"file": "model-00004-of-00004.safetensors", "ranges_complete": 64, "total_ranges": 230, "seconds": 534.1502419225872}
 {"file": "model-00004-of-00004.safetensors", "ranges_complete": 96, "total_ranges": 230, "seconds": 548.005654104054}
 {"file": "model-00004-of-00004.safetensors", "ranges_complete": 128, "total_ranges": 230, "seconds": 564.8486194647849}
@@ -5388,7 +5388,7 @@ NoPEMean 24 0.34867825837685923 24 3
 
 
 ===== [CMD] line 4858 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/minicpm41_native_20260908/download_status.json; tail -n 5 /root/minicpm41_native_20260908/kernel_install_fixed.log; ps -p 24791 -o pid=,etime=,comm=; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/minicpm41_native_20260908/download_status.json; tail -n 5 /root/minicpm41_native_20260908/kernel_install_fixed.log; ps -p 24791 -o pid=,etime=,comm=; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {
   "repo": "openbmb/MiniCPM4.1-8B",
   "revision": "3a8dfed9c79a45e07dbff95bcd49d792343fa1a3",
@@ -5421,7 +5421,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 4859 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/minicpm_native.py scripts/eval/longbench_metrics.py root@connect.westc.seetacloud.com:/root/minicpm41_native_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/minicpm_native.py scripts/eval/longbench_metrics.py [REDACTED_EMAIL]:/root/minicpm41_native_20260908/
 [exit 0] 
 
 ===== [CMD] line 4864 =====
@@ -5469,7 +5469,7 @@ tests/test_psr_groups.py ..                                              [100%]
 
 
 ===== [CMD] line 4874 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import json,subprocess
 r=Path('/root/minicpm41_native_20260908');o=Path('/root/autodl-tmp/position_observability_20260908')
@@ -5484,7 +5484,7 @@ PY
 
 
 ===== [CMD] line 4875 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'du -sh /root/minicpm41_native_20260908/infllmv2/build; find /root/minicpm41_native_20260908/infllmv2/build -name "*.o" | wc -l; df -h /root'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'du -sh /root/minicpm41_native_20260908/infllmv2/build; find /root/minicpm41_native_20260908/infllmv2/build -name "*.o" | wc -l; df -h /root'
 [exit 0] 2.0M	/root/minicpm41_native_20260908/infllmv2/build
 8
 Filesystem      Size  Used Avail Use% Mounted on
@@ -5589,7 +5589,7 @@ $ /bin/zsh -lc rg -n 'DISABLE_BACKWARD|DISABLE_DROPOUT' /tmp/infllmv2_source_202
 
 
 ===== [CMD] line 4894 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 5 /root/minicpm41_native_20260908/dense_natural_01.log; tail -n 6 /root/minicpm41_native_20260908/kernel_install_fixed.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 5 /root/minicpm41_native_20260908/dense_natural_01.log; tail -n 6 /root/minicpm41_native_20260908/kernel_install_fixed.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0]   File "/root/minicpm41_native_20260908/runtime/lib/python3.12/site-packages/transformers/modeling_flash_attention_utils.py", line 84, in _lazy_imports
     from flash_attn.bert_padding import pad_input, unpad_input
   File "/root/minicpm41_native_20260908/runtime/lib/python3.12/site-packages/flash_attn/bert_padding.py", line 5, in <module>
@@ -5604,7 +5604,7 @@ ModuleNotFoundError: No module named 'einops'
 
 
 ===== [CMD] line 4905 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 for s in subprocess.check_output(['ps','-eo','pid,ppid,etime,pcpu,comm'],text=True).splitlines():
@@ -5620,7 +5620,7 @@ cgroup memory max 96636764160
 
 
 ===== [CMD] line 4912 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import json
 p=Path('/root/minicpm41_native_20260908/dense_natural_01/status.json');assert not p.exists()
@@ -5629,7 +5629,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 4913 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check einops==0.8.1'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check einops==0.8.1'
 [exit 0] Looking in indexes: http://mirrors.aliyun.com/pypi/simple
 Collecting einops==0.8.1
   Downloading http://mirrors.aliyun.com/pypi/packages/87/62/9773de14fe6c45c23649e98b83231fffd7b9892b6cf863251dc2afa73643/einops-0.8.1-py3-none-any.whl (64 kB)
@@ -5639,7 +5639,7 @@ Successfully installed einops-0.8.1
 
 
 ===== [CMD] line 4924 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import shutil
 from pathlib import Path
 print('ninja',shutil.which('ninja'))
@@ -5653,7 +5653,7 @@ cpu max 1200000 100000
 
 
 ===== [CMD] line 4925 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import subprocess,os
 r=Path('/root/minicpm41_native_20260908');o=Path('/root/autodl-tmp/position_observability_20260908')
@@ -5697,7 +5697,7 @@ qwen35 {'Dense': {'n': 24, 'whole_answer_f1': 0.3767993514899828, 'eos': 24, 'tr
 
 
 ===== [CMD] line 4939 =====
-$ /bin/zsh -lc sed -n '170,240p' /tmp/infllmv2_source_20260908/setup.py; ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'find /root/minicpm41_native_20260908/infllmv2/build -name "*.o" | wc -l; tail -n 4 /root/minicpm41_native_20260908/dense_natural_02.log; tail -n 3 /root/minicpm41_native_20260908/kernel_install_fixed.log'
+$ /bin/zsh -lc sed -n '170,240p' /tmp/infllmv2_source_20260908/setup.py; ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'find /root/minicpm41_native_20260908/infllmv2/build -name "*.o" | wc -l; tail -n 4 /root/minicpm41_native_20260908/dense_natural_02.log; tail -n 3 /root/minicpm41_native_20260908/kernel_install_fixed.log'
 [exit 0] 12
 {"row_id": "hotpotqa_62", "method": "Dense", "input_tokens": 17519, "output_text": "The animated series Kent Scott wrote ended in September 2005.", "ended_eos": true, "qa_f1": 0.0, "seconds": 4.704379215836525, "attention_calls": {"dense": 512, "sparse": 0}}
 {"row_id": "hotpotqa_66", "method": "Dense", "input_tokens": 14966, "output_text": "Answer: Deftones", "ended_eos": true, "qa_f1": 0.6666666666666666, "seconds": 3.5372017100453377, "attention_calls": {"dense": 192, "sparse": 0}}
@@ -5709,7 +5709,7 @@ $ /bin/zsh -lc sed -n '170,240p' /tmp/infllmv2_source_20260908/setup.py; ssh -o 
 
 
 ===== [CMD] line 4940 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check ninja==1.11.1.4'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/minicpm41_native_20260908/runtime/bin/pip install --disable-pip-version-check ninja==1.11.1.4'
 [exit 0] Looking in indexes: http://mirrors.aliyun.com/pypi/simple
 Collecting ninja==1.11.1.4
   Downloading http://mirrors.aliyun.com/pypi/packages/eb/7a/455d2877fe6cf99886849c7f9755d897df32eaf3a0fba47b56e615f880f7/ninja-1.11.1.4-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (422 kB)
@@ -5745,7 +5745,7 @@ scripts/experiments/scale_transport/prepare.py:29:    template='You are given a 
 
 
 ===== [CMD] line 4961 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 2 /root/minicpm41_native_20260908/dense_natural_02.log; tail -n 5 /root/minicpm41_native_20260908/kernel_install_fixed.log; find /root/minicpm41_native_20260908/infllmv2/build -name "*.o" | wc -l'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 2 /root/minicpm41_native_20260908/dense_natural_02.log; tail -n 5 /root/minicpm41_native_20260908/kernel_install_fixed.log; find /root/minicpm41_native_20260908/infllmv2/build -name "*.o" | wc -l'
 [exit 0] {"row_id": "multifieldqa_en_18", "method": "Dense", "input_tokens": 10887, "output_text": "Answer: 70-75 metres.\nExtracted Information: The water depth in the Greater Ekofisk Area is 70-75 metres.\nRationale: The text explicitly states the water depth in the specified area.\nConfidence Score: 10", "ended_eos": true, "qa_f1": 0.4571428571428572, "seconds": 5.312638580799103, "attention_calls": {"dense": 1920, "sparse": 0}}
 {"row_id": "multifieldqa_en_24", "method": "Dense", "input_tokens": 11864, "output_text": "Answer: The court concluded that the transformation prong of the Bilski test required that a method claim either be tied to a particular machine or transform a particular article into a different state or thing.", "ended_eos": true, "qa_f1": 0.22222222222222224, "seconds": 4.504197459667921, "attention_calls": {"dense": 1280, "sparse": 0}}
   Created wheel for infllm_v2: filename=infllm_v2-0.0.0-cp312-cp312-linux_x86_64.whl size=2665397 sha256=1549a3db0da18285cac3698cbc26aec5cf17597defb1e36c0c116449bd32e2ba
@@ -5757,7 +5757,7 @@ Successfully installed infllm_v2-0.0.0
 
 
 ===== [CMD] line 4968 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/minicpm41_native_20260908/dense_natural_02/status.json; tail -n 5 /root/minicpm41_native_20260908/kernel_install_fixed.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/minicpm41_native_20260908/dense_natural_02/status.json; tail -n 5 /root/minicpm41_native_20260908/kernel_install_fixed.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {
   "status": "RUNNING",
   "pid": 25864,
@@ -5846,14 +5846,14 @@ python3 -m py_compile experiments/native_sparse_position/qualify_minicpm_kernel.
 [exit 0] 
 
 ===== [CMD] line 5000 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 2 /root/minicpm41_native_20260908/dense_natural_02.log; wc -l /root/minicpm41_native_20260908/dense_natural_02/outputs.jsonl; ps -p 25864 -o pid=,etime=,comm='
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 2 /root/minicpm41_native_20260908/dense_natural_02.log; wc -l /root/minicpm41_native_20260908/dense_natural_02/outputs.jsonl; ps -p 25864 -o pid=,etime=,comm='
 [exit 1] {"row_id": "multifieldqa_en_109", "method": "Dense", "input_tokens": 10117, "output_text": "Answer: The ratio of the average unscreened electron-electron potential energy to the electron kinetic energy.", "ended_eos": true, "qa_f1": 0.8333333333333334, "seconds": 3.1703900694847107, "attention_calls": {"dense": 704, "sparse": 0}}
 {"row_id": "multifieldqa_en_1", "method": "Dense", "input_tokens": 11801, "output_text": "Answer: No.\nExtracted Information: \"...the upregulation of CHOP does not parallel quantitatively that of the transgene, neither appears sufficient to induce it... The finding that GCN2 activation by L-Histidinol is sufficient to reactivate the transgenes... pointed to this kinase, and to the downstream ISR, as the pathway possibly involved... However, the ISR appears widely activated upon EAA starvation, the upregulation of its downstream effector CHOP only partly correlates with transgene reactivation and may not be sufficient to induce it... The ISR is neither sufficient nor necessary to induce transgene reactivation in HepG2 cells.\"\nRationale: The text explicitly states that the ISR is \"neither sufficient nor necessary\" to induce transgene reactivation, based on experiments where ISR activation (e.g., by Salubrinal or ISRIB) did not lead to transgene reactivation, and the ISR pathway was not required for the response.\nConfidence Score: 10", "ended_eos": true, "qa_f1": 0.07575757575757576, "seconds": 14.143100645393133, "attention_calls": {"dense": 7296, "sparse": 0}}
 24 /root/minicpm41_native_20260908/dense_natural_02/outputs.jsonl
 
 
 ===== [CMD] line 5001 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/qualify_minicpm_kernel.py root@connect.westc.seetacloud.com:/root/minicpm41_native_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/qualify_minicpm_kernel.py [REDACTED_EMAIL]:/root/minicpm41_native_20260908/
 [exit 0] 
 
 ===== [CMD] line 5008 =====
@@ -5968,7 +5968,7 @@ RoPE 在稀疏 mask 下仍满足其旋转组合律；稀疏化本身不会使
 ...[clipped 3846 chars]
 
 ===== [CMD] line 5011 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import json,subprocess
 r=Path('/root/minicpm41_native_20260908')
@@ -6156,7 +6156,7 @@ PY
 
 ===== [CMD] line 5070 =====
 $ /bin/zsh -lc mkdir -p results/minicpm41_native_20260908
-scp -q -r -P 27741 root@connect.westc.seetacloud.com:/root/minicpm41_native_20260908/dense_natural_02 results/minicpm41_native_20260908/
+scp -q -r -P 27741 [REDACTED_EMAIL]:/root/minicpm41_native_20260908/dense_natural_02 results/minicpm41_native_20260908/
 [exit 0] 
 
 ===== [CMD] line 5077 =====
@@ -6391,7 +6391,7 @@ def verdict(candidate, baseline):
 
 
 ===== [CMD] line 5140 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls /root/autodl-tmp/bm_transfer_20260908; ls /root/autodl-tmp/rope_qwen_baseline_20260907'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls /root/autodl-tmp/bm_transfer_20260908; ls /root/autodl-tmp/rope_qwen_baseline_20260907'
 [exit 0] BiasPosition_spec.json
 PadBM192_spec.json
 assets_qwen15
@@ -6560,7 +6560,7 @@ def main():
 ...[clipped 2920 chars]
 
 ===== [CMD] line 5158 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import json
 p=Path('/root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01');print([x.name for x in p.iterdir()])
@@ -6614,7 +6614,7 @@ six Western European 67986 'nce on all of the Romance languages.\n\nSee also\nIt
 
 
 ===== [CMD] line 5174 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import json
 from transformers import AutoTokenizer
@@ -6724,7 +6724,7 @@ CPU/NumPy 检验：B=64，`z_j=exp(2*pi*i*j/B)`，令
 ...[clipped 3000 chars]
 
 ===== [CMD] line 5207 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import json,collections
 rs=[json.loads(x) for x in Path('/root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl').read_text().splitlines()]
@@ -6742,7 +6742,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 5217 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/prepare_support_oracle.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/prepare_support_oracle.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5235 =====
@@ -6763,7 +6763,7 @@ s=s.replace('Natural long QA: query-blind prefix, native reader, exact block-ran
 ...[clipped 276 chars]
 
 ===== [CMD] line 5239 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/evidence_native.py experiments/native_sparse_position/evidence_repair.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/evidence_native.py experiments/native_sparse_position/evidence_repair.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5246 =====
@@ -6847,7 +6847,7 @@ D_{KL}(p_h^S\Vert p_h)=-\log r_h(S).
 ...[clipped 3097 chars]
 
 ===== [CMD] line 5249 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -6860,7 +6860,7 @@ PY
 
 
 ===== [CMD] line 5266 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 8 /root/autodl-tmp/position_observability_20260908/evidence_repair_qwen35_01.log; cat /root/autodl-tmp/position_observability_20260908/evidence_repair_qwen35_01/status.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 8 /root/autodl-tmp/position_observability_20260908/evidence_repair_qwen35_01.log; cat /root/autodl-tmp/position_observability_20260908/evidence_repair_qwen35_01/status.json'
 [exit 0] Loading weights:   0%|          | 0/473 [00:00<?, ?it/s]Loading weights: 100%|██████████| 473/473 [00:00<00:00, 6447.45it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEMean": true, "NoPEMean": true}}
 {"row_id": "hotpotqa_77", "method": "Dense", "output_text": "Brittany, Cornwall, Ireland, the Isle of Man, Scotland, and Wales.\n", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.2636872120201588, "qa_f1": 1.0}
@@ -6923,7 +6923,7 @@ niah_multiquery_32768_1 [('output_text', ':\n\n1. For minor-practice: 5689416\n2
 
 
 ===== [CMD] line 5276 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_support_oracle.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl --output support_inputs_01'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_support_oracle.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl --output support_inputs_01'
 [exit 0] [{"row_id": "niah_multikey_2_32768_0", "prefix_tokens": 32080, "support_blocks": [279, 280], "wrong_blocks": [278, 281]}, {"row_id": "niah_multikey_2_32768_1", "prefix_tokens": 32111, "support_blocks": [227], "wrong_blocks": [226]}, {"row_id": "niah_multiquery_32768_0", "prefix_tokens": 31962, "support_blocks": [22, 23, 142, 177, 291], "wrong_blocks": [20, 21, 141, 176, 290]}, {"row_id": "niah_multiquery_32768_1", "prefix_tokens": 31964, "support_blocks": [39, 92, 93, 164], "wrong_blocks": [38, 91, 94, 163]}]
 
 
@@ -7074,7 +7074,7 @@ end=s.index("                if current
 ...[clipped 1649 chars]
 
 ===== [CMD] line 5359 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/prepare_support_strict.py experiments/native_sparse_position/support_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/prepare_support_strict.py experiments/native_sparse_position/support_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5364 =====
@@ -7122,7 +7122,7 @@ $ /bin/zsh -lc sed -n '20,125p' experiments/native_sparse_position/support_ruler
 ...[clipped 2266 chars]
 
 ===== [CMD] line 5367 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_support_strict.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl --output support_strict_inputs_01'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_support_strict.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl --output support_strict_inputs_01'
 [exit 1] Traceback (most recent call last):
   File "/root/autodl-tmp/position_observability_20260908/prepare_support_strict.py", line 62, in <module>
     if __name__=='__main__':main()
@@ -7154,7 +7154,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 5377 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -7175,16 +7175,16 @@ from pathlib import Path
 p=Path('experiments/native_sparse_position/prepare_support_strict.py');s=p.read_text().replace("        if any(span['token_span'][1]>cut-3072 for span in spans):raise ValueError('Evidence must stay remote throughout the continuation')", "        last_n=r['input_tokens']+128\n        covered_throughout=set(range(min(64,cut)))|set(range(max(64,last_n-2048),cut))|{j for b in support for j in range(b*64,(b+1)*64)}\n        if not needed<=covered_throughout:raise ValueError('Evidence can enter the uncovered boundary during continuation; oracle not applicable')")
 p.write_text(s)
 PY
-scp -q -P 27741 experiments/native_sparse_position/prepare_support_strict.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -q -P 27741 experiments/native_sparse_position/prepare_support_strict.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5387 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_support_strict.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl --output support_strict_inputs_02'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && /root/miniconda3/bin/python prepare_support_strict.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/bm_transfer_20260908/prepared_qwen3_01/screen.jsonl --output support_strict_inputs_02'
 [exit 0] [{"row_id": "niah_multikey_2_32768_0", "prefix_tokens": 32080, "support_blocks": [279, 280], "wrong_blocks": [278, 281]}, {"row_id": "niah_multikey_2_32768_1", "prefix_tokens": 32111, "support_blocks": [227], "wrong_blocks": [226]}, {"row_id": "niah_multiquery_32768_0", "prefix_tokens": 31962, "support_blocks": [22, 23, 142, 177, 291], "wrong_blocks": [20, 21, 141, 176, 290]}, {"row_id": "niah_multiquery_32768_1", "prefix_tokens": 31964, "support_blocks": [39, 92, 93, 164], "wrong_blocks": [38, 91, 94, 163]}]
 
 
 ===== [CMD] line 5392 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908')
@@ -7299,7 +7299,7 @@ class PairEnvelopeCache:
 ...[clipped 5270 chars]
 
 ===== [CMD] line 5401 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 4 /root/autodl-tmp/position_observability_20260908/support_ruler_02.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 4 /root/autodl-tmp/position_observability_20260908/support_ruler_02.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {"row_id": "niah_multikey_2_32768_0", "method": "Dense", "output_text": "9700616", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.0972515121102333, "whole_numeric_list_exact": false}
 {"row_id": "niah_multikey_2_32768_0", "method": "RoPEMean", "output_text": "9789512", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.830694641917944, "whole_numeric_list_exact": false}
 {"row_id": "niah_multikey_2_32768_0", "method": "SupportRepair", "output_text": "300303", "text_exact": false, "ended_eos": true, "continuation_seconds": 2.8216856569051743, "whole_numeric_list_exact": false}
@@ -7308,7 +7308,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 5430 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/support_ruler_02/status.json; tail -n 12 /root/autodl-tmp/position_observability_20260908/support_ruler_02.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/support_ruler_02/status.json; tail -n 12 /root/autodl-tmp/position_observability_20260908/support_ruler_02.log'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 28229,
@@ -7451,7 +7451,7 @@ def score_quest(q, cache):
 
 
 ===== [CMD] line 5461 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import yaml,runpy
 r=Path('/root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream')
@@ -7471,7 +7471,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/root/autodl-tmp/rope_q
 
 
 ===== [CMD] line 5468 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream; find /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream -name synthetic.yaml -o -name niah.py'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream; find /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream -name synthetic.yaml -o -name niah.py'
 [exit 0] RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a
 /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream/RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a/scripts/data/synthetic/niah.py
 /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream/RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a/scripts/synthetic.yaml
@@ -7545,7 +7545,7 @@ def main():
 
 
 ===== [CMD] line 5476 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import yaml,runpy
 r=Path('/root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream/RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a')
@@ -7613,11 +7613,11 @@ random.seed(args.random_
 ...[clipped 1108 chars]
 
 ===== [CMD] line 5503 =====
-$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/generate_primary_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -q -P 27741 experiments/native_sparse_position/generate_primary_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5504 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import subprocess,os
 r=Path('/root/autodl-tmp/position_observability_20260908');e=os.environ.copy();e['NLTK_DATA']='/root/autodl-tmp/nltk_data'
@@ -7639,11 +7639,11 @@ s=s.replace("bool(re.fullmatch(r'\\s*\\d+(?:\\s*,\\s*\\d+)*\\s*',answer))", "boo
 s=s.replace('Same m16 remote budget; support replaces lowest-scoring unprotected blocks, wrong control matches count and distance bin; diagnostic only','Fixed m16 remote budget; new independently generated multiquery families with full four-number space-separated output+EOS; baseline quality, no new method')
 Path('experiments/native_sparse_position/ruler_primary_baseline.py').write_text(s)
 PY
-scp -q -P 27741 experiments/native_sparse_position/ruler_primary_baseline.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -q -P 27741 experiments/native_sparse_position/ruler_primary_baseline.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5518 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 8 /root/autodl-tmp/position_observability_20260908/primary_ruler_prepare_01.log; ls /root/autodl-tmp/position_observability_20260908/primary_ruler_01'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 8 /root/autodl-tmp/position_observability_20260908/primary_ruler_prepare_01.log; ls /root/autodl-tmp/position_observability_20260908/primary_ruler_01'
 [exit 0] INFO:__main__:Testing haystack size: 561, resulting tokens: 1018/512
 INFO:__main__:Testing haystack size: 530, resulting tokens: 977/512
 INFO:__main__:Testing haystack size: 514, resulting tokens: 956/512
@@ -7659,11 +7659,11 @@ $ /bin/zsh -lc python3 - <<'PY'
 from pathlib import Path
 p=Path('experiments/native_sparse_position/generate_primary_ruler.py');s=p.read_text().replace("('compact_dev',512,8,20260910)","('compact_dev',2048,8,20260910)");p.write_text(s)
 PY
-scp -q -P 27741 experiments/native_sparse_position/generate_primary_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/generate_primary_ruler_v2.py
+scp -q -P 27741 experiments/native_sparse_position/generate_primary_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/generate_primary_ruler_v2.py
 [exit 0] 
 
 ===== [CMD] line 5526 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 from pathlib import Path
 import os,signal,subprocess,json
 r=Path('/root/autodl-tmp/position_observability_20260908');pid=int((r/'primary_prepare.pid').read_text());proc=Path(f'/proc/{pid}/cmdline')
@@ -7679,7 +7679,7 @@ PY
 
 
 ===== [CMD] line 5539 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 6 /root/autodl-tmp/position_observability_20260908/primary_ruler_prepare_02.log; ls /root/autodl-tmp/position_observability_20260908/primary_ruler_02'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 6 /root/autodl-tmp/position_observability_20260908/primary_ruler_prepare_02.log; ls /root/autodl-tmp/position_observability_20260908/primary_ruler_02'
 [exit 0] INFO:__main__:Testing haystack size: 26640, resulting tokens: 32765/32768
 INFO:__main__:Testing haystack size: 26643, resulting tokens: 32780/32768
 INFO:__main__:Testing haystack size: 26641, resulting tokens: 32774/32768
@@ -7848,7 +7848,7 @@ class EnvelopeMixin:
 ...[clipped 10123 chars]
 
 ===== [CMD] line 5548 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com /root/miniconda3/bin/python - <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] /root/miniconda3/bin/python - <<'PY'
 import subprocess
 from pathlib import Path
 r=Path('/root/autodl-tmp/position_observability_20260908');f=open(r/'primary_compact_01.log','xb')
@@ -7860,7 +7860,7 @@ PY
 
 
 ===== [CMD] line 5569 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/position_observability_20260908/primary_compact_01/status.json; tail -n 8 /root/autodl-tmp/position_observability_20260908/primary_compact_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/position_observability_20260908/primary_compact_01/status.json; tail -n 8 /root/autodl-tmp/position_observability_20260908/primary_compact_01.log'
 [exit 0] {
   "status": "COMPLETE",
   "pid": 29659,
@@ -8012,15 +8012,15 @@ def main():
 ...[clipped 5349 chars]
 
 ===== [CMD] line 5608 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] 
 
 ===== [CMD] line 5615 =====
-$ /bin/zsh -lc scp -P 27741 experiments/native_sparse_position/envelope_ruler.py experiments/native_sparse_position/envelope_native.py experiments/native_sparse_position/pair_envelope.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -P 27741 experiments/native_sparse_position/envelope_ruler.py experiments/native_sparse_position/envelope_native.py experiments/native_sparse_position/pair_envelope.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5616 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup python envelope_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output envelope_causal_01 --row-id niah_multiquery_32768_0 --diagnose > envelope_causal_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup python envelope_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output envelope_causal_01 --row-id niah_multiquery_32768_0 --diagnose > envelope_causal_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 30216
 
 
@@ -8235,12 +8235,12 @@ RoPE 在稀疏 mask 下仍满足其旋转组合律；稀疏化本身不会使
 ...[clipped 3372 chars]
 
 ===== [CMD] line 5629 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 20 /root/autodl-tmp/position_observability_20260908/envelope_causal_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 20 /root/autodl-tmp/position_observability_20260908/envelope_causal_01.log'
 [exit 0] nohup: failed to run command 'python': No such file or directory
 
 
 ===== [CMD] line 5636 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls /root/miniconda3/bin/python /opt/conda/bin/python /root/autodl-tmp/position_observability_20260908/*run* 2>/dev/null; tail -n 8 /root/autodl-tmp/position_observability_20260908/primary_compact_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls /root/miniconda3/bin/python /opt/conda/bin/python /root/autodl-tmp/position_observability_20260908/*run* 2>/dev/null; tail -n 8 /root/autodl-tmp/position_observability_20260908/primary_compact_01.log'
 [exit 0] /root/miniconda3/bin/python
 {"row_id": "compact_dev_multiquery_0", "method": "Dense", "output_text": "\n3825255 7369418", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.1931179352104664, "whole_numeric_list_exact": false}
 {"row_id": "compact_dev_multiquery_1", "method": "Dense", "output_text": "\n5619860 6539464 7865066 4983997", "text_exact": true, "ended_eos": true, "continuation_seconds": 1.5404986627399921, "whole_numeric_list_exact": true}
@@ -8337,12 +8337,12 @@ def build(oracle, omega=None, *, K=None, modes=DEFAULT_BUILD):
 ...[clipped 9497 chars]
 
 ===== [CMD] line 5651 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python envelope_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output envelope_causal_01 --row-id niah_multiquery_32768_0 --diagnose > envelope_causal_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python envelope_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output envelope_causal_01 --row-id niah_multiquery_32768_0 --diagnose > envelope_causal_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 30277
 
 
 ===== [CMD] line 5654 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 25 /root/autodl-tmp/position_observability_20260908/envelope_causal_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 25 /root/autodl-tmp/position_observability_20260908/envelope_causal_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 6849.88it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEMean": true, "Quest": true, "PairEnvelope": true}}
 Traceback (most recent call last):
@@ -8512,7 +8512,7 @@ def main():
 
 ===== [CMD] line 5685 =====
 $ /bin/zsh -lc mkdir -p results/position_observability_20260908
-rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{evidence_repair_qwen35_01,support_ruler_02,support_strict_inputs_02,primary_ruler_02,primary_compact_01,envelope_causal_01} results/position_observability_20260908/
+rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{evidence_repair_qwen35_01,support_ruler_02,support_strict_inputs_02,primary_ruler_02,primary_compact_01,envelope_causal_01} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5688 =====
@@ -8561,7 +8561,7 @@ def main():
     print(json.dumps(receipts))
 if __name__=='__main__':main()
 PY
-scp -P 27741 experiments/native_sparse_position/repair_primary_header.py experiments/native_sparse_position/ruler_primary_baseline.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/repair_primary_header.py experiments/native_sparse_position/ruler_primary_baseline.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5704 =====
@@ -8607,12 +8607,12 @@ primary_compact_01 compact_dev_multiquery_7 Dense '\n2105803 1781730 6381268 197
 
 
 ===== [CMD] line 5707 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/repair_primary_header.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/position_observability_20260908/primary_ruler_02 --output /root/autodl-tmp/position_observability_20260908/primary_ruler_03'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/repair_primary_header.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --source /root/autodl-tmp/position_observability_20260908/primary_ruler_02 --output /root/autodl-tmp/position_observability_20260908/primary_ruler_03'
 [exit 0] [{"split": "compact_dev", "rows": 8, "parent_sha256": "dc1286e53a7a935c77dcd3b7b9792eb51ca0aecde8f3757a557d846e6ad35e6f", "sha256": "97f3033d27d89b38d8543e62f38d3f8345b0f3c33dc813f130e1e5e3891c88d6"}, {"split": "frozen_long", "rows": 32, "parent_sha256": "f2ef5b2bbd260c63db3d5f8b62ca6aecefd12a7b4e165090568c2fa1bc93ee43", "sha256": "046d3e90b399c6084d688aba96b19140a6667fe866b94180e86acd38c709eaee"}]
 
 
 ===== [CMD] line 5714 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python ruler_primary_baseline.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs primary_ruler_03/compact_dev.jsonl --output primary_compact_02 --methods Dense > primary_compact_02.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python ruler_primary_baseline.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs primary_ruler_03/compact_dev.jsonl --output primary_compact_02 --methods Dense > primary_compact_02.log 2>&1 < /dev/null & echo $!'
 [exit 0] 30723
 
 
@@ -8684,7 +8684,7 @@ $ /bin/zsh -lc sed -n '1,220p' experiments/native_sparse_position/METHOD_INDEPEN
 ...[clipped 8449 chars]
 
 ===== [CMD] line 5729 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 12 /root/autodl-tmp/position_observability_20260908/primary_compact_02.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 12 /root/autodl-tmp/position_observability_20260908/primary_compact_02.log'
 [exit 0] Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 7192.53it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEMean": true, "NoPEMean": true}}
 {"row_id": "compact_dev_multiquery_0", "method": "Dense", "output_text": "3825255 7369418", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.1919205002486706, "whole_numeric_list_exact": false}
@@ -8793,11 +8793,11 @@ $ /bin/zsh -lc sed -n '152,172p' experiments/native_sparse_position/pair_envelop
 
 
 ===== [CMD] line 5749 =====
-$ /bin/zsh -lc scp -P 27741 experiments/native_sparse_position/pair_envelope.py experiments/native_sparse_position/envelope_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -P 27741 experiments/native_sparse_position/pair_envelope.py experiments/native_sparse_position/envelope_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5763 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python envelope_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output envelope_causal_02 --row-id niah_multiquery_32768_0 --diagnose > envelope_causal_02.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python envelope_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output envelope_causal_02 --row-id niah_multiquery_32768_0 --diagnose > envelope_causal_02.log 2>&1 < /dev/null & echo $!'
 [exit 0] 30949
 
 
@@ -8841,7 +8841,7 @@ python3 -m py_compile experiments/native_sparse_position/envelope_ruler.py exper
 [exit 0] 
 
 ===== [CMD] line 5769 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 12 /root/autodl-tmp/position_observability_20260908/envelope_causal_02.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 12 /root/autodl-tmp/position_observability_20260908/envelope_causal_02.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 6448.09it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEMean": true, "Quest": true, "PairEnvelope": true}}
 {"row_id": "niah_multiquery_32768_0", "method": "RoPEMean", "output_text": "2608471", "text_exact": false, "ended_eos": true, "continuation_seconds": 4.339562080800533, "whole_numeric_list_exact": false}
@@ -8852,7 +8852,7 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 
 
 ===== [CMD] line 5783 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{primary_ruler_03,primary_compact_02,envelope_causal_02} results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{primary_ruler_03,primary_compact_02,envelope_causal_02} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5787 =====
@@ -9007,7 +9007,7 @@ s=s.replace('Fixed m16 remote budget; new independently generated multiquery fam
 (root/'oracle_target_ruler.py').write_text(s)
 PY
 python3 -m py_compile experiments/native_sparse_position/oracle_target_native.py experiments/native_sparse_position/oracle_target_ruler.py
-scp -P 27741 experiments/native_sparse_position/oracle_target_native.py experiments/native_sparse_position/oracle_target_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/oracle_target_native.py experiments/native_sparse_position/oracle_target_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5806 =====
@@ -9044,7 +9044,7 @@ $ /bin/zsh -lc sed -n '39,75p' experiments/native_sparse_position/oracle_target_
 
 
 ===== [CMD] line 5810 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python oracle_target_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output oracle_target_01 --row-id niah_multiquery_32768_0 > oracle_target_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python oracle_target_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output oracle_target_01 --row-id niah_multiquery_32768_0 > oracle_target_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 31233
 
 
@@ -9172,7 +9172,7 @@ PY
 
 
 ===== [CMD] line 5820 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 12 /root/autodl-tmp/position_observability_20260908/oracle_target_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 12 /root/autodl-tmp/position_observability_20260908/oracle_target_01.log'
 [exit 0] Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 6156.77it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEOracle": true, "RoPEMax": true}}
 {"row_id": "niah_multiquery_32768_0", "method": "RoPEOracle", "output_text": "2608476 9403234 4105180 3192420", "text_exact": false, "ended_eos": true, "continuation_seconds": 4.401975315064192, "whole_numeric_list_exact": true}
@@ -9264,15 +9264,15 @@ s=s.replace('Fixed m16 remote budget; new independently generated multiquery fam
 (root/'mixture_ruler.py').write_text(s)
 PY
 python3 -m py_compile experiments/native_sparse_position/mixture_ruler.py experiments/native_sparse_position/mixture_native.py
-scp -P 27741 experiments/native_sparse_position/mixture_ruler.py experiments/native_sparse_position/mixture_native.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/mixture_ruler.py experiments/native_sparse_position/mixture_native.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5861 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{oracle_target_01,primary_compact_02,primary_ruler_03} results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{oracle_target_01,primary_compact_02,primary_ruler_03} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5862 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python mixture_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output mixture_causal_01 --row-id niah_multiquery_32768_0 > mixture_causal_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python mixture_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs support_strict_inputs_02/inputs.jsonl --output mixture_causal_01 --row-id niah_multiquery_32768_0 > mixture_causal_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 31529
 
 
@@ -9296,7 +9296,7 @@ header replay equal True n 8 raw exact 4
 
 
 ===== [CMD] line 5870 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 12 /root/autodl-tmp/position_observability_20260908/mixture_causal_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 12 /root/autodl-tmp/position_observability_20260908/mixture_causal_01.log'
 [exit 0] Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 6241.16it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEMean": true, "NoPEMean": true}}
 {"row_id": "niah_multiquery_32768_0", "method": "PostMetric4", "output_text": "2608476 9403234 4105180 3192420", "text_exact": false, "ended_eos": true, "continuation_seconds": 4.243326161056757, "whole_numeric_list_exact": true}
@@ -9322,7 +9322,7 @@ s=s.replace("summary_build_seconds=time.monotonic()-tick;base_ids", "summary_bui
 p.write_text(s)
 PY
 python3 -m py_compile experiments/native_sparse_position/mixture_native.py experiments/native_sparse_position/mixture_ruler.py
-scp -P 27741 experiments/native_sparse_position/mixture_native.py experiments/native_sparse_position/mixture_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/mixture_native.py experiments/native_sparse_position/mixture_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5896 =====
@@ -9496,7 +9496,7 @@ paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZE
 ...[clipped 1319 chars]
 
 ===== [CMD] line 5907 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 12 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 12 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 7543.15it/s]
 {"all_key_gather_bitwise_logit_parity": {"RoPEMean": true, "NoPEMean": true}}
 {"row_id": "frozen_long_multiquery_0", "method": "Dense", "output_text": "5609527 1435166 6601742 7582386", "text_exact": true, "ended_eos": true, "continuation_seconds": 1.5605209805071354, "whole_numeric_list_exact": true}
@@ -9548,11 +9548,11 @@ $ /bin/zsh -lc git diff --check; rg -n 'ClusterKV|Multipole|SAAP|cluster' docs/r
 
 
 ===== [CMD] line 5924 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{mixture_causal_01,mixture_frozen_01} results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{mixture_causal_01,mixture_frozen_01} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5930 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python mixture_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs primary_ruler_03/frozen_long.jsonl --output mixture_frozen_01 --methods Dense RoPEMean Quest QuestSplit32 PostMetric4 PreMetric4 MatchedContiguous4 > mixture_frozen_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python mixture_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs primary_ruler_03/frozen_long.jsonl --output mixture_frozen_01 --methods Dense RoPEMean Quest QuestSplit32 PostMetric4 PreMetric4 MatchedContiguous4 > mixture_frozen_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 31807
 Connection to connect.westc.seetacloud.com closed by remote host.
 
@@ -9718,7 +9718,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 5969 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'ls /root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/*.npz | head -n 3; tail -n 8 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'ls /root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/*.npz | head -n 3; tail -n 8 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log'
 [exit 0] /root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/heldout_f0_L16384_r0_marker_M7_layer0_kv0.npz
 /root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/heldout_f0_L16384_r0_marker_M7_layer0_kv1.npz
 /root/autodl-tmp/position_observability_20260908/psr_qwen25_activation_01/heldout_f0_L16384_r0_marker_M7_layer18_kv0.npz
@@ -9745,7 +9745,7 @@ $ /bin/zsh -lc rg --files /Users/yang/.codex/automations | rg 'automation.toml$'
 
 
 ===== [CMD] line 5979 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/mixture_frozen_01 results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/mixture_frozen_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 5985 =====
@@ -9968,11 +9968,11 @@ updated_at = 1788905039999
 
 
 ===== [CMD] line 6016 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/mixture_frozen_01 results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/mixture_frozen_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6017 =====
-$ /bin/zsh -lc scp -P 27741 experiments/native_sparse_position/quest_fine_native.py experiments/native_sparse_position/quest_fine_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+$ /bin/zsh -lc scp -P 27741 experiments/native_sparse_position/quest_fine_native.py experiments/native_sparse_position/quest_fine_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6023 =====
@@ -10102,7 +10102,7 @@ $ /bin/zsh -lc python3 experiments/native_sparse_position/compare_complete_outpu
 ...[clipped 1063 chars]
 
 ===== [CMD] line 6029 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 3 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; nvidia-smi --query-gpu=name,memory.total,memory.used,utilization.gpu --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 3 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; nvidia-smi --query-gpu=name,memory.total,memory.used,utilization.gpu --format=csv,noheader'
 [exit 0] {"row_id": "frozen_long_multiquery_25", "method": "Dense", "output_text": "7587877 3288423 3466704 4847018", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.4945082478225231, "whole_numeric_list_exact": false}
 {"row_id": "frozen_long_multiquery_25", "method": "RoPEMean", "output_text": "7587877", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.732019666582346, "whole_numeric_list_exact": false}
 {"row_id": "frozen_long_multiquery_25", "method": "Quest", "output_text": "7587877 3288423 3466704 4847018", "text_exact": false, "ended_eos": true, "continuation_seconds": 3.08104282990098, "whole_numeric_list_exact": false}
@@ -10194,11 +10194,11 @@ p=Path('experiments/native_sparse_position/quest_fine_ruler.py');s=p.read_text()
 s=s.replace('FP32 min/max costs4D floats per 64 physical token positions, versus mixtures4D+4.', 'Lossless BF16 min/max costs4D BF16 numbers per 64 token positions, versus mixtures4D+4 FP32 numbers; FP32 score roundtrip parity checked per layer and prefix.')
 p.write_text(s)
 PY
-scp -P 27741 experiments/native_sparse_position/quest_fine_native.py experiments/native_sparse_position/quest_fine_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/quest_fine_native.py experiments/native_sparse_position/quest_fine_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6053 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; cat /root/autodl-tmp/position_observability_20260908/mixture_frozen_01/status.json | tail -n 5'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; cat /root/autodl-tmp/position_observability_20260908/mixture_frozen_01/status.json | tail -n 5'
 [exit 0] {"row_id": "frozen_long_multiquery_28", "method": "MatchedContiguous4", "output_text": "918214 2605374 3993624 3993625", "text_exact": false, "ended_eos": true, "continuation_seconds": 3.017835073173046, "whole_numeric_list_exact": false}
 {"row_id": "frozen_long_multiquery_29", "method": "Dense", "output_text": "1327777 2284584 5885320 1664768", "text_exact": false, "ended_eos": true, "continuation_seconds": 1.537327565252781, "whole_numeric_list_exact": false}
     "pair_envelope.py": "87a01acee3f37963e680cc190428fe9f090e632ad26327a610ab0c1d90932f8d"
@@ -10208,14 +10208,14 @@ $ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '
 }
 
 ===== [CMD] line 6062 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 2 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01.log; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] {"row_id": "frozen_long_multiquery_31", "method": "Quest", "output_text": "8641244 7686224 9467434 3833876", "text_exact": true, "ended_eos": true, "continuation_seconds": 3.1138454638421535, "whole_numeric_list_exact": true}
 {"row_id": "frozen_long_multiquery_31", "method": "QuestSplit32", "output_text": "8641244 7686224 9467434 3833876", "text_exact": true, "ended_eos": true, "continuation_seconds": 3.1911221481859684, "whole_numeric_list_exact": true}
 31808, 19680 MiB
 
 
 ===== [CMD] line 6074 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 4 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01/status.json; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 4 /root/autodl-tmp/position_observability_20260908/mixture_frozen_01/status.json; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0]   "seconds": 759.4930538013577,
   "outputs": 224,
   "peak_cuda_bytes": 18359112704
@@ -10227,11 +10227,11 @@ from pathlib import Path
 p=Path('experiments/native_sparse_position/quest_fine_native.py');p.write_text(p.read_text().replace('QuestCache,build_quest,score_quest','QuestCache,build_quest'))
 p=Path('experiments/native_sparse_position/quest_fine_ruler.py');p.write_text(p.read_text().replace('Strong frontier baseline: actual Quest32 retrieval pages,', 'Strong frontier baseline: literal unpadded Quest min/max FP32 score, actual Quest32 retrieval pages,'))
 PY
-scp -P 27741 experiments/native_sparse_position/quest_fine_native.py experiments/native_sparse_position/quest_fine_ruler.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/quest_fine_native.py experiments/native_sparse_position/quest_fine_ruler.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6082 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{mixture_frozen_01,mixture_causal_01,oracle_target_01} results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{mixture_frozen_01,mixture_causal_01,oracle_target_01} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6086 =====
@@ -10377,11 +10377,11 @@ def main():
   print(name,sum(r['copied_exact_version'] for r in inventory),len(inventory))
 if __name__=='__main__':main()
 PY
-scp -P 27741 experiments/native_sparse_position/archive_run_sources.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/archive_run_sources.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6099 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python quest_fine_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs primary_ruler_03/frozen_long.jsonl --output quest_fine_frozen_01 > quest_fine_frozen_01.log 2>&1 < /dev/null & echo $!'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/position_observability_20260908 && nohup /root/miniconda3/bin/python quest_fine_ruler.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --inputs primary_ruler_03/frozen_long.jsonl --output quest_fine_frozen_01 > quest_fine_frozen_01.log 2>&1 < /dev/null & echo $!'
 [exit 0] 32510
 Connection to connect.westc.seetacloud.com closed by remote host.
 
@@ -10417,7 +10417,7 @@ tests/test_orbit_regression.py ...                                       [100%]
 
 
 ===== [CMD] line 6107 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/archive_run_sources.py /root/autodl-tmp/position_observability_20260908 mixture_frozen_01 oracle_target_01 envelope_causal_02 evidence_repair_qwen35_01 support_ruler_02 primary_compact_02; tail -n 3 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01.log'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/archive_run_sources.py /root/autodl-tmp/position_observability_20260908 mixture_frozen_01 oracle_target_01 envelope_causal_02 evidence_repair_qwen35_01 support_ruler_02 primary_compact_02; tail -n 3 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01.log'
 [exit 0] mixture_frozen_01 3 3
 oracle_target_01 2 2
 envelope_causal_02 4 4
@@ -10430,7 +10430,7 @@ primary_compact_02 2 2
 
 
 ===== [CMD] line 6114 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{mixture_frozen_01,oracle_target_01,envelope_causal_02,evidence_repair_qwen35_01,support_ruler_02,primary_compact_02,quest_fine_frozen_01} results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{mixture_frozen_01,oracle_target_01,envelope_causal_02,evidence_repair_qwen35_01,support_ruler_02,primary_compact_02,quest_fine_frozen_01} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6121 =====
@@ -10553,7 +10553,7 @@ $ /bin/zsh -lc python3 experiments/native_sparse_position/compare_complete_outpu
 
 
 ===== [CMD] line 6132 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'tail -n 5 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01/status.json; tail -n 2 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01.log; ls -1 /root/autodl-tmp/rope_qwen_baseline_20260907 | head -n 20'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'tail -n 5 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01/status.json; tail -n 2 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01.log; ls -1 /root/autodl-tmp/rope_qwen_baseline_20260907 | head -n 20'
 [exit 0]   "cost_boundary": "Strong frontier baseline: literal unpadded Quest min/max FP32 score, actual Quest32 retrieval pages, top32 pages=1024 remote tokens, sink64+local2048 unchanged. Lossless BF16 min/max costs4D BF16 numbers per 64 token positions, versus mixtures4D+4 FP32 numbers; FP32 score roundtrip parity checked per layer and prefix. Retrieval granularity differs from fixed-B64 causal attribution",
   "seconds": 210.4937837831676,
   "outputs": 32,
@@ -10593,7 +10593,7 @@ $ /bin/zsh -lc git diff --stat; git diff --check
 
 
 ===== [CMD] line 6140 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01 results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01 results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6145 =====
@@ -10636,7 +10636,7 @@ $ /bin/zsh -lc python3 experiments/native_sparse_position/compare_complete_outpu
 
 
 ===== [CMD] line 6149 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'cat /root/autodl-tmp/rope_qwen_baseline_20260907/acquisition_state.json | head -n 50; /root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/archive_run_sources.py /root/autodl-tmp/position_observability_20260908 quest_fine_frozen_01'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'cat /root/autodl-tmp/rope_qwen_baseline_20260907/acquisition_state.json | head -n 50; /root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/archive_run_sources.py /root/autodl-tmp/position_observability_20260908 quest_fine_frozen_01'
 [exit 0] {
   "status": "PAUSED_FOR_NO_GPU_SWITCH",
   "partial_files": {
@@ -10722,7 +10722,7 @@ def main():
  print(json.dumps(all_results,indent=2))
 if __name__=='__main__':main()
 PY
-scp -P 27741 experiments/native_sparse_position/verify_generation_records.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/verify_generation_records.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6174 =====
@@ -10748,7 +10748,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 6177 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/verify_generation_records.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model /root/autodl-tmp/position_observability_20260908/mixture_frozen_01 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/verify_generation_records.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model /root/autodl-tmp/position_observability_20260908/mixture_frozen_01 /root/autodl-tmp/position_observability_20260908/quest_fine_frozen_01; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] [
   {
     "run": "mixture_frozen_01",
@@ -10833,7 +10833,7 @@ def main():
  a.output.write_text(json.dumps(data,indent=2));print(json.dumps({'files':len(files),'total_bytes_hashed':sum(x['bytes'] for x in hashes.values()),'output':str(a.output),'gpu':data['gpu']}))
 if __name__=='__main__':main()
 PY
-scp -P 27741 experiments/native_sparse_position/record_runtime_identity.py root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/
+scp -P 27741 experiments/native_sparse_position/record_runtime_identity.py [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6196 =====
@@ -10847,7 +10847,7 @@ PY
 [exit 0] 
 
 ===== [CMD] line 6199 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/record_runtime_identity.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --output /root/autodl-tmp/position_observability_20260908/qwen25_native_runtime_identity.json'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python /root/autodl-tmp/position_observability_20260908/record_runtime_identity.py --model /root/autodl-tmp/rope_qwen_baseline_20260907/model --output /root/autodl-tmp/position_observability_20260908/qwen25_native_runtime_identity.json'
 [exit 0] {"files": 9, "total_bytes_hashed": 6183451098, "output": "/root/autodl-tmp/position_observability_20260908/qwen25_native_runtime_identity.json", "gpu": "NVIDIA GeForce RTX 4080 SUPER, 32760 MiB, 580.76.05"}
 
 
@@ -10870,7 +10870,7 @@ mixture_ruler.py True
 
 
 ===== [CMD] line 6209 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com '/root/miniconda3/bin/python -' <<'PY'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] '/root/miniconda3/bin/python -' <<'PY'
 from pathlib import Path
 import json,hashlib
 root=Path('/root/autodl-tmp/position_observability_20260908')
@@ -10888,7 +10888,7 @@ git diff --check
 [exit 0] 
 
 ===== [CMD] line 6220 =====
-$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' root@connect.westc.seetacloud.com:/root/autodl-tmp/position_observability_20260908/{mixture_frozen_01,quest_fine_frozen_01,envelope_causal_01,qwen25_native_runtime_identity.json,envelope_causal_01.log,mixture_frozen_01.log,quest_fine_frozen_01.log,oracle_target_01.log,mixture_causal_01.log,envelope_causal_02.log} results/position_observability_20260908/
+$ /bin/zsh -lc rsync -az -e 'ssh -p 27741' [REDACTED_EMAIL]:/root/autodl-tmp/position_observability_20260908/{mixture_frozen_01,quest_fine_frozen_01,envelope_causal_01,qwen25_native_runtime_identity.json,envelope_causal_01.log,mixture_frozen_01.log,quest_fine_frozen_01.log,oracle_target_01.log,mixture_causal_01.log,envelope_causal_02.log} results/position_observability_20260908/
 [exit 0] 
 
 ===== [CMD] line 6226 =====
@@ -10922,7 +10922,7 @@ git diff --check
 [exit 0] 
 
 ===== [CMD] line 6259 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] 
 
 ===== [CMD] line 6279 =====
@@ -10990,7 +10990,7 @@ result. The user explicitly rejected this pattern. Independently reason through
 
 
 ===== [CMD] line 6285 =====
-$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 root@connect.westc.seetacloud.com 'nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
+$ /bin/zsh -lc ssh -o BatchMode=yes -p 27741 [REDACTED_EMAIL] 'nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'
 [exit 0] 
 
 ===== [CMD] line 6294 =====
@@ -11557,8 +11557,8 @@ $ /bin/zsh -lc rg -n 'RRPE|Transport.then.Pool|relative.relative' docs experimen
 experiments/native_sparse_position/DESIGN_SOURCE.md:956:**[I2]** `read_referenced_position_research_20260908.md`，本轮从用户Library读取。重点：实际attention接口区别、RRPE/TAPE边界、旧wrapper parity失败、RULER与自然QA结果可能不同。另检索了其他对话的项目上下文：RRPE的两读诊断存在泄漏风险，不能默认地址交接就是主瓶颈。这里只把它们作为项目历史，不当作公开论文证据。
 /Users/yang/Downloads/native_sparse_position_research_plan_20260908.md
 /Users/yang/Downloads/KLD_v2_critical_audit_and_experiment_plan.md
-/Users/yang/Downloads/Misaya Notes Design System/assets/article-thumbs/position-encoding-field.jpg
-/Users/yang/Downloads/压缩包/Misaya Notes Design System/assets/article-thumbs/position-encoding-field.jpg
+/Users/yang/Downloads/[REDACTED_AUTHOR] Notes Design System/assets/article-thumbs/position-encoding-field.jpg
+/Users/yang/Downloads/压缩包/[REDACTED_AUTHOR] Notes Design System/assets/article-thumbs/position-encoding-field.jpg
 /Users/yang/Downloads/i4ToolsDownloads/cache/SimulatePositionCollect.json
 
 
@@ -11601,7 +11601,7 @@ def run():
     assert np.linalg.matrix_rank(features)==2 and sketch.size==1
     # Convex interpolation of two opposite unit rotations can erase a query.
     gated=.5*rot(0.)+.5*rot(np.pi)
-    normratio=float(np.linalg.norm(gated@np.array([1.,0.])))
+    normratio=float(np.linalg.norm([REDACTED_EMAIL]([1.,0.])))
     assert normratio<1e-15
     # Same unrotated learned query, correct origin replacement can double-count
     # a reference already computed by native hidden states.
@@ -12012,8 +12012,8 @@ $ /bin/zsh -lc git status --short --branch; git diff --stat; git diff --cached -
 d599f09 Hourly workspace snapshot 2026-09-08 20:27
 90b1993 Hourly workspace snapshot 2026-09-08 19:27
 27a2f4a Hourly workspace snapshot 2026-09-08 18:06
-origin	git@github.com:misaya-yang/hybrid-rope.git (fetch)
-origin	git@github.com:misaya-yang/hybrid-rope.git (push)
+origin	[REDACTED_EMAIL]:[REDACTED_AUTHOR]-yang/hybrid-rope.git (fetch)
+origin	[REDACTED_EMAIL]:[REDACTED_AUTHOR]-yang/hybrid-rope.git (push)
 
 
 ===== [CMD] line 6615 =====
@@ -12234,7 +12234,7 @@ $ /bin/zsh -lc git commit -m "research: archive RefCarry audit and CPU checks"
 
 ===== [CMD] line 6645 =====
 $ /bin/zsh -lc git push origin HEAD
-[exit 0] To github.com:misaya-yang/hybrid-rope.git
+[exit 0] To github.com:[REDACTED_AUTHOR]-yang/hybrid-rope.git
    d599f09..3dc3527  HEAD -> main_0726_09_06
 
 

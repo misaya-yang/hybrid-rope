@@ -1,6 +1,6 @@
 # digest panel-results（36 行开发面板与全部已测结果数字钉死）
 
-日期：2026-09-10。方法：python3 直接读取本地 JSON/JSONL 原始文件重算 macro；与 docs/research 各 md 引用逐条对账。铁律执行：每个数字给出文件路径（相对仓库根 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/`）；代理指标不写作能力结果；未测不写作否证。
+日期：2026-09-10。方法：python3 直接读取本地 JSON/JSONL 原始文件重算 macro；与 docs/research 各 md 引用逐条对账。铁律执行：每个数字给出文件路径（相对仓库根 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/`）；代理指标不写作能力结果；未测不写作否证。
 
 ---
 

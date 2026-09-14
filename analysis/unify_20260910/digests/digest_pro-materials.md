@@ -4,7 +4,7 @@
 
 ## 1. 来源清单（文件路径/大小/行数）
 
-根目录 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/` 下（wc -c -l 实测，2026-09-10）：
+根目录 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/` 下（wc -c -l 实测，2026-09-10）：
 
 **路由文件**
 - `paper-2027/research/external-reviews/README.md` — 3,616 B / 24 行。全部外部材料的"当前用途"权威表。关键句（原文）："External reviews are source material, not validated research owners. Their `VERIFIED`, `mandatory`, `decision` or `priority` labels do not grant project scientific authority or execution permission."

@@ -4,9 +4,9 @@ YOUR ID: astra09
 YOUR TASK: Research independently from full source: seek overlooked constructive solution or exact invariant joining EVQ, MrRoPE, P2 and successful E1 signals. Prioritize a single executable rule over a menu of hypotheses.
 The listed corpus files are your full-text project coverage responsibility. For theory you may additionally inspect MrRoPE full paper, EVQ theory, newest6Pro attachment and completed reports of other agents; distinguish fully read from indexed files.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GAP_CAPPED_RESULT_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_ROUTE_EVALUATION_20260909.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/supporting_eval/eval_longbench.py
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GAP_CAPPED_RESULT_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CANDIDATE_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_ROUTE_EVALUATION_20260909.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/supporting_eval/eval_longbench.py

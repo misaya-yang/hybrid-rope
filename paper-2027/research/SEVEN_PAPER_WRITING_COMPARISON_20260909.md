@@ -1,6 +1,6 @@
 # 七篇论文怎样围绕主张呈现实验
 
-2026-09-09。独立子代理只读七份作者提供的本地论文；主代理复核关键段落。下列位置相对 `/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/` 中的对应文件。此表是内部写作依据，不进入论文。
+2026-09-09。独立子代理只读七份作者提供的本地论文；主代理复核关键段落。下列位置相对 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/` 中的对应文件。此表是内部写作依据，不进入论文。
 
 | 论文 | 原文位置 | 可以直接借鉴的处理 |
 | --- | --- | --- |

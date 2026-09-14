@@ -80,7 +80,7 @@ def Lambda_of_prior(D,w):
     B=[np.ones_like(D),D]; G0=np.array([[ip(B[i],B[j]) for j in range(2)] for i in range(2)])
     Gi=np.linalg.inv(G0)
     def res(f):
-        be=Gi@np.array([ip(B[0],f),ip(B[1],f)]); return f-be[0]*B[0]-be[1]*B[1]
+        be=[REDACTED_EMAIL]([ip(B[0],f),ip(B[1],f)]); return f-be[0]*B[0]-be[1]*B[1]
     U=[-0.5*res(D**2),-(1/6)*res(D**3)]
     M=np.array([[ip(U[i],U[j]) for j in range(2)] for i in range(2)])
     return float(np.trace(Gi@M))
@@ -100,7 +100,7 @@ def cbar_r2(om,D,w,subset=None):
     ts=list(2*idx)+[v for (i,j) in pr for v in (abs(idx[i]-idx[j]), idx[i]+idx[j])]
     A,B=charfun(np.array(ts),D,w)
     def isq(M):
-        ev,V=np.linalg.eigh((M+M.T)/2); return V@np.diag(np.maximum(ev,1e-300)**-.5)@V.T
+        ev,V=np.linalg.eigh((M+M.T)/2); return [REDACTED_EMAIL](np.maximum(ev,1e-300)**-.5)@V.T
     Si=[isq(0.5*np.array([[1+A[i],B[i]],[B[i],1-A[i]]])) for i in range(K)]
     cs=[]
     for n_,(i,j) in enumerate(pr):

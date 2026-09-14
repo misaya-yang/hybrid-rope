@@ -2,7 +2,7 @@
 """V_math part3: T3 four limit theorems — numeric re-derivation (EVQ cosh chain,
 KKT algebra Thm2a, YaRN Thm3 numbers, conversions, NLC ridge)."""
 import json, math
-ROOT='/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT='/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 d=json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=d['methods']
 ln4=math.log(4); c=math.log(1e6)/64; lnb=math.log(1e6); rnat=1e6**(1/64); W=32768

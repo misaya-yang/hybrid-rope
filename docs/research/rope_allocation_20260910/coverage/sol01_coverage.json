@@ -3,7 +3,7 @@
   "assignment": "MrRoPE full primary paper: reconstruct all math, mixed radix carry and progressive construction; find a rigorous allocation principle that actually follows, finite-index ambiguities, and how it could connect to EVQ.",
   "assigned_files": [
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md",
       "lines": 1421,
       "bytes": 50635,
       "sha256": "06199dfcf1d6d5da5a9a6683a31f767f12dc207636299e57b31c16fbbd9206c9",
@@ -12,7 +12,7 @@
       "omissions": []
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CONSTRUCTION_ANALYSIS_20260908.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_BM_CONSTRUCTION_ANALYSIS_20260908.md",
       "lines": 121,
       "bytes": 8992,
       "sha256": "fbc93016582dec3a9d505896c456a31149dd4d8319d2220ef7c335cf385a9021",
@@ -21,7 +21,7 @@
       "omissions": []
     },
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_TRANSITION_REVIEW_20260908.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_MRPRO_TRANSITION_REVIEW_20260908.md",
       "lines": 153,
       "bytes": 9201,
       "sha256": "5ca6c5a2936591b6721495bbb155b6d35504668f4d2ee048bddb253cab0e3757",
@@ -32,7 +32,7 @@
   ],
   "supplemental_files": [
     {
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md",
       "lines": 138,
       "bytes": 6186,
       "sha256": "5db0209aa126669374ce8514e408fdd06e6f564e08bba77820581b2326ede254",

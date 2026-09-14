@@ -1,6 +1,6 @@
 {
   "agent_id": "sol15",
-  "assignment": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/assignments/sol15.md",
+  "assignment": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/assignments/sol15.md",
   "status": "complete",
   "assigned_file_count": 48,
   "assigned_bytes": 1107672,
@@ -9,7 +9,7 @@
   "read_status": "all_assigned_full_text_ingested",
   "method": "Every assigned short file was emitted in full in bounded batches. The 993411-byte rows.jsonl was emitted in 52 contiguous pages of 120 lines (last page 24 lines), covering lines 1-6144 without gaps, then parsed fieldwise for aggregate checks. Earlier oversized truncated outputs were not counted as coverage.",
   "large_file_coverage": {
-    "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/artifacts/sparse_memory_20260908/eval_v1_baseline/rows.jsonl",
+    "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/artifacts/sparse_memory_20260908/eval_v1_baseline/rows.jsonl",
     "sha256": "a69b263ff72565f8b4adb61887561e501d6ee9f37b53a02d62bc37e6d78c45f7",
     "bytes": 993411,
     "lines": 6144,
@@ -19,20 +19,20 @@
   },
   "assigned_paths_source": "FULL FILE LIST in the assignment; the ordered manifest hashes each line as path TAB sha256 NEWLINE",
   "additional_full_texts": [
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra01.md",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra02.md",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra03.md",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra04.md",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra05.md",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra06.md",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/EVQ_COSH_THEORY.tex",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_findings.tex",
-    "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex"
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra01.md",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra02.md",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra03.md",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra04.md",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra05.md",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/astra06.md",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/EVQ_COSH_THEORY.tex",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_findings.tex",
+    "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex"
   ],
   "external_full_text": {
-    "path": "/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md",
+    "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md",
     "status": "fully read in bounded source inspection; relevant derivation and appendix boundaries independently rechecked by line search"
   },
   "omissions": [],

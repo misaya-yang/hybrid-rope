@@ -1,7 +1,7 @@
 # digest thread-0910-batch（09-10 07:40–07:52 批量启动的 16 个 codex 短会话）
 
 提取时间：2026-09-10 约 08:07（本地，America/New_York；rollout 内时间戳为 UTC，本地 = UTC−4）。
-提取方法：python3 逐行解析 JSONL，仅保留 `type=response_item & payload.type=message & role∈{user,assistant}` 的文本，跳过 tool/reasoning/token_count；另用事件类型统计与 `task_complete` 事件判定终止状态。纯文本转录存于 `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw/batch_t07-*.txt`（16 个分文件）与 `batch_all.txt` / `batch_clean.txt`（合并、去 boilerplate 版，clean 版 485 行，已全文通读）。
+提取方法：python3 逐行解析 JSONL，仅保留 `type=response_item & payload.type=message & role∈{user,assistant}` 的文本，跳过 tool/reasoning/token_count；另用事件类型统计与 `task_complete` 事件判定终止状态。纯文本转录存于 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw/batch_t07-*.txt`（16 个分文件）与 `batch_all.txt` / `batch_clean.txt`（合并、去 boilerplate 版，clean 版 485 行，已全文通读）。
 
 ## 0. 总体判定（先结论）
 
@@ -14,7 +14,7 @@
 
 ### 1.1 rollout 文件（16 个）与代理映射
 
-目录 `/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/10/`。所有子会话共享 parent_thread_id `01a0806f-3df5-74b1-bc56-bf00d89d238e`；cwd 均为项目根。agent_path / 行数 / 提取消息数 / 终止状态（截至 ~08:07 本地）：
+目录 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/10/`。所有子会话共享 parent_thread_id `01a0806f-3df5-74b1-bc56-bf00d89d238e`；cwd 均为项目根。agent_path / 行数 / 提取消息数 / 终止状态（截至 ~08:07 本地）：
 
 | # | 文件（前 30 字符） | agent | 行数 | 消息(user+assistant) | 起止(本地) | 终止状态 |
 |---|---|---|---|---|---|---|

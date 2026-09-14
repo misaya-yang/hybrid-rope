@@ -65,7 +65,7 @@
 ### 1.5 会话/转录
 
 - 本任务上游主转录：`analysis/unify_20260910/raw_thread-main.txt`、`raw_thread-0909-pm.txt`（含 candidate 命名的最早出处）。
-- 本次 compact 前会话 jsonl：`/Users/misaya.yanghejazfs.com.au/.claude/projects/-Users-misaya-yanghejazfs-com-au-paper-project-hybrid-rope/7cf3ec49-b384-45ca-99f1-edab805c575a.jsonl`。
+- 本次 compact 前会话 jsonl：`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.claude/projects/-Users-[REDACTED_AUTHOR]-yanghejazfs-com-au-paper-project-hybrid-rope/7cf3ec49-b384-45ca-99f1-edab805c575a.jsonl`。
 
 ## 2. 任务时间线（目标 → 方案 → 结果 + 关键数字）
 

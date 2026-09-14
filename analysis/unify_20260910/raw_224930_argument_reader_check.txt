@@ -1,5 +1,5 @@
 # RAW extraction argument_reader_check (Ampere) — codex session starting 22-49-30 local
-# source: /Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-49-30-01a08412-0bd1-7402-af02-19380e612a66.jsonl
+# source: /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T22-49-30-01a08412-0bd1-7402-af02-19380e612a66.jsonl
 # raw size: 3672835 bytes
 # timestamps converted to America/New_York (UTC-4)
 # NOTE: NEW_TASK payloads in inter-agent messages are encrypted; task identity inferred from agent_path, assistant text, tool calls, task_complete reports
@@ -56,7 +56,7 @@ Here is a list of plugins that are available but not installed.
 - Canva (canva@openai-curated-remote)
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
-</recommended_plugins># AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+</recommended_plugins># AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Ask when the request is unclear or conflicts with skills or project AGENTS.md.
@@ -106,11 +106,11 @@ Project-specific hypotheses, baselines, parameters, experiment plans, results,
 and failure records belong in project documents, not here.
 
 </INSTRUCTIONS><environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-08</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [09-08 22:49:44 ET] <inter-agent msg> /root -> /root/argument_reader_check | Message Type: NEW_TASK
@@ -123,27 +123,27 @@ Payload: [payload encrypted]
 
 [09-08 22:50:00 ET] <tool exec> const r = await Promise.allSettled([
   tools.exec_command({
-    cmd: "cat /Users/misaya.yanghejazfs.com.au/.codex/skills/academic-research-suite/SKILL.md",
-    workdir: "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",
+    cmd: "cat /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/skills/academic-research-suite/SKILL.md",
+    workdir: "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",
     yield_time_ms: 10000,
    ...
-[09-08 22:50:14 ET] <tool exec> const base = "/Users/misaya.yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer";
+[09-08 22:50:14 ET] <tool exec> const base = "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer";
 const files = [
   `${base}/WORKFLOW.md`,
   `${base}/agents/perspective_reviewer_agent.md`,
   `${base}/agents/domain_reviewer_agent.md`,
   `${base...
-[09-08 22:50:27 ET] <tool exec> const p="/Users/misaya.yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer/WORKFLOW.md";
-const r=await tools.exec_command({cmd:`sed -n '240,520p' ${JSON.stringify(p)}`,workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hyb...
-[09-08 22:50:35 ET] <tool exec> const p="/Users/misaya.yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer/agents/methodology_reviewer_agent.md";
-const r=await tools.exec_command({cmd:`cat ${JSON.stringify(p)}`,workdir:"/Users/misaya.yanghejazfs.com.au/paper_...
-[09-08 22:50:44 ET] <tool exec> const p="/Users/misaya.yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer/agents/methodology_reviewer_agent.md";
+[09-08 22:50:27 ET] <tool exec> const p="/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer/WORKFLOW.md";
+const r=await tools.exec_command({cmd:`sed -n '240,520p' ${JSON.stringify(p)}`,workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hyb...
+[09-08 22:50:35 ET] <tool exec> const p="/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer/agents/methodology_reviewer_agent.md";
+const r=await tools.exec_command({cmd:`cat ${JSON.stringify(p)}`,workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_...
+[09-08 22:50:44 ET] <tool exec> const p="/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/skills/academic-research-suite/ars/academic-paper-reviewer/agents/methodology_reviewer_agent.md";
 const rs=await Promise.allSettled([[1,180],[181,330],[331,520]].map(([a,b])=>tools.exec_command({cmd:`sed -n '${a...
 [09-08 22:50:50 ET] <assistant>
 评阅边界已固定为“论证链与数学表达”，不做完整 venue 决策，也不把缺少全套大模型实验本身列为问题。下一步我会逐段核对正文里的定义、命题条件、实验归因和防御性措辞。
 
 [09-08 22:51:00 ET] <tool exec> const r = await Promise.allSettled([
-  tools.exec_command({cmd:"git branch --show-current && git status --short",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:10000}),
+  tools.exec_command({cmd:"git branch --show-current && git status --short",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:10000}),
   tools.exec_command({cmd:"rg -...
 [09-08 22:51:08 ET] <tool exec> const files=[
 "paper-2027/sections/00_abstract.tex",
@@ -154,16 +154,16 @@ const rs=await Promise.allSettled([[1,180],[181,330],[331,520]].map(([a,b])=>too
 "paper-2027/sections/04_mature.tex",
 "paper-2027/sec...
 [09-08 22:51:22 ET] <tool exec> const r = await Promise.allSettled([
-  tools.exec_command({cmd:"nl -ba paper-2027/sections/02_identification.tex",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:20000}),
+  tools.exec_command({cmd:"nl -ba paper-2027/sections/02_identification.tex",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:20000}),
   tools.exec_command({cmd:"rg ...
 [09-08 22:51:32 ET] <tool exec> const p="paper-2027/appendix/a1_proofs.tex";
 for (const [a,b] of [[1,165],[318,375],[500,620]]){
-  const r=await tools.exec_command({cmd:`nl -ba ${JSON.stringify(p)} | sed -n '${a},${b}p'`,workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yi...
+  const r=await tools.exec_command({cmd:`nl -ba ${JSON.stringify(p)} | sed -n '${a},${b}p'`,workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yi...
 [09-08 22:51:52 ET] <tool exec> const r = await Promise.allSettled([
   tools.exec_command({cmd:"rg -n \"does not|do not|not a|not establish|separate|only|cannot|rather than|instead|distinct|conditional|fixed|matched|without\" paper-2027/sections/00_abstract.tex paper-2027/sections/01_intro.t...
 [09-08 22:52:30 ET] <tool exec> const r=await Promise.allSettled([
-  tools.exec_command({cmd:"ls -l paper-2027/appendix/a7_exponent_adjustments.tex && nl -ba paper-2027/appendix/a7_exponent_adjustments.tex | sed -n '1,260p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope...
-[09-08 22:52:38 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '85,175p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:20000});text(r.output);
+  tools.exec_command({cmd:"ls -l paper-2027/appendix/a7_exponent_adjustments.tex && nl -ba paper-2027/appendix/a7_exponent_adjustments.tex | sed -n '1,260p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope...
+[09-08 22:52:38 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '85,175p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:20000});text(r.output);
 [09-08 22:53:30 ET] <inter-agent msg> /root -> /root/argument_reader_check | Message Type: MESSAGE
 Task name: /root/argument_reader_check
 Sender: /root
@@ -173,33 +173,33 @@ Payload: [payload encrypted]
 正文的主线目前很清楚：定义 exponent allocation，给出相位不变的全 sin/cos 子空间几何，再把它转成一个明确标作 surrogate 的 Cosh 变分构造，最后分开报告训练/适配与冻结模型。现在我在核对两类更细的风险：effective rank 是否被写成实际维数，以及不同 grid 约定是否会让读者误以为标准 RoPE 与 midpoint EVQ 共用同一端点。
 
 [09-08 22:53:58 ET] <tool exec> const r=await Promise.allSettled([
-  tools.exec_command({cmd:"pdfinfo paper-2027/main.pdf | sed -n '1,20p' && pdftotext -f 1 -l 8 -layout paper-2027/main.pdf - | sed -n '1,320p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_m...
+  tools.exec_command({cmd:"pdfinfo paper-2027/main.pdf | sed -n '1,20p' && pdftotext -f 1 -l 8 -layout paper-2027/main.pdf - | sed -n '1,320p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_m...
 [09-08 22:54:40 ET] <tool exec> const r=await Promise.allSettled([
-  tools.exec_command({cmd:"rg -n \"newcommand\\{\\\\evq|EVQ|Exact Variational|variational quant\" paper-2027/main.tex paper-2027/sections paper-2027/appendix | head -120",workdir:"/Users/misaya.yanghejazfs.com.au/paper_projec...
+  tools.exec_command({cmd:"rg -n \"newcommand\\{\\\\evq|EVQ|Exact Variational|variational quant\" paper-2027/main.tex paper-2027/sections paper-2027/appendix | head -120",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_projec...
 [09-08 22:54:53 ET] <tool exec> const r=await Promise.allSettled([
-  tools.exec_command({cmd:"rg -n -F -e '\\newcommand{\\evq' -e 'EVQ' -e 'Exact Variational' -e 'variational quant' paper-2027/main.tex paper-2027/sections paper-2027/appendix | head -160",workdir:"/Users/misaya.yanghejazfs.co...
-[09-08 22:54:59 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '1,90p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:15000});text(r.output);
+  tools.exec_command({cmd:"rg -n -F -e '\\newcommand{\\evq' -e 'EVQ' -e 'Exact Variational' -e 'variational quant' paper-2027/main.tex paper-2027/sections paper-2027/appendix | head -160",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.co...
+[09-08 22:54:59 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '1,90p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:15000});text(r.output);
 [09-08 22:56:54 ET] <tool send_message> {"target":"/root","message":"gAAAAABqoMr36k2ElcNfSJjZ3adDOqwhmwh_nfyf8cLmElZV_f6_0lomG4K5WM11M3DbY2FKZUFRixB5wGBS3XK-rDTKIJgC44oknds3SpQfeSIzPIngqZVLBTvJbtBVfhh-kTThis1hWF7zgsIpKLE9Avz1o4188xDrmChsRH3iuxmbHp9hG1uFtGOQtNBdKYg6YFg-RHPP3_RrknW_2EaIQcfiP_WVHJ2Omps...
-[09-08 22:57:31 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba /Users/misaya.yanghejazfs.com.au/.codex/memories/MEMORY.md | sed -n '61,86p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:10000});text(r.output);
+[09-08 22:57:31 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/memories/MEMORY.md | sed -n '61,86p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:10000});text(r.output);
 [09-08 22:58:21 ET] <assistant>
 核查结论：第一页已经能准确回答“研究什么、为什么重要、怎么验证”。数学主干自洽，没有发现把坐标重写冒充核心理论贡献，也没有把静态几何直接当成模型性能的硬跳跃。正文的防御性措辞已明显收敛，现有范围限定大多服务于实验识别，不建议再增加成串 caveat。
 
 确定需要处理的四点：
 
-1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
+1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
    “Under the usual geometric grid, the base sets the sampled log-frequency range; after fixing the endpoints, the normalized exponent allocation controls how a finite set of pairs covers that range.”
 
-2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
+2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
    “the 23 pairs … have Rényi-2 effective rank approximately two under a uniform separation prior.”  
    实际 span 通常仍是 46 维；这里测的是 block-whitened Gram 的 effective rank。
 
-3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
+3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
    “Together, the analysis and experiments establish exponent allocation as an analyzable design axis with measurable effects on long-context behavior.”  
    这样保留有效主张，同时不暗示 canonical-correlation geometry 已被证明是 PPL/RULER 改善的中介机制。
 
-4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
+4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
 
-一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
+一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
 
 最有说服力的部分是：固定端点、只动 30 个 interior exponents 的三种子干预；完整 sin/cos 子空间而非单一 cosine slice 的 canonical-correlation 定义；以及同时报告 range retarget reversal、8K 代价和 Qwen/OLMo profile reversal。这些反例式结果让“allocation 是独立且与 checkpoint/range 交互的设计轴”比单纯报 EVQ 增益更可信。冻结模型部分也没有把 displacement coordinate 本身当贡献；真正有分量的是 BM 的明确离散构造、自然 QA 验证与跨 checkpoint 的相反排序。
 
@@ -217,20 +217,20 @@ MEMORY.md:76-80|note=[used preference against unnecessary process constraints]
 
 确定需要处理的四点：
 
-1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
+1. 核心坐标在摘要开头切得略过头。[00_abstract.tex:1](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:1) 的 “the base controls the frequency range, the exponent distribution controls…” 忽略了 exponent endpoints 也参与决定 range。最小改为：  
    “Under the usual geometric grid, the base sets the sampled log-frequency range; after fixing the endpoints, the normalized exponent allocation controls how a finite set of pairs covers that range.”
 
-2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
+2. “effective positional dimension” 容易被读成实际线性维数。[01_intro.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:15) 可直接写成：  
    “the 23 pairs … have Rényi-2 effective rank approximately two under a uniform separation prior.”  
    实际 span 通常仍是 46 维；这里测的是 block-whitened Gram 的 effective rank。
 
-3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
+3. Cosh 与性能之间的桥还可再精确一处。[00_abstract.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:4) 把 “variational allocation problem” 改成 “convex surrogate allocation problem”；[00_abstract.tex:16](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/00_abstract.tex:16) 的结句可改为：  
    “Together, the analysis and experiments establish exponent allocation as an analyzable design axis with measurable effects on long-context behavior.”  
    这样保留有效主张，同时不暗示 canonical-correlation geometry 已被证明是 PPL/RULER 改善的中介机制。
 
-4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
+4. grid 与定义域应统一命名。[02_exponents.tex:13](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:13) 在定义 \(z_k\) 前加 “For an ordered, nondegenerate table \(\omega_0>\cdots>\omega_{K-1}>0\)”；标准 \(k/K\)、midpoint \((k+1/2)/K\)、anchored \(z\) 三者正文已区分，但 [a6_mature_scale.tex:9](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a6_mature_scale.tex:9) 把 \(u_k=k/K\) 称为 “endpoint grid” 不准确，宜改成 “standard left-endpoint grid” 或直接 “standard \(k/K\) grid”。
 
-一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
+一个普通 ML 读者唯一还会短暂停顿的是 [01_intro.tex:58](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:58) 的 Qwen 结果没立即说 comparator；把 “improves Qwen’s 64K RULER score” 改成 “improves over matched YaRN at 64K” 即可。
 
 最有说服力的部分是：固定端点、只动 30 个 interior exponents 的三种子干预；完整 sin/cos 子空间而非单一 cosine slice 的 canonical-correlation 定义；以及同时报告 range retarget reversal、8K 代价和 Qwen/OLMo profile reversal。这些反例式结果让“allocation 是独立且与 checkpoint/range 交互的设计轴”比单纯报 EVQ 增益更可信。冻结模型部分也没有把 displacement coordinate 本身当贡献；真正有分量的是 BM 的明确离散构造、自然 QA 验证与跨 checkpoint 的相反排序。
 
@@ -249,15 +249,15 @@ Payload: [payload encrypted]
 [09-08 23:09:30 ET] <tool exec> const r = await Promise.allSettled([
   tools.exec_command({
     cmd: "git ls-tree -r --name-only main_0726 rebuttal | sed -n '1,240p'",
-    workdir: "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",
+    workdir: "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",
     yield_time_ms: 10000,
     max_output_tokens: ...
 [09-08 23:09:42 ET] <tool exec> const r = await Promise.allSettled([
-  tools.exec_command({cmd:"git ls-tree -r --name-only main_0726 rebuttal | rg 'FINAL_|AC_PUBLIC|final_responses|REBUTTAL_HANDOVER|02_RESPONSE' | sed -n '1,240p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybri...
+  tools.exec_command({cmd:"git ls-tree -r --name-only main_0726 rebuttal | rg 'FINAL_|AC_PUBLIC|final_responses|REBUTTAL_HANDOVER|02_RESPONSE' | sed -n '1,240p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybri...
 [09-08 23:09:54 ET] <tool exec> const r=await tools.exec_command({cmd:"git show main_0726:rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md | nl -ba | rg 'Part I|Part II|Part III|Part IV|## Reviewer|### Summary|### Strength|### Weak|### Questions|### Rating|Overall|Confidence|AC...
 [09-08 23:10:01 ET] <tool exec> const file="rebuttal/rebuttal_0723/00_REVIEWER_SCORES_AND_AC_METAREVIEW.md";
 for (const [a,b] of [[41,159],[160,258],[259,335]]){
-  const r=await tools.exec_command({cmd:`git show main_0726:${file} | nl -ba | sed -n '${a},${b}p'`,workdir:"/Users/misaya.yanghej...
+  const r=await tools.exec_command({cmd:`git show main_0726:${file} | nl -ba | sed -n '${a},${b}p'`,workdir:"/Users/[REDACTED_AUTHOR].yanghej...
 [09-08 23:10:12 ET] <tool exec> const files=[
 "rebuttal/rebuttal_0723/paste/final_send/FINAL_27bE.md",
 "rebuttal/rebuttal_0723/paste/final_send/FINAL_Dz6s.md",
@@ -275,14 +275,14 @@ for (const [a,b] of [[41,159],[160,258],[259,335]]){
 
 [09-08 23:10:47 ET] <tool exec> const r=await tools.web__run({search_query:[{q:"site:neurips.cc Conferences 2026 Reviewer Guidelines rating 6 strong accept 5 accept 4 borderline accept"}],response_length:"short"});text(r);
 [09-08 23:11:13 ET] <tool exec> const r=await Promise.allSettled([
-  tools.exec_command({cmd:"rg -n -i 'DAPE|learned.*inv_freq|free_inv|learned-frequency|Kerple' paper-2027/main.tex paper-2027/sections paper-2027/appendix paper-2027/tables",workdir:"/Users/misaya.yanghejazfs.com.au/paper_pro...
+  tools.exec_command({cmd:"rg -n -i 'DAPE|learned.*inv_freq|free_inv|learned-frequency|Kerple' paper-2027/main.tex paper-2027/sections paper-2027/appendix paper-2027/tables",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_pro...
 [09-08 23:11:26 ET] <tool exec> const r=await Promise.allSettled([
- tools.exec_command({cmd:"nl -ba paper-2027/sections/04_experiments.tex | sed -n '1,110p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:12000}),
+ tools.exec_command({cmd:"nl -ba paper-2027/sections/04_experiments.tex | sed -n '1,110p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:12000}),
  tools.exec_comman...
-[09-08 23:12:41 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '180,275p'",workdir:"/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:18000});text(r.output);
+[09-08 23:12:41 ET] <tool exec> const r=await tools.exec_command({cmd:"nl -ba paper-2027/appendix/a6_mature_scale.tex | sed -n '180,275p'",workdir:"/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope",yield_time_ms:10000,max_output_tokens:18000});text(r.output);
 [09-08 23:12:56 ET] <tool send_message> {"target":"/root","message":"gAAAAABqoM659WTRuaBLVOUY--vG2ASxe_FRfQbb0z1YL_YX9_URQNdlQqHMO8xrf_418mVu_SMSb-BRIn_nzNajWOFfl-XDf7YSMJzfvgdHjELQHq4wflrZ7xVQGNRrx6UDy1UXTAvQbwP_6k4CFuc_QtRmVkzeP5BBTSw0vavg0qCUXMIjYklVLBTmBOUtBkPHlrZobJzWcPjG5NFSjpFSa1Urgz2yGR9DQaF...
 [09-08 23:14:14 ET] <tool exec> const r=await Promise.allSettled([
-  tools.exec_command({cmd:"nl -ba paper-2027/sections/00_abstract.tex && nl -ba paper-2027/sections/01_intro.tex | sed -n '1,75p' && nl -ba paper-2027/sections/02_exponents.tex | sed -n '1,38p'",workdir:"/Users/misaya.yanghej...
+  tools.exec_command({cmd:"nl -ba paper-2027/sections/00_abstract.tex && nl -ba paper-2027/sections/01_intro.tex | sed -n '1,75p' && nl -ba paper-2027/sections/02_exponents.tex | sed -n '1,38p'",workdir:"/Users/[REDACTED_AUTHOR].yanghej...
 [09-08 23:15:58 ET] <assistant>
 专业复审结论：当前稿已越过旧 3 分初审的主要门槛。按 NeurIPS 2026 六档量表，我给 **5/6 — Accept，confidence 4/5**。质量 5、清晰度 5、重要性 4、原创性 4。5 分表示技术可靠、子领域影响明确、评估达到 good-to-excellent；不代表录用承诺。[官方量表](https://neurips.cc/Conferences/2026/ReviewerGuidelines)
 
@@ -292,26 +292,26 @@ for (const [a,b] of [[41,159],[160,258],[259,335]]){
 
 | 旧问题 | 实际 rebuttal 解法 | 现稿状态 |
 |---|---|---|
-| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
-| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
-| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
+| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
+| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
+| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
 | `RzWsa.3/.4、R27bE.2/.5`：RULER、1B–7B、base/head dimension | rebuttal 分成 scale tier 与 mechanistic tier | **已解决。** 现稿不拿 50.9M factorial 当 scale evidence；它负责 500K/1M、\(d_{\rm head}=32/64/128\) 的方向验证，成熟模型负责 scale。Qwen-3B/7B 的反结果也被保留，没有包装成普遍胜利。 |
-| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
-| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
-| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
+| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
+| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
+| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
 | `RDz6s.2`：optimized Geo+YaRN 可能缩小差距 | rebuttal 将结论收窄为 fixed-scaler substrate dependence | **部分解决，但已不构成对现稿主张的反驳。** 本文没有证明 tuned Geo+YaRN 无法追平，也不再提出该命题。正在恢复的 454M \(157.7\rightarrow107.5\) 是真实历史结果；只需按正确 fixed-index \(s=8\) scaler 写清 protocol，无需删结果或把临时源文件恢复状态当科学缺陷。 |
 
 AC 当时要求的三个决策门槛——清晰 novelty、direct control、stronger evaluation——现稿均已满足。因此从 3 分升到 5 分是基于实质变化，不是靠 rebuttal 话术。
 
 ### 最影响接收的三个剩余写作问题
 
-1. [01_intro.tex:40](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
+1. [01_intro.tex:40](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
    “motivates a **convex surrogate variational problem** for distributing exponents.”
 
-2. [01_intro.tex:61](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
+2. [01_intro.tex:61](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
    “derive and evaluate model-relative displacement profiles, including a boundary-matched intermediate-band construction, and show through matched RULER and natural-QA tests that useful allocation depends on checkpoint and target length.”
 
-3. [04_mature.tex:54](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
+3. [04_mature.tex:54](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
    “OLMo is the held-out nine-task confirmation; Qwen is the four-task development panel.”  
    这能提前化解 profile selection/cherry-picking 质疑，无需新实验。
 
@@ -335,26 +335,26 @@ MEMORY.md:76-80|note=[used preference against unnecessary process constraints]
 
 | 旧问题 | 实际 rebuttal 解法 | 现稿状态 |
 |---|---|---|
-| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
-| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
-| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
+| `AC.1 / RzWsa.1`：与 FMRoPE、dead-channel 观察重合 | `AC_PUBLIC §1`、`FINAL_zWsa §1` 用 base/range 与 exponent grid 的对象差异回答，并承认漏引 Oka | **已解决；原评论的一部分前提不成立。** 现稿明确写 FMRoPE 选择 base、normalized exponents 仍均匀，而本文固定 endpoints 改 interior allocation；见 [02_related.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_related.tex:4)、[02_exponents.tex:5](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_exponents.tex:5)。dead-channel 不是本文贡献，本文的独立对象是完整 sin/cos subspace geometry。 |
+| `RzWsa.2`：缺少直接 FMRoPE 对照 | exact-range control，并主动报告 target-retarget reversal | **已解决。** 三个训练种子固定 architecture、initialization、token order、optimizer、budget 和两个频率端点，只动 30 个 interiors；见 [02_identification.tex:4](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/02_identification.tex:4)、[a5_identification.tex:38](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:38)。反转结果进一步证明 range 与 allocation 是不同且交互的变量。 |
+| `AC.2 / RDz6s.1`：证据小、diagnostic-heavy | 1.485B/8B、free-running generation、RULER、2Wiki、remote-block intervention | **已解决到现稿实际主张所需范围。** 正文包含 432M 三种子、750M continuation、matched Llama-3-8B NLL 与 source intervention；见 [04_experiments.tex:15](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_experiments.tex:15)。冻结模型部分增加 1B–7B RULER 和 631 条自然 QA；见 [04_mature.tex:98](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:98)、[a7_exponent_adjustments.tex:114](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a7_exponent_adjustments.tex:114)。 |
 | `RzWsa.3/.4、R27bE.2/.5`：RULER、1B–7B、base/head dimension | rebuttal 分成 scale tier 与 mechanistic tier | **已解决。** 现稿不拿 50.9M factorial 当 scale evidence；它负责 500K/1M、\(d_{\rm head}=32/64/128\) 的方向验证，成熟模型负责 scale。Qwen-3B/7B 的反结果也被保留，没有包装成普遍胜利。 |
-| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
-| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
-| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
+| `AC.3 / RDz6s.3 / R27bE.1`：exact theory、surrogate、small-\(\tau\)、trained behavior 混在一起 | 四层 epistemic separation | **已解决。** 正文先给完整子空间 canonical correlation、\(r_2\) 恒等式和 slow-limit，再明确称 \(\mathcal C_{\rm app}\) 为 surrogate；Cosh 只声称是该凸目标的唯一解。finite-\(\tau\) operating rule 已降到附录并写明假设；见 [03_theory.tex:69](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/03_theory.tex:69)、[a1_proofs.tex:322](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:322)、[a1_proofs.tex:501](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex:501)。 |
+| `R27bE.4`：独立 \(\tau\) 与 matched non-Cosh schedules | 多个 Cosh strength、deformation-matched exponential、99-run receipt | **已解决。** [a5_identification.tex:157](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:157) 给出预先指定的 \(0.75/1/1.25\times\) Cosh 与 matched exponential，且明确不同配置的最好 multiplier 不同。 |
+| `R27bE.3`：DAPE 混淆 allocation 与 capacity/tuning | 退役错误 DAPE 身份，归因转向固定零参数 schedules | **已解决。** 当前表正确写成 layer-shared learned inverse-frequency baseline，并明确 DAPE 属于 learned-operator family；见 [a5_identification.tex:210](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex:210)。 |
 | `RDz6s.2`：optimized Geo+YaRN 可能缩小差距 | rebuttal 将结论收窄为 fixed-scaler substrate dependence | **部分解决，但已不构成对现稿主张的反驳。** 本文没有证明 tuned Geo+YaRN 无法追平，也不再提出该命题。正在恢复的 454M \(157.7\rightarrow107.5\) 是真实历史结果；只需按正确 fixed-index \(s=8\) scaler 写清 protocol，无需删结果或把临时源文件恢复状态当科学缺陷。 |
 
 AC 当时要求的三个决策门槛——清晰 novelty、direct control、stronger evaluation——现稿均已满足。因此从 3 分升到 5 分是基于实质变化，不是靠 rebuttal 话术。
 
 ### 最影响接收的三个剩余写作问题
 
-1. [01_intro.tex:40](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
+1. [01_intro.tex:40](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:40) 仍写 “motivates a variational problem”，而摘要和理论已正确写成 surrogate。最小改为：  
    “motivates a **convex surrogate variational problem** for distributing exponents.”
 
-2. [01_intro.tex:61](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
+2. [01_intro.tex:61](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:61) 的第三项贡献目前像“把已有方法改写成 displacement coordinate”。建议改成正面、实际的贡献：  
    “derive and evaluate model-relative displacement profiles, including a boundary-matched intermediate-band construction, and show through matched RULER and natural-QA tests that useful allocation depends on checkpoint and target length.”
 
-3. [04_mature.tex:54](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
+3. [04_mature.tex:54](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/04_mature.tex:54) 把 OLMo confirmation 与 Qwen development evidence 放在同一表中但未在正文标层级。caption 增加一句即可：  
    “OLMo is the held-out nine-task confirmation; Qwen is the four-task development panel.”  
    这能提前化解 profile selection/cherry-picking 质疑，无需新实验。
 

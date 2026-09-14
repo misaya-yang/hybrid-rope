@@ -3,10 +3,10 @@ Active task: Derive a concrete, evidence-grounded frequency allocation rule unif
 YOUR ID: sol06
 YOUR TASK: Full recent allocation math and failed theory review: jointly audit native subspace transport, nonlinear softmax harmonics, generalized gap budget theories; seek a unified objective with an actual constructive solution and refuse unsupported proxy-to-performance jumps.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SOFTMAX_MIXED_FREQUENCY_DERIVATION_20260910.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_EXTRAPOLATION_FAILURE_AND_LIMITS_20260910.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/COSH_REDESIGN_EVIDENCE_REVIEW.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SOFTMAX_MIXED_FREQUENCY_DERIVATION_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_EXTRAPOLATION_FAILURE_AND_LIMITS_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/COSH_REDESIGN_EVIDENCE_REVIEW.md

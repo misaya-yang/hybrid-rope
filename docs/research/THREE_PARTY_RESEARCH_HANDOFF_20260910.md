@@ -314,7 +314,7 @@ BM交叉的multikey四臂均EOS；VT的MrPro来源是100%答案项召回但预�
 
 第三方新增源码为 [retention_evidence.py](../../experiments/pm_keep/retention_evidence.py) 及其 [3项测试](../../experiments/pm_keep/test_retention_evidence.py)，以及上文covariance-tail与7项测试；另外追加过既有交接记录。核心的full_covariance_probe/hour_bridge/cached_full_covariance/tail_pair、future_query_probe/replay_weighted_probe/key_novel_queries、kvzip_reconstruction、target_record_oracle、canonical_keydiff代码均仍在各实验包内，准备状态以对应合同和源码快照为准。
 
-远端为 `ssh -p 24941 root@connect.westc.seetacloud.com`，工作根目录 `/root/autodl-tmp/position_overnight_20260909`，Python `/root/miniconda3/bin/python`，KVPress固定提交 `71640b4f9061054a7630c5049bb9ee659a01523c`。共享 `queue.lock`，启动时沿用STOP/实际PID核查；root自己的16DEV进程早已退出。之后key-novel、KVzip、target-record与已完成K_pre均由接管任务统一执行，本任务未再占GPU。
+远端为 `ssh -p 24941 [REDACTED_EMAIL]`，工作根目录 `/root/autodl-tmp/position_overnight_20260909`，Python `/root/miniconda3/bin/python`，KVPress固定提交 `71640b4f9061054a7630c5049bb9ee659a01523c`。共享 `queue.lock`，启动时沿用STOP/实际PID核查；root自己的16DEV进程早已退出。之后key-novel、KVzip、target-record与已完成K_pre均由接管任务统一执行，本任务未再占GPU。
 
 旧hour_finish入口有两个真实执行错误：缓存shadow的`--row-ids`传入CSV而runner要求JSON文件；key-novel缺必需`--baseline-cache`。二者均在模型加载前失败，修复留有备份；缓存shadow/timing与weighted replay后来完成，原一小时队列最终标`PARTIAL_DEADLINE`，被跳过的key-novel已在后续单独完成。不能隐去入口错误，也不能把首次失败当作已发生的方法阴性。
 

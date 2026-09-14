@@ -92,7 +92,7 @@ report both. Do not change `EPS` itself to make a branch appear.
 ## Boot sequence
 
 ```bash
-ssh -p 27741 root@connect.westc.seetacloud.com
+ssh -p 27741 [REDACTED_EMAIL]
 cd /root/autodl-tmp/nongeometric_screen_20260909/code
 nvidia-smi -L                       # confirm the card is actually attached
 ```

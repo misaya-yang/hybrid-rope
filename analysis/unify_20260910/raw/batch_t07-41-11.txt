@@ -51,7 +51,7 @@ Here is a list of plugins that are available but not installed.
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
 </recommended_plugins>
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
@@ -85,11 +85,11 @@ and failure records belong in project documents, not here.
 
 </INSTRUCTIONS>
 <environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-10</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [2026-09-10T11:41:29.523Z] <assistant>
@@ -101,8 +101,8 @@ The three assigned documents converge on one durable distinction: allocation is 
 [2026-09-10T11:46:34.370Z] <assistant>
 Completed Sol 04’s full-text audit and constructive derivation.
 
-- Report: [sol04.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol04.md)
-- Coverage receipt: [sol04_coverage.json](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol04_coverage.json)
+- Report: [sol04.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol04.md)
+- Coverage receipt: [sol04_coverage.json](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol04_coverage.json)
 
 All 2,175 assigned lines were ingested with SHA-256 receipts and no omissions. The report derives a stage-dependent EVQ/MrRoPE framework and a concrete native-KL-budgeted water-filling allocation for Qwen2.5-3B 32K→128K deployment.
 

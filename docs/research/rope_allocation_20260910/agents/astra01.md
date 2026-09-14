@@ -19,7 +19,7 @@ Consequently its quadratic energy is exactly
 
 This is a squared aggregate response, not a generic measure of useful positional signal. MrRoPE §4.4 instead invokes positive \(B_\theta(\Delta)=\sum_k\cos(\theta_k\Delta)\) as an advantage for similar tokens over a random token. It seeks to postpone the first zero of that coherent signal. Suppressing the square of this response and keeping this response positive are different objectives.
 
-Sources: `docs/theory/EVQ_COSH_THEORY.tex:87–114,162–174,225–245`; `/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md:782–812`. MrPro's arithmetic progressive increments are explicitly assumed at lines 420–440; they are not derived from the first-zero analysis. Appendix B also reports empirical boundary selection, including Qwen's (23,40), rather than a universally derived boundary.
+Sources: `docs/theory/EVQ_COSH_THEORY.tex:87–114,162–174,225–245`; `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md:782–812`. MrPro's arithmetic progressive increments are explicitly assumed at lines 420–440; they are not derived from the first-zero analysis. Appendix B also reports empirical boundary selection, including Qwen's (23,40), rather than a universally derived boundary.
 
 A same-support counterexample removes possible coordinate excuses. At lag \(\Delta=2\pi\), use three frequencies
 

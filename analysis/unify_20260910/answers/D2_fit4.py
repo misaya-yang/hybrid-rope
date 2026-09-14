@@ -12,7 +12,7 @@ import json, math
 import numpy as np
 from collections import Counter
 
-ROOT = '/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT = '/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 d = json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M = d['methods']
 W = 32768.0

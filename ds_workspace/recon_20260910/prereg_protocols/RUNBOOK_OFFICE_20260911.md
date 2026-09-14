@@ -1,6 +1,6 @@
 # RUNBOOK：在公司执行的命令与判读
 
-**2026-09-11** · 服务器 `ssh -p 27741 root@connect.westc.seetacloud.com`，工作目录 `/root/autodl-tmp/phase1_20260910`
+**2026-09-11** · 服务器 `ssh -p 27741 [REDACTED_EMAIL]`，工作目录 `/root/autodl-tmp/phase1_20260910`
 所有命令都可直接复制。**先读 §0 的当前状态，再决定跑什么。**
 
 ---
@@ -16,7 +16,7 @@
 
 **查看进度（一条命令）**：
 ```bash
-ssh -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/phase1_20260910 && \
+ssh -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/phase1_20260910 && \
   for f in chain_serial chain_holdout chain_pro; do echo -n "$f: "; tail -1 $f.log 2>/dev/null; done; \
   echo "--- qwen4x $(grep -c "\"arm\"" qwen4x.log)/10 ---"; \
   ps -eo args|grep -c "[o]lmo_beta\|[q]wen_longnll"'
@@ -51,13 +51,13 @@ ssh -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/phase1_20260
 
 **A. RULER 350 行（选择面板）配对**——所有臂放一起：
 ```bash
-ssh -p 27741 root@connect.westc.seetacloud.com \
+ssh -p 27741 [REDACTED_EMAIL] \
   'cd /root/autodl-tmp/phase1_20260910 && /root/miniconda3/bin/python ruler_paired.py'
 ```
 
 **B. held-out 72 行配对**：
 ```bash
-ssh -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/phase1_20260910 && \
+ssh -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/phase1_20260910 && \
  /root/miniconda3/bin/python -c "
 import json,math,numpy as np
 def R(p):
@@ -87,7 +87,7 @@ for k,v in sorted(A.items()):
 
 **表构造器与自检**（纯 numpy，不花 GPU）：
 ```bash
-ssh -p 27741 root@connect.westc.seetacloud.com \
+ssh -p 27741 [REDACTED_EMAIL] \
   'cd /root/autodl-tmp/phase1_20260910 && /root/miniconda3/bin/python pro_tables_20260911.py'
 ```
 **本机也能跑**（同一份代码在仓库里）：
@@ -106,7 +106,7 @@ cd <repo> && python ds_workspace/recon_20260910/code/pro_tables_20260911.py
 **跑这两张表**（runner 已接好，`--dry-run` 已验证）：
 ```bash
 # 350 行 RULER（仲裁者）
-ssh -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/phase1_20260910 && \
+ssh -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/phase1_20260910 && \
 export PYTHONPATH=/root/autodl-tmp/nongeometric_screen_20260909/code:/root/autodl-tmp/phase1_20260910/repoharness:/root/autodl-tmp/phase1_20260910 && \
 setsid nohup /root/miniconda3/bin/python olmo_beta.py \
   --root /root/autodl-tmp/phase1_20260910/olmo_pro \
@@ -119,7 +119,7 @@ setsid nohup /root/miniconda3/bin/python olmo_beta.py \
 
 ```bash
 # cheap 连续仪器先筛（~1 分钟）
-ssh -p 27741 root@connect.westc.seetacloud.com 'cd /root/autodl-tmp/phase1_20260910 && \
+ssh -p 27741 [REDACTED_EMAIL] 'cd /root/autodl-tmp/phase1_20260910 && \
 export PYTHONPATH=/root/autodl-tmp/nongeometric_screen_20260909/code:/root/autodl-tmp/phase1_20260910/repoharness:/root/autodl-tmp/phase1_20260910 && \
 setsid nohup /root/miniconda3/bin/python olmo_longnll.py \
   --root /root/autodl-tmp/phase1_20260910/contpro \

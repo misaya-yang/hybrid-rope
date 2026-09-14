@@ -3,6 +3,6 @@ Active task: Derive a concrete, evidence-grounded frequency allocation rule unif
 YOUR ID: sol04
 YOUR TASK: Pro proposals full ingestion group2: audit exponent allocation, research guidance, and FFN report. Derive constructive implications that survive failures rather than repeating proposal rhetoric.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Exponent_Allocation_Unified_Plan_20260905.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Research_Guidance_20260905.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/SINGLE_TABLE_FFN_REPORT_AUDIT_AND_CODEX_GUIDANCE_20260904.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_Exponent_Allocation_Unified_Plan_20260905.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/RoPE_ICLR2027_Research_Guidance_20260905.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/SINGLE_TABLE_FFN_REPORT_AUDIT_AND_CODEX_GUIDANCE_20260904.md

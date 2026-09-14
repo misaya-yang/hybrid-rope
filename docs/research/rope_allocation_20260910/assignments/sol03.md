@@ -3,6 +3,6 @@ Active task: Derive a concrete, evidence-grounded frequency allocation rule unif
 YOUR ID: sol03
 YOUR TASK: Pro proposals full ingestion group1: audit first-principles synthesis, original dossier and two-direction theory; identify original assumptions, good surviving formulas, and concrete unified allocation rule.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_FIRST_PRINCIPLES_SYNTHESIS.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/hybrid_rope_iclr2027_theory_experiment_dossier_20260904.md
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_TWO_DIRECTION_THEORY_AUDIT_20260905.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_FIRST_PRINCIPLES_SYNTHESIS.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/hybrid_rope_iclr2027_theory_experiment_dossier_20260904.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/external-reviews/pro-materials-20260908/HYBRID_ROPE_TWO_DIRECTION_THEORY_AUDIT_20260905.md

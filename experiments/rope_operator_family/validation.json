@@ -11,7 +11,7 @@
     "fixture_test_seconds": 2.463
   },
   "remote": {
-    "ssh": "ssh -p 18164 root@connect.westd.seetacloud.com",
+    "ssh": "ssh -p 18164 [REDACTED_EMAIL]",
     "directory": "/root/autodl-tmp/operator_family_prepare_20260909",
     "python": "3.12.3",
     "torch": "2.8.0+cu128",

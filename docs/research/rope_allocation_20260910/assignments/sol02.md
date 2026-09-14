@@ -3,7 +3,7 @@ Active task: Derive a concrete, evidence-grounded frequency allocation rule unif
 YOUR ID: sol02
 YOUR TASK: EVQ full derivation and paper proofs: reconstruct the functional, cosh law, exact quantile/gap reformulation; distinguish mathematically proved and empirical claims; derive a finite-window generalization.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/EVQ_COSH_THEORY.tex
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/budget_proofs.tex
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/EVQ_COSH_THEORY.tex
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a1_proofs.tex
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/budget_proofs.tex
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md

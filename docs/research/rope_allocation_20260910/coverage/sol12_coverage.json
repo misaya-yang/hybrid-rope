@@ -13,7 +13,7 @@
     1324747
   ],
   "dialogue": {
-    "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/corpus/sol12_full_dialogue.jsonl",
+    "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/corpus/sol12_full_dialogue.jsonl",
     "sha256": "2ac22279dc1ef74cb09c6af3c8d92ca9a32a83a0c54a78ba8735b24e3d0bd5ac",
     "records_total": 257,
     "records_fully_read": "1-257",
@@ -22,7 +22,7 @@
   "files": [
     {
       "index": 1,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/corpus/sol12_full_dialogue.jsonl",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/corpus/sol12_full_dialogue.jsonl",
       "chars": 181237,
       "bytes": 268608,
       "sha256": "2ac22279dc1ef74cb09c6af3c8d92ca9a32a83a0c54a78ba8735b24e3d0bd5ac",
@@ -35,7 +35,7 @@
     },
     {
       "index": 2,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/auditor_victory_document_1/handoff.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/auditor_victory_document_1/handoff.md",
       "chars": 5976,
       "bytes": 5981,
       "sha256": "c254957464fbfc78aaa2e7f0713917eef1bafb323650cad9830377e44c07cec6",
@@ -48,7 +48,7 @@
     },
     {
       "index": 3,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_2/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_2/BRIEFING.md",
       "chars": 3817,
       "bytes": 3841,
       "sha256": "3195a9d412590cda017fde6095395a75520643cf5dfb82b07f0ed7d1afd2c770",
@@ -61,7 +61,7 @@
     },
     {
       "index": 4,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_2/DISPATCH.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_2/DISPATCH.md",
       "chars": 1983,
       "bytes": 1983,
       "sha256": "147d275db7f6f6607a5bd1167ab483a298cc8eb7d48a927f2df23fffd2a88cea",
@@ -74,7 +74,7 @@
     },
     {
       "index": 5,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_remediation_1/progress.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/challenger_remediation_1/progress.md",
       "chars": 827,
       "bytes": 829,
       "sha256": "bde4e439bd8cb28b18c2fc06697b2393722a383124cbd12f78cb5699b72a4093",
@@ -87,7 +87,7 @@
     },
     {
       "index": 6,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_2/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_2/BRIEFING.md",
       "chars": 3297,
       "bytes": 3315,
       "sha256": "ba914172ccbab058d347a2c3d0db7c61c502bb36af1d340e7f080f911b1ef933",
@@ -100,7 +100,7 @@
     },
     {
       "index": 7,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_2/DISPATCH.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/explorer_survey_2/DISPATCH.md",
       "chars": 2946,
       "bytes": 2946,
       "sha256": "4a2b6c1c28e8e4ce24cb40e1c9fe3cfcd68556ee9431f5ab94711a639f517630",
@@ -113,7 +113,7 @@
     },
     {
       "index": 8,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/orchestrator_1/GATE_STATUS.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/orchestrator_1/GATE_STATUS.md",
       "chars": 1853,
       "bytes": 1857,
       "sha256": "c7998e91dcbfe96470712fa6936ed91a99ca1b50777cbcc327873a0023b06a13",
@@ -126,7 +126,7 @@
     },
     {
       "index": 9,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/BRIEFING.md",
       "chars": 5139,
       "bytes": 5147,
       "sha256": "d62d8fa7c637cf770873888b5fd6ba854bf7199dae7ced755b138d837121fdb7",
@@ -139,7 +139,7 @@
     },
     {
       "index": 10,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/assemble_final_report.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/synthesizer_1/assemble_final_report.py",
       "chars": 2277,
       "bytes": 2277,
       "sha256": "1263193992a18c1040ece0cbd1e7251691a03a3e2f71ae673edca6359f547397",
@@ -152,7 +152,7 @@
     },
     {
       "index": 11,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/teamwork_preview_document_2/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/teamwork_preview_document_2/BRIEFING.md",
       "chars": 5518,
       "bytes": 5545,
       "sha256": "3a402f5e493f705a8fb37af7e7dd1d7c6026ac8b33aac8b2a7822e11282da683",
@@ -165,7 +165,7 @@
     },
     {
       "index": 12,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/teamwork_preview_document_3/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/teamwork_preview_document_3/BRIEFING.md",
       "chars": 4439,
       "bytes": 4464,
       "sha256": "db9159fd745e4b7a32383a81d319f8706552473d4618f47524869fe849a35747",
@@ -178,7 +178,7 @@
     },
     {
       "index": 13,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_blueprint_r4/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_blueprint_r4/BRIEFING.md",
       "chars": 3572,
       "bytes": 3586,
       "sha256": "cc098ba7f9a4ca15b5cc10946354f29f3725b660372167498ca7ab71aa4c30c8",
@@ -191,7 +191,7 @@
     },
     {
       "index": 14,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_comparative_gap_1/progress.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_comparative_gap_1/progress.md",
       "chars": 238,
       "bytes": 240,
       "sha256": "51fea30e5e2393c174a383ba7448128153d74b81d647aa2f06aece7ab004927e",
@@ -204,7 +204,7 @@
     },
     {
       "index": 15,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_falsification_1/BRIEFING.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_falsification_1/BRIEFING.md",
       "chars": 3125,
       "bytes": 3137,
       "sha256": "bd137e418f415f2b7a8506da307285b4a84064acf7e66bf017b6a49d8512eb3b",
@@ -217,7 +217,7 @@
     },
     {
       "index": 16,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_remediation_1/handoff.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/worker_remediation_1/handoff.md",
       "chars": 9709,
       "bytes": 9877,
       "sha256": "c4e414eaacf324960623dd43433f6dbe27275a9957a298195c3e05d93d073769",
@@ -230,7 +230,7 @@
     },
     {
       "index": 17,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.codex_tmp/qwen_z_margin_probe.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.codex_tmp/qwen_z_margin_probe.py",
       "chars": 31242,
       "bytes": 31242,
       "sha256": "1f77a16e2b3b3122ce9c82fc29d937309b5697b8fc7132079cd43e56ce2d0de1",
@@ -243,7 +243,7 @@
     },
     {
       "index": 18,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/ai-handoff.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/ai-handoff.md",
       "chars": 8311,
       "bytes": 11251,
       "sha256": "89e69eaee35118ba93125a542cb06a2843a01283cdd1c96c3c2d592c33342838",
@@ -256,7 +256,7 @@
     },
     {
       "index": 19,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/artifacts/sparse_memory_20260908/initial_plan.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/artifacts/sparse_memory_20260908/initial_plan.json",
       "chars": 1938,
       "bytes": 1938,
       "sha256": "215d15bda6981d5784ef5a86e1fedef15ce09290091a013c28c91febba53b25c",
@@ -269,7 +269,7 @@
     },
     {
       "index": 20,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/artifacts/sparse_memory_20260908/selective_plan.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/artifacts/sparse_memory_20260908/selective_plan.json",
       "chars": 2495,
       "bytes": 2495,
       "sha256": "21d0770ac2569cb663c759f863d1da63e9c0470962266d7cfe7dce1320088642",
@@ -282,7 +282,7 @@
     },
     {
       "index": 21,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/data/curated/table2_evq_yarn_454m_passkey_10pct.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/data/curated/table2_evq_yarn_454m_passkey_10pct.json",
       "chars": 3900,
       "bytes": 3900,
       "sha256": "d2c37769a0a166830d022778bf517c0973eb2ea80a9a87aea3bbadf597cee4ac",
@@ -295,7 +295,7 @@
     },
     {
       "index": 22,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-03/2026-03-04_phase11_L256_results.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-03/2026-03-04_phase11_L256_results.md",
       "chars": 2890,
       "bytes": 3516,
       "sha256": "917d6de0c9ed3891b5f7cff35cd93c32571cab94cd5d57851aa8ce9972ec9146",
@@ -308,7 +308,7 @@
     },
     {
       "index": 23,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-03/2026-03-10_phase17b_1024_continue_vs_512_baseline.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-03/2026-03-10_phase17b_1024_continue_vs_512_baseline.md",
       "chars": 5660,
       "bytes": 7760,
       "sha256": "0f76198b8c4a1cdb21f8ef32252e297fea44693bd0a9001ddcdf3f1f0336e50b",
@@ -321,7 +321,7 @@
     },
     {
       "index": 24,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-07/2026-07-14_repo_fixed_ramp_mechanism_probe.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-07/2026-07-14_repo_fixed_ramp_mechanism_probe.md",
       "chars": 5233,
       "bytes": 5233,
       "sha256": "935b7252f7eeafc6fc6f5a781801164b9f7bde66548425879215787572b24248",
@@ -334,7 +334,7 @@
     },
     {
       "index": 25,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-07/2026-07-15_readout_conversion_impl_plan.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/exp/2026-07/2026-07-15_readout_conversion_impl_plan.md",
       "chars": 29104,
       "bytes": 29158,
       "sha256": "8da938223aedf60618d29658ce3c1863f2f08782773a20c8eb02f3481284d66d",
@@ -347,7 +347,7 @@
     },
     {
       "index": 26,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/overview/EXPERIMENT_CODE_RESULT_AUDIT.md",
       "chars": 9647,
       "bytes": 9647,
       "sha256": "6e8d4740598e8a925f96120f01b6b18a7a7073c067902b98c59dcc46ce4f49b4",
@@ -360,7 +360,7 @@
     },
     {
       "index": 27,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/PROJECT_DIRECTION_SYNTHESIS_20260909.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/PROJECT_DIRECTION_SYNTHESIS_20260909.md",
       "chars": 7323,
       "bytes": 13806,
       "sha256": "ab5763c6cabf7ed9e3f61f5ab0f20cf12dc0a388d1ab0793f7770699831963bb",
@@ -373,7 +373,7 @@
     },
     {
       "index": 28,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_BM_128K_DIAGNOSIS_RESULT_20260908.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_BM_128K_DIAGNOSIS_RESULT_20260908.json",
       "chars": 13941,
       "bytes": 13941,
       "sha256": "07439e06373943bbfab4511767811792f6251e8235e115fc7b6bbe5374e44f52",
@@ -386,7 +386,7 @@
     },
     {
       "index": 29,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_BM_CROSS_CACHE_20260908.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_BM_CROSS_CACHE_20260908.md",
       "chars": 2657,
       "bytes": 5564,
       "sha256": "546aaa469b453bdb1659a0150d55096828088e781f794685aef1fecf75c0c86f",
@@ -399,7 +399,7 @@
     },
     {
       "index": 30,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_EXTRA_RULER_RESULT_20260908.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_EXTRA_RULER_RESULT_20260908.md",
       "chars": 594,
       "bytes": 894,
       "sha256": "a4a5806e87373176c87b90f79ba5a4df53fa407bfae254bb908f3d3680d2b9b2",
@@ -412,7 +412,7 @@
     },
     {
       "index": 31,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_QWEN3_BM_NLL_RESULT_20260908.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_QWEN3_BM_NLL_RESULT_20260908.json",
       "chars": 17868,
       "bytes": 17868,
       "sha256": "23c1850d4e0ab7ba6614d1440c2271bea3b09ddffe441038cf169dafaadf4e8e",
@@ -425,7 +425,7 @@
     },
     {
       "index": 32,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_QWEN7_BM_TRANSFER_20260908.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_QWEN7_BM_TRANSFER_20260908.md",
       "chars": 1475,
       "bytes": 2823,
       "sha256": "4cb4836567fc8d76078afdc00283187051d6bf97546928a43ea7a66a4f6db981",
@@ -438,7 +438,7 @@
     },
     {
       "index": 33,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_FOLLOWUP_20260907.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_FOLLOWUP_20260907.json",
       "chars": 4262,
       "bytes": 4262,
       "sha256": "5222bcf62d114ce53fa9285c37941e48a08b1ef98c9ae7a90104cf6eb954e519",
@@ -451,7 +451,7 @@
     },
     {
       "index": 34,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md",
       "chars": 5671,
       "bytes": 12174,
       "sha256": "b7c47ef12a8b26ac75f00eb1da50f34cda01a9cc3f31c6f3ad6b9b5a5a7879fa",
@@ -464,7 +464,7 @@
     },
     {
       "index": 35,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md",
       "chars": 10248,
       "bytes": 20757,
       "sha256": "83eb5f5d0148159adc97ff5e28f5a9664a7a81bc0686213319308871f0fe9a5e",
@@ -477,7 +477,7 @@
     },
     {
       "index": 36,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_CONTINUATION_RESULTS_20260910.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/TWO_CORE_CONTINUATION_RESULTS_20260910.md",
       "chars": 20395,
       "bytes": 41084,
       "sha256": "a16254cfe2bf2d861cade08446954044ffb788da2ea9c4e5b7444b28d8746680",
@@ -490,7 +490,7 @@
     },
     {
       "index": 37,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/THEORY_MATH_VALIDATION.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/theory/THEORY_MATH_VALIDATION.md",
       "chars": 4018,
       "bytes": 6862,
       "sha256": "034b104be367f8a58d0e434130ec460aa4b93f29c9c5e67f948023938344348e",
@@ -503,7 +503,7 @@
     },
     {
       "index": 38,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/native_sparse_position/groups.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/experiments/native_sparse_position/groups.py",
       "chars": 1147,
       "bytes": 1147,
       "sha256": "53e61e79a72b96eaed864c4ddcba42c9f9e1d1814003efa4c48aa718bb8e9fc4",
@@ -516,7 +516,7 @@
     },
     {
       "index": 39,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/pm_keep/fetch_data.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/experiments/pm_keep/fetch_data.py",
       "chars": 1506,
       "bytes": 1506,
       "sha256": "87d9e8b5784cd9a8c9bf4a6cb6ad8dd1724d20d812122565a89f5600771ab647",
@@ -529,7 +529,7 @@
     },
     {
       "index": 40,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/initialization_manifest.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/initialization_manifest.json",
       "chars": 1481,
       "bytes": 1481,
       "sha256": "0d46a8e6287c3160aac5f5965d596974e6cf6f8bfeab96c3f67daadb235d78b0",
@@ -542,7 +542,7 @@
     },
     {
       "index": 41,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/profile_method.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/profile_method.json",
       "chars": 1355,
       "bytes": 1355,
       "sha256": "692dd2855d6872aeb8282cf7df7e8a65b5b4ff6c517f097db39195f843c7c6a2",
@@ -555,7 +555,7 @@
     },
     {
       "index": 42,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/internal/tools/neurips-paper-skill/references/rebuttal_guide.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/internal/tools/neurips-paper-skill/references/rebuttal_guide.md",
       "chars": 4200,
       "bytes": 4206,
       "sha256": "56448580e03d896ddee15ac7c7fb9400e2b44856f915557912beb1f7e833cee9",
@@ -568,7 +568,7 @@
     },
     {
       "index": 43,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/README.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/README.md",
       "chars": 1255,
       "bytes": 1255,
       "sha256": "4fe3c71891f1799be4bbbcbf7ae98d7d71a280b2b579758a8c35674427942d75",
@@ -581,7 +581,7 @@
     },
     {
       "index": 44,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/probe_7b_train.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/probe_7b_train.py",
       "chars": 7218,
       "bytes": 7218,
       "sha256": "b574bbc6ee73425eb8e5ce073643a9ef6b890a89ae0b617055be4fff90e7c03e",
@@ -594,7 +594,7 @@
     },
     {
       "index": 45,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/probe_capability.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/probe_capability.py",
       "chars": 6349,
       "bytes": 6355,
       "sha256": "6f0458f8f957b9a4f3a5f799bc94ee46b3e1a22dbe4a73fb9a726e5f6dda26c2",
@@ -607,7 +607,7 @@
     },
     {
       "index": 46,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/round11_harness_ref/olmo_zf.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/round11_harness_ref/olmo_zf.sh",
       "chars": 2485,
       "bytes": 2485,
       "sha256": "2552c4c0da28ab3dfcde37819bb3f45a56d154c0609ca5c86530772236207231",
@@ -620,7 +620,7 @@
     },
     {
       "index": 47,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/round11_harness_ref/single_table_generation.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/round12_20260906/code/round11_harness_ref/single_table_generation.py",
       "chars": 48262,
       "bytes": 48262,
       "sha256": "401767d59c978fe9b02bbffa111c169ec8577158352d970798a80dceaaa4ef17",
@@ -633,7 +633,7 @@
     },
     {
       "index": 48,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/runbooks/BOOT_RUNBOOK_20260905.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/claude_code_workspace/runbooks/BOOT_RUNBOOK_20260905.md",
       "chars": 5251,
       "bytes": 6721,
       "sha256": "858acda099feaaf7f3a7ff424231953a984cf3df1559e52293bf84e9ad9f7409",
@@ -646,7 +646,7 @@
     },
     {
       "index": 49,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/compile.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/compile.sh",
       "chars": 5044,
       "bytes": 5044,
       "sha256": "4ad864ab81cd3de86401a2c97f40777a444dec339d761306c92c398803803e8d",
@@ -659,7 +659,7 @@
     },
     {
       "index": 50,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_fig_exact_range_control.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/figs/make_fig_exact_range_control.py",
       "chars": 2970,
       "bytes": 2976,
       "sha256": "a04cb7a41605c4337e197384c057619286cffbef40a328f1055b1afa43d3a5ce",
@@ -672,7 +672,7 @@
     },
     {
       "index": 51,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/RESEARCH_PROTOCOL_REFERENCE.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/RESEARCH_PROTOCOL_REFERENCE.md",
       "chars": 28305,
       "bytes": 28325,
       "sha256": "8455ae874efaa6b9dd764eae1bd04fa279d11f90dd3e75c297b646115b148138",
@@ -685,7 +685,7 @@
     },
     {
       "index": 52,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/analysis/PRO_REPORT_AUDIT_RECONCILIATION_20260905.md",
       "chars": 4865,
       "bytes": 10202,
       "sha256": "bf2199e949606692036e83b78da6500e60bb46042885ce9453eb731e51c6c560",
@@ -698,7 +698,7 @@
     },
     {
       "index": 53,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/FROZEN_2D_COUPLING_TRANSPORT_RECEIPT_20260901.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/FROZEN_2D_COUPLING_TRANSPORT_RECEIPT_20260901.json",
       "chars": 6197,
       "bytes": 6197,
       "sha256": "2898b3dd6b0cf817261a5aa47b58f8c60828becd08c656b9866b6a7f215532ad",
@@ -711,7 +711,7 @@
     },
     {
       "index": 54,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/K32_FINITE_K_COUPLING_GPU_RECEIPT_20260901.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/K32_FINITE_K_COUPLING_GPU_RECEIPT_20260901.json",
       "chars": 2734,
       "bytes": 2734,
       "sha256": "19aa389b1f676bebeaa85a8a1d61d24b5c8e081d225ddea18d02d365867df3a3",
@@ -724,7 +724,7 @@
     },
     {
       "index": 55,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/artifacts/coupling_law_cpu/candidate_tables.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/artifacts/coupling_law_cpu/candidate_tables.json",
       "chars": 4806,
       "bytes": 4806,
       "sha256": "1d0ac6c900335647112c9ba36e8c6af37052db387d531afc483917db21aa8e43",
@@ -737,7 +737,7 @@
     },
     {
       "index": 56,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/artifacts/coupling_law_cpu/fit_0d.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/artifacts/coupling_law_cpu/fit_0d.json",
       "chars": 12519,
       "bytes": 12519,
       "sha256": "2b6e9c6b4794737add3fed0c20af76a06879a211777de1c99ded961957952fab",
@@ -750,7 +750,7 @@
     },
     {
       "index": 57,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/artifacts/coupling_law_cpu/fit_1d.json",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/evidence/artifacts/coupling_law_cpu/fit_1d.json",
       "chars": 12971,
       "bytes": 12971,
       "sha256": "49898bb4b9155ce2206b8fa287b9be350e93656e78d2993aa4f2d9cb940e936c",
@@ -763,7 +763,7 @@
     },
     {
       "index": 58,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/CONSTRAINED_FRONTIER_AND_2X4X_LORA_PREFLIGHT_20260904.md",
       "chars": 36297,
       "bytes": 41035,
       "sha256": "157de05f67f4069473b9ffa072f09d3b58f2fcbfd21dca01820746a3dc7ae2b2",
@@ -776,7 +776,7 @@
     },
     {
       "index": 59,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/adaptation-coadaptation/COADAPTIVE_ALLOCATION_ORACLE_PREFLIGHT_20260825.md",
       "chars": 3414,
       "bytes": 3414,
       "sha256": "55b51bdc9d29de6e2319de76771a955e1a8f77d1ea3a57fe611c6166f4be700a",
@@ -789,7 +789,7 @@
     },
     {
       "index": 60,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/adaptation-coadaptation/PHASE_CHORD_LORA_RETROFIT_PREFLIGHT_20260822.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/adaptation-coadaptation/PHASE_CHORD_LORA_RETROFIT_PREFLIGHT_20260822.md",
       "chars": 9075,
       "bytes": 9077,
       "sha256": "33d77061bca237e8c9cd01a203ea9c8af67722eff190fe0264996ace2ee910ff",
@@ -802,7 +802,7 @@
     },
     {
       "index": 61,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/causal-mechanism/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/preflights/causal-mechanism/MATCHED_CONTENT_PHASE_2X2_BRIDGE_PREFLIGHT_20260827.md",
       "chars": 14665,
       "bytes": 14687,
       "sha256": "cc22a5abf25bea338984fe2c4335df0b589c9a3b12eb59b324fa0076d7f65248",
@@ -815,7 +815,7 @@
     },
     {
       "index": 62,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/PHASE_ALLOCATION_M4_EXTENDED_RESULT_20260824.md",
       "chars": 10978,
       "bytes": 10990,
       "sha256": "0db1e4c6be53a4e0e314bde97aa080f448c74e3b1fc6a04a587f1197fe1dd583",
@@ -828,7 +828,7 @@
     },
     {
       "index": 63,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/causal-mechanism/JOINT_MECHANISM_REPORT_20260822.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/causal-mechanism/JOINT_MECHANISM_REPORT_20260822.md",
       "chars": 8562,
       "bytes": 8562,
       "sha256": "7990f66d2a162b7c4810bf5b926da646618c19b03027c90ea16108ff9955ef18",
@@ -841,7 +841,7 @@
     },
     {
       "index": 64,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/coupling-transfer/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/coupling-transfer/FROZEN_2D_COUPLING_TRANSPORT_RESULT_20260901.md",
       "chars": 14877,
       "bytes": 14901,
       "sha256": "567650472939141a8b18c128ac3c2508dc46842479615a67918a55898bbdeb27",
@@ -854,7 +854,7 @@
     },
     {
       "index": 65,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_CONJUGACY_TIGHTNESS_RESULT_20260904.md",
       "chars": 7282,
       "bytes": 7282,
       "sha256": "281967efdb940077b6c8a9cffecd0168f5ab251745fa73e5ba73a6edec6fca70",
@@ -867,7 +867,7 @@
     },
     {
       "index": 66,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/operator-analysis/SCALE_ORBIT_BOUNDARY_VALIDATION_RESULT_20260904.md",
       "chars": 8187,
       "bytes": 8187,
       "sha256": "59854850d4af838a232f38b8cac80f7faf3d50ffe07cbf5c263cc0be23ac0417",
@@ -880,7 +880,7 @@
     },
     {
       "index": 67,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEADWISE_FACTORIZED_Z_AND_SCALE_FLOW_RESULT_20260902.md",
       "chars": 17268,
       "bytes": 17272,
       "sha256": "0994ef728dacff08a020582213022e83bc8809e165de5377e6a5f022827325fe",
@@ -893,7 +893,7 @@
     },
     {
       "index": 68,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/HEAD_SELECTIVE_ZERO_TRAINING_SIX_ARM_RESULT_20260903.md",
       "chars": 10799,
       "bytes": 10799,
       "sha256": "beab84a9b6235b404ac57f80e8055970f2dae4195fe0d1a1306c6db534e82b9e",
@@ -906,7 +906,7 @@
     },
     {
       "index": 69,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/zero-training-deployment/ZERO_TRAINING_TWO_DAY_EXPERIMENT_SUMMARY_20260902.md",
       "chars": 13569,
       "bytes": 19273,
       "sha256": "c59aa54128c895f59b96a4d047e762c70fa19eb250261febb1c3334603bcfb08",
@@ -919,7 +919,7 @@
     },
     {
       "index": 70,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/ATTENTION_AWARE_RETROFIT_AGENDA_20260822.md",
       "chars": 20178,
       "bytes": 20186,
       "sha256": "2e2d24c2652687079c9c6847c5f6a3ce41da87f677a585b762973b2c9248d979",
@@ -932,7 +932,7 @@
     },
     {
       "index": 71,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/CONSTRAINED_GENERATION_FIRST_PRINCIPLES_20260904.md",
       "chars": 33341,
       "bytes": 33358,
       "sha256": "f5dccda88f4190ce0c56b7a7e98c6d88911b026405e3b719cbf8c6091c48e30f",
@@ -945,7 +945,7 @@
     },
     {
       "index": 72,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/README.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/README.md",
       "chars": 8670,
       "bytes": 8675,
       "sha256": "d62e6215cea46b34a260af2adc2eaec318f425ac4539709f18cb76624daad57c",
@@ -958,7 +958,7 @@
     },
     {
       "index": 73,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/SOLVER_F_CANDIDATE_SOLUTION_V2_20260904.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/SOLVER_F_CANDIDATE_SOLUTION_V2_20260904.md",
       "chars": 33543,
       "bytes": 34292,
       "sha256": "b2c248173b9a0203f6035e3653e27dac84b7ade55f65799c1c53fcfa9170373b",
@@ -971,7 +971,7 @@
     },
     {
       "index": 74,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/SOLVER_Z_CANDIDATE_SOLUTION_V2_20260904.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/SOLVER_Z_CANDIDATE_SOLUTION_V2_20260904.md",
       "chars": 23007,
       "bytes": 23673,
       "sha256": "33cc066a3730cbfe6512ce8ce77ddc72ab5638de5c44bfce2bb1b1cb5f897b92",
@@ -984,7 +984,7 @@
     },
     {
       "index": 75,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/budget_method.tex",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/budget_method.tex",
       "chars": 1213,
       "bytes": 1213,
       "sha256": "4993adbf12e9ec7ee819def5aa834fd7b9cfbe635c1f2ba787eebd9751f5ba4d",
@@ -997,7 +997,7 @@
     },
     {
       "index": 76,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/requirements-lock.txt",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/requirements-lock.txt",
       "chars": 1030,
       "bytes": 1030,
       "sha256": "6f07fb40ac6a1813fc49bc82425b37ed4f0c5a6096124fdd5e5a5596a0428e6a",
@@ -1010,7 +1010,7 @@
     },
     {
       "index": 77,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/requirements.txt",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/requirements.txt",
       "chars": 334,
       "bytes": 334,
       "sha256": "0e8cd1908900308961a0ea942cf2e128f11b2b807304b98ae2b647aee1c69646",
@@ -1023,7 +1023,7 @@
     },
     {
       "index": 78,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/2026-07/03_lora_longalign_matched_multiseed.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/2026-07/03_lora_longalign_matched_multiseed.sh",
       "chars": 8885,
       "bytes": 8885,
       "sha256": "dbe6b1979a6b7e4d900fa65fb5398223b37b4355773055e16b5dc620a5f04041",
@@ -1036,7 +1036,7 @@
     },
     {
       "index": 79,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/2026-07/04_lora_longalpaca_paper_geo_s42.sh",
       "chars": 13548,
       "bytes": 13548,
       "sha256": "b52061a038859d37dad4e6ff2324df8b69c48cbf8330d3cf81a2606b0bbac2f2",
@@ -1049,7 +1049,7 @@
     },
     {
       "index": 80,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/2026-07/15_track_z1_prepare_nogpu.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/2026-07/15_track_z1_prepare_nogpu.sh",
       "chars": 6246,
       "bytes": 6246,
       "sha256": "bab077c9cddb083c3e3f775a8c04732cc1a1fb25675ca31c4f71500b9ad93356",
@@ -1062,7 +1062,7 @@
     },
     {
       "index": 81,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/START_NOW.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/START_NOW.sh",
       "chars": 646,
       "bytes": 702,
       "sha256": "e6016ba9152a2c1dc13236d69f206c37e7f5761dd04db44273395aff35e679c3",
@@ -1075,7 +1075,7 @@
     },
     {
       "index": 82,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/eval_passkey.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/eval_passkey.py",
       "chars": 15683,
       "bytes": 15683,
       "sha256": "0c8f7f387afb86948d70596a943192b3cc8b66c2f002fd1e333f2ed5ac923edc",
@@ -1088,7 +1088,7 @@
     },
     {
       "index": 83,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/gqa_patch.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/gqa_patch.py",
       "chars": 4419,
       "bytes": 4419,
       "sha256": "fc85c2f07a0a8773e71427c4a280bd6deffd4944ee8d2f1dfd66f0f59a8339fd",
@@ -1101,7 +1101,7 @@
     },
     {
       "index": 84,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase11c_454m_scaling.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase11c_454m_scaling.py",
       "chars": 10412,
       "bytes": 10628,
       "sha256": "290958fee4ce0bb7c9bd098c213efb15c384f51530b8be5160c3f60f62b9f908",
@@ -1114,7 +1114,7 @@
     },
     {
       "index": 85,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase17b_full_grid_eval.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase17b_full_grid_eval.py",
       "chars": 15682,
       "bytes": 16248,
       "sha256": "b4667790c280116bd5a19a88294c8edd2f5da071d9fe8c8f857fb218a229c203",
@@ -1127,7 +1127,7 @@
     },
     {
       "index": 86,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase17c_extended_eval.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase17c_extended_eval.py",
       "chars": 15377,
       "bytes": 15825,
       "sha256": "35e1b1ec68c92c59d16164ab44ca5b4ee617a539d2bddd9537e542e73726c939",
@@ -1140,7 +1140,7 @@
     },
     {
       "index": 87,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase8d_scaling_law.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/phase8d_scaling_law.py",
       "chars": 10185,
       "bytes": 10250,
       "sha256": "e58e9107bea4ff9490a88363b50d3ccf8763abae89f1a4be5a1990d8aa464653",
@@ -1153,7 +1153,7 @@
     },
     {
       "index": 88,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/run_125m_gqa_experiment.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/run_125m_gqa_experiment.sh",
       "chars": 5343,
       "bytes": 5357,
       "sha256": "d6dc95ab926745c0dc8e334a006ae1b2c7ae4a4f896c1dbd8115a0e25b6df3ef",
@@ -1166,7 +1166,7 @@
     },
     {
       "index": 89,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/run_quality_454m.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/run_quality_454m.sh",
       "chars": 6103,
       "bytes": 7397,
       "sha256": "366f1cf3cdd0494ee6451bcd7efa68725615d6a2330a16f258ee631efb270250",
@@ -1179,7 +1179,7 @@
     },
     {
       "index": 90,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/run_quality_454m_eval_only.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/core_text_phases/run_quality_454m_eval_only.sh",
       "chars": 2245,
       "bytes": 2258,
       "sha256": "a1b2710ef5002b23ca1d89354743072ff142b7895aaf71e363a2efb0c1ef8902",
@@ -1192,7 +1192,7 @@
     },
     {
       "index": 91,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data/prepare_qwen_k32_natural_nll.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data/prepare_qwen_k32_natural_nll.py",
       "chars": 9829,
       "bytes": 9829,
       "sha256": "fd571e651d6a2ca31e0ddcbdb8aa24a813bfbafab7f5b098ad2183e708fde620",
@@ -1205,7 +1205,7 @@
     },
     {
       "index": 92,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data_prep/prepare_longbench_local_data.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data_prep/prepare_longbench_local_data.py",
       "chars": 9416,
       "bytes": 9416,
       "sha256": "b5a5f9693e4854dd11fd9312dda64b6718e4780d2161836e16443ea4a4fb0507",
@@ -1218,7 +1218,7 @@
     },
     {
       "index": 93,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data_prep/tokenize_synth.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/data_prep/tokenize_synth.py",
       "chars": 4943,
       "bytes": 4943,
       "sha256": "5b703b13788a8b04a780db3f82b5730ed7a3da3baf2ff8ad19c1eb7a92923d06",
@@ -1231,7 +1231,7 @@
     },
     {
       "index": 94,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/audit_native_attention_reference.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/audit_native_attention_reference.py",
       "chars": 5902,
       "bytes": 5902,
       "sha256": "2f5c2ea9fdc0dbc0f9f6465ee082809d0fff4df38eb7c172b0ba137981fc1fff",
@@ -1244,7 +1244,7 @@
     },
     {
       "index": 95,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/eval_allocation_dose_grid.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/eval_allocation_dose_grid.py",
       "chars": 16457,
       "bytes": 16458,
       "sha256": "918c33fdbe817b36a0b840d6ffac7fde0e8e6cb1ed2eb8f66f82daaf772fd9f6",
@@ -1257,7 +1257,7 @@
     },
     {
       "index": 96,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/eval_qwen_k32_natural_nll.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/eval_qwen_k32_natural_nll.py",
       "chars": 19401,
       "bytes": 19401,
       "sha256": "e35b300881f2b0a43e281f0a80f417d18a11199ad21b64b661eb7b3950efe57a",
@@ -1270,7 +1270,7 @@
     },
     {
       "index": 97,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/eval_zero_training_tournament.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/eval_zero_training_tournament.py",
       "chars": 36235,
       "bytes": 36251,
       "sha256": "b56260f14fdb598ef53484d6f9d360782010b7f017abb9f1f8871045bcf9f881",
@@ -1283,7 +1283,7 @@
     },
     {
       "index": 98,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/run_native_single_code_calibration.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/run_native_single_code_calibration.sh",
       "chars": 1574,
       "bytes": 1574,
       "sha256": "8209999c44d6e0e25075ec15ae645dcb80deb3ada94bd5733ccbe799101170f4",
@@ -1296,7 +1296,7 @@
     },
     {
       "index": 99,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/run_qwen_s2_baseline_completion.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/eval/run_qwen_s2_baseline_completion.sh",
       "chars": 3154,
       "bytes": 3154,
       "sha256": "a836f10b1f557dbef4891dfd23450b873541a3ceed9539839aee88523ad6730e",
@@ -1309,7 +1309,7 @@
     },
     {
       "index": 100,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/sparse_memory/__init__.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/sparse_memory/__init__.py",
       "chars": 75,
       "bytes": 75,
       "sha256": "5fdfb915e5f46ec61af470fb187a40da388b40e8b90c078186aef492ddae776a",
@@ -1322,7 +1322,7 @@
     },
     {
       "index": 101,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/lib/rope/knot_allocation.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/lib/rope/knot_allocation.py",
       "chars": 12091,
       "bytes": 12091,
       "sha256": "b7ccc66d58e4339dfa4454126cffc1131ee3db8971c05ffa0c466fe89ee0c9f6",
@@ -1335,7 +1335,7 @@
     },
     {
       "index": 102,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/lib/rope/length_conditioned_budgeted.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/lib/rope/length_conditioned_budgeted.py",
       "chars": 9368,
       "bytes": 9368,
       "sha256": "8c3147726321654d2cc9951d8767e4ae6131ffff433594158f3a7e49e8fef9bb",
@@ -1348,7 +1348,7 @@
     },
     {
       "index": 103,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/m4_max_36gb/queue_after_main_sweep.sh",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/m4_max_36gb/queue_after_main_sweep.sh",
       "chars": 2140,
       "bytes": 2143,
       "sha256": "39c88a2e99af6d14a145ad608ada4d764cecd203a86406d0934e86d5476d429f",
@@ -1361,7 +1361,7 @@
     },
     {
       "index": 104,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/supporting_eval/eval_passkey_scratch.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/supporting_eval/eval_passkey_scratch.py",
       "chars": 26395,
       "bytes": 26395,
       "sha256": "6970dcaed9d14f1cf4ebb74e1772848c11bce466d4edf0dc2174113c46b4f8d4",
@@ -1374,7 +1374,7 @@
     },
     {
       "index": 105,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/validate_rebuttal_evidence_bundle.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/validate_rebuttal_evidence_bundle.py",
       "chars": 8029,
       "bytes": 8029,
       "sha256": "6770b6fe83c3131cd7efc3af3d4d94a14fafbebf424a196e689cb2f1c5787d54",
@@ -1387,7 +1387,7 @@
     },
     {
       "index": 106,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/video_temporal/cogvideox_evq_finetune.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/video_temporal/cogvideox_evq_finetune.py",
       "chars": 22283,
       "bytes": 22292,
       "sha256": "b16476e53aabb455e51547eac958a218bb134007b6ea9299fc75ccb94c15eda8",
@@ -1400,7 +1400,7 @@
     },
     {
       "index": 107,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/video_temporal/eval_temporal_precision.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/video_temporal/eval_temporal_precision.py",
       "chars": 25306,
       "bytes": 25306,
       "sha256": "211776e137ec731068f49c1c37001e5d3819acb8b4b7500ae6e659230f08eefd",
@@ -1413,7 +1413,7 @@
     },
     {
       "index": 108,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/fixtures/target_free_contexts/longbench_fixture.jsonl",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/fixtures/target_free_contexts/longbench_fixture.jsonl",
       "chars": 634,
       "bytes": 634,
       "sha256": "4d54a24551a19f5a0f2807660d93336f9d3e688d2c5d2177909eef7171731ac3",
@@ -1426,7 +1426,7 @@
     },
     {
       "index": 109,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_challenger_remediation_verification.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_challenger_remediation_verification.py",
       "chars": 11512,
       "bytes": 11512,
       "sha256": "e4be12acb2871a5cb43f4db6d583f1854850513f52366b0fda4d6315df1070ee",
@@ -1439,7 +1439,7 @@
     },
     {
       "index": 110,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_cross_cache.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_cross_cache.py",
       "chars": 1703,
       "bytes": 1703,
       "sha256": "8c68e71688861a39219f551e70bb673dab463895867f886dab2eef5f1ef28099",
@@ -1452,7 +1452,7 @@
     },
     {
       "index": 111,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_matched_transfer_round.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_matched_transfer_round.py",
       "chars": 7673,
       "bytes": 7673,
       "sha256": "ba3ad3eb57b86efce7546cda29c3e445602da05757ac1c73649ff3570b4cba41",
@@ -1465,7 +1465,7 @@
     },
     {
       "index": 112,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_olmo_slotwise_gain.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_olmo_slotwise_gain.py",
       "chars": 2711,
       "bytes": 2711,
       "sha256": "937767f09595edda76323449778fce2388c23a42aee8fa12869dbcdfa6386b12",
@@ -1478,7 +1478,7 @@
     },
     {
       "index": 113,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_orbit_regression.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_orbit_regression.py",
       "chars": 1766,
       "bytes": 1766,
       "sha256": "234c048b006f4fa5a92beb3261607e82579a34093347a06805e0a3645f4a2392",
@@ -1491,7 +1491,7 @@
     },
     {
       "index": 114,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_qwen_k32_far_evidence_qa.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_qwen_k32_far_evidence_qa.py",
       "chars": 6841,
       "bytes": 6841,
       "sha256": "7a2cfcd746e1b1fd1533d5463f379010e7e0b1aba68dd34abcebbbba4fb298f8",
@@ -1504,7 +1504,7 @@
     },
     {
       "index": 115,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_qwen_k32_natural_target_audit.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_qwen_k32_natural_target_audit.py",
       "chars": 3076,
       "bytes": 3076,
       "sha256": "a82c9f1c36467f418ecb7988197590660d15e7fb7ab6751085dbe9ae43e3ab1d",
@@ -1517,7 +1517,7 @@
     },
     {
       "index": 116,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_scale_transport_math.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_scale_transport_math.py",
       "chars": 3292,
       "bytes": 3292,
       "sha256": "62a4759520e8340d647a52b577e9dc03d36803c744ace4396a4b565a1d8bb4c0",
@@ -1530,7 +1530,7 @@
     },
     {
       "index": 117,
-      "path": "/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_yarn_checkpoint_inv_freq.py",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/tests/test_yarn_checkpoint_inv_freq.py",
       "chars": 4068,
       "bytes": 4068,
       "sha256": "93e50cbde77138e479a564161e909f40b17f53bf5f1e03bef877051ea1e7e595",
@@ -1543,7 +1543,7 @@
     },
     {
       "index": 118,
-      "path": "/Users/misaya.yanghejazfs.com.au/Downloads/EVQ_Cosh_Rebuttal_Playbook_Optimized_v4.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/EVQ_Cosh_Rebuttal_Playbook_Optimized_v4.md",
       "chars": 18991,
       "bytes": 18993,
       "sha256": "fc5ac8ffd63c88e328a41f6b63f13585ef2e978dc2b02b242bb50d2750453214",
@@ -1556,7 +1556,7 @@
     },
     {
       "index": 119,
-      "path": "/Users/misaya.yanghejazfs.com.au/Downloads/OLMo2_1B_EVQ_Single_Arm_Experiment_Plan.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/OLMo2_1B_EVQ_Single_Arm_Experiment_Plan.md",
       "chars": 11521,
       "bytes": 16464,
       "sha256": "63311ca4396a3ef1da34b5f9fb8c1cde07a6d4bfb03a87fde74dd8006f84ccc8",
@@ -1569,7 +1569,7 @@
     },
     {
       "index": 120,
-      "path": "/Users/misaya.yanghejazfs.com.au/Downloads/ICLR2027_EVQ_优化执行方案.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/ICLR2027_EVQ_优化执行方案.md",
       "chars": 24537,
       "bytes": 37812,
       "sha256": "ef235c51d2ee6850c0ea067554fb80565d031de74756dca7104f6769ab09cf88",
@@ -1582,7 +1582,7 @@
     },
     {
       "index": 121,
-      "path": "/Users/misaya.yanghejazfs.com.au/Desktop/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
+      "path": "/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/RoPE_Allocation_Core_Problem_for_Pro_20260910.md",
       "chars": 3169,
       "bytes": 6765,
       "sha256": "86a0bdced87fd82593689ddb587bd75e4ad514216acea7c387df9a4a2e007856",

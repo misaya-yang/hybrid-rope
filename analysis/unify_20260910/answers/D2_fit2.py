@@ -10,7 +10,7 @@ H = 短端洞风险：Σ_g (ρ_g − ρ0)_+^p，g∈23..39（超容差周期洞�
 import json, math, itertools
 import numpy as np
 
-ROOT = '/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT = '/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 d = json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M = d['methods']
 W, S, L = 32768, 4.0, 131072

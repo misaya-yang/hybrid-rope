@@ -26,9 +26,9 @@
 - `docs/research/PARALLEL_NONGEOMETRIC_20X10_PLAN_20260910.md`（227 行）：E7"160×低估"原始表述处（第 15、30、48 行）。
 - `docs/research/PARALLEL_NONGEOMETRIC_20X10_AUDIT_20260910.md`（127 行）：E7 161× 的 BF16 实现纠错（第 27–40 行）、gain 独立变量纠错（第 42–46 行）、E8 行（第 21 行）。
 - `docs/research/USER_PROMPT_TRANSCRIPT_20260909.md`（1,220 行）：09-09 用户指令转录（第 43、690、996 行等）。
-- 桌面外部材料：`/Users/misaya.yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md`（约 21KB，10 问）、`RoPE_Allocation_Theory_Questions_for_Pro_20260910.md`（08:43 交付）、`RoPE_Allocation_Core_Problem_for_Pro_20260910.md`（09:48 交付）；`~/Downloads/Nongeometric_RoPE_Theory_and_Experiments_20260910.md`（6Pro 第一份分析，06:52 到达，本地 Downloads 目录当前检索未见同名文件，仅线程引用为出处）。
+- 桌面外部材料：`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Desktop/Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md`（约 21KB，10 问）、`RoPE_Allocation_Theory_Questions_for_Pro_20260910.md`（08:43 交付）、`RoPE_Allocation_Core_Problem_for_Pro_20260910.md`（09:48 交付）；`~/Downloads/Nongeometric_RoPE_Theory_and_Experiments_20260910.md`（6Pro 第一份分析，06:52 到达，本地 Downloads 目录当前检索未见同名文件，仅线程引用为出处）。
 - 外部评审粘贴源（codex attachments）：`~/.codex/attachments/178672bd-…/pasted-text.txt`（"姐夫，可以统一…"= 6Pro 第二稿正文）；`~/.codex/attachments/f295d4fc-…/pasted-text.txt`（5.6Pro/Codex 半对分析）。
-- MrRoPE 论文：`/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md`（11:37 指令点名精读对象）。
+- MrRoPE 论文：`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md`（11:37 指令点名精读对象）。
 - 实验代码：`experiments/nongeometric_screen/`（binding_swap.py、capture.py、local_precision.py、cross_model.py 等）。
 
 ---
@@ -261,7 +261,7 @@
 
 1. [09-10 06:06:06] "你让子代理输出一个问题清单到桌面，就是结合你和qwen的思考，和方案，以及实验，我作为附件发到6pro，让它研究下"
 2. [06:46:56] "你结合5.6pro这个分析看看？"
-3. [06:52:37] "6 pro的分析也到了 /Users/misaya.yanghejazfs.com.au/Downloads/Nongeometric_RoPE_Theory_and_Experiments_20260910.md"
+3. [06:52:37] "6 pro的分析也到了 /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/Nongeometric_RoPE_Theory_and_Experiments_20260910.md"
 4. [07:00:21] "对了，对于新实验，你可以用3B去做……还是那句话，尽可能线节省GPU时间"
 5. [07:27:32] "现在你需要额外考虑一个问题，MrPro的超长程为什么这么强，我们在32K赢，是不是差别就是需要迁移一部分能力过去长程？我理解根本就不存在所谓的最佳规则，还是一开始我们研究的水床不等式"
 6. [07:48:22] "你的研究思路错了，很明显128K输是长程，低频管长程，变化的中频如何变化中怎么更好照顾长程，你想过没有？"
@@ -273,11 +273,11 @@
 12. [09:17:56] "不是等价，我们有一个考60分的，你他妈搞一个考30分的方法去做实验，你在想什么？"
 13. [09:20:19] "而且，你为什么不先测PPL和passkey 浪费无限多的时间去跑长程，而且我们都重点关注长程了，你去做32K干嘛？你不会动一下你的脑子吗？"
 14. [09:33:29] "你根本就不知道你做这些实验的意义是什么，在理论就焊死了……本质就是分配问题，又回到evq那个理论了，现在我们知道了规则，我们需要找更好的规则，你所有的实验室要为这个服务的……这个成功了，那个失败了没有任何意义"
-15. [09:35:58] "我先关机了，你就思考这个问题，思考不出来不要结束任务，这是个纯粹的数学问题了"；"ssh -p 27741 root@connect.westc.seetacloud.com 这个是无卡模式，你可以分析重要结果"
+15. [09:35:58] "我先关机了，你就思考这个问题，思考不出来不要结束任务，这是个纯粹的数学问题了"；"ssh -p 27741 [REDACTED_EMAIL] 这个是无卡模式，你可以分析重要结果"
 16. [09:46:33] "你先把问题总结一下，我去拿给pro，然后你自己再思考"
 17. [11:00:45] "你看看glm的是否有用？"
 18. [11:02:27] "你这是6pro的分析：（姐夫，可以统一……）"
-19. [11:05:51] "我已经有卡了，你可以验证 ssh -p 27741 root@connect.westc.seetacloud.com"
+19. [11:05:51] "我已经有卡了，你可以验证 ssh -p 27741 [REDACTED_EMAIL]"
 20. [11:16:21] "你刚才思考了一个小时一点准备都没有吧，要等我把pro的发给你你来验证pro的思考？我说有卡了，你还不信，浪费6min去测试，你到底想干嘛？"
 21. [11:23:19] "我问你，你一个小时啥也没做，我就不说了，我上一句话质问你，然后你就又去推导，那我的GPU怎么办？这个逻辑是不是对你来说太难了啊？"
 22. [11:24:09] "你该猜为什么不知道呢？你好好搜索整个transcript，你犯了多少次错，你告诉我？"
@@ -287,7 +287,7 @@
 26. [11:30:17] "你是不是1 + 1 都做不出来？"
 27. [11:32:36] "现在怎么办"
 28. [11:33:02] "你觉得6pro的方案可行吗？"
-29. [11:37:52] "使用30个代理并行研究（其中20个sol,10个astra），解决这个问题，其中/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md 对于这个 和我们的evq进行研究，其他的阅读所有transcript的失败，阅读所有pro的文档，阅读整个项目，不要read，直接加载所有内容到上下文，给我一个100%成功的解决方案，统一这个理论"
+29. [11:37:52] "使用30个代理并行研究（其中20个sol,10个astra），解决这个问题，其中/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md 对于这个 和我们的evq进行研究，其他的阅读所有transcript的失败，阅读所有pro的文档，阅读整个项目，不要read，直接加载所有内容到上下文，给我一个100%成功的解决方案，统一这个理论"
 30. [11:39:30] "你不用承若，给不出100%，就把token耗尽，我还有两个重置卡，token耗尽还做不出来，我一辈子不会使用openAI的产品，我直接去购买Claude，他比你这条傻狗强1000000000000000000000000倍"
 31. [承前，USER_PROMPT_TRANSCRIPT_20260909.md 第 43 行] "请先系统核对截至 2026-09 的真实架构和最近工作，包括 DeepSeek V4、Qwen3.8、GLM-5.3、Kimi K3……不要因为我们已有 EVQ / frequency-allocation 结果就强行围绕它展开；只有它真正增强新主线时才复用。"
 32. [同上 第 996 行] "这是我让GPT6pro生成的一份详细的计划：/Users/yang/Downloads/hybrid_rope_iclr2027_theory_experiment_dossier_20260904.md 你可以进行精细阅读，看是否会修改你刚才的一些想法"

@@ -53,14 +53,14 @@ Ponytail 已通过 Desktop 自带插件管理器卸载，旧版 Build Web Apps �
 ===== [2026-09-07T02:42:29.208Z] <assistant> =====
 已完成。
 
-- 升级 [AGENTS.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)：修正过时实验约束和指标解释，补齐操作入口、验证命令。
+- 升级 [AGENTS.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)：修正过时实验约束和指标解释，补齐操作入口、验证命令。
 - 已卸载 **Ponytail 及其 6 个 skills**。
 - 删除内容等价的旧 Build Web Apps 安装，以及仅重复 harness 通用规则的 `code-simplifier`。
 - 修复、去重或收窄 **27 个 skills**，保留独立功能、脚本和依赖。
 
 格式校验通过；三个项目的新运行时加载均无错误。论文、归档及原有未跟踪文件未变，未提交或推送。
 
-未验证：完整科研测试因本机缺少 PyTorch 未执行；未重启当前应用。删除依据、加载关系和备份见[清理报告](/Users/misaya.yanghejazfs.com.au/.local/share/codex-maintenance/20260907T023005Z/REPORT.md)。
+未验证：完整科研测试因本机缺少 PyTorch 未执行；未重启当前应用。删除依据、加载关系和备份见[清理报告](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.local/share/codex-maintenance/20260907T023005Z/REPORT.md)。
 
 <oai-mem-citation>
 <citation_entries>
@@ -84,7 +84,7 @@ MEMORY.md:503-515|note=[preserved scientific prose skill scope]
 现有术语文档属于早期实验口径，我会新增一份活动研究参考文档承接这些内容，并在 INDEX.md 中加入口，避免混用。AGENTS.md 也会明确规定：研究数值、公式、问题说明和具体实验步骤应放在索引可达的文档中。
 
 ===== [2026-09-07T02:46:24.721Z] <user> =====
-请参考/Users/misaya.yanghejazfs.com.au/Downloads/RoPE\_ICLR2027\_Cross\_Audit\_Theory\_and\_Codex\_Plan\_20260906.md 文件，我们需要对论文进行一次彻底的大重构，所以需要你优化目前0906分之文档， agent.md 放核心约束（例如先规划好，不要盲目GPU实验，实验规则，项目规范等） index.md放详细文件索引， readme.md放项目详情
+请参考/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE\_ICLR2027\_Cross\_Audit\_Theory\_and\_Codex\_Plan\_20260906.md 文件，我们需要对论文进行一次彻底的大重构，所以需要你优化目前0906分之文档， agent.md 放核心约束（例如先规划好，不要盲目GPU实验，实验规则，项目规范等） index.md放详细文件索引， readme.md放项目详情
 
 ===== [2026-09-07T02:46:40.666Z] <assistant> =====
 我会先阅读这份交叉审计文件，再按你指定的分工重整 0906 分支文档：AGENTS.md 放核心约束，INDEX.md 放详细文件索引，README.md 放项目详情和重构背景。审计中的研究建议会注明状态，并核对现有证据与执行边界。
@@ -101,11 +101,11 @@ MEMORY.md:503-515|note=[preserved scientific prose skill scope]
 ===== [2026-09-07T02:59:14.637Z] <assistant> =====
 已按你的分工重整 `main_0726_09_06`：
 
-- [AGENTS.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)：71 行核心约束，突出先规划、实验授权、证据规则和项目规范。
-- [INDEX.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md)：详细文件索引，保留原有全部目标，补齐审计、Round12、代码及归档入口。
-- [README.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/README.md)：项目详情、重构问题、预期贡献和现有缺口。
+- [AGENTS.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)：71 行核心约束，突出先规划、实验授权、证据规则和项目规范。
+- [INDEX.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md)：详细文件索引，保留原有全部目标，补齐审计、Round12、代码及归档入口。
+- [README.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/README.md)：项目详情、重构问题、预期贡献和现有缺口。
 
-审计原文已完整引入，[REVISION_BRIEF v5](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/REVISION_BRIEF.md) 承接具体规划；旧“冻结论文”和默认续跑要求已标明被取代。
+审计原文已完整引入，[REVISION_BRIEF v5](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/REVISION_BRIEF.md) 承接具体规划；旧“冻结论文”和默认续跑要求已标明被取代。
 
 218 处引用检查及格式检查通过。**本次只重构文档**，未改代码、TeX/PDF，未启动 GPU、提交或推送；审计的证明、结果与缺失附件尚未独立验证。
 
@@ -186,7 +186,7 @@ MEMORY.md:503-515|note=[preserved scientific prose skill scope]
 发现了两个会直接影响新实验的问题：旧评分器把“正确答案开头加多余文字”也计为严格正确；旧 Y2 的 ramp 和幅度与 YaRN 官方实现不一致。我会保留旧结果原貌，新增修正后的评测入口，并用保存的输出复算差异。服务器仍是无卡模式；当前数据盘配额显示为 50 GiB、可用约 25 GiB，需要按这次实际容量规划。
 
 ===== [2026-09-07T05:49:42.727Z] <user> =====
-你别看错文档了啊，v5是另一个实验的，是这个：/Users/misaya.yanghejazfs.com.au/Downloads/RoPE\_ICLR2027\_Cross\_Audit\_Theory\_and\_Codex\_Plan\_20260906.md
+你别看错文档了啊，v5是另一个实验的，是这个：/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE\_ICLR2027\_Cross\_Audit\_Theory\_and\_Codex\_Plan\_20260906.md
 
 ===== [2026-09-07T05:49:49.662Z] <assistant> =====
 收到，我刚才把 v5 当作本轮依据不准确。现在直接以你指定的 Downloads 文件为本轮实验来源，逐项核对其中 E0–E3 的模型、对照和预算安排；其他实验的 v5 不再作为本轮依据。已发现的评分和 YaRN 实现问题会对照这份文件继续修复。
@@ -237,7 +237,7 @@ MEMORY.md:503-515|note=[preserved scientific prose skill scope]
 
 执行包已同步服务器：29 项 CPU 测试、40 条任务命令校验通过，包含流水执行、超时停止和报告汇总，未启动 GPU。
 
-新 session 让 Luna 读取 [执行交接](/Users/misaya.yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA_EXECUTION.md) 即可。先跑 E0/E1；后续训练预算按预检计时冻结，避免 GPU 空等分析。
+新 session 让 Luna 读取 [执行交接](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/cross-audit-20260907/LUNA_EXECUTION.md) 即可。先跑 E0/E1；后续训练预算按预检计时冻结，避免 GPU 空等分析。
 
 <oai-mem-citation>
 <citation_entries>
@@ -252,7 +252,7 @@ MEMORY.md:397-397|note=[paired evidence reporting scope]
 [BOILERPLATE recommended_plugins stripped][AGENTS.md boilerplate — identical to repo AGENTS.md as of 2026-09-07, read once in earlier session notes][BOILERPLATE environment_context stripped]
 
 ===== [2026-09-07T07:35:20.145Z] <user> =====
-目前luna模型在按部就班的进行实验，我们来思考如何处理论文重构的事情，也就是在MrRoPE与我们ICLR版本研究的novelty很相似的情况下，我们要如何修改论文，如何处理实验，如何才能做到同样足够solid accept？ 你结合pro模型的重构方案，和MrRoPE原文：/Users/misaya.yanghejazfs.com.au/Downloads/RoPE\_Papers/Markdown/5551\_MrRoPE\_Mixed\_radix\_Rotary.md 和我们仓库现状， 目前分支是轻量版全力冲刺ICLR，还有分支更加全面但是偏向于evq-cosh。 请你深入分析
+目前luna模型在按部就班的进行实验，我们来思考如何处理论文重构的事情，也就是在MrRoPE与我们ICLR版本研究的novelty很相似的情况下，我们要如何修改论文，如何处理实验，如何才能做到同样足够solid accept？ 你结合pro模型的重构方案，和MrRoPE原文：/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE\_Papers/Markdown/5551\_MrRoPE\_Mixed\_radix\_Rotary.md 和我们仓库现状， 目前分支是轻量版全力冲刺ICLR，还有分支更加全面但是偏向于evq-cosh。 请你深入分析
 
 ===== [2026-09-07T07:35:31.549Z] <assistant> =====
 我会先对齐 MrRoPE 原文、你指定的 Pro 重构方案和当前论文，再按需要查完整版分支的证据，判断哪些 novelty 已重叠、哪些贡献还能成立，以及现有实验能否支撑新主线。
@@ -284,7 +284,7 @@ MEMORY.md:397-397|note=[paired evidence reporting scope]
 
 这里真正值得争取的是**可重复的能力或成本优势，以及能指导选择的解释**。目前 E1/E2 正在检验这些条件，还不能提前认定它们成立，也不能承诺 solid accept。
 
-我依据的是你指定的 [9 月 6 日 Pro 交叉审核方案](/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_ICLR2027_Cross_Audit_Theory_and_Codex_Plan_20260906.md)、[MrRoPE 原文](/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md)、当前 TeX/PDF，以及 `main_0726` 中相关旧稿和证据。
+我依据的是你指定的 [9 月 6 日 Pro 交叉审核方案](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_ICLR2027_Cross_Audit_Theory_and_Codex_Plan_20260906.md)、[MrRoPE 原文](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md)、当前 TeX/PDF，以及 `main_0726` 中相关旧稿和证据。
 
 **首先，MrRoPE 与我们的重叠，比“都改了频率”更深。**
 
@@ -304,7 +304,7 @@ h_j=\sum_{d<j}\log\lambda_d,
 
 在固定首频率、允许正 radix 因子的范围内，两者就是累积与差分的关系。我们用指数坐标描述整张表，MrRoPE 用相邻尺度因子描述变换；**换坐标本身不能证明发现了新的设计自由度**。如果进一步限制 \(\lambda_j\ge1\)、分段或单调性，可实现的子类才会不同。MrRoPE 的具体 Uni/Pro 在保护段存在时，也共享相同端点，只改变中间频率。[MrRoPE §3](https://arxiv.org/html/2601.22181v1)
 
-因此，当前 [Introduction 的贡献列表](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:82) 需要这样调整：
+因此，当前 [Introduction 的贡献列表](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/sections/01_intro.tex:82) 需要这样调整：
 
 | 当前贡献 | 我的判断 | 重构中的位置 |
 |---|---|---|
@@ -333,7 +333,7 @@ LeRoPE 已经研究了学习频率、用独立运行学得的频率冻结训练�
 
 最有价值的旧结果，并非全部都是“Cosh 获胜”。
 
-151.9M 三种子实验中，固定训练 support 时，Cosh 在 2K 的平均 tail NLL 差为 **−0.14571**；允许目标匹配的 support 变换后，同一长度变成 **+0.45959**。训练窗口内还有 **+0.02619** 的平均代价。[三种子结果 owner](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
+151.9M 三种子实验中，固定训练 support 时，Cosh 在 2K 的平均 tail NLL 差为 **−0.14571**；允许目标匹配的 support 变换后，同一长度变成 **+0.45959**。训练窗口内还有 **+0.02619** 的平均代价。[三种子结果 owner](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md)
 
 这说明两件不同的事：
 
@@ -348,7 +348,7 @@ LeRoPE 已经研究了学习频率、用独立运行学得的频率冻结训练�
 
 - 旧 frozen 实验里，粗 ramp 已能接近 detailed profile，因此 detailed profile 的必要性没有被识别出来。
 - 当前 Z 是经过历史结果选择的 **log-p2 movement + 固定 gain**，不是 Cosh 变分解。
-- Z 的历史 Native PPL retention 为 **0.875302**，对应那次旧门槛；它没有达到现有 0.88 要求，更不能单凭这个数证明指令、格式和完整生成保持。[Z 的定义与选择历史](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md)
+- Z 的历史 Native PPL retention 为 **0.875302**，对应那次旧门槛；它没有达到现有 0.88 要求，更不能单凭这个数证明指令、格式和完整生成保持。[Z 的定义与选择历史](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/theory/SINGLE_STATIC_LOG_P2_SELECTION_AND_LORA_20260903.md)
 
 所以，**不能用 Cosh 定理作为统一方法的理论，再用另一张 Z 表的成熟模型结果作为它的主实证。**两者可以出现在同一研究中，但必须由一个真正共同、经过检验的问题连接起来。
 
@@ -430,9 +430,9 @@ S_L(\Omega,b)\ge q,\
 
 其中有几个容易影响投稿结论的具体点。
 
-**当前准备包保存中间 checkpoint，但默认任务主要评估最终 checkpoint。**生成的 `paired_training_curves.csv` 记录的是 CE、KL、tokens 和时间。因此，跑完它不能直接画出“生成能力—计算量”曲线；还需要评测已保存的共同里程碑。这项补充通常比新增训练臂更有价值。[任务生成代码](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/make_plan.py:48)
+**当前准备包保存中间 checkpoint，但默认任务主要评估最终 checkpoint。**生成的 `paired_training_curves.csv` 记录的是 CE、KL、tokens 和时间。因此，跑完它不能直接画出“生成能力—计算量”曲线；还需要评测已保存的共同里程碑。这项补充通常比新增训练臂更有价值。[任务生成代码](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/make_plan.py:48)
 
-**当前准备版交替训练 8K/16K。**如果 Luna 沿用该版本，16K 是适配后的已见长度。可以称为相对原始 4K 模型的上下文延展；要主张超出本轮训练长度的泛化，需要更长的独立测试。不能继续沿用 Pro 优先 8K 配方下的措辞。[当前训练约定](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md:111)
+**当前准备版交替训练 8K/16K。**如果 Luna 沿用该版本，16K 是适配后的已见长度。可以称为相对原始 4K 模型的上下文延展；要主张超出本轮训练长度的泛化，需要更长的独立测试。不能继续沿用 Pro 优先 8K 配方下的措辞。[当前训练约定](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md:111)
 
 **现有验证集仍是 development。**它适合筛查大效应和协议问题，不能因为实例不同就重新命名为独立确认。32 个组也很难支撑几百分点的小优势；若最终差距较小，应把资源集中到主对比的样本量，而非增加模型数量。
 
@@ -523,9 +523,9 @@ Luna 的最终总结确认 E1 已收尾。我也看到你随后要求启动 E2�
 ===== [2026-09-07T08:09:07.779Z] <assistant> =====
 已按**从零训练＋轻量适配＋零训练部署三合一，寻找 SOTA**落成三份文档，并更新 INDEX、README、重构说明和 HANDOFF：
 
-1. [研究思考与统一计划](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)
-2. [可直接交给 Pro 的提示词](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md)
-3. [Luna E1 结果与 ROI 调整建议](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md)
+1. [研究思考与统一计划](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)
+2. [可直接交给 Pro 的提示词](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md)
+3. [Luna E1 结果与 ROI 调整建议](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md)
 
 你的理解大体正确：MrRoPE 高频频率保持、主要改变中段，低频则**统一除以倍率 \(s\)**，不是统一改 base。文档分别讨论了“低频是否减慢过多”“槽位如何分配”“区域过渡如何设计”，要求 Pro 给出贯穿三阶段的共同构造。
 
@@ -560,7 +560,7 @@ MEMORY.md:394-397|note=[preserved focused reconstruction and paired Native-long 
 - 单臂空间要求 **8.53 GiB**；三臂最终权重加余量共 **19.60 GiB**，当前 **22.22 GiB 可用，足够**。
 - 12 项 CPU 测试、9 条任务参数校验通过。未启动 GPU，未删除旧资产。
 
-已改 [训练代码](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/train.py)、计划生成器及相关测试。[新执行计划](/Users/misaya.yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/unified-frequency-20260907/jobs_e2_final_only_1528.json)已同步服务器，Luna 已收到路径、完整 SHA 和执行说明。
+已改 [训练代码](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/train.py)、计划生成器及相关测试。[新执行计划](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.local/share/hybrid-rope-maintenance/unified-frequency-20260907/jobs_e2_final_only_1528.json)已同步服务器，Luna 已收到路径、完整 SHA 和执行说明。
 
 ===== [2026-09-07T08:20:16.929Z] <user> =====
 我们现在的lora训练是最佳状态了吗？
@@ -573,7 +573,7 @@ MEMORY.md:394-397|note=[preserved focused reconstruction and paired Native-long 
 
 先明确：准备让 Luna 执行的 **E2 是全参数适配**，AdamW 是优化器；**E3 才是 LoRA，目前尚未执行。**
 
-现有 [LoRA 配置](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/training.py:46) 是：
+现有 [LoRA 配置](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/experiments/cross_audit/training.py:46) 是：
 
 - `rank=16、alpha=32、dropout=0`
 - 覆盖 Attention 的 Q/K/V/O 和 MLP 的 gate/up/down
@@ -687,7 +687,7 @@ sL_0\omega'_j\le L_0\omega_j
 
 **还没闭合的是“这些条件怎样确定实际频率数组”。这是需要继续解决的理论问题，不能用更多候选实验来替代。**
 
-我已把这次推导和“理论先行”的顺序写入[研究计划](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)，并修正了 [Pro 提示词](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md)。本轮没有新增实验。
+我已把这次推导和“理论先行”的顺序写入[研究计划](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)，并修正了 [Pro 提示词](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_PRO_PROMPT_20260907.md)。本轮没有新增实验。
 
 <oai-mem-citation>
 <citation_entries>
@@ -769,7 +769,7 @@ J(y)=2-\operatorname{sinc}(y-q)-\operatorname{sinc}(sy-q),
 
 另外，[CoPE](https://arxiv.org/html/2602.05258v1) 已研究低频软裁剪和平滑过渡，因此这两个关键词也不能单独承担我们的新颖性。
 
-本轮的实际产物是[独立推导报告](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md)和[可复现的 CPU 检查](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/scripts/analysis/verify_general_rope_allocation.py)。**严格无数据的新分配规则，以及足够强的新颖性，仍是未解决部分；我不会用这些数学检查包装成已经突破。**
+本轮的实际产物是[独立推导报告](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_GENERAL_ALLOCATION_DERIVATION_20260907.md)和[可复现的 CPU 检查](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/scripts/analysis/verify_general_rope_allocation.py)。**严格无数据的新分配规则，以及足够强的新颖性，仍是未解决部分；我不会用这些数学检查包装成已经突破。**
 
 <oai-mem-citation>
 <citation_entries>
@@ -810,7 +810,7 @@ MEMORY.md:3-4|note=[checked workspace and machine scope for local CPU-only resea
 
 这样每次实验都决定下一步，避免重新进入曲线盲猜。创新点应从可重复的改进及其机制中形成。
 
-已更新[研究计划](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)、INDEX、README、HANDOFF，并将通用优化路线标为历史探索。链接、参数计算及格式检查通过；新模型实验尚未执行，Luna 队列、论文和 Git 提交均未改动。
+已更新[研究计划](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_UNIFIED_PLAN_20260907.md)、INDEX、README、HANDOFF，并将通用优化路线标为历史探索。链接、参数计算及格式检查通过；新模型实验尚未执行，Luna 队列、论文和 Git 提交均未改动。
 
 <oai-mem-citation>
 <citation_entries>
@@ -822,7 +822,7 @@ MEMORY.md:3-4|note=[workspace and machine scope]
 </oai-mem-citation>
 
 ===== [2026-09-07T09:27:49.735Z] <user> =====
-pro的文档也到了，你结合看看：/Users/misaya.yanghejazfs.com.au/Downloads/RoPE\_Scale\_Transport\_Method\_and\_Codex\_20260907.md
+pro的文档也到了，你结合看看：/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE\_Scale\_Transport\_Method\_and\_Codex\_20260907.md
 
 ===== [2026-09-07T09:27:56.639Z] <assistant> =====
 我会先读这份 Pro 文档，对照当前 MrRoPE、CoPE 和本方方法的计划，判断哪些推导与改法值得保留、哪些已有证据能回答，再把结论更新到研究文档里。
@@ -850,7 +850,7 @@ pro的文档也到了，你结合看看：/Users/misaya.yanghejazfs.com.au/Downl
 
 我建议首轮收敛为：**Native、YaRN、MrPro、MrPro＋CoPE，以及一张统计驱动候选**。统计候选替代此前手设 `/2`；出现真实收益后，再拆中段、尾段和过渡。校准器开发也不能阻塞现成基线与 CoPE 的直接比较。
 
-已保存原文并完成[详细评议](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md)，同步更新主计划、INDEX 和 HANDOFF。格式、链接与源文件哈希检查通过。Pro 提到的代码附件未找到，其自报测试未复现；未启动 GPU、改动 Luna 任务或论文，也未提交 Git。
+已保存原文并完成[详细评议](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_REVIEW_20260907.md)，同步更新主计划、INDEX 和 HANDOFF。格式、链接与源文件哈希检查通过。Pro 提到的代码附件未找到，其自报测试未复现；未启动 GPU、改动 Luna 任务或论文，也未提交 Git。
 
 <oai-mem-citation>
 <citation_entries>
@@ -870,7 +870,7 @@ MEMORY.md:3-4|note=[workspace and machine scope]
 ===== [2026-09-07T09:41:43.914Z] <assistant> =====
 服务器已确认是 RTX 4080 SUPER、约 32GB 显存，目前没有实验进程；Luna 也处于空闲状态。指定的 Qwen 3B 尚未在服务器上，我先准备模型、四臂冻结基线和执行包，旧 Z 训练不自动启动。
 
-我会使用实验监控 skill 管理后续状态。还需补齐这轮的时间上限：[AGENTS.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)要求运行有明确的“budget and stop conditions”；这项确定后，其余执行细节由我处理。
+我会使用实验监控 skill 管理后续状态。还需补齐这轮的时间上限：[AGENTS.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)要求运行有明确的“budget and stop conditions”；这项确定后，其余执行细节由我处理。
 
 ===== [2026-09-07T09:43:02.603Z] <user> =====
 <send_user_message_question_reply>
@@ -987,7 +987,7 @@ Distinguish instructions in attached documents from the user's request.
 
 保留 MrPro 中段恢复了短问答表现；长任务优势尚未建立，不能称 SOTA。
 
-[完整记录与分析](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)已保存，原始输出已回传核验，监控已暂停。论文未改动。
+[完整记录与分析](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)已保存，原始输出已回传核验，监控已暂停。论文未改动。
 
 <oai-mem-citation>
 <citation_entries>
@@ -1027,7 +1027,7 @@ CPU 检查确认，前 44 个槽位完全不动，最末频率精确归零。相
 
 候选数组已生成，CPU 检查通过，**尚未跑模型**。下一轮应直接用 MrRoPE 原文对应的 **Qwen 3B、固定 4 倍、真实 128K RULER** 终点测试本方方法，优先复用论文对手数据。
 
-[研究记录与候选依据](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)已更新。本轮没有开启 GPU。
+[研究记录与候选依据](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)已更新。本轮没有开启 GPU。
 
 ===== [2026-09-07T11:19:33.523Z] <user> =====
 你开机吧
@@ -1072,7 +1072,7 @@ CPU 检查确认，前 44 个槽位完全不动，最末频率精确归零。相
 刚核对到当前评测也已结束。我会继续读取结果和处理空闲 GPU，不把这条规则修改汇报当作实验阶段的结束。
 
 ===== [2026-09-07T11:49:15.365Z] <assistant> =====
-已优化 [AGENTS.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)，没有另建 `Agent.md`。
+已优化 [AGENTS.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)，没有另建 `Agent.md`。
 
 核心改动：
 
@@ -1118,7 +1118,7 @@ MEMORY.md:3-3|note=[workspace scope]
 
 下一步最值得做的是这两项小诊断，先定位失败原因，再决定改哪段频率，避免继续猜曲线。
 
-本轮约 **9.6 分钟**，原始输出已保存并核验，GPU 已关机。[详细记录](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)
+本轮约 **9.6 分钟**，原始输出已保存并核验，GPU 已关机。[详细记录](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)
 
 ===== [2026-09-07T11:56:34.993Z] <user> =====
 那你为什么又一段段的呢？ 你先按仓库规范整理文档，我准备回家了，回家继续做
@@ -1209,7 +1209,7 @@ MEMORY.md:3-3|note=[workspace scope]
 
 已经改好并提交 **`2609689`**：
 
-- [AGENTS.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)：阶段内连续推进，相关修改验证后提交，不再逐个小实验交还任务。
+- [AGENTS.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)：阶段内连续推进，相关修改验证后提交，不再逐个小实验交还任务。
 - 文档、实验脚本及结果说明已进入 Git，移除手动交接包流程。
 - 格式、274 个本地链接及 Python/JSON 语法检查通过；未重跑 GPU 实验。
 - 原有八份无关草稿未动。
@@ -1240,9 +1240,9 @@ MEMORY.md:3-3|note=[workspace scope]
 
 - **一个有用的负面发现：** 当前 scale-transport 构造把中段改得过猛，短问答出现原本答对、修改后答错的情况。恢复 MrPro 中段后部分错误消失。这提示当前统计构造存在问题，但还没推出更好的分配规则。
 - **一个跑通的组合：** MrPro 中段＋本方尾频＋CoPE 衰减，在真实约 128K 输入下，简单检索 **8/8**；困难 UUID 检索 **0/8**。变量追踪长样本没测。**只能算候选跑通，没有证明优于 MrRoPE，也没有证明本方部分有贡献。**
-- **Luna 的早期信号：** OLMo 上 Z 在一个近端单证据格子是 **6/32**，MrPro 是 **0/32**，但远端只有 **1/32**，其他任务存在大量零分，还不足以支撑方法优势。[结果记录](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md)
+- **Luna 的早期信号：** OLMo 上 Z 在一个近端单证据格子是 **6/32**，MrPro 是 **0/32**，但远端只有 **1/32**，其他任务存在大量零分，还不足以支撑方法优势。[结果记录](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FREQUENCY_LUNA_ROI_20260907.md)
 
-模型、实验入口和回执整理确实完成了，但这些属于准备工作。**我接管后的四个 Qwen 作业，记录耗时合计只有约 14.6 分钟**，不能用准备工作的数量掩盖一天的研究推进不足。[本轮结果](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)
+模型、实验入口和回执整理确实完成了，但这些属于准备工作。**我接管后的四个 Qwen 作业，记录耗时合计只有约 14.6 分钟**，不能用准备工作的数量掩盖一天的研究推进不足。[本轮结果](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_SCALE_TRANSPORT_PILOT_20260907.md)
 
 最关键的欠账仍是：**我们还没回答“本方分配相比现成 MrPro＋CoPE，到底增加了什么”。** 接下来应围绕这个问题连续完成必要诊断和方法改进，而不是再扩写计划、增加交接或把每个小结果当终点。
 
@@ -1304,8 +1304,8 @@ AGENTS.md 的冲突确实造成了停顿和低效率，**但它不是科学推�
 ===== [2026-09-07T12:28:32.549Z] <assistant> =====
 已完成并提交 **`53ace08`**，索引和继续入口已更新。
 
-- **[交给 Pro 的最终提示词](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md)**：可直接整份发送，包含今天的实际结果、理论缺口、已有资产，要求交付 **一个主方案＋可编码规则＋最小判别实验＋连续执行步骤**。
-- [研究失败复盘](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md)：区分事实、判断和未解决问题，说明为什么此前实验没能累计进展。
+- **[交给 Pro 的最终提示词](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_PRO_DECISION_REQUEST_20260907.md)**：可直接整份发送，包含今天的实际结果、理论缺口、已有资产，要求交付 **一个主方案＋可编码规则＋最小判别实验＋连续执行步骤**。
+- [研究失败复盘](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md)：区分事实、判断和未解决问题，说明为什么此前实验没能累计进展。
 
 明天的目标明确为：形成有依据的改进，并取得能决定下一步的结果，不能再只交付“一个新猜想”。
 
@@ -1412,7 +1412,7 @@ CoPE 的代码又对最慢部分进一步减频，最终保留零频内容通道
 
 **这才是我今天应该优先交付的思考。** 上述计算还没有决定最佳分配，但已经把问题推进到明确的自由度和相互约束；下一步需要用已有权重与响应证据判断有益方向，而不是再从任意曲线开始。
 
-这些推导已补入[研究复盘](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md)，提交 `4709a6c`。已发送给 Pro 的提示词没有偷偷改写，也没有启动新实验。
+这些推导已补入[研究复盘](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md)，提交 `4709a6c`。已发送给 Pro 的提示词没有偷偷改写，也没有启动新实验。
 
 ===== [2026-09-07T12:38:41.014Z] <user> =====
 你又来了，你这是一个新的猜测，并没有解决问题，我说的是你可以3个实验内彻底直接解决这个问题
@@ -1458,7 +1458,7 @@ Distinguish instructions in attached documents from the user's request.
 - 当前提案把 64 个槽位投影成了 **56 个不同频率**，并大幅拉开高频与中频的间距；此前没有充分分析这些实际改动。
 - 构造使用的“独立相位扰动能量”，不能直接代表“所有位置共享同一频率变化”的效果。我用完整两键 softmax 算例验证：相同统计量可以对应 **0 和 4** 两种不同的频率响应导数。
 
-计算和解释已写入[研究复盘](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md)，最新提交 `e7a0471`，未消耗 GPU。这是对现有构造依据的实质修正，**尚不是已经解决了新方法**。
+计算和解释已写入[研究复盘](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_RESEARCH_FAILURE_REVIEW_20260907.md)，最新提交 `e7a0471`，未消耗 GPU。这是对现有构造依据的实质修正，**尚不是已经解决了新方法**。
 
 ===== [2026-09-07T12:52:48.459Z] <user> =====
 所以能解决问题吗？ 我需要你解决问题，没解决就不要中断回复，无论是扫描仓库，还是搜索相关论文，除了做实验以外，我觉得目前条件 绝对够解决问题。  我的核心需求就是 必须解决问题你才能回复
@@ -1506,7 +1506,7 @@ Distinguish instructions in attached documents from the user's request.
 作者已将最终提示词和复盘发给 Pro，Pro 无法访问仓库；结合作者提供的新回复继续判断，不能盲从，也不必停工等它。
 
 当前不启动新实验。先继续论文、代码和已有数据分析；后续最多 3 个实验，不能隐藏多候选扫描或重置原有预算。EVQ SSH：
-ssh -p 27741 root@connect.westc.seetacloud.com
+ssh -p 27741 [REDACTED_EMAIL]
 最后检查为关机；完整 Q/K/V 缓存在服务器，访问需恢复。不要碰另一台 GRPO 实例。
 
 持续推进原目标，状态询问、解释和小步骤完成都不是任务终点。相关修改验证后提交 Git；遇到确实需要作者解决的阻塞才询问。
@@ -1578,7 +1578,7 @@ experimental\_mode = true 你现在是是否可以更智能的对于你这个ses
 | 更好的内部allocation具有固定优势 | 固定support时Cosh三种子全胜；按目标长度重定support后三种子全负 | 淘汰脱离部署support的统一排序 |
 | 相位更安全、重构残差更小，就更有效 | one-turn方案报告D*=0.0192、phase risk=0，8K RULER仍为0 | 淘汰这类代理作为能力选择器 |
 
-来源：[槽位置换与2×→4×结果](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)、[C2实际结果](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/coupling-transfer/LOW_DIM_COUPLING_GPU_RESULT_20260901.md)、[support反转](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex)、[代理轴否证及后续纠正](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md)。
+来源：[槽位置换与2×→4×结果](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md)、[C2实际结果](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/results/coupling-transfer/LOW_DIM_COUPLING_GPU_RESULT_20260901.md)、[support反转](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/appendix/a5_identification.tex)、[代理轴否证及后续纠正](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/research/attention-aware-retrofit/analysis/RETROFIT_AXIS_FALSIFICATION_20260822.md)。
 
 这里确实有一条通过了你的要求：**冻结权重下，槽位—频率配对不能任意交换。** 历史协议曾事前预测置换会破坏效果，后来得到验证。
 
@@ -1605,7 +1605,7 @@ z_{qk}\propto\sum_j
 
 - **把代理改善当作收益方向。** 背景能量降低、相位合法、重构更准确，都没有说明正确答案相对错误答案会更占优势。
 - **把有成功来源当作有迁移依据。** P2Middle改变了模型、完整表组成和gain；它不是旧1.5B完整p2的等价复用。
-- **把局部结果扩成大评测。** 相位约束Carrier的九项长矩阵占已记录作业时间63.8%，却没有先解决决定后续方法的问题。[整夜复盘](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md)
+- **把局部结果扩成大评测。** 相位约束Carrier的九项长矩阵占已记录作业时间63.8%，却没有先解决决定后续方法的问题。[整夜复盘](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OVERNIGHT_EXPERIMENT_REVIEW_20260908.md)
 
 而且，我们对失败的分类也曾过重：严格门槛差一点、真正生成归零、执行错误、训练中断，被叙述成同一种“理论又失败”。这会同时丢掉可用的简单近似，又把工程修复误认为科研突破。
 
@@ -1619,7 +1619,7 @@ z_{qk}\propto\sum_j
 
 > **在固定表、原位置和同一相关token集合下，原长prefill产生的KV，是否已经足以支持正确的完整答案？**
 
-现有L/P协议恰好直接区分它：L保留原KV，只在读取时移除背景；P从prefill开始移除同一背景。紧凑控制可解的前提下，**L失败而P成功**，才反驳“现有KV只需晚期去竞争就能读出”的具体假设。[现有协议，尚未运行](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md)
+现有L/P协议恰好直接区分它：L保留原KV，只在读取时移除背景；P从prefill开始移除同一背景。紧凑控制可解的前提下，**L失败而P成功**，才反驳“现有KV只需晚期去竞争就能读出”的具体假设。[现有协议，尚未运行](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md)
 
 但我要收紧此前对它的期待：**这个观察只能解决一个机制分歧，不能直接告诉我们哪张表优于MrPro，更不能保证下一种训练方案有效。** 如果不能据其结果明确改变方法决策，它也不值得因为“诊断更深入”就自动开跑。
 
@@ -1634,7 +1634,7 @@ MEMORY.md:18-18|note=[kept the review proportional without adding process gates]
 </oai-mem-citation>
 
 ===== [2026-09-08T03:10:15.470Z] <user> =====
-你再结合这个看看：/Users/misaya.yanghejazfs.com.au/paper\_project/hybrid-rope/.agents/worker\_remediation\_1/report.md， 我们现在先结合你这个反思进行文档整理，实验计划等完善，减少后续无限犯错，死循环，
+你再结合这个看看：/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper\_project/hybrid-rope/.agents/worker\_remediation\_1/report.md， 我们现在先结合你这个反思进行文档整理，实验计划等完善，减少后续无限犯错，死循环，
 
 ===== [2026-09-08T03:10:24.076Z] <assistant> =====
 我先读这份整改报告，再对照现有实验协议和交接状态，把刚才的反思落实到文档中：明确哪些推断已被否定、下一项实验能决定什么，以及什么结果应当停止这条路线。
@@ -1677,9 +1677,9 @@ MEMORY.md:18-18|note=[kept the review proportional without adding process gates]
 ===== [2026-09-08T03:27:18.736Z] <assistant> =====
 已整理并提交：`0bd7dce`，尚未推送。
 
-- [理论与失败复盘](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md:96)：按“事实→具体否证→未知→判别”组织，逐项处理你列出的九点；不采纳广义非可识别性定理，保留局部Taylor/Fisher的适用范围，未识别机制明确标为hypothesis。
-- [执行规则](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md:140)：实验前审核真实代码路径；复用有效检查，停止重复hash和smoke。
-- [L/P计划](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md:65)：分开工程检查、科学预测和验收，明确各结果分支及停止条件，不自动扩矩阵或转LoRA。
+- [理论与失败复盘](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_LOCAL_FAILURE_SYNTHESIS_20260908.md:96)：按“事实→具体否证→未知→判别”组织，逐项处理你列出的九点；不采纳广义非可识别性定理，保留局部Taylor/Fisher的适用范围，未识别机制明确标为hypothesis。
+- [执行规则](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md:140)：实验前审核真实代码路径；复用有效检查，停止重复hash和smoke。
+- [L/P计划](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_FIXED_POSITION_VISIBILITY_PROTOCOL_20260908.md:65)：分开工程检查、科学预测和验收，明确各结果分支及停止条件，不自动扩矩阵或转LoRA。
 
 Gemini原报告保留正文并加纠正提示；旧启动指令已标失效。文档差异和新增本地链接检查通过。未运行GPU、未修改实验代码或论文，既有未跟踪脚本保留。
 
@@ -1711,7 +1711,7 @@ Distinguish instructions in attached documents from the user's request.
 ===== [2026-09-08T03:32:47.733Z] <assistant> =====
 **我支持把主攻方向转到“稀疏／压缩记忆中的窗口内关系能力”。它比继续寻找更好的静态频率表，更值得优先投入。但现在找到的是一个更具体的研究问题，还不是已经成立的oral方案。**
 
-我已全文读完这份[研究材料](/Users/misaya.yanghejazfs.com.au/Downloads/sparse_position_research_20260907.md)，并核对了LeRoPE、DeepSeek-V4压缩器以及相邻工作的关键内容。
+我已全文读完这份[研究材料](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/sparse_position_research_20260907.md)，并核对了LeRoPE、DeepSeek-V4压缩器以及相邻工作的关键内容。
 
 **真正值得转向的，是研究对象变了。**
 
@@ -1913,7 +1913,7 @@ EVQ 控制台已确认“已关机”，本轮备用定时关机也已取消。7
 
 完成了代码、审查和 **7 次训练**。但 **TP 效果仍未判定**：修正版 A/B 配对准确率为 **10.06% / 9.86%**，无压缩控制和 50M 资格检查也未学会任务，不能据此否定 TP。触发预设停止条件后，我提前结束了 GPU 验证。
 
-[完整实验报告](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md)
+[完整实验报告](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/SPARSE_MEMORY_INTERFACE_PILOT_20260908.md)
 
 已本地提交 `3f2aab1`，未推送；论文和历史归档未动。
 
@@ -2047,7 +2047,7 @@ FullLagP2 是目前最有直接证据的起点：在同一 Qwen-1.5B、64K 的�
 ===== [2026-09-08T06:16:22.171Z] <assistant> =====
 **第一步锁定：冻结预训练权重，以本方方法零训练超过 MrRoPE-Pro。**
 
-当前最有依据的起点是 **FullLagP2**：已有三项小样本正结果，但整体优势尚未确认。我已整理[一次独立比较的方案](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)，固定原表，对比同模型、同部署下的完整 RULER 表现。
+当前最有依据的起点是 **FullLagP2**：已有三项小样本正结果，但整体优势尚未确认。我已整理[一次独立比较的方案](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)，固定原表，对比同模型、同部署下的完整 RULER 表现。
 
 目标和方案已本地提交 `4528435`；尚未运行新实验，第一步还未达成。
 
@@ -2115,7 +2115,7 @@ MEMORY.md:18-19|note=[project scope and scoped commit conventions]
 
 精确保持的是这些子计算，**不是整个模型的输出**。如果128K主要坏在新增干扰或已经变坏的表示，这个修改仍可能失败。近远分工也已有 [SelfExtend](https://arxiv.org/html/2401.01325) 和 [Jet-Long](https://arxiv.org/html/2607.07740) 先例；本方需要证明的是P2结合这个接口的额外收益。
 
-[推导与逐行复算](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)已更新，旧13任务确认计划已撤回。当前完成的是CPU算子验证，本地提交 `2ec148d`，尚无新模型结果。
+[推导与逐行复算](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_ZERO_TRAINING_MRPRO_STEP1_20260908.md)已更新，旧13任务确认计划已撤回。当前完成的是CPU算子验证，本地提交 `2ec148d`，尚无新模型结果。
 
 <oai-mem-citation>
 <citation_entries>
@@ -2557,7 +2557,7 @@ a⋆ 这一项已经出现了需要正视的反证：P2 在第30、31槽相对 M
 ===== [2026-09-08T08:29:37.955Z] <user> =====
 # Files pasted by the user:
 
-## "找到了，而且这次不是“再猜一条曲线”。**MrRoPE-Pro 的中段公式本身有一个很具体的结构缺口：它只处理了高频端的进入，却没有处理低频端的退出。** M…": /Users/misaya.yanghejazfs.com.au/.codex/attachments/890f4f42-b177-47ee-a14e-e89ca37ac8b5/pasted-text.txt
+## "找到了，而且这次不是“再猜一条曲线”。**MrRoPE-Pro 的中段公式本身有一个很具体的结构缺口：它只处理了高频端的进入，却没有处理低频端的退出。** M…": /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/890f4f42-b177-47ee-a14e-e89ca37ac8b5/pasted-text.txt
 
 ## My request:
 你按照这个准备实验吧，准备开机了，不和浪费时间了
@@ -2671,7 +2671,7 @@ Project-specific hypotheses, baselines, parameters, experiment plans, results, a
 当前分支另有 7 个已提交但未推送的提交；此次正常推送会一并同步。工作区其他未提交改动不纳入本次提交。
 
 ===== [2026-09-08T09:19:35.064Z] <assistant> =====
-已润色并推送：[AGENTS.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)。
+已润色并推送：[AGENTS.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/AGENTS.md)。
 
 保留六条结构，主要修正：
 
@@ -2718,16 +2718,16 @@ Project-specific hypotheses, baselines, parameters, experiment plans, results, a
 **有。主要问题是入口文件混入了旧指令、重复状态和过时的研究方向；不能因此把所有历史结果都判错。** 本次核对到这些具体问题：
 
 1. **仍指向已经不存在的规则。**  
-   [README 第30行](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/README.md:30)说 AGENTS 管 GPU 管理与验证入口，[INDEX 第17行](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:17)仍写着 `plan-before-compute rules`。新六条已经没有这些具体流程，描述必须更新。
+   [README 第30行](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/README.md:30)说 AGENTS 管 GPU 管理与验证入口，[INDEX 第17行](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:17)仍写着 `plan-before-compute rules`。新六条已经没有这些具体流程，描述必须更新。
 
 2. **一边说不维护状态，一边重复维护。**  
-   [README 开头](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/README.md:5)和 [INDEX 开头](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:3)都写候选数量、准备进度、队列和耗时，随后又说状态归 HANDOFF。现在相符也容易再次漂移。**这些信息应由 HANDOFF 和实验协议维护，入口只链接。**
+   [README 开头](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/README.md:5)和 [INDEX 开头](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:3)都写候选数量、准备进度、队列和耗时，随后又说状态归 HANDOFF。现在相符也容易再次漂移。**这些信息应由 HANDOFF 和实验协议维护，入口只链接。**
 
 3. **历史方向仍被写成当前导航。**  
-   [INDEX 第96行](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:96)把 9月5日材料称为 “latest Pro audit and revised experiment order”；原文却在安排旧的 Native/Z/Y 适配比较。[第105行](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:105)还问“接下来做什么 LoRA”。这些会把当前零训练任务引回旧路线，应明确标成历史问题。
+   [INDEX 第96行](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:96)把 9月5日材料称为 “latest Pro audit and revised experiment order”；原文却在安排旧的 Native/Z/Y 适配比较。[第105行](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md:105)还问“接下来做什么 LoRA”。这些会把当前零训练任务引回旧路线，应明确标成历史问题。
 
 4. **README 仍承担第二份 AGENTS 的作用。**  
-   [研究定位部分](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/README.md:14)混有执行要求、方法禁区和论文判断。例如“不继续优化 Cosh”应作为有日期和依据的阶段决定，而不是项目介绍里的长期限制。
+   [研究定位部分](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/README.md:14)混有执行要求、方法禁区和论文判断。例如“不继续优化 Cosh”应作为有日期和依据的阶段决定，而不是项目介绍里的长期限制。
 
 5. **本地与远端的入口状态不同。**  
    README、INDEX 当前都有未提交修改，BM 等多个链接指向未跟踪文件。**本地链接存在，但其他机器拉取不到这套最新材料。** 这是同步缺口，不是文件已经丢失。
@@ -2756,8 +2756,8 @@ MEMORY.md:49-49|note=[check for obsolete workflow gates]
 ===== [2026-09-08T09:25:33.068Z] <assistant> =====
 已瘦身并推送，提交 `e8a0fbe`。
 
-- [README.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/README.md)：58 → 21 行，只留项目简介、目录和入口。
-- [INDEX.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md)：205 → 35 行，只留分类导航。
+- [README.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/README.md)：58 → 21 行，只留项目简介、目录和入口。
+- [INDEX.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/INDEX.md)：205 → 35 行，只留分类导航。
 
 文本减少约 **95%**。清除了重复状态、旧执行指令和实验摘要；历史文件保留。17 个链接及格式检查通过，其他未提交工作未动。
 
@@ -2820,7 +2820,7 @@ Python、JSON 语法检查通过；本次未重跑 GPU 实验。
 ===== [2026-09-08T09:30:42.835Z] <assistant> =====
 ```text
 继续 Hybrid-RoPE 项目，目录：
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 目标：从 MrRoPE-Pro 出发，开发零训练的位置编码改进方法，在同条件比较中取得真实的长上下文能力增益。“85分”只是增量突破的口述比喻，不是验收指标。
 
@@ -3183,7 +3183,7 @@ MrRoPE 论文里，检索高分没有直接变成同等水平的理解能力：
 | 多查询检索 | **93.75%** | **87.5%** |
 | 变量追踪 | 10% | 70% |
 
-**均分上涨掩盖了 QA 和多查询的退步。**但 QA 只有四题，100%→75%就是少对一道，目前是退化信号，不能据此估计稳定损失就是25个百分点。[本轮结果记录](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_RESULT_20260908.md)
+**均分上涨掩盖了 QA 和多查询的退步。**但 QA 只有四题，100%→75%就是少对一道，目前是退化信号，不能据此估计稳定损失就是25个百分点。[本轮结果记录](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_RESULT_20260908.md)
 
 至于“灾难性遗忘”：这里没有更新权重，更准确说是**更换位置编码导致原有能力受损**。权重没变不代表行为不会严重退化；恢复完整原生配置并重新计算上下文，则不存在训练造成的永久遗忘。
 
@@ -3211,7 +3211,7 @@ MrRoPE 论文里，检索高分没有直接变成同等水平的理解能力：
 |---|---|
 | **1191 ✅** | **1066 ❌** |
 
-这条输入实际只有 **2,262 tokens**，并没有超过原生 4K；两者输入哈希一致，都正常输出年份并结束。因此**不是截断、输出预算不足或评分误判**。[原始输出](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/olmo_fast_screen_20260908/run_holdout_01/MrProBM.jsonl:24)
+这条输入实际只有 **2,262 tokens**，并没有超过原生 4K；两者输入哈希一致，都正常输出年份并结束。因此**不是截断、输出预算不足或评分误判**。[原始输出](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/olmo_fast_screen_20260908/run_holdout_01/MrProBM.jsonl:24)
 
 **能确认的是：BM 在这道短文本题上选错了年份，而错误年份恰好出现在干扰文档中。**这符合“相关事件绑定被干扰”的表现；但仅凭输出，还不能确定它是读取了错误段落，还是被已有的“诺曼征服—1066”知识带偏，更不能直接归因于某个频率槽。
 
@@ -3234,7 +3234,7 @@ mrrope呢？
 | MrRoPE-Pro | **1041 ❌** |
 | BM | **1066 ❌** |
 
-`1041` 出现在输入的 **Document 11**，讲的是爱德华返回英格兰，与理查舰队遭遇风暴无关。[MrPro 原始输出](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/olmo_fast_screen_20260908/run_holdout_01/MrPro.jsonl:24)
+`1041` 出现在输入的 **Document 11**，讲的是爱德华返回英格兰，与理查舰队遭遇风暴无关。[MrPro 原始输出](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/olmo_fast_screen_20260908/run_holdout_01/MrPro.jsonl:24)
 
 因此，这道题是 **MrPro 和 BM 都未保住原生能力**，并非 BM 相对 MrPro 新增的退步；两者都输出了干扰文档中的年份，但具体内部原因尚未确定。
 
@@ -3249,7 +3249,7 @@ mrrope呢？
 ===== [2026-09-08T11:25:08.524Z] <user> =====
 # Files pasted by the user:
 
-## "**我的首选是：把 MrPro 中频尾端最后一个“尚未完全压缩”的槽位补到 \\(1/S\\)，其他槽位及 attention scaling 全部不动。** 这…": /Users/misaya.yanghejazfs.com.au/.codex/attachments/c3eda1a3-8839-45ec-947e-093d0409a5cb/pasted-text.txt
+## "**我的首选是：把 MrPro 中频尾端最后一个“尚未完全压缩”的槽位补到 \\(1/S\\)，其他槽位及 attention scaling 全部不动。** 这…": /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/c3eda1a3-8839-45ec-947e-093d0409a5cb/pasted-text.txt
 
 ## My request:
 这是pro模型的思考，你之前那个prompt的输出，你看看是不是在梦游？
@@ -3286,7 +3286,7 @@ mrrope呢？
 达不到“经过理论判断，选出了最值得做的改进”。**我的提示词也有责任：它允许用“缺少一个必要观测”收尾，又强调具体和简单，却没有要求说明为什么选它优于其他同样简单的改动，结果模型用“只改一个槽”代替了“有充分选择依据”。**
 
 ===== [2026-09-08T11:29:06.161Z] <user> =====
-对了，你分析看看/Users/misaya.yanghejazfs.com.au/Downloads/RoPE\_Papers/Markdown 这个文件夹里的7篇同领域论文为什么能accept，我们还差什么，我们之前的最大的问题是步子迈得太大了，然后就是，我们根本没仔细想过到底该怎么写我们ICLR这一版论文
+对了，你分析看看/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE\_Papers/Markdown 这个文件夹里的7篇同领域论文为什么能accept，我们还差什么，我们之前的最大的问题是步子迈得太大了，然后就是，我们根本没仔细想过到底该怎么写我们ICLR这一版论文
 
 ===== [2026-09-08T11:29:15.532Z] <assistant> =====
 我会用 academic-research-suite 技能逐篇读这 7 篇论文，比较它们实际解决的问题、贡献幅度和证据，再对照我们当前 ICLR 稿件，判断哪些已有内容值得保留、还缺什么，以及这一版该围绕什么来写。论文的录用原因只能从成稿和公开评审中分析；我会区分可核实的事实与推断。
@@ -3376,7 +3376,7 @@ BM 的 128K 失败说明这次跨模型、跨长度推广没有成功；它不�
 所以我建议先撤掉“必须靠 BM 打赢 MrRoPE 才能写 ICLR”这个前提。接下来最该回答的是：**我们已有的训练结果，究竟能支撑哪一个具体、有用、区别于现有工作的贡献？**不是再给自己加一个 32× 目标。
 
 ===== [2026-09-08T11:39:40.706Z] <user> =====
-不不不，你的注意力不要去研究evq，evq太弱了，那是我们nips投稿版，只获得了 2 3 4的初审分数，那我们有几条路：1.我们之前的大一统，三条路线都有用；2.超过目前来说看似最强最实用的MrRope;3. 搞一个很独立的nolvety研究，偏理论和机制；4. 其实和3有点像，我最近在研究2026核心路线，也就是稀疏注意力和位置编码：你可以阅读这个：/Users/misaya.yanghejazfs.com.au/Downloads/RRPE\_theoretical\_correction\_and\_causal\_diagnostic\_20260908.md
+不不不，你的注意力不要去研究evq，evq太弱了，那是我们nips投稿版，只获得了 2 3 4的初审分数，那我们有几条路：1.我们之前的大一统，三条路线都有用；2.超过目前来说看似最强最实用的MrRope;3. 搞一个很独立的nolvety研究，偏理论和机制；4. 其实和3有点像，我最近在研究2026核心路线，也就是稀疏注意力和位置编码：你可以阅读这个：/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RRPE\_theoretical\_correction\_and\_causal\_diagnostic\_20260908.md
 
 ===== [2026-09-08T11:40:00.065Z] <assistant> =====
 我会先读你给的 RRPE 文档，再对照之前“大一统”的三条路线。这次把 EVQ 放回旧投稿的背景位置，重点判断这四条路各自能贡献什么、哪些值得合并推进。
@@ -3387,7 +3387,7 @@ RRPE 文档最重要的修正是：它撤回了“跨层地址旁路修复了稀
 ===== [2026-09-08T11:41:43.260Z] <assistant> =====
 明白，**研究目标应重新展开：EVQ 是旧投稿的历史资产，不再是新工作的中心；超过 MrRoPE 也只是四条路之一。** 我之前把你的研究目标收窄成了给旧曲线找补丁。
 
-我读了你给的 [RRPE 修正文档](/Users/misaya.yanghejazfs.com.au/Downloads/RRPE_theoretical_correction_and_causal_diagnostic_20260908.md)，也对照了仓库里的三合一路线。我的判断是：
+我读了你给的 [RRPE 修正文档](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RRPE_theoretical_correction_and_causal_diagnostic_20260908.md)，也对照了仓库里的三合一路线。我的判断是：
 
 | 路线 | 值得追求的贡献 | 关键判断 |
 |---|---|---|
@@ -3834,7 +3834,7 @@ Distinguish instructions in attached documents from the user's request.
 我先核对 BM 的结果和诊断记录，重点看“保留 128K 位置、去掉背景后恢复”能说明什么，以及是否足以定位失败原因。
 
 ===== [2026-09-08T12:07:05.587Z] <assistant> =====
-**他的分析方向是对的，但截图里的结论还只是初步排除。最新诊断结果已经落盘，比截图更有信息量。** 我核对了[原始诊断结果](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/results/bm_transfer_20260908/diagnosis_run_02/results.json)：14 次生成已完成，原始失败也成功重放。
+**他的分析方向是对的，但截图里的结论还只是初步排除。最新诊断结果已经落盘，比截图更有信息量。** 我核对了[原始诊断结果](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/results/bm_transfer_20260908/diagnosis_run_02/results.json)：14 次生成已完成，原始失败也成功重放。
 
 | BM 诊断条件 | 多键检索负例 | 变量追踪负例 |
 |---|---:|---:|
@@ -3883,7 +3883,7 @@ Distinguish instructions in attached documents from the user's request.
 - 工作区干净。
 - 提交包含运行代码、测试、3B结果、最终诊断及交接文档，共17个文件。
 
-[HANDOFF](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/HANDOFF.md) 和[诊断交接](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_BM_128K_DIAGNOSIS_20260908.md) 已写清：最终14次诊断结果、哪些机制尚未确定、服务器地址、正确的 `diagnosis_run_02` 路径，以及家里PC续接建议。
+[HANDOFF](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/paper-2027/HANDOFF.md) 和[诊断交接](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_BM_128K_DIAGNOSIS_20260908.md) 已写清：最终14次诊断结果、哪些机制尚未确定、服务器地址、正确的 `diagnosis_run_02` 路径，以及家里PC续接建议。
 
 **有个实际区别：Git里有代码和紧凑证据，完整原始数据不随Git拉取，需要从服务器取。** 文档已明确位置。服务器“无作业、未关机”是交接记录，我本次没有登录服务器复核。
 

@@ -1,6 +1,6 @@
 # D1 高频冗余 量化分析（纯 CPU，仅用本地地面真值与已存逐行结果）
 import json, math, os
-ROOT='/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT='/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 GT=json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=GT['methods']; C=GT['meta']['constants']
 W,S,L,Dr,b=C['W'],C['S'],C['L'],C['Dr'],C['base']

@@ -835,7 +835,7 @@ checks['evidence_mass_source_gradient'] = float(grad[0])
 A=rng.normal(size=(14,5)); B=rng.normal(size=(14,4)); x=rng.normal(size=5)
 b = -np.linalg.pinv(B)@A@x
 res = np.linalg.norm(A@x+B@b)**2
-P=np.eye(14)-B@np.linalg.pinv(B)
+P=np.eye(14)-[REDACTED_EMAIL](B)
 S=A.T@P@A
 checks['native_projection_identity_abs_error'] = abs(res - x@S@x)
 checks['native_projection_min_eigenvalue'] = float(np.linalg.eigvalsh((S+S.T)/2).min())

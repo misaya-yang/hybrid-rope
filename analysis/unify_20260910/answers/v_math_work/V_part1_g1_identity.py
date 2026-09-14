@@ -3,7 +3,7 @@
 across ALL 38 tables; exceptions; P2 single-gap reconciliation; Stack hole position;
 closed-form reconstructions ramp17/16/15 vs G1 arrays."""
 import json, math
-ROOT='/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT='/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 d=json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=d['methods']
 c=math.log(1e6)/64; ln4=math.log(4); rnat=1e6**(1/64)

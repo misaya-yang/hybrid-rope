@@ -51,7 +51,7 @@ Here is a list of plugins that are available but not installed.
 - ClickUp (clickup@openai-curated-remote)
 - Cloudflare (cloudflare@openai-curated-remote)
 </recommended_plugins>
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 - Continue working toward the goal until complete or a serious blocker requires user input. Do not stop merely to report progress.
@@ -85,11 +85,11 @@ and failure records belong in project documents, not here.
 
 </INSTRUCTIONS>
 <environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-10</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [2026-09-10T11:41:20.091Z] <assistant>
@@ -101,8 +101,8 @@ The three assigned files are now fully ingested. Their strongest common result i
 [2026-09-10T11:47:19.082Z] <assistant>
 Completed Sol03’s assignment.
 
-- Report: [.agents/rope_unification_20260910/reports/sol03.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol03.md)
-- Coverage receipt: [.agents/rope_unification_20260910/reports/sol03_coverage.json](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol03_coverage.json)
+- Report: [.agents/rope_unification_20260910/reports/sol03.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol03.md)
+- Coverage receipt: [.agents/rope_unification_20260910/reports/sol03_coverage.json](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol03_coverage.json)
 
 All three assigned files were ingested completely: 3,091 lines total, with SHA-256 hashes recorded. The report derives a unified log-radix allocation framework, separates scratch training from frozen deployment, and provides concrete counterexample and falsification checks.
 

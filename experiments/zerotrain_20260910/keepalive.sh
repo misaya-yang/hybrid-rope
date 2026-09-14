@@ -20,7 +20,7 @@
 #
 # Usage:  nohup ./keepalive.sh > keepalive.log 2>&1 &
 set -u
-H="ssh -o ConnectTimeout=25 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -p 27741 root@connect.westc.seetacloud.com"
+H="ssh -o ConnectTimeout=25 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -p 27741 [REDACTED_EMAIL]"
 D=/root/autodl-tmp/phase1_20260910
 PY=/root/miniconda3/bin/python
 MODEL=/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct
@@ -60,9 +60,9 @@ for i in $(seq 1 240); do
   if ! $H "test -f $D/tables/amp8x_s2p0.json" 2>/dev/null; then
     $H "mkdir -p $D/tables" 2>/dev/null
     scp -P 27741 -q "$TBL"/amp8x_s*.json \
-      root@connect.westc.seetacloud.com:"$D/tables/" 2>&1 | tail -2
+      [REDACTED_EMAIL]:"$D/tables/" 2>&1 | tail -2
     scp -P 27741 -q "$(dirname "$TBL")/../../experiments/zerotrain_20260910/amp8x_read.py" \
-      root@connect.westc.seetacloud.com:"$D/" 2>&1 | tail -2
+      [REDACTED_EMAIL]:"$D/" 2>&1 | tail -2
     # The deployed qwen4x_power_read.py prints the OPPOSITE verdict: its negative
     # branch says "MrRoPE genuinely beats BM" while dd<0 in NLL means BM is better.
     # Verified by diffing against the frozen audit snapshot
@@ -70,7 +70,7 @@ for i in $(seq 1 240); do
     # fixed copy ONLY in the corrected lines -- so pushing this clobbers no other
     # patch.  Without this, the watchdog auto-prints a wrong verdict.
     scp -P 27741 -q "$(dirname "$TBL")/../../experiments/zerotrain_20260910/qwen4x_power_read.py" \
-      root@connect.westc.seetacloud.com:"$D/" 2>&1 | tail -2
+      [REDACTED_EMAIL]:"$D/" 2>&1 | tail -2
     if $H "test -f $D/tables/amp8x_s2p0.json && test -f $D/amp8x_read.py && grep -q 'LOWER IS BETTER' $D/qwen4x_power_read.py" 2>/dev/null; then
       echo "[$(date +%H:%M:%S)] amp8x tables + readers synced (verified: marker line present)"
     else

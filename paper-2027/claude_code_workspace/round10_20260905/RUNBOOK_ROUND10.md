@@ -10,7 +10,7 @@
 - **授权：** 用户 2026-09-05 明确授权 GPU 实验安排由 Claude 决断；§10 为作者预先冻结的有界轮次
   （固定 caps：train 3600s / native 900s / task 1800s / review 600s；seed42；step128 固定；无 resume/
   prefix/test/扫参）。本手册只执行该冻结轮次，不新增任何臂。
-- **目标机：** westc（`ssh -p 27741 root@connect.westc.seetacloud.com`；开机后端口可能变化，需用户确认）。
+- **目标机：** westc（`ssh -p 27741 [REDACTED_EMAIL]`；开机后端口可能变化，需用户确认）。
   无卡模式容器 cgroup 内存上限仅 **2 GiB**；有卡模式内存充足（N128 全流程曾在有卡模式完成）。
 - **本机包：** `claude_code_workspace/round10_20260905/package/`；`config/round10_config_westc.json`（已填好）。
 

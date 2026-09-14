@@ -234,7 +234,7 @@ u=1.5 无覆盖窗——我们的理论）；(b) YaRN gain=1.1386 在 8× 是错
   理论文档 `COVERAGE_CEILING_THEORY_20260911.md`（含跨模型分解 §5b/5c）。
 - 本地已同步原始输出：`work/jsonl/{archive,olmo,olmo_tstar,olmo_turns,olmo_wide,
   olmo_c42,holdout,...}/*.jsonl`（含逐行 output_text/EOS/correct）。
-- 服务器（只读）：`ssh -p 27741 root@connect.westc.seetacloud.com`，
+- 服务器（只读）：`ssh -p 27741 [REDACTED_EMAIL]`，
   `/root/autodl-tmp/phase1_20260910/`（olmo_pro/step42、s8_out、walk_out 等最新），
   面板 `prepared_ruler_newtasks_02/screen.jsonl`（含 prompt_ids/gold），
   runner `olmo_beta.py`（--steps/--pro-tables/--walk/--m-file 经 patch_mfile.py）。

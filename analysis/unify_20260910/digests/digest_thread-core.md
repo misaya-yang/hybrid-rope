@@ -5,11 +5,11 @@ codex "核心 session"（2026-09-06 起，含 overnight 接续与 astra 后续�
 
 ## 1. 来源清单
 
-- 主源（JSONL rollout）：`/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/06/rollout-2026-09-06T21-58-16-01a07996-6df5-7a42-a906-aa1616b7361c.jsonl`
+- 主源（JSONL rollout）：`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/06/rollout-2026-09-06T21-58-16-01a07996-6df5-7a42-a906-aa1616b7361c.jsonl`
   - 大小 70,514,482 B（约 70.5MB）；session_id `01a07996-6df5-7a42-a906-aa1616b7361c`；Codex Desktop cli_version 0.153.4，base_instructions 自述 "Codex, an agent based on GPT-6"，用户称该模型为 **Astra**（例：09-07T12:22:50Z "GPT6Astra的数学能力"）。
   - 文件名 21-58-16 为本地（UTC-4，America/New_York）注入；消息时间戳为 UTC。user/assistant 消息共 **468 条**（user 145 / assistant 323），首条 `2026-09-07T01:58:25.679Z`，末条 `2026-09-08T12:17:23.073Z`。
 - 压缩文本（本任务规定路径，前次运行已生成并经本次校验完整，468/468 条消息、首末时间戳与源文件一致）：
-  - `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw_thread-core.txt`（5,303 行，376,793 B；MD5 342af4a5…，与 `analysis/unify_20260910/raw/raw_thread-core.txt` 同哈希）
+  - `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw_thread-core.txt`（5,303 行，376,793 B；MD5 342af4a5…，与 `analysis/unify_20260910/raw/raw_thread-core.txt` 同哈希）
 - 去噪阅读副本：`analysis/unify_20260910/read_thread-core_clean.txt`（3,943 行，306,393 B，剥离 recommended_plugins/AGENTS.md 样板/environment_context；同样 468 个消息头）
 - 中间时间线：`analysis/unify_20260910/timeline_thread-core.md`（前次运行分块通读块1–块4，覆盖至 09-08T09:28Z；本运行通读尾部 clean 行 2802–3943，即 09-08T09:28Z–12:17Z，并对块1–4 的关键数字/引文逐条 grep 回 raw 原文核验，未发现失实）
 - "astra 接续"说明：同一 rollout 文件跨夜连续（09-07T13:49 用户留言回家、由家里 PC 的 codex 按交接提示词接续——该接续跑在**另一个线程/机器**，本文件是核心线；09-08T02:59 起本 session 恢复并被用户持续用作"理论审查+结果判读"主线。09-08T09:30 用户判"整体上下文已被污染"后另开新 session 执行 BM 的 GPU 评测；该执行 session 的结果以截图形式回流本 session 判读（10:01、12:05、12:11），本 session 只读取证远端提交 `0177e6d`。

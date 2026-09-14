@@ -154,7 +154,7 @@ The old remediation handoff declared the generalized three-fiber non-identifiabi
 
 ### Heterogeneous crossings do not create a universal crossover law
 
-The external optimization plan tries to combine seven protocols into a universal 1x–2x “exchange-rate law” (`/Users/misaya.yanghejazfs.com.au/Downloads/ICLR2027_EVQ_优化执行方案.md`). The full corpus shows why that is not yet admissible: the rows mix architectures, training histories, metrics, gains, physical windows, and adaptation regimes; Video-DiT is already an exception; and support retargeting reverses the scratch ordering. Phase17B is explicitly a staged continuation rather than an equal-budget comparison (`docs/exp/2026-03/2026-03-10_phase17b_1024_continue_vs_512_baseline.md`). A common sign-change interval is a descriptive pattern. It cannot determine a frozen allocation without a common estimand or prospective prediction.
+The external optimization plan tries to combine seven protocols into a universal 1x–2x “exchange-rate law” (`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/ICLR2027_EVQ_优化执行方案.md`). The full corpus shows why that is not yet admissible: the rows mix architectures, training histories, metrics, gains, physical windows, and adaptation regimes; Video-DiT is already an exception; and support retargeting reverses the scratch ordering. Phase17B is explicitly a staged continuation rather than an equal-budget comparison (`docs/exp/2026-03/2026-03-10_phase17b_1024_continue_vs_512_baseline.md`). A common sign-change interval is a descriptive pattern. It cannot determine a frozen allocation without a common estimand or prospective prediction.
 
 ### Scratch evidence supports allocation activity, not the historical universal story
 

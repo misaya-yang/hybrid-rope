@@ -92,7 +92,7 @@ flock -n "$TASKROOT/queue.lock" "$TASKPY" -m experiments.pm_keep.run_followup --
 
 ## 入口与现有证据
 
-服务器：`ssh -p 24941 root@connect.westc.seetacloud.com`。根目录`/root/autodl-tmp/position_overnight_20260909`；代码在`code`，数据在`data/pc2/rows.jsonl`与`data/pm_keep/rows.jsonl`，结果写`runs`，基线库写`baselines/pc2`与`baselines/pm_keep`。
+服务器：`ssh -p 24941 [REDACTED_EMAIL]`。根目录`/root/autodl-tmp/position_overnight_20260909`；代码在`code`，数据在`data/pc2/rows.jsonl`与`data/pm_keep/rows.jsonl`，结果写`runs`，基线库写`baselines/pc2`与`baselines/pm_keep`。
 
 模型：NOSA `/root/autodl-tmp/NOSA-1B`；PMKeep Qwen3B 使用已验证的加载视图 `/root/autodl-tmp/position_overnight_20260909/runs/pm_gpu_ready_20260909_v3/model_view`。原始3B目录缺分片索引，该视图通过真实shard header补齐索引，原权重未改。Python `/root/miniconda3/bin/python`；作者KVpress实现位于根目录`vendor/kvpress`。
 

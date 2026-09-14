@@ -16,11 +16,11 @@
 
 | 来源 | 路径 / 标识 | 大小/行数 | 说明 |
 |---|---|---|---|
-| MrRoPE 全文 | `/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md` | 50,635 B / 1,421 行 | ICLR 2026 正式发表（Tian, Zhu, Liu, Wang†, Wang；SJTU/Fudan）。arXiv:2601.22181（由我方审计文档核对原始 HTML 得到，见 `docs/research/PARALLEL_NONGEOMETRIC_20X10_AUDIT_20260910.md:115`）。本次**全文精读**。 |
+| MrRoPE 全文 | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown/5551_MrRoPE_Mixed_radix_Rotary.md` | 50,635 B / 1,421 行 | ICLR 2026 正式发表（Tian, Zhu, Liu, Wang†, Wang；SJTU/Fudan）。arXiv:2601.22181（由我方审计文档核对原始 HTML 得到，见 `docs/research/PARALLEL_NONGEOMETRIC_20X10_AUDIT_20260910.md:115`）。本次**全文精读**。 |
 | RoPE Has a Spectral Budget | `.../ICLR2027_RoPE_Has_a_Spectral_Budget_latest.md` | 111,076 B / 5,162 行 | **我们自己项目的 ICLR 2027 在审稿**（anonymous）。精读：摘要、§1、§2、§3.1–3.4、§4.1–4.4、§5 开头。 |
 | Selective RoPE | `.../21436_Selective_Rotary_Positio.md` | 99,422 B / 4,441 行 | ICLR 2026（Movahedi, Carstensen, Afzal 等；Tübingen/EPFL）。快读：摘要 + §3.3 设计原则。 |
 | Decoupling Positional and Symbolic | `.../20805_Decoupling_Positional_an.md` | 93,836 B / 2,240 行 | ICLR 2026（Urrutia, Kozachinskiy 等；CENIA/UC）。快读：摘要 + §5 + 结论。 |
-| 统一预算理论 | `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md` | 143 行 | I1/I2、水床恒等式路径形式、bank/arc 二分法、§6 EVQ 和解、§8 姐夫稿整合。全文精读。 |
+| 统一预算理论 | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md` | 143 行 | I1/I2、水床恒等式路径形式、bank/arc 二分法、§6 EVQ 和解、§8 姐夫稿整合。全文精读。 |
 | 预算模型与候选 | `.../docs/research/BUDGET_ALLOCATION_MODEL_AND_CANDIDATES_20260910.md` | 63 行 | 槽 24–39、17 gap、ln S=1.386、s28/LBS/P2 读数表、0446/0448/0449 队列。全文精读。 |
 | EVQ 非局部核修正 | `.../docs/research/EVQ_NONLOCAL_KERNEL_CORRECTION_20260910.md` | 138 行 | Ci 精确核、h_c 脊乘子表、delta 近似过惩罚定理性观察。全文精读。 |
 | 子空间推导 | `.../docs/research/ROPE_ALLOCATION_SUBSPACE_DERIVATION_20260910.md` | 281 行 | U(ν)、均匀-PI 界、选择性-PI 恒等式、Smooth 反例、Q/K 算子 Gram。全文精读。 |

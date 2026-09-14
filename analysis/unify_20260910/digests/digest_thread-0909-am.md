@@ -1,9 +1,9 @@
 # digest thread-0909-am（2026-09-09 凌晨会话簇：00:50–07:42 本地时间，7 个 rollout）
 
 提取方法：codex rollout JSONL → 仅保留 `response_item` 中 role∈{user,assistant} 的 `message` 与 `agent_message` 负载（任务指令正文为 `encrypted_content`，不可读，以任务名+助手自述代替），工具调用命令单独抽取用于时间线重建。压缩纯文本位于
-`/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw/raw_s{1..7}-*.txt`（7 个文件合计约 79KB，已全部通读，无抽样）。
+`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw/raw_s{1..7}-*.txt`（7 个文件合计约 79KB，已全部通读，无抽样）。
 工具调用清单（54.5KB）持久化于 Claude 侧
-`/Users/misaya.yanghejazfs.com.au/.claude/projects/-Users-misaya-yanghejazfs-com-au-paper-project-hybrid-rope/7cf3ec49-b384-45ca-99f1-edab805c575a/tool-results/b4kxtt5u7.txt`。
+`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.claude/projects/-Users-[REDACTED_AUTHOR]-yanghejazfs-com-au-paper-project-hybrid-rope/7cf3ec49-b384-45ca-99f1-edab805c575a/tool-results/b4kxtt5u7.txt`。
 时间戳说明：消息 timestamp 为 UTC（Z 后缀）；文件名与用户口语时间为美东 EDT（UTC−4）。00:50–02:25 本地 = 04:50–06:25 UTC；07:38 本地 = 11:38 UTC。
 
 ## 0. 范围核对（重要：与派发任务描述的偏差）
@@ -17,7 +17,7 @@
 
 ## 1. 来源清单
 
-全部父线程 = `01a0806f-3df5-74b1-bc56-bf00d89d238e`（2026-09-08T09:52:49Z 起，source=vscode 的主编排会话，其 rollout 位于 `/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T05-52-49-01a0806f-3df5-74b1-bc56-bf00d89d238e.jsonl`）。工作目录均为 hybrid-rope 仓库，分支 `codex/exponent-allocation-manuscript`（s7 父链标注 `main_0726_09_06`）。
+全部父线程 = `01a0806f-3df5-74b1-bc56-bf00d89d238e`（2026-09-08T09:52:49Z 起，source=vscode 的主编排会话，其 rollout 位于 `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T05-52-49-01a0806f-3df5-74b1-bc56-bf00d89d238e.jsonl`）。工作目录均为 hybrid-rope 仓库，分支 `codex/exponent-allocation-manuscript`（s7 父链标注 `main_0726_09_06`）。
 
 | key | 文件（.codex/sessions/2026/09/09/） | 大小 | JSONL 行数 | 提取消息数 | 会话 id | 子代理名/昵称 | 本地起时 |
 |---|---|---|---|---|---|---|---|
@@ -65,7 +65,7 @@
 
 ### 2.7 s7 = retrieval_failure_analysis（07:38–07:42 本地 | 11:38–11:42 UTC）— 成功交付归因
 文件头部内嵌了父会话（01a0806f）09-09 早晨被回放的完整用户回合（各消息同刻 11:38:14.131Z 出现即回放标志），内容链：
-1. 用户："已经开机了，ssh -p 57109 root@connect.westc.seetacloud.com"；父代理上一轮已完成 rope_operator_family 首次 GPU 配对实验并误报"GPU 已空闲，可以关机"。配对结果（REPORT.md 数字）：原模型留出 NLL 2.651387 / 共同初始化 5.300757 / score+value 拟合 9.989853 / output+value 蒸馏 3.942717；两边均 50% KV（256 实数 vs 原生 512），均未恢复冻结 8K 检索题（8189 chat tokens、412 条随机记录、答案 `f83a9144`）。
+1. 用户："已经开机了，ssh -p 57109 [REDACTED_EMAIL]"；父代理上一轮已完成 rope_operator_family 首次 GPU 配对实验并误报"GPU 已空闲，可以关机"。配对结果（REPORT.md 数字）：原模型留出 NLL 2.651387 / 共同初始化 5.300757 / score+value 拟合 9.989853 / output+value 蒸馏 3.942717；两边均 50% KV（256 实数 vs 原生 512），均未恢复冻结 8K 检索题（8189 chat tokens、412 条随机记录、答案 `f83a9144`）。
 2. 用户："**没有其他方法了吗？**" 助手自我纠正："我上一条'可以关机'的表达太早，容易让人以为这条路线已经结束"——列出三个方向：① BKV 平衡初始化（TransMLA 有原文依据：未平衡联合 PCA 偏向幅度大的 K）；② attention 分布/输出约束拟合（KL 替代原始 score MSE）；③ 学生实际输入逐层恢复。明确"第二、三项仍是待验证假设，不能提前承诺有效"。
 3. 用户："**那你试，试完这三个看看**" → 父会话在 GPU 上执行（执行本身不在本簇 7 文件内，产物 `experiments/rope_operator_family/FOLLOWUP_RESULTS_20260909.md`）：BKV+KD 4.992231（劣于原 KD）、attention KL+output+value **3.745052**（7/8 篇改善，最优）、逐层 progressive 4.567863；三者答案 NLL 4.466099/3.296716/3.747326，**全部未恢复检索**。关键细节：BKV 只初始化不训练 NLL 4.150590 优于旧初始化 5.300757，但同 Adam 配方后反而 4.992231——"初始化改善不自动转化为同一优化器下的最终改善，不能简单总结成 BKV 没有作用"。attention_kd 输出的是被询问的 key `5c4cb02e` 而非 value（内容错误，非格式差异）。
 4. 用户："**检索题是不是概率问题，对模型太难了，原始模型也不一定此次答对，有没有可能？**"与"**为什么破坏了检索呢，你让一个子代理分析原因**" → spawn 本 s7 子代理（Linnaeus）。
@@ -134,7 +134,7 @@
 
 ## 6. 用户指令与纠正（原文引用）
 
-- s7 链内（父会话 09-09 晨，11:38:14Z 回放）："已经开机了，ssh -p 57109 root@connect.westc.seetacloud.com"；"**没有其他方法了吗？**"；"**那你试，试完这三个看看，**"；"**检索题是不是概率问题，对模型太难了，原始模型也不一定此次答对，有没有可能？**"；"**为什么破坏了检索呢，你让一个子代理分析原因**"。
+- s7 链内（父会话 09-09 晨，11:38:14Z 回放）："已经开机了，ssh -p 57109 [REDACTED_EMAIL]"；"**没有其他方法了吗？**"；"**那你试，试完这三个看看，**"；"**检索题是不是概率问题，对模型太难了，原始模型也不一定此次答对，有没有可能？**"；"**为什么破坏了检索呢，你让一个子代理分析原因**"。
 - s7 助手据此自纠："我上一条'可以关机'的表达太早，容易让人以为这条路线已经结束。"
 - §2.8 近邻会话内："你说得对，既然那个目录里已有批量转换结果，我刚才只查了'当前安装命令/包'，范围不够。"（用户纠正环境检索范围后助手语）；"你说得对，这个下载任务不该继续占着机器。"；"你说得对，刚才的做法过头了。……实际上没有下载任何论文。"；"明白，transformers 不装，我只负责把模型文件下载好；无卡模式不做加载测试。"
 - 铁律语境：09-09 当日仓库 AGENTS.md（每会话头部均含）第 3/5/7 条——"Distinguish hypotheses and proxy improvements from demonstrated outcomes"、"Do not repackage failed assumptions or generalize a specific failure beyond its evidence"、后加 "**Test the claim directly.** keep both positive and negative conclusions within what the experiment actually tested"（s7 头部首次出现第 7 条，说明 AGENTS.md 在 09-09 中午前后被更新）。[已验证：s1 与 s7 头部对比]
@@ -149,7 +149,7 @@
 6. DeepSeek-V4-mini-300M-init scaffold（两台 AutoDL）与十候选计划/两核路线的关系（CC-RoPE 机制实验）要到 09-09 晚 `TWO_CORE_SOL_HANDOFF_20260909.md` 与 09-10 `PARALLEL_NONGEOMETRIC_20X10_*` 会话中取证——建议并行 digest 任务覆盖 `~/.codex/sessions/2026/09/09/rollout-…T21-44-01…` 与 `2026/09/10/` 全目录。
 
 ### 证据文件路径索引
-- 原始转录：`/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/09/rollout-2026-09-09T{00-50-47,01-08-08,01-25-25,01-53-17,02-01-16,02-16-08,07-38-14}-*.jsonl`（近邻 `01-53-14`）
+- 原始转录：`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/09/rollout-2026-09-09T{00-50-47,01-08-08,01-25-25,01-53-17,02-01-16,02-16-08,07-38-14}-*.jsonl`（近邻 `01-53-14`）
 - 压缩文本：`analysis/unify_20260910/raw/raw_s{1..7}-*.txt`
 - 审稿交付：`paper-2027/research/pdf-review-rounds/20260909/r0{1,2,3,4}/review.md`（r05 无）
 - 压缩实验：`experiments/rope_operator_family/results/20260909_gpu/REPORT.md`、`FOLLOWUP_RESULTS_20260909.md`、`FOLLOWUPS_20260909.md`

@@ -85,7 +85,7 @@ def H_block(w,v):
     return np.array([[0.5*(Ecos(w-v)+Ecos(w+v)), 0.5*(Esin(w+v)-Esin(w-v))],
                      [0.5*(Esin(w-v)+Esin(w+v)), 0.5*(Ecos(w-v)-Ecos(w+v))]])
 def inv_sqrt(A):
-    ev,V=np.linalg.eigh(A); return V@np.diag(1/np.sqrt(ev))@V.T
+    ev,V=np.linalg.eigh(A); return [REDACTED_EMAIL](1/np.sqrt(ev))@V.T
 def r2_of(ws):
     n=len(ws); G=np.zeros((2*n,2*n))
     for i,w in enumerate(ws):

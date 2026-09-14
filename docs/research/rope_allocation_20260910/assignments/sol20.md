@@ -4,5 +4,5 @@ YOUR ID: sol20
 YOUR TASK: Full remaining project docs, research retrospective, and all supporting source: identify hidden contradictions or overlooked successful rules; synthesize into a constructive theory with traceable failure checks.
 The listed corpus files are your full-text project coverage responsibility. For theory you may additionally inspect MrRoPE full paper, EVQ theory, newest6Pro attachment and completed reports of other agents; distinguish fully read from indexed files.
 FULL FILE LIST:
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_EXTRA_RULER_RESULT_20260908.json
-/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/USER_PROMPT_TRANSCRIPT_20260909.md
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/ROPE_OLMO_BM_EXTRA_RULER_RESULT_20260908.json
+/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/docs/research/USER_PROMPT_TRANSCRIPT_20260909.md

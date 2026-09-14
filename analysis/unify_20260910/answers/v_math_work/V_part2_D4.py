@@ -6,7 +6,7 @@ for three F_arc definitions; (3) family feature tables (uni/ramp 13..17);
 argmin knots; (6) §5 transport arithmetic (nats conversions, lambdas, delivered
 RAMP16 table row-by-row, notch/pair)."""
 import json, math
-ROOT='/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT='/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 d=json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M=d['methods']
 c=math.log(1e6)/64; ln4=math.log(4); rnat=1e6**(1/64); L=131072; W=32768

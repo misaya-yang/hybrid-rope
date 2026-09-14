@@ -6,14 +6,14 @@ codex 主线程转录提取与复盘。转录跨 2026-09-08T09:53Z 至 2026-09-1
 
 | 项 | 值 |
 |---|---|
-| 源 JSONL | `/Users/misaya.yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T05-52-49-01a0806f-3df5-74b1-bc56-bf00d89d238e.jsonl` |
+| 源 JSONL | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/sessions/2026/09/08/rollout-2026-09-08T05-52-49-01a0806f-3df5-74b1-bc56-bf00d89d238e.jsonl` |
 | 源大小 / 行数 | 115,831,019 B（115 MB）/ 15,386 行 |
-| 提取文本 | `/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw_thread-main.txt`，297,071 B，3,584 行，542 条 user/assistant 消息（跳过 tool 输出/reasoning/token_count） |
+| 提取文本 | `/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/analysis/unify_20260910/raw_thread-main.txt`，297,071 B，3,584 行，542 条 user/assistant 消息（跳过 tool 输出/reasoning/token_count） |
 | 读取方式 | 全文顺序分块通读（1–700、700–1399、1399–2098、2098–2797、2797–3584），无抽样 |
 | 会话内引用的项目文档 | `docs/research/ROPE_OLMO_BM_RESULT_20260908.md`、`ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.md`、`OVERNIGHT_FAILURE_POSTMORTEM_20260909.md`、`COSH_REDESIGN_EVIDENCE_REVIEW.md`、`NONGEOMETRIC_TEN_CANDIDATE_PLAN_20260909.md`、`UNIFIED_BUDGET_ALLOCATION_THEORY_20260910.md`、`TWO_CORE_SOL_HANDOFF_20260909.md`、`TWO_CORE_ONE_HOUR_DECISION_20260909.md`、`TWO_CORE_CONTINUATION_RESULTS_20260910.md`、`REFCARRY_INTERFACE_AUDIT_20260909.md`、`experiments/native_sparse_position/CORE_DIAGNOSIS.md`、`experiments/native_sparse_position/RESULT_20260908.md`、`experiments/rope_operator_family/{DESIGN.md,EXPERIMENT_VALUE.md,RECENT_RESULTS_NOTE.md,README.md,run.py,evidence.json,results/20260909_gpu/REPORT.md}`、`paper-2027/research/attention-aware-retrofit/results/coupling-transfer/K32_NORMALIZED_INDEX_FULL13_CONFIRMATION_RESULT_20260901.md`、`paper-2027/research/external-reviews/pro-materials-20260908/hybrid_rope_iclr2027_theory_experiment_dossier_20260904.md`、`paper-2027/research/external-reviews/pro-materials-20260908/SINGLE_TABLE_FFN_REPORT_AUDIT_AND_CODEX_GUIDANCE_20260904.md`、`paper-2027/HANDOFF.md`、桌面附件 `Nongeometric_RoPE_Questions_for_GPT6Pro_20260910.md`、`RoPE_Allocation_Theory_Questions_for_Pro_20260910.md`、`RoPE_Allocation_Core_Problem_for_Pro_20260910.md` |
-| 用户外部附件（转录内粘贴） | GPT 分析多份（`/Users/misaya.yanghejazfs.com.au/.codex/attachments/…` 约 06:39–07:27 五份方案 + 06:46 的 5.6/6 Pro 分析）、`/Users/misaya.yanghejazfs.com.au/Downloads/CC_ROPE_REVIEW_AND_CODEX_PLAN_20260909.md`、`/Users/misaya.yanghejazfs.com.au/Downloads/Nongeometric_RoPE_Theory_and_Experiments_20260910.md`、`/Users/misaya.yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown`（7 篇参考论文，后续 10 篇） |
+| 用户外部附件（转录内粘贴） | GPT 分析多份（`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/attachments/…` 约 06:39–07:27 五份方案 + 06:46 的 5.6/6 Pro 分析）、`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/CC_ROPE_REVIEW_AND_CODEX_PLAN_20260909.md`、`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/Nongeometric_RoPE_Theory_and_Experiments_20260910.md`、`/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/Downloads/RoPE_Papers/Markdown`（7 篇参考论文，后续 10 篇） |
 | 提交号 | `9b9d3d7`（09-08 OLMo BM，未推送→随后推送）、`0177e6d`（09-08 收尾，分支 `main_0726_09_06`）、`fe10272`（09-10 复核时 HEAD，分支 `09_09`） |
-| 服务器 | `ssh -p 27741 root@connect.westc.seetacloud.com`（RTX 4080 SUPER 32GB）；`ssh -p 18164 root@connect.westd.seetacloud.com`（无卡，0.5 CPU/2 GiB）；`ssh -p 57109 root@connect.westc.seetacloud.com`（09-09 GPU） |
+| 服务器 | `ssh -p 27741 [REDACTED_EMAIL]`（RTX 4080 SUPER 32GB）；`ssh -p 18164 [REDACTED_EMAIL]`（无卡，0.5 CPU/2 GiB）；`ssh -p 57109 [REDACTED_EMAIL]`（09-09 GPU） |
 
 证据等级标注约定：转录内直接报告的实测数字 = [已验证]（在该转录的评测协议内）；转录中口头推断/用户粘贴外部审稿 = 按文中标注。
 

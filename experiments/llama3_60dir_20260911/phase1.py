@@ -54,7 +54,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
 SSH = ["ssh", "-o", "ConnectTimeout=30", "-o", "BatchMode=yes",
-       "-p", "53405", "root@connect.westc.seetacloud.com"]
+       "-p", "53405", "[REDACTED_EMAIL]"]
 
 D = "/root/autodl-tmp"
 P = f"{D}/phase1_20260910"

@@ -15,7 +15,7 @@
 
 两种压缩都节省 **50% KV 缓存**，但都未恢复原模型答对的 8K 检索题。当前分数目标没有实际优势；输出蒸馏恢复了部分能力。
 
-[完整结果与证据](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/REPORT.md) 已保存并同步远端。
+[完整结果与证据](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/experiments/rope_operator_family/results/20260909_gpu/REPORT.md) 已保存并同步远端。
 
 <oai-mem-citation>
 <citation_entries>
@@ -57,7 +57,7 @@ MEMORY.md:78-78|note=[Continue authorized experiments through interpretable resu
 
 
 ===== [2026-09-09T11:38:24.367Z] <user> =====
-# AGENTS.md instructions for /Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope
+# AGENTS.md instructions for /Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope
 
 <INSTRUCTIONS>
 These AGENTS.md instructions replace all previously provided AGENTS.md instructions.

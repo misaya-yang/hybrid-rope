@@ -2,11 +2,11 @@
 [2026-09-10T11:47:59.456Z] <user> /root/sol09
 [plugins boilerplate]
 [AGENTS.md boilerplate]<environment_context>
-  <cwd>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
+  <cwd>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</cwd>
   <shell>zsh</shell>
   <current_date>2026-09-10</current_date>
   <timezone>America/New_York</timezone>
-  <filesystem><workspace_roots><root>/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/misaya.yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope</root><root>/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/.codex/visualizations/2026/09/08/01a0806f-3df5-74b1-bc56-bf00d89d238e</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 
 [2026-09-10T11:48:03.178Z] <assistant> /root/sol09
@@ -30,8 +30,8 @@ Full ingestion is complete: all 136 dialogue records and all 114 additional file
 [2026-09-10T12:01:57.603Z] <assistant> /root/sol09
 Completed Sol09’s full failure audit and constructive allocation derivation.
 
-- Report: [sol09.md](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol09.md)
-- Coverage receipt: [sol09_coverage.json](/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol09_coverage.json)
+- Report: [sol09.md](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol09.md)
+- Coverage receipt: [sol09_coverage.json](/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope/.agents/rope_unification_20260910/reports/sol09_coverage.json)
 
 Validated 136 dialogue records, 114 additional files, contiguous full-text coverage, JSON integrity, and `git diff --check`. No omissions, GPU work, or extra agents.
 

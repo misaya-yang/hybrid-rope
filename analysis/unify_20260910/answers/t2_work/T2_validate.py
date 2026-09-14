@@ -11,7 +11,7 @@
 import json, math
 import numpy as np
 
-ROOT = '/Users/misaya.yanghejazfs.com.au/paper_project/hybrid-rope'
+ROOT = '/Users/[REDACTED_AUTHOR].yanghejazfs.com.au/paper_project/hybrid-rope'
 G1 = json.load(open(f'{ROOT}/analysis/unify_20260910/tables/ground_truth_tables.json'))
 M = G1['methods']
 
