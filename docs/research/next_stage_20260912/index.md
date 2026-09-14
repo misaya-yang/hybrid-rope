@@ -14,12 +14,18 @@ Llama结果见[经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)�
 AUC差全部为正；两模型均3/3方向通过。YaRN/BM与机制实验后置，不自动启动。
 既有零训练与冻结checkpoint边界见合同，执行沿用目标任务的有效授权。
 
+另有一条不改变TailSpline主线优先级的Native窗口探索：冻结成熟OLMo-2-1B全部
+权重与Native频率support，仅以五个有效自由度校准interior `z`，检验geometric
+Native表是否仍是该checkpoint的事后最优点。该实验是checkpoint-calibrated反事实，
+不是新的目标无关解析曲线；它已冻结资产与判决，并排在当前TailSpline评测主链之后。
+
 | 任务 | 入口 |
 |---|---|
 | 当前实现与结果定位 | [实验流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md) |
 | Llama数据、样本量与执行实现 | [资产审计](LLAMA_CLASSIC_ASSET_AUDIT_20260914.md) |
 | Llama TailSpline–MrPro主结果 | [经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，局部反转与证据边界完整保留 |
 | OLMo TailSpline–MrPro跨模型确认 | [经典两臂结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，13任务AUC差全部为正 |
+| 成熟checkpoint Native `z`增强探索 | [Native-Z5预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md)：OLMo-2-1B、零权重更新、五自由度、独立NLL与原生窗口任务判决；只支持checkpoint-calibrated结论 |
 | YaRN–MrPro理论对照 | [等剂量单交叉后移审计](MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)：CPU闭式已核验，YaRN按作者要求后置 |
 | 核实论文已有证据 | [证据索引](../../../paper-2027/research/evidence/index.md) |
 | Web Pro理论与论文组织讨论 | [十个研究问题与自包含背景](WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md) |

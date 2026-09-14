@@ -2194,6 +2194,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/OLMO_LORA_V2_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2245,6 +2250,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/SCALE_MODEL_TRANSFER_PLAN_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/STABLE_ACCEPT_PLAN_EXECUTION_REVIEW_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -5620,6 +5630,36 @@
     },
     {
       "path": "experiments/native_sparse_position/verify_generation_records.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/followup_chain.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/optimize.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/run.sh",
       "area": "experiments",
       "category": "code"
     },
