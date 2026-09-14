@@ -54,7 +54,7 @@
 
 ## 使用时的解释边界
 
-- **A01**：绝对四格NLL尚未追回，配对差已确认。
+- **A01**：matched support下仅改变30内点，三seed在2×/4×/8×均改善；几何对照配置源自FMRoPE，不作为方法排名。绝对四格NLL尚未追回，配对差已确认。
 - **A02**：128步；reference7/12，1.25×10/12，Exp9/12。
 - **A03**：block whitening对象，不是模型loss预测器。
 - **A04**：b256不能直接套ωL≪1。
@@ -105,6 +105,6 @@
 
 [绘图脚本](../../figs/make_m4_tradeoff.py)、[可移植输入](../../figs/m4_tradeoff_inputs.json)、[48点CSV](../../figs/m4_tradeoff_points.csv)由原M4记录派生；12配置×4主臂、每点3配对seed，含全部正负点。此图不增加模型实验数量，也不拟合跨配置Pareto前沿。
 
-本轮正文已纳入A37构造及A39/A40 TailSpline两模型结果（§5.2、§6.2、Fig3）；BM自然QA仍属A14。兼容性完整内容移入附录，主要证据身份不变。当前版面以[主张映射](../EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)为准。
+本轮正文已纳入A37构造及A39/A40 TailSpline两模型结果（§5.2、§6.2、Fig5）；BM自然QA仍属A14。兼容性完整内容移入附录，主要证据身份不变。当前版面以[主张映射](../EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)为准。
 
 A41：历史原生Std-RoPE三seed对照已追回，见[可移植输入](../../figs/allocation_value_inputs.json)的native_grid_historical及[附录](../../appendix/a5_identification.tex)。严格保持短训练、span匹配、报告聚合身份；不替代A01。

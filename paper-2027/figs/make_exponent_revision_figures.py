@@ -145,7 +145,7 @@ def build_coadaptation(data):
     fig, axes = plt.subplots(1,2,figsize=(7.25,2.7),gridspec_kw={"wspace":.70})
     for ax,loss,values,title,labels,digits in [
         (axes[0],loss50,ppl50,"(a) 50M: perplexity",["Geo","Cosh"],2),
-        (axes[1],loss151,loss151,"(b) 151.9M: tail NLL at 1K",["FMR-derived","Cosh-derived"],3)]:
+        (axes[1],loss151,loss151,"(b) 151.9M: tail NLL at 1K",["Geo-derived","Cosh-derived"],3)]:
         penalty = loss - np.diag(loss)[:,None]
         assert penalty[0,1] > 0 and penalty[1,0] > 0
         im=ax.imshow(penalty,cmap=cmap,vmin=0,vmax=2.5,aspect="auto")
@@ -155,7 +155,7 @@ def build_coadaptation(data):
                         color="white" if penalty[i,j]>1.8 else INK,fontsize=13)
         ax.set(xticks=[0,1],xticklabels=labels,yticks=[0,1],
                yticklabels=["Geo-trained","Cosh-trained"] if ax is axes[0]
-                          else ["FMR-trained","Cosh-trained"],
+                          else ["Geo-trained","Cosh-trained"],
                xlabel="Installed runtime table")
         ax.set_title(title,loc="left",pad=10)
         ax.tick_params(length=0,pad=6)

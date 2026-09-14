@@ -29,11 +29,15 @@ def verify():
         hh=dd.T@dd;hh[-1,-1]+=1
         vv=np.linalg.solve(hh,np.ones(width));vv/=vv.sum()
         assert np.allclose(ee,vv,atol=1e-13) and np.all(ee>0)
-    t=D['tailspline'];w=np.array([.25,.5,.25])
-    for key in ['full13','ppl']:
-        delta=w@(np.array(t[key]['TailSpline'])-t[key]['MrPro'])
-        assert abs(delta-t['auc_delta'][key])<1e-6
-    assert abs(w@t['niah_delta']-.0375)<1e-10
+    w=np.array([.25,.5,.25])
+    for model in ['tailspline','tailspline_olmo']:
+        block=D[model]
+        for metric in ['full13','ppl']:
+            delta=w@(np.array(block[metric]['TailSpline'])-np.array(block[metric]['MrPro']))
+            assert abs(delta-block['auc_delta'][metric])<2e-6
+        lo,hi=block['auc_delta_ci95']['full13']
+        assert lo<block['auc_delta']['full13']<hi
+    assert abs(w@D['tailspline']['niah_delta']-.0375)<1e-10
 
     # Exact stiffness versus independent Gauss-Legendre integration.
     nodes,weights=np.polynomial.legendre.leggauss(100)
@@ -151,95 +155,157 @@ def method_overview():
     svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
 
 def overview():
-    fig,axes=plt.subplots(1,3,figsize=(7.25,2.7))
-    ax=axes[0];u=(np.arange(32)+.5)/32;quant=1-np.arcsinh((1-u)*np.sinh(4))/4;z=(quant-quant[0])/(quant[-1]-quant[0])
-    for xs,y,col,label in [(np.linspace(0,1,32),.7,BLUE,'Uniform'),(z,.25,ORANGE,'Cosh')]:
-        ax.scatter(xs,np.full(32,y),s=8,color=col);ax.scatter([0,1],[y,y],s=25,facecolor='white',edgecolor=INK);ax.text(.03,y+.12,label,color=col,fontsize=8)
-    ax.set(xlim=(-.05,1.05),ylim=(0,1),xlabel='Normalized exponent',yticks=[]);ax.spines[['left','right','top']].set_visible(False);ax.set_title('(a) Same endpoints',loc='left')
-    ax=axes[1];ls=[256,512,1024,2048];block=D['range']['fixed_training_range'];vs=np.array([[block[str(l)]['seed_values'][str(s)] for l in ls] for s in [42,137,256]])
-    for v in vs:ax.plot(range(4),v,color='#AFB7BD',lw=.8,marker='o',ms=2)
-    ax.plot(range(4),vs.mean(0),color=ORANGE,lw=1.8,marker='D',ms=3);ax.axhline(0,color=INK,lw=.7)
-    ax.set(xticks=range(4),xticklabels=['1x','2x','4x','8x'],xlabel='Eval. / train length',ylabel='Cosh - Geo tail NLL');ax.set_title('(b) Three-seed training',loc='left');axis_style(ax)
+    fig,axes=plt.subplots(1,3,figsize=(7.25,2.45))
+    ax=axes[0];u=(np.arange(32)+.5)/32
+    quant=1-np.arcsinh((1-u)*np.sinh(4))/4
+    z=(quant-quant[0])/(quant[-1]-quant[0])
+    for values,y,color,label in [(np.linspace(0,1,32),.7,BLUE,'Geo'),(z,.25,ORANGE,'Cosh')]:
+        ax.scatter(values,np.full(32,y),s=8,color=color)
+        ax.scatter([0,1],[y,y],s=25,facecolor='white',edgecolor=INK)
+        ax.text(.03,y+.12,label,color=color,fontsize=9)
+    ax.set(xlim=(-.05,1.05),ylim=(0,1),xlabel='Normalized exponent',yticks=[])
+    ax.spines[['left','right','top']].set_visible(False)
+    ax.set_title('(a) Matched endpoints',loc='left',fontsize=9)
+    ax=axes[1];lengths=[256,512,1024,2048];block=D['range']['fixed_training_range']
+    values=np.array([[block[str(length)]['seed_values'][str(seed)]
+                      for length in lengths] for seed in [42,137,256]])
+    assert np.all(values[:,1:]<0)
+    for row in values:
+        ax.plot(range(4),row,color='#AFB7BD',lw=.85,marker='o',ms=2)
+    ax.plot(range(4),values.mean(0),color=ORANGE,lw=1.8,marker='D',ms=3)
+    ax.axhline(0,color=INK,lw=.7)
+    ax.set(xticks=range(4),xticklabels=['1x','2x','4x','8x'],
+           xlabel='Eval. / train length',ylabel='Cosh - Geo tail NLL')
+    ax.set_title('(b) Three-seed fixed support',loc='left',fontsize=9)
+    axis_style(ax)
     ax=axes[2];keys=['same_support_geometric','nearest_movement_profile_ramp','derived']
-    for i,(k,col,lab) in enumerate(zip(keys,[BLUE,'#009E73',ORANGE],['Uniform','Ramp','Derived'])):
-        vals=[D['frozen'][m]['macro'][k]*100 for m in ['olmo_16k_unseen9','qwen_64k_core4']]
-        ax.bar(np.arange(2)+(i-1)*.24,vals,width=.23,color=col,label=lab)
-    ax.set(xticks=[0,1],xticklabels=['OLMo\n16K','Qwen\n64K'],ylabel='Task macro (%)',ylim=(0,86));ax.set_title('(c) Frozen models',loc='left');ax.legend(frameon=False,fontsize=6.8,ncol=3,loc='upper center',columnspacing=.5,handlelength=.8);axis_style(ax)
-    fig.subplots_adjust(left=.035,right=.99,bottom=.25,top=.85,wspace=.68);finish(fig,'fig_evidence_overview')
+    for i,(key,color,label) in enumerate(zip(keys,[BLUE,'#009E73',ORANGE],['Uniform','Ramp','Derived'])):
+        values=[D['frozen'][model]['macro'][key]*100
+                for model in ['olmo_16k_unseen9','qwen_64k_core4']]
+        ax.bar(np.arange(2)+(i-1)*.24,values,width=.23,color=color,label=label)
+    ax.set(xticks=[0,1],xticklabels=['OLMo 16K\nHeld-out (9)','Qwen 64K\nDev. (4)'],
+           ylabel='Task macro (%)',ylim=(0,86))
+    ax.set_title('(c) Frozen matched support',loc='left',fontsize=9)
+    ax.legend(frameon=False,fontsize=7,ncol=3,loc='upper center',columnspacing=.5,handlelength=.8)
+    axis_style(ax)
+    fig.subplots_adjust(left=.075,right=.99,bottom=.26,top=.85,wspace=.69)
+    finish(fig,'fig_evidence_overview')
+
+
+def geometry():
+    frequencies=256*np.exp(-np.log(256)*np.arange(32)/32)
+    gram=white(frequencies)
+    overlap=np.array([[.5*np.sum(gram[2*i:2*i+2,2*j:2*j+2]**2)
+                       for j in range(32)] for i in range(32)])
+    slow=gram[48:,48:]
+    rank=np.trace(slow)**2/np.sum(slow**2)
+    assert abs(rank-2.11474)<1e-5
+    assert np.allclose(np.diag(overlap),1) and np.allclose(overlap,overlap.T)
+    fig=plt.figure(figsize=(4.7,2.15))
+    ax=fig.add_axes([.14,.24,.40,.72])
+    im=ax.imshow(overlap,origin='lower',vmin=0,vmax=1,cmap='Blues',aspect='equal')
+    ax.add_patch(Rectangle((23.5,23.5),8,8,fill=False,edgecolor=ORANGE,lw=1.3))
+    ax.set(xlabel='Frequency-pair index',ylabel='Frequency-pair index',xticks=[0,8,16,24,31],yticks=[0,8,16,24,31])
+    color_ax=fig.add_axes([.58,.24,.025,.72]);fig.colorbar(im,cax=color_ax,ticks=[0,.5,1])
+    fig.text(.71,.81,'Full-pair overlap',fontsize=10,fontweight='bold')
+    fig.text(.71,.62,'Slowest eight pairs',fontsize=9,color=ORANGE)
+    fig.text(.71,.44,r'$r_2 = 2.11$',fontsize=15,color=INK)
+    fig.text(.71,.26,r'$\omega L\in[1.19,4]$',fontsize=10)
+    finish(fig,'fig_allocation_geometry')
+
 
 def learning():
-    fig,axes=plt.subplots(1,2,figsize=(7.25,3.0),gridspec_kw={'wspace':.45})
-    ws=256*np.exp(-np.log(256)*np.arange(32)/32);g=white(ws)
-    a=np.array([[.5*np.sum(g[2*i:2*i+2,2*j:2*j+2]**2) for j in range(32)]for i in range(32)])
-    ax=axes[0];im=ax.imshow(a,origin='lower',vmin=0,vmax=1,cmap='Blues',aspect='auto');ax.add_patch(Rectangle((23.5,23.5),8,8,fill=False,edgecolor=ORANGE,lw=1.2));ax.set(xlabel='Frequency-pair index',ylabel='Frequency-pair index');ax.set_title('(a) Which rotary pairs overlap?',loc='left',fontsize=8.5);fig.colorbar(im,ax=ax,fraction=.045,pad=.03)
-    ax=axes[1];mla=D['mla'];ls=mla['eval_lengths']
-    for key,col,style,label in [('GEO',BLUE,'-','Geo'),('EVQ',ORANGE,'-','Cosh'),('GEO+YaRN(s=4)',BLUE,'--','Geo + blend'),('EVQ+YaRN(s=4)',ORANGE,'--','Cosh + blend')]:
-        sample=np.array([[mla['extended'][key][str(seed)][str(l)] for l in ls]for seed in mla['seeds']]);vals=sample.mean(0)
-        if key in ['GEO','EVQ']:ax.fill_between(np.array(ls)/1024,sample.min(0),sample.max(0),color=col,alpha=.10,linewidth=0)
-        ax.plot(np.array(ls)/1024,vals,style,color=col,marker='o',ms=3,label=label)
-    ax.set(xlabel='Evaluation length (K tokens)',ylabel='PPL',xticks=[8,16,24,32]);ax.set_title('(b) Does allocation help after learning?',loc='left',fontsize=8.5);ax.legend(frameon=False,fontsize=7.5);axis_style(ax)
-    fig.subplots_adjust(left=.08,right=.99,bottom=.22,top=.87);finish(fig,'fig_allocation_learning')
+    fig,ax=plt.subplots(figsize=(5.6,2.05))
+    mla=D['mla'];lengths=mla['eval_lengths']
+    for key,color,style,label in [('GEO',BLUE,'-','Geo'),('EVQ',ORANGE,'-','Cosh'),
+                                  ('GEO+YaRN(s=4)',BLUE,'--','Geo + blend'),
+                                  ('EVQ+YaRN(s=4)',ORANGE,'--','Cosh + blend')]:
+        sample=np.array([[mla['extended'][key][str(seed)][str(length)]
+                          for length in lengths] for seed in mla['seeds']])
+        if key in ['GEO','EVQ']:
+            ax.fill_between(np.array(lengths)/1024,sample.min(0),sample.max(0),color=color,alpha=.12,linewidth=0)
+        ax.plot(np.array(lengths)/1024,sample.mean(0),style,color=color,marker='o',ms=3,label=label)
+    ax.set(xlabel='Evaluation length (K tokens)',ylabel='PPL',xticks=[8,16,24,32])
+    ax.legend(frameon=False,fontsize=9,ncol=2,loc='upper left')
+    axis_style(ax)
+    fig.subplots_adjust(left=.12,right=.99,bottom=.25,top=.96)
+    finish(fig,'fig_allocation_learning')
+
 
 def tailspline():
-    fig=plt.figure(figsize=(7.25,6.2))
-    gs=fig.add_gridspec(3,3,height_ratios=[.72,1,1])
+    fig=plt.figure(figsize=(7.25,3.7))
+    gs=fig.add_gridspec(2,2,height_ratios=[.65,1])
     top=fig.add_subplot(gs[0,:]);n=17;q=np.arange(1,n+1)
-    for vals,col,label in [(2*q/(n*(n+1)),BLUE,'MrPro'),(6*q*(n-q+1)/(n*(n+1)*(n+2)),'#009E73','BM'),(3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1)),ORANGE,'TailSpline')]:
-        top.plot(np.arange(n+2),np.r_[0,vals,0],color=col,lw=1.6,marker="o",ms=2.5,label=label)
-    top.set(xlabel='Gap index (0 and 18: unchanged outer gaps)',ylabel='Extra log gap / log s',xticks=[0,1,5,9,13,17,18])
-    top.set_title('(a) Extra log gaps: the boundary trade-off',loc='left',fontsize=9)
-    top.set_ylim(-.004,.15)
-    top.legend(frameon=False,ncol=3,loc='upper center',fontsize=8)
-    top.annotate('Larger entry jump',xy=(1,3/(2*n+1)),xytext=(2.6,.112),fontsize=7.5,color=ORANGE,
+    for values,color,label in [(2*q/(n*(n+1)),BLUE,'MrPro'),
+                               (6*q*(n-q+1)/(n*(n+1)*(n+2)),'#009E73','BM'),
+                               (3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1)),ORANGE,'TailSpline')]:
+        top.plot(np.arange(n+2),np.r_[0,values,0],color=color,lw=1.6,marker='o',ms=2.5,label=label)
+    top.set(xlabel='Gap index (0 and 18: unchanged outer gaps)',ylabel=r'Extra gap / $\log s$',
+            xticks=[0,1,5,9,13,17,18],ylim=(-.004,.16))
+    top.set_title('(a) Boundary increments',loc='left',fontsize=10)
+    top.legend(frameon=False,ncol=3,loc='lower right',bbox_to_anchor=(1,1.01),fontsize=9)
+    top.annotate('Larger entry jump',xy=(1,3/(2*n+1)),xytext=(2.6,.112),fontsize=8,color=ORANGE,
                  arrowprops=dict(arrowstyle='->',color=ORANGE,lw=.8))
-    top.annotate('Smaller tail jump',xy=(n,6/((n+1)*(2*n+1))),xytext=(11.1,.025),fontsize=7.5,color=ORANGE,
+    top.annotate('Smaller tail jump',xy=(n,6/((n+1)*(2*n+1))),xytext=(11.1,.025),fontsize=8,color=ORANGE,
                  arrowprops=dict(arrowstyle='->',color=ORANGE,lw=.8))
-    top.axvspan(-.2,.5,color='#F1F3F5',zorder=0);top.axvspan(17.5,18.2,color='#F1F3F5',zorder=0);axis_style(top)
-    axes=np.array([[fig.add_subplot(gs[r+1,c]) for c in range(3)] for r in range(2)])
+    top.axvspan(-.2,.5,color='#F1F3F5',zorder=0);top.axvspan(17.5,18.2,color='#F1F3F5',zorder=0)
+    axis_style(top)
+    for col,(key,name) in enumerate([('tailspline','Llama'),('tailspline_olmo','OLMo')]):
+        ax=fig.add_subplot(gs[1,col]);block=D[key];x=np.array(block['lengths'])/1024
+        for method,color,marker in [('MrPro',BLUE,'o'),('TailSpline',ORANGE,'D')]:
+            ax.plot(x,np.array(block['full13'][method])*100,color=color,marker=marker,ms=3,label=method)
+        delta=block['auc_delta']['full13']*100
+        lo,hi=np.array(block['auc_delta_ci95']['full13'])*100
+        ax.set_title(f'({chr(98+col)}) {name}: RULER-13',loc='left',fontsize=10)
+        ax.text(.02,.07 if col==0 else .43,f'AUC difference {delta:+.2f}pp\nPaired 95% CI [{lo:+.2f}, {hi:+.2f}]',
+                transform=ax.transAxes,fontsize=8.5,bbox=dict(facecolor='white',edgecolor='none',alpha=.85,pad=1.5))
+        ax.set(xticks=x,xlabel='Length (K tokens)',ylabel='Task macro (%)',ylim=(0,103))
+        ax.legend(frameon=False,fontsize=8,ncol=2,loc='upper right')
+        axis_style(ax)
+    fig.subplots_adjust(left=.095,right=.99,bottom=.13,top=.94,wspace=.30,hspace=.95)
+    finish(fig,'fig_tailspline_main')
+
+
+def deployment_details():
+    fig,axes=plt.subplots(2,2,figsize=(7.25,4.3))
     for row,(key,name) in enumerate([('tailspline','Llama'),('tailspline_olmo','OLMo')]):
-        t=D[key];x=np.array(t['lengths'])/1024
-        w=np.array([.25,.5,.25])
-        for col,metric in [(0,'full13'),(2,'ppl')]:
-            ax=axes[row,col]
-            if metric=='full13':
-                for method,color in [('MrPro',BLUE),('TailSpline',ORANGE)]:
-                    ax.plot(x,np.array(t[metric][method])*100,color=color,marker='o',ms=3,label=method)
-            else:
-                relative=100*(np.array(t['ppl']['TailSpline'])/np.array(t['ppl']['MrPro'])-1)
-                ax.axhline(0,color=INK,lw=.7)
-                ax.plot(x,relative,color=ORANGE,marker='o',ms=3)
-                for xx,yy in zip(x,relative):
-                    ax.annotate(f'{yy:+.2f}%',(xx,yy),xytext=(0,6),textcoords='offset points',
-                                ha='center',fontsize=7)
-                ax.margins(x=.14,y=.25)
-            assert abs(w@(np.array(t[metric]['TailSpline'])-t[metric]['MrPro'])-t['auc_delta'][metric])<2e-6
-            ax.set(ylabel='Task macro (%)' if col==0 else 'PPL change (%)')
-            if row==0 and col==0:ax.legend(frameon=False,fontsize=7)
-        ax=axes[row,1];ax.axhline(0,color=INK,lw=.7);ax.plot(x,np.array(t['niah_delta'])*100,color=ORANGE,marker='o',ms=3);ax.set(ylabel='Difference (pp)')
-        for col,title in enumerate(['RULER-13','NIAH difference','PPL vs MrPro']):
-            ax=axes[row,col];ax.set(xticks=x,xlabel='Length (K tokens)');ax.set_title(f'({chr(98+row*3+col)}) {name}: {title}',loc='left',fontsize=8.5);axis_style(ax)
-    fig.subplots_adjust(left=.075,right=.99,bottom=.10,top=.95,wspace=.60,hspace=.90);finish(fig,'fig_tailspline_main')
+        block=D[key];x=np.array(block['lengths'])/1024
+        values=[np.array(block['niah_delta'])*100,
+                100*(np.array(block['ppl']['TailSpline'])/np.array(block['ppl']['MrPro'])-1)]
+        for col,(value,metric,label) in enumerate(zip(values,['NIAH subset','PPL vs MrPro'],['Difference (pp)','PPL change (%)'])):
+            ax=axes[row,col];ax.axhline(0,color=INK,lw=.7)
+            ax.plot(x,value,color=ORANGE,marker='o',ms=3)
+            ax.set(xticks=x,xlabel='Length (K tokens)',ylabel=label)
+            ax.set_title(f'({chr(97+2*row+col)}) {name}: {metric}',loc='left',fontsize=10)
+            ax.margins(x=.12,y=.3);axis_style(ax)
+    fig.subplots_adjust(left=.10,right=.99,bottom=.13,top=.94,wspace=.35,hspace=.65)
+    finish(fig,'fig_tailspline_details')
+
 
 def table():
     rows=[]
     for stage in ['50%','75%','100%']:
         vals=[np.mean(list(v['16384']for v in D['mla']['progression'][a][stage].values()))for a in ['GEO','EVQ']]
-        rows.append(f"MLA, {stage.replace('%',r'\%')} budget & PPL at $16$K & {vals[0]:.1f} & {vals[1]:.1f} "+r'\\')
+        escaped_stage=stage.replace('%',r'\%')
+        rows.append(f"{escaped_stage} budget & PPL at $16$K & {vals[0]:.1f} & {vals[1]:.1f} "+r'\\')
     text=r'''\begin{table}[t]
 \centering\small
-\caption{\textbf{Allocation benefits across learning protocols.} MLA uses three seeds, unanchored midpoint Cosh and $8$K training. The $750$M pair fixes endpoints and uses one seed. OLMo uses one matched adaptation pair with physical inputs $\le4$K and explicit long-phase exposure; its score requires the full answer and EOS.}
+\caption{\textbf{Allocation benefits across learning protocols.} Each block names its reference. MLA uses unanchored midpoint Cosh and $8$K training; the $750$M pair fixes endpoints. OLMo adaptation uses physical inputs $\le4$K with explicit long-phase exposure and requires the full answer plus EOS.}
 \label{tab:training-models}
 \begin{tabular}{@{}llrr@{}}
 \toprule
-Protocol & Endpoint & Geo / Native & Cosh \\
+Protocol & Metric & Reference & Cosh \\
 \midrule
+\multicolumn{4}{@{}l@{}}{\textit{MLA learning: Geo reference, three seeds}} \\
 '''+ '\n'.join(rows)+r'''
 \midrule
-$750$M continuation & PPL at $4$K & 22.0 & 22.3 \\
+\multicolumn{4}{@{}l@{}}{\textit{$750$M continuation: Geo reference, one seed}} \\
+After continuation & PPL at $4$K & 22.0 & 22.3 \\
  & PPL at $16$K & 45.1 & 24.4 \\
  & $8$K answer-token exact & $0/40$ & $31/40$ \\
 \midrule
-OLMo matched adaptation & $4$K complete + EOS & $95/100$ & $100/100$ \\
+\multicolumn{4}{@{}l@{}}{\textit{OLMo adaptation: Native reference, one matched pair}} \\
+After phase exposure & $4$K complete + EOS & $95/100$ & $100/100$ \\
  & $8$K complete + EOS & $18/100$ & $98/100$ \\
  & $16$K complete + EOS & $0/100$ & $60/100$ \\
 \bottomrule
@@ -249,4 +315,4 @@ OLMo matched adaptation & $4$K complete + EOS & $95/100$ & $100/100$ \\
     (HERE.parent/'tables/table_learning_main.tex').write_text(text)
 
 if __name__=='__main__':
-    verify();method_overview();overview();learning();tailspline();table();print('Method overview, three evidence figures, learning table and TailSpline algebra verified.')
+    verify();method_overview();overview();geometry();learning();tailspline();deployment_details();table();print('Five main figures, deployment supplement, learning table and CPU algebra verified.')

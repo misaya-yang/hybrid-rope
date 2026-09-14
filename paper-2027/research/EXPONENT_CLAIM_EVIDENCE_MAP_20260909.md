@@ -15,13 +15,13 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 | 认识 | 本项发现与作用 | 相邻成果的联系 | 当前稿件位置 |
 |---|---|---|---|
 | 研究对象 | x=a+Rz 分离端点与内部位置；pi 分离槽指派 | 为纯内部干预和冻结安装定义对象 | 主文 §2 |
-| C01 独立作用 | 151.9M 三 seed：只动 30 内点，OOD 三长度全同向 | 给几何分析一个实际需要解释的变量 | §3.1、Fig.2、App. exact-range |
+| C01 独立作用 | 151.9M 三 seed：matched support下只动30内点，2×/4×/8× NLL均改善；几何对照配置源自FMRoPE | 给几何分析一个实际需要解释的变量 | §3.1、Fig.2、App. exact-range |
 | C02 位置对象 | 完整 sin/cos 子空间、canonical overlap、rank 恒等式 | 把点位差异转成位置方向分配 | §4.1、Fig.3、App. A |
 | C03 有限窗结构 | 核心 b256 网格最慢8对 r2=2.11474 | 使位置基分析落到核心训练参数，非模型loss中介效应证明 | §4.2、Fig.3、App. finite-window-rank |
 | C04 学得兼容 | 两尺度 crossing、运行范围反转、同谱置换与补偿恒等式 | 将位置基与权重使用联系，动机转入成熟部署 | 附录兼容性整节及原交叉图 |
 | C05 可构造性 | Cosh 明示密度目标、唯一解、逆CDF、端点锚定 | 从对象和设计偏好到一个可安装实例 | §5.1、App. A |
 | C06 多形状价值 | M4：7/12 reference、10/12 preassigned1.25、9/12 Exp | 主变量价值超出一条曲线；Cosh/Exp差异按区间呈现 | §3多形状段、App. B |
-| C07 旋转预算 | 432M MLA三seed，完整8/16/24/32K曲线与共享blend | 学习期构造在少pair架构的实际价值 | §6.1、Table1、App. MLA |
+| C07 旋转预算 | 432M MLA三seed，完整8/16/24/32K曲线与共享blend | 学习期构造在少pair架构的实际价值 | §6.1、Fig.4、Table1、App. MLA |
 | C08 继续学习 | 750M共享起点续训、完整长度PPL与40-case生成 | 学习已有模型的新分配可影响生成 | §6.1、Table1、App. larger-scale |
 | C09 适配与读出 | 8B PPL/来源使用、同adapter任务结果、独立516-step后续 | 区分学到长程来源使用与任务转换；保留整组证据 | §6末指针、App. Llama；完整结果在附录 |
 | C10 成熟模型内点效应 | OLMo/Qwen同支持冻结干预 | 与学习期C01连接，扩展至固定权重和任务指标 | §3.2、App. frozen |
@@ -37,12 +37,21 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 | 主张 | 身份 | 正文 |
 |---|---|---|
 | TailSpline有限网格唯一解 | 声明的单侧差分能量；CPU独立KKT核验 | §5.2、证明附录 |
-| Llama零训练收益 | A39，共同端点/band/gain/权重下比较内部分配，报告聚合 | 摘要、§6.2、Fig4第一行 |
-| OLMo零训练确认 | A40，同样固定外部条件，exact表在本次输出前冻结 | 摘要、§6.2、Fig4第二行 |
+| Llama零训练收益 | A39，共同端点/band/gain/权重下比较内部分配，报告聚合 | 摘要、§6.2、Fig.5b |
+| OLMo零训练确认 | A40，同样固定外部条件，exact表在本次输出前冻结 | 摘要、§6.2、Fig.5c |
 | 完整回答能力 | A12，匹配适配且有长相位暴露 | §6.1、Table1 |
 | 窗口内增强 | 成熟结论尚未建立；M4初步双改善 | 讨论与附录 |
 
 主图可移植输入为 `figs/allocation_value_inputs.json`。A39/A40导入报告聚合，不声称本机raw重算。NIAH为Full-13子集；PPL按token聚合后指数化，跨长度AUC用log-length梯形权重。
+
+151.9M的主张：相同频率端点与训练协议下，仅重新分配中间30个频率，三个seed在2×/4×/8×的NLL均改善，说明allocation有效。“固定支持”只是这一控制条件的术语。27bE的Cosh形状/τ/理论链问题与此项收益分开，避免把额外归因任务堆到151.9M上。
+
+## 本轮图表与证据职责
+
+- Fig.2保留同端点示意、151.9M三seed fixed-support收益及冻结同支持结果；FMRoPE只注明几何配置来源。历史target-matched评价是当时的方法比较设置，保留附录，不前置为allocation收益边界。
+- Fig.3在§4展示full-pair overlap与慢频块effective rank；Fig.4在§6展示三seed MLA曲线，两者不再共用面板。
+- Fig.5保留边界增量及两模型Full-13曲线；已有报告的AUC区间写入可移植图源，未构造逐长度区间。NIAH/PPL分解进入TailSpline附录；Llama 8/16K PPL代价、QA family −1.25pp与OLMo 133/390、142/390 cap-hit保留正文。
+- 新标准Transformer 350M若在正文冻结前完成三seed fixed-support对照，仅作为§3.1的scale confirmation接入，完整协议及逐seed结果入固定支持附录。未完成时不写论文占位，不混用历史MLA文件，不跨规模合并seed；当前尚未据此新增主张或资产。
 
 ## 新增区间设计内容
 

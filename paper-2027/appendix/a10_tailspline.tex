@@ -79,6 +79,13 @@ Full-13 AUC difference is $0.492340$ with paired $95\%$ interval $[0.453365,0.53
 Neither arm has empty outputs. TailSpline and MrPro terminate with EOS on $257$ and $248$ of $390$ inputs, respectively, and hit the cap on $133$ and $142$ ($34.1\%$ and $36.4\%$). PPL uses the same document sources as Llama with OLMo-tokenized prefixes. Report and original stream identities accompany the portable aggregates.
 \FloatBarrier
 
+\begin{figure}[ht]
+\centering\includegraphics[width=\linewidth]{fig_tailspline_details.pdf}
+\caption{\textbf{NIAH and language-modeling responses.} NIAH is a subset of each model's depth-balanced RULER-13 panel. Both columns show TailSpline relative to MrPro; PPL changes use each length's absolute PPL. Llama's $8/16$K PPL slightly increases, while OLMo improves at every measured length. The panels have separate vertical scales.}
+\label{fig:tailspline-details}
+\end{figure}
+\FloatBarrier
+
 \subsection{Evaluation implementation}
 \label{sec:tailspline-implementation}
 Generation is greedy, with repetition penalty $1$, no repeat-ngram restriction and the model's EOS IDs. Llama uses batch size one with cached $8192$-token prefill chunks; OLMo uses batches of at most four identical-length inputs. The static FP32 frequency table is installed after model loading and its installed values are checked against the receipt. NIAH point-depth tasks use two prompts at each target depth $10/30/50/70/90\%$ per length. Other tasks keep their recorded task-specific output budgets.

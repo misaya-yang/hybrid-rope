@@ -26,6 +26,7 @@ For example, with Python, NumPy and Matplotlib available:
 ```bash
 python3 figs/allocation_design.py
 python3 figs/make_allocation_value.py
+python3 figs/make_fig_exact_range_control.py
 python3 figs/verify_explicit_geometry.py
 python3 figs/verify_profile_diagnostics.py
 python3 figs/verify_recovered_assets.py
@@ -64,3 +65,8 @@ construction properties, not separately identified causes of task gains.
 `fig_method_overview.pdf` is a vector method diagram with embedded fonts;
 `fig_method_overview.svg` is an editable export. Both are generated from
 analytic quantiles and exact finite-grid profiles by `make_allocation_value.py`.
+
+The main displays separately show fixed-support controls, full-pair geometry,
+MLA learning and frozen deployment. Reported TailSpline AUC intervals are
+stored in `allocation_value_inputs.json`; they are not pointwise confidence
+bands. The NIAH/PPL decomposition is retained in `fig_tailspline_details.pdf`.

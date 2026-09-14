@@ -24,3 +24,5 @@ python3 paper-2027/package_source.py
 按改动需要复核；`figs/make_exponent_revision_figures.py`和`figs/make_story_figures.py`重建历史图表，最后运行`figs/make_allocation_value.py`生成主图及实证图；`verify_explicit_geometry.py`、`verify_profile_diagnostics.py`、`verify_recovered_assets.py`、`verify_routing_schedule.py`检查数学/摘要/历史调度。它们不运行模型。历史独立源码包重建记录见[2026-09-12重构说明](research/STORY_RESTRUCTURE_20260912.md)，不代表后续版本已独立重建。
 
 源包按`package_source.py`的实际依赖收集，不包含内部research、Pro指导或全仓库原始实验流。2026-09-14已更新TeX/PDF与源码包，并在解包目录运行五项CPU核验并独立编译；未运行模型实验。
+
+当前写作锚点修订：151.9M保留固定支持下的三seed外推收益，几何对照配置仅注明FMRoPE来源；Fig3几何与Fig4学习分开，Fig5简化为边界与两模型Full-13，代价留正文。正文9页、五图两表；最新处理与验收见[修订目标](REVISION_BRIEF.md)。

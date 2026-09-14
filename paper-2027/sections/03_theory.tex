@@ -33,9 +33,16 @@ Here $\operatorname{tr}(\Gamma^2)$ is the frame potential of the normalized posi
 Under uniform measure on $[0,L]$, with $t=\Delta/L$, as $x=\omega L\to0$, $\cos(xt)\to1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal O(\epsilon^4)$.
 \end{proposition}
 
-Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened effective rank $r_2=2.00013$. At $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have effective rank $r_2=2.11$ (Fig.~\ref{fig:allocation-basis}a). Their overlap is substantial even though every frequency has $\omega L>1$.
+Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened effective rank $r_2=2.00013$. At $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have effective rank $r_2=2.11$ (Fig.~\ref{fig:allocation-basis}). Their overlap is substantial even though every frequency has $\omega L>1$.
 
 
+
+\begin{figure}[!ht]
+\centering\includegraphics[width=.68\linewidth]{fig_allocation_geometry.pdf}
+\caption{\textbf{Slow rotary pairs share positional directions.} Full-pair canonical overlap on the identification grid ($b=256$, $K=32$, $L=256$), under uniform separation measure on $[0,L]$. The outlined eight-pair block has effective rank $r_2=2.11$ despite $\omega L\in[1.19,4]$.}
+\label{fig:allocation-basis}
+\end{figure}
 
 \paragraph{Design implication.}
 A fixed set of rotary pairs can supply strongly overlapping positional directions. Allocation controls this concentration, while learning determines how the model combines these directions with content. This motivates two uses of frequency-spacing design: distribute the basis during learning, or redistribute extension relative to a frozen model's native table. Appendix~\ref{sec:compatibility} examines the learned frequency--coordinate associations through crossed-table and slot interventions.
+\FloatBarrier

@@ -2249,6 +2249,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/STABLE_ACCEPT_PLAN_EXECUTION_REVIEW_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
       "area": "docs",
       "category": "document"
@@ -8139,6 +8144,16 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/fig_allocation_geometry.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_allocation_geometry.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/figs/fig_allocation_learning.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8180,6 +8195,11 @@
     },
     {
       "path": "paper-2027/figs/fig_exact_range_control.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_exact_range_control.png",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -8250,6 +8270,16 @@
     },
     {
       "path": "paper-2027/figs/fig_spectral_budget_scaling.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_details.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_details.png",
       "area": "paper-2027",
       "category": "manuscript"
     },

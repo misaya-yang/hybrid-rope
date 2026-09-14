@@ -81,9 +81,9 @@ def main() -> None:
         ax.grid(axis="y", color="#D8D8D8", linewidth=0.6, alpha=0.8)
         ax.spines[["top", "right"]].set_visible(False)
 
-    axes[0].set_ylabel("anchored EVQ-Cosh − FMRoPE tail NLL")
-    axes[0].text(7.85, -0.055, "EVQ-Cosh favoured", ha="right", va="top", color="#176B87", fontsize=8)
-    axes[1].text(7.85, 0.055, "FMRoPE favoured", ha="right", va="bottom", color="#B14A3B", fontsize=8)
+    axes[0].set_ylabel("Cosh − Geo tail NLL")
+    axes[0].text(7.85, -0.055, "Cosh allocation favoured", ha="right", va="top", color="#176B87", fontsize=8)
+    axes[1].text(7.85, 0.055, "Geometric control favoured", ha="right", va="bottom", color="#B14A3B", fontsize=8)
     handles, labels = axes[1].get_legend_handles_labels()
     fig.legend(handles, labels, loc="lower center", ncol=4, frameon=False, bbox_to_anchor=(0.5, -0.01))
     fig.tight_layout(rect=(0, 0.10, 1, 1), w_pad=2.0)
