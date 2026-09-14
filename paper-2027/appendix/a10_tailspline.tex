@@ -31,7 +31,7 @@ The opposite entry behavior is also explicit: $\epsilon_1^{\rm Pro}=2/[n(n+1)]$,
 \subsection{Protocol and complete length responses}
 Frozen Llama-$3$-$8$B-Instruct has native window $8192$. Both arms use exact finite-grid profiles, $s=4$, canonical $32/1$-turn band $[18,35]$, and cosine/sine gain $1+0.1\ln4$. Each table is installed before prefill and shared across layers, requests and evaluation lengths. Construction uses no weights, activations or calibration outputs.
 
-RULER-13 contains $10$ prompts per task at $8/16/32$K: $390$ paired inputs per arm. NIAH and passkey are subsets of this panel. The PPL panel contains $32$ ProofPile-test and $14$ PG19-test documents at each length: $138$ rows per arm. Both compared methods retain their $s=4$ table even at the native input length.
+The depth-balanced RULER-13 panel contains $10$ prompts per task at $8/16/32$K: $390$ paired inputs per arm. NIAH and passkey are subsets of this panel. PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents at each length: $138$ rows per arm \citep{azerbayev2022proofpile,rae2019compressive}. Both compared methods retain their $s=4$ table even at the native input length.
 
 Normalized trapezoidal log-length AUC weights the three endpoints by $1/4,1/2,1/4$. For PPL it integrates PPL over log length, not log PPL. At each length, PPL is the exponential of total whole-sequence loss divided by total scored tokens across the 46 documents. The paired document bootstrap resamples document identities jointly across lengths, recomputing token-weighted NLL, PPL and AUC for each draw. Task aggregates weight tasks equally. The recorded paired intervals characterize the tested inputs and task families for this frozen checkpoint.
 \begin{table}[ht]
@@ -49,7 +49,8 @@ PPL TailSpline & 5.295283 & 4.530318 & 4.110622 \\
 \bottomrule
 \end{tabular}
 \end{table}
-Family AUC differences are retrieval $+3.750$ points, tracking $+6.500$, aggregation approximately $+3.792$, and QA $-1.250$. Multikey-2 improves by $22.5$ points; QA-1 and multikey-1 each decrease by $5.0$. TailSpline/MrPro have $30/37$ empty outputs, $388/384$ EOS-terminated outputs and $2/6$ budget-limited outputs, each out of $390$. Official scores are distinct from complete-answer-plus-EOS exactness.
+\FloatBarrier
+Family AUC differences are retrieval $+3.750$ points, tracking $+6.500$, aggregation approximately $+3.792$, and QA $-1.250$. Multikey-2 improves by $22.5$ points; QA-1 and multikey-1 each decrease by $5.0$. Out of $390$ inputs, TailSpline and MrPro respectively have $30$ and $37$ empty outputs, $388$ and $384$ EOS-terminated outputs, and $2$ and $6$ budget-limited outputs. Task scores include partial credit.
 
 The portable input \path{figs/allocation_value_inputs.json} records reported aggregates and original source identities. Original generation and LM streams are maintained separately. The packaged frequency constructor computes the native-grid boundaries and FP32 table from public base, pair count, native length and scale; no model object is required. Regeneration checks aggregate arithmetic and algebra, not a new model execution. TailSpline and MrPro also differ in total log-frequency displacement: this comparison tests complete profiles, not boundary regularization as an isolated task mechanism.
 \FloatBarrier
@@ -72,12 +73,24 @@ PPL TailSpline & 11.152472 & 10.117407 & 8.536196 \\
 \bottomrule
 \end{tabular}
 \end{table}
+\FloatBarrier
 Full-13 AUC difference is $0.492340$ with paired $95\%$ interval $[0.453365,0.530449]$; NIAH difference $0.644531$ has interval $[0.592188,0.694531]$; PPL difference $-3.852932$ has interval $[-4.775042,-3.125459]$. Passkey AUC is $0.950$ versus $0.375$. All $13$ task differences are positive, ranging from $+0.0325$ for common words to $+0.875$ for single-3. Family differences are retrieval $+0.64453$, tracking $+0.37000$, aggregation approximately $+0.16208$, and QA approximately $+0.27563$.
 
-Neither arm has empty outputs. TailSpline/MrPro terminate with EOS on $257/248$ of $390$ inputs and hit the cap on $133/142$. The PPL data use the same document sources as Llama but OLMo-tokenized prefixes. Total transition displacement also differs between the profiles, so the large observed advantage does not isolate the roughness mechanism. Report and original stream identities accompany the portable aggregates.
+Neither arm has empty outputs. TailSpline and MrPro terminate with EOS on $257$ and $248$ of $390$ inputs, respectively, and hit the cap on $133$ and $142$ ($34.1\%$ and $36.4\%$). PPL uses the same document sources as Llama with OLMo-tokenized prefixes. Report and original stream identities accompany the portable aggregates.
 \FloatBarrier
 
 \subsection{Evaluation implementation}
+\label{sec:tailspline-implementation}
 Generation is greedy, with repetition penalty $1$, no repeat-ngram restriction and the model's EOS IDs. Llama uses batch size one with cached $8192$-token prefill chunks; OLMo uses batches of at most four identical-length inputs. The static FP32 frequency table is installed after model loading and its installed values are checked against the receipt. NIAH point-depth tasks use two prompts at each target depth $10/30/50/70/90\%$ per length. Other tasks keep their recorded task-specific output budgets.
+
+\paragraph{Input construction.}
+The generator pins NVIDIA RULER revision \texttt{c3f5e3b}. Each NIAH task--length cell selects $10$ rows from $64$ candidates using only evidence positions and row identifiers. For single-evidence tasks, the five target depths above each receive two prompts; selection minimizes absolute depth error with tolerance $0.10$. Multi-evidence tasks alternate dispersed targets $(0.10,0.35,0.65,0.90)$ and middle-cluster targets $(0.35,0.45,0.55,0.65)$, with mean absolute tolerance $0.18$. Depths use token positions divided by the context cap, after padding. Task scores are not used in selection.
+
+Fixed filler tokens are inserted immediately after the user header, before the original task template, until the input occupies cap minus $128$ tokens. The original context, question and references are preserved. In the pinned aggregation templates, the numbered list or coded text follows the task instruction; filler is placed before that instruction. The task-specific generation budgets remain $128$ (NIAH), $30$ (tracking), $120$ (common words), $50$ (frequent words) and $32$ (QA). The row records store padding-token counts and achieved depth errors.
+
+The Llama and OLMo preparation seeds are $20260924$ and $20260925$; each cell adds $300000+10000i+100j$ for length index $i$ and task index $j$. QA uses question-index blocks starting at $5000$, $5010$ and $5020$ for the three lengths. These rules specify sample selection within each model; the two model panels have separate tokenizations. Both exact tables were fixed before their corresponding comparison; historical Llama and OLMo experiments informed the design direction.
+
+\paragraph{Natural-text sources.}
+Proof-Pile uses the original \texttt{hoskinson-center/proof-pile} test archive, selecting the first $32$ arXiv records with at least $300000$ characters and retaining up to the first million characters. PG-19 uses individual test-book prefixes. The frozen $46$-document source manifest records the selected $32$ Proof-Pile and $14$ PG-19 identities; each tokenizer takes a prefix of maximum evaluation length plus one token. Documents are scored separately rather than concatenated.
 
 Full-13 intervals use $20{,}000$ paired resamples within each task--length cell, retaining fixed task weights; NIAH intervals aggregate the corresponding retrieval tasks. The report treats different length cells separately for this panel. PPL intervals instead resample the $46$ document identities jointly across all lengths, also using $20{,}000$ draws. The two uncertainty calculations therefore preserve different experimental units. These are conditional evaluation intervals, not uncertainty across training seeds or model families.

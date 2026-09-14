@@ -55,7 +55,7 @@ $\bar c=\frac{1}{K(K-1)}\sum_{i\neq j}c_{\omega_i\omega_j}$ with
 $\|Q_{ij}\|_F^2=2c_{ij}$. Dividing gives \eqref{eq:budget-identity}.
 \end{proof}
 
-The identity determines R\'enyi-$2$ rank exactly from the mean pairwise
+The identity determines R\'enyi-$2$ effective rank exactly from the mean pairwise
 redundancy. Shannon effective rank and log-determinant retain higher-order
 multi-subspace dependence on the full spectrum.
 
@@ -421,7 +421,7 @@ since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluati
 \rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1-\phi))}{\sinh\tau},
 \label{eq:rho-tau-closed}
 \end{equation}
-which is main-text Theorem~\ref{thm:ode}. Mass normalization enters the
+which establishes Theorem~\ref{thm:ode} and the density used in \S\ref{sec:construction}. Mass normalization enters the
 boundary condition through $g'(0)=\int_0^1\rho=1$. Positivity holds on the closed interval since $\rho_\tau(\phi){\geq}\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$ (with $\rho_\tau(0){=}\tau\coth\tau{>}0$); the inequality constraint $\rho{>}0$ is therefore inactive throughout $[0,1]$ and the unconstrained Euler--Lagrange solution coincides with the KKT-constrained solution. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
 
 \paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the surrogate is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
@@ -496,9 +496,9 @@ For all $\tau > 0$:
 \end{theorem}
 
 \begin{proof}
-The Green's function $g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi$ satisfies $g''(\phi) = -\rho(\phi)$ with $g(0) = 0$, $g'(1) = 0$ (from the $\min$ kernel structure; see~\S\ref{sec:proofs}). Define $h(\phi) = \rho(0) - \rho(\phi)$. Then $h'' = -\rho''$, and under the pure-tether ODE $\rho'' = \tau^2\rho$ this gives $h'' = -\tau^2\rho$, with $h(0) = 0$ and $h'(0) = -\rho'(0)$.
+The Green's function $g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi$ satisfies $g''(\phi) = -\rho(\phi)$ with $g(0) = 0$, $g'(1) = 0$ (from the $\min$ kernel structure; see~\S\ref{sec:proofs}). Define $h(\phi) = \rho(0) - \rho(\phi)$. Then $h'' = -\rho''$, and under the Cosh ODE $\rho'' = \tau^2\rho$ this gives $h'' = -\tau^2\rho$, with $h(0) = 0$ and $h'(0) = -\rho'(0)$.
 
-Define $f(\phi) = \tau^2 g(\phi) - h(\phi)$. Then $f'' = \tau^2 g'' - h'' = -\tau^2\rho - (-\tau^2\rho) = 0$, so $f$ is linear in $\phi$. The boundary values give $f(0) = \tau^2 g(0) - h(0) = 0$ and $f'(0) = \tau^2 g'(0) + \rho'(0) = \tau^2 - \tau^2 = 0$ (using $g'(0) = \int_0^1\rho = 1$ and $\rho'(0) = -\tau^2$ from the pure-tether density). Hence $f \equiv 0$, yielding $\tau^2 g(\phi) = h(\phi) = \rho(0) - \rho(\phi)$, i.e.,
+Define $f(\phi) = \tau^2 g(\phi) - h(\phi)$. Then $f'' = \tau^2 g'' - h'' = -\tau^2\rho - (-\tau^2\rho) = 0$, so $f$ is linear in $\phi$. The boundary values give $f(0) = \tau^2 g(0) - h(0) = 0$ and $f'(0) = \tau^2 g'(0) + \rho'(0) = \tau^2 - \tau^2 = 0$ (using $g'(0) = \int_0^1\rho = 1$ and $\rho'(0) = -\tau^2$ from the Cosh density). Hence $f \equiv 0$, yielding $\tau^2 g(\phi) = h(\phi) = \rho(0) - \rho(\phi)$, i.e.,
 \begin{equation}
 g(\phi) = \frac{\rho(0) - \rho(\phi)}{\tau^2}.
 \label{eq:green-identity}
@@ -545,7 +545,7 @@ records the strength, grid, and setting procedure used in each experiment.
 
 \paragraph{Local scaling calculation.}
 The scaling argument uses four explicit modelling assumptions: (i) the
-pure-tether Cosh family is varied only through $\tau$; (ii) full-RoPE MHA has
+Cosh family is varied only through $\tau$; (ii) full-RoPE MHA has
 $d_{\mathrm{rot}}=\dhd$; (iii) the reference post-softmax distribution is
 diffuse, $p_0=1/L$; and (iv) a fixed trade-off $\lambda>0$ compares a normalised
 channel-load stiffness with a specified phase-variance utility, with

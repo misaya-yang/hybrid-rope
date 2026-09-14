@@ -74,16 +74,30 @@ def greedy_tokens(model, ids, *, max_new_tokens, eos_ids, pad_token_id, prefill_
         model.config._attn_implementation = previous_attention
 
 
-def batched_greedy_tokens(model, prompt_ids, *, max_new_tokens, eos_ids, pad_token_id):
-    """Generate an exact-length batch without an attention padding mask."""
+def batched_greedy_tokens(
+    model, prompt_ids, *, max_new_tokens, eos_ids, pad_token_id, left_pad=False,
+):
+    """Generate a batch, optionally left-padding only at the attention-mask layer."""
     import torch
 
-    lengths = {len(values) for values in prompt_ids}
-    if len(lengths) != 1:
+    lengths = [len(values) for values in prompt_ids]
+    if not left_pad and len(set(lengths)) != 1:
         raise ValueError("Flash-only batching requires equal prompt lengths")
-    maximum = lengths.pop()
-    ids = torch.tensor(prompt_ids, device="cuda", dtype=torch.long)
-    mask = torch.ones_like(ids)
+    maximum = max(lengths)
+    if left_pad:
+        if pad_token_id is None:
+            raise ValueError("left-padded batching requires a tokenizer pad token")
+        ids = torch.full(
+            (len(prompt_ids), maximum), int(pad_token_id), device="cuda", dtype=torch.long,
+        )
+        mask = torch.zeros_like(ids)
+        for index, values in enumerate(prompt_ids):
+            length = len(values)
+            ids[index, maximum - length:] = torch.tensor(values, device="cuda", dtype=torch.long)
+            mask[index, maximum - length:] = 1
+    else:
+        ids = torch.tensor(prompt_ids, device="cuda", dtype=torch.long)
+        mask = torch.ones_like(ids)
     output = model.generate(
         ids, attention_mask=mask, do_sample=False, num_beams=1,
         repetition_penalty=1., no_repeat_ngram_size=0,
@@ -174,6 +188,8 @@ def main():
                         help='0 uses stock generate; positive values enable exact-context chunked KV prefill')
     parser.add_argument('--batch-size',type=int,default=1,
                         help='contiguous exact-length generation batch using Flash SDPA')
+    parser.add_argument('--left-pad-batches',action='store_true',
+                        help='batch variable prompt lengths using masked left pad tokens; prompt content and position ids are unchanged')
     parser.add_argument('--static-table-json',type=Path,
                         help='install the table object (or result.table) from this frozen solver receipt')
     parser.add_argument('--table-label',help='result label for --static-table-json; does not alter the table')
@@ -230,6 +246,7 @@ def main():
               'lm_lengths':list(lm_lengths),
               'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size,
               'batch_size':args.batch_size,
+              **({'left_pad_batches':True} if args.left_pad_batches else {}),
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
     if contract.exists() and json.loads(contract.read_text())!=identity:raise ValueError('output contains a different evaluation')
@@ -255,7 +272,8 @@ def main():
             while (len(batch)<args.batch_size and cursor+len(batch)<len(rows)
                    and rows[cursor+len(batch)]['max_new_tokens']==first['max_new_tokens']
                    and rows[cursor+len(batch)]['length_cap']==first['length_cap']
-                   and len(rows[cursor+len(batch)]['prompt_ids'])==len(first['prompt_ids'])):
+                   and (args.left_pad_batches
+                        or len(rows[cursor+len(batch)]['prompt_ids'])==len(first['prompt_ids']))):
                 batch.append(rows[cursor+len(batch)])
             if len(batch)==1:
                 ids=torch.tensor([first['prompt_ids']],device='cuda',dtype=torch.long)
@@ -268,6 +286,7 @@ def main():
                     model,[row['prompt_ids'] for row in batch],
                     max_new_tokens=first['max_new_tokens'],eos_ids=eos,
                     pad_token_id=tokenizer.pad_token_id,
+                    left_pad=args.left_pad_batches,
                 )
             for row,tokens in zip(batch,token_batches):
                 ended=bool(tokens and tokens[-1] in eos)

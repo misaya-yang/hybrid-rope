@@ -2,7 +2,7 @@
 \centering\small
 \caption{\textbf{Allocation protocols, parameter bounds, and float32 tensor SHA-256 digests.}
 \textbf{Top}: Cosh-family settings across reported experiments. Midpoint means $u_k=(k+1/2)/K$; standard means $u_k=k/K$; anchoring fixes sampled endpoints after quantile evaluation.
-\textbf{Bottom}: Parameter bounds and float32 tensor hashes for static deployment profiles. MrRoPE-Pro parameters follow discrete turn cutoffs $\beta=32, \alpha=1$ with fast cutoff $l = \max \{ j \mid \text{turns}_j > 32 \}$, slow cutoff $h = \min \{ j \mid \text{turns}_j < 1 \}$, and transition width $n = h - l$. FullLagP2 evaluates all $32{,}768$ integer lags, eliminating p2 aliasing spikes.}
+\textbf{Bottom}: Parameter bounds and float32 tensor hashes for static deployment profiles. MrRoPE-Pro parameters follow discrete turn cutoffs $\beta=32, \alpha=1$ with fast cutoff $l = \max \{ j \mid \text{turns}_j > 32 \}$, slow cutoff $h = \min \{ j \mid \text{turns}_j < 1 \}$, and transition width $n = h - l$. FullLagP2 evaluates all $32{,}768$ integer lags, rather than the earlier subsampled grid.}
 \label{tab:allocation-protocols}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}p{.28\linewidth}p{.12\linewidth}p{.22\linewidth}p{.38\linewidth}@{}}

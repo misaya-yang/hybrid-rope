@@ -12,7 +12,7 @@ Return to the paired models of \S\ref{sec:exp-identify}, without further trainin
 \centering
 \includegraphics[width=\linewidth]{fig_allocation_compatibility.pdf}
 \caption{\textbf{Three interventions distinguish the supplied spectrum from learned compatibility.} (a) Range retargeting reverses the ordering of the same trained allocations; thin lines are three seeds and thick lines their means. (b) Crossed factor-four tables at $1$K: rows are trained weights, columns runtime tables, and cells are mean tail NLL over two seeds and $32$ anchors/seed. (c,d) Permuting interior frequency assignments preserves the final frequency multiset, endpoints and gain, but changes OLMo PG-19 tail NLL and Qwen $64$K task macro ($4$ tasks, $20$ rows/task). Each metric has its own axis. Joint Q/K compensation is the algebraic identity in~\eqref{eq:slot-permutation}, not a plotted recovery experiment.}
-\label{fig:allocation-compatibility}
+\label{fig:allocation-compatibility}\label{fig:weight-table-crossing}
 \end{figure}
 
 \subsection{Crossing weights with their frequency tables}
@@ -31,5 +31,5 @@ The distinction becomes sharper when the frequency multiset itself is preserved.
 \end{equation}
 Thus permuting Q/K blocks together with frequencies exactly preserves the attention kernel. With weights fixed, however, permuting only internal frequency assignments raises OLMo tail NLL from $3.10423$ to $6.86493$ and lowers Qwen $64$K task macro from $0.7000$ to $0.0000$. The model uses a specific association between coordinate subspaces and frequencies (Fig.~\ref{fig:allocation-compatibility}c,d).
 
-For genuinely different frequency multisets, position-independent invertible Q/K maps cannot equate the rotation kernels over an interval containing zero (Theorem~\ref{thm:obstruction}). Allocation changes the supplied basis; assignment changes its association with learned coordinates. The experimental counterparts establish why a design can be valuable during learning yet require a different installation strategy on a mature checkpoint. These controls complement the constructive learning and deployment results in the main text.
+For genuinely different frequency multisets, position-independent invertible Q/K maps cannot equate the rotation kernels over an interval containing zero (Theorem~\ref{thm:obstruction}). Allocation changes the supplied basis; assignment changes its association with learned coordinates. The crossed-table controls show that an allocation learned during training need not be a drop-in replacement for a frozen checkpoint. These controls complement the constructive learning and deployment results in the main text.
 \FloatBarrier

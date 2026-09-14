@@ -8,4 +8,6 @@ Run `figs/make_allocation_value.py` after legacy figure generators. Its portable
 
 The design-focused revision moves the BM-Uni equal-displacement control to Section 3, explains both objectives through frequency spacing, and annotates the entry/tail trade-off in Figure 3. BM-Pro shares endpoints and increment mass, not total displacement. Task numbers and constructor interfaces are unchanged; local costs remain in the results section.
 
-Final build: 9 scientific-body pages, 55 total pages; three main figures and two main tables. Undefined references/citations and overfull boxes: zero.
+Final build: 9 scientific-body pages, 55 total pages; four main figures and two main tables. Undefined references/citations and overfull boxes: zero.
+
+The new main figure is a fully vector method overview with an editable SVG. Pro-audit corrections cover effective-rank terminology, sampling implementation, comparison labels, references and duplicated appendix material. The new MLA shared-corpus downgrade was withdrawn after tracing the evaluator: cache accessibility in the audit is not a property of the experiment. The source package now includes the frozen-evaluation runtime closure.

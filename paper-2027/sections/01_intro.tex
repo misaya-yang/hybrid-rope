@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-A RoPE table makes two design choices: its sampled frequency support and the allocation $z$ of finite rotary pairs within it. Existing extensions often change both through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We isolate $z$, establish its extrapolation value, and use it to construct allocations for learning and zero-training deployment.
+A RoPE table distributes a finite set of rotary frequencies across a chosen range. How should those frequencies be placed to improve extrapolation? Existing extensions change their placement through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We identify the independent value of internal allocation $z$ and derive explicit constructions that improve learning and zero-training deployment.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}

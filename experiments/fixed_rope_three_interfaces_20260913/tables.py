@@ -114,6 +114,12 @@ def analytic_exponents(
         # front weight is 3n/[2(2n+1)].
         profile = q * (3.0 * n * n + 3.0 * n + 1.0 - q * q)
         profile /= n * (n + 1.0) * (2.0 * n + 1.0)
+    elif method == "tailspline_dose_control":
+        uniform = q / n
+        pro = q * (q + 1.0) / (n * (n + 1.0))
+        front = 2.0 * uniform - pro
+        weight = 3.0 * n / (2.0 * (2.0 * n + 1.0))
+        profile = (1.0 - weight) * uniform + weight * front
     else:
         raise ValueError(f"unsupported analytic exponent method: {method}")
     return depth * profile
@@ -277,11 +283,11 @@ def build_analytic(
             **construction,
             "identity": "official static YaRN frequency map on a frozen checkpoint; no YaRN SFT",
         }
-    if method == "tailspline":
+    if method in {"tailspline", "tailspline_dose_control"}:
         if not math.isfinite(scale) or scale <= 1.0:
             raise ValueError("TailSpline deployment scale must exceed one")
         if depth != 1.0:
-            raise ValueError("TailSpline is parameter-free and requires depth=1")
+            raise ValueError("TailSpline and its dose control require depth=1")
         if (low is None) != (high is None):
             raise ValueError("low and high must be supplied together")
         canonical_low, canonical_high = default_band(geometry)
@@ -301,6 +307,23 @@ def build_analytic(
             runtime_native.astype(np.float64)
             * np.power(float(scale), -exponents)
         ).astype(np.float32)
+        if method == "tailspline_dose_control":
+            weight = 3.0 * n / (2.0 * (2.0 * n + 1.0))
+            return values, canonical_gain, {
+                "method": "tailspline_same_log_displacement_control",
+                "low": canonical_low,
+                "high": canonical_high,
+                "transition_gaps": n,
+                "tail_depth": 1.0,
+                "formula": "C=(1-w)*U+w*Front; U_q=q/n; Front=2U-MrPro; w=3n/[2(2n+1)]",
+                "finite_grid_front_weight": weight,
+                "matched_candidate": "tailspline",
+                "matched_quantity": "sum of Native-relative exponents and therefore total log-frequency displacement",
+                "boundary_rule": "canonical MrRoPE native-grid 32-turn/1-turn boundaries",
+                "gain_rule": "shared YaRN/MrRoPE 1+0.1*ln(scale) cos/sin amplitude",
+                "identity": "parameter-free same-dose shape control C for exact finite-grid TailSpline",
+                "fitted_coefficients": 0,
+            }
         return values, canonical_gain, {
             "method": "tailspline_exact_finite_grid",
             "low": canonical_low,
@@ -773,7 +796,7 @@ def main() -> None:
         "--method",
         choices=(
             "native", "yarn", "mrpro", "mrpro_frontloaded", "bm", "uni",
-            "mix075", "tailspline", "c42",
+            "mix075", "tailspline", "tailspline_dose_control", "c42",
         ),
         required=True,
     )

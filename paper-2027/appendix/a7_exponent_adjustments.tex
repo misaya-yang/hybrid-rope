@@ -2,7 +2,7 @@
 \label{sec:adjustment-details}
 
 This section specifies the static profiles and evaluation panels used in
-\S\ref{sec:mature-adjustments}. An amplitude $g$ multiplies both the cosine
+\S\ref{sec:exp-frozen-support} and the BM natural-QA comparison in \S\ref{sec:experiments}. An amplitude $g$ multiplies both the cosine
 and sine tables, so its contribution to a rotated Q/K logit is $g^2$.
 Every table is installed before prefill and retained for the entire request.
 The accompanying \texttt{figs/recorded\_runtime\_identities.json} records
@@ -21,13 +21,12 @@ m_k\log s,&\text{log-frequency shift},\\
 \end{equation}
 The blend weight $w_k$ and log-shift profile $m_k$ have different meanings; the first line is the exact conversion between them.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig_frozen_application.pdf}
-\caption{\textbf{Fixed-support identification and natural-QA use are separate comparisons.} (a) Frozen OLMo $16$K scores on nine held-out RULER tasks ($20$ rows/task), with endpoints, amplitude, weights and inputs shared. (b) Matched BM/MrRoPE-Pro $s=4$ natural QA on $631$ untruncated inputs longer than $4$K, using whole-response token F1. The two panels retain their own task and metric definitions.}
-\label{fig:frozen-application}
-\label{fig:bm-natural-qa}
-\end{figure}
+\paragraph{YaRN implementation coordinate.}
+The index-linear YaRN baseline uses
+$r_k=\operatorname{clip}((k-l)/(h-l),0,1)$ and
+$\omega'_k=\omega_k(1-r_k+r_k/s)$, with the recorded correction indices and separate cosine/sine gain. This is the channel-index ramp in the author implementation (revision \texttt{995db5b}) and its Transformers implementation \citep{peng2024yarn}. It is distinct from the historical smoothstep scaler in Appendix~\ref{sec:experiment-details} and the MLA wavelength blend in Appendix~\ref{sec:mla-results}.
+
+
 
 \subsection{Normalized-index profile}
 \label{sec:index-adjustment}
@@ -52,7 +51,7 @@ $\omega'_k=\omega_k^N s^{-m_k}$.
 The Qwen-$2.5$-$0.5$B-Instruct experiment uses its native $K=32$ pairs,
 $b=10^6$, and original context length $L_{\rm ref}=32768$, with $s=2$ and fixed amplitude
 $g=1+0.074\log2=1.0512928914$. The YaRN-$2$ comparison uses the
-Transformers official-equation table and $g=1+0.1\log2=1.0693147181$;
+Transformers index-linear YaRN table and $g=1+0.1\log2=1.0693147181$;
 Native uses $g=1$.
 
 The full RULER-13 confirmation uses seed $202609027$, $20$ examples per

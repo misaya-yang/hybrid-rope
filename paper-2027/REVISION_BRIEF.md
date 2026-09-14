@@ -12,7 +12,7 @@
 
 ## 验证与交付
 
-保持三图两表、正文至多9页。主图重建入口为 `figs/make_allocation_value.py`，最后运行以覆盖旧布局生成器；它验证TailSpline闭式和报告AUC算术。精确主张见[主张映射](research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)。不新增模型实验，不改写既有异常证据。
+正文至多9页，图表数量服从论证需要；当前四图两表。主图重建入口为 `figs/make_allocation_value.py`，最后运行以覆盖旧布局生成器；它验证TailSpline闭式和报告AUC算术。精确主张见[主张映射](research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)。不新增模型实验，不改写既有异常证据。
 
 ## 改稿记录
 
@@ -55,3 +55,13 @@ Final build: 9 scientific-body pages, 55 total pages; three main figures and two
 摘要明确NIAH/PPL为跨长度汇总收益；§6保留局部代价、适配身份与自然QA，删除等总位移重复数字。结论回到可复用设计认识。修正claim map中BM–MrPro“同总量”的含混：同增量质量不等于同总log位移；等总log位移的是BM–Uni。无新实验、无新理论最优性主张。
 
 本轮验收：9页正文、55页总稿，三图两表；逐页检查正文和受影响附录，修复图表两侧的跨页断句。0未定义引用、0溢出，匿名与字体检查通过。89文件源码包校验、独立解包编译、构造/图源/恢复资产CPU核验均通过；冻结输入、主表数值及构造器接口未改变。BM–Uni按原owner明确标为开发面板。文档检查仍只有原有的有限窗receipt与fixed-u报告两项来源快照差异，未刷新其身份。
+
+## 方法主图与Pro审计的取舍
+
+新增Fig1矢量方法总览：固定端点的内部分配→Cosh密度/分位数构造与TailSpline/BM零训练构造。K8/tau2示意和n17有限表均由公式生成；嵌入真实字体，同时提供可编辑SVG。此前生图只用作构图参考，不进入论文。原实证三图保留并顺延编号，图表数量不再固定为三图两表。
+
+采纳Pro的事实修正：effective rank名称；RULER候选池、深度选择、padding与QA索引说明；MLA未锚定端点身份；PPL相对MrPro的比较对象；明确两臂EOS/cap计数；交叉实验结论；logit符号；错指Theorem/Table/Section；Proof-Pile与PG-19引用；YaRN index-linear身份。PPL图改为相对变化并保留原绝对值和AUC。合并重复的冻结母表与交叉图，删除旧tier表。
+
+撤回未经实际cache链路支持的MLA降格：摘要、正文不采用shared-corpus stress-test标签；附录删除“当前快照未保存hash，因此实验只能算压力测试”的推论。保留实际cache、评分、共享offset和三seed结果。审计可达性不能替代实验属性；通用准备脚本的默认分支不能证明当年cache来源。没有宣称或证明训练评测文档重叠，也不虚构新的文档拆分事实。
+
+写作以真实成果争取accept/oral为目标：摘要直接提出分配改善外推，正文以设计与结果推进，删除反复自我否定及完整方法的同义免责。数学对象和实验操作按实写清。未照搬Pro的弱化摘要或强制图表取舍；保留MLA训练进度和BM自然QA。新增逐任务/逐语料母表不从AUC倒推；已有原始报告器连同冻结评测运行入口、局部依赖及命令说明一并打包，可从真实逐行输出直接导出。

@@ -85,7 +85,8 @@ def method_overview():
         xx=left+(right-left)*values
         ax.vlines(xx[1:-1],y-.027,y+.027,color=color,lw=2.1)
         ax.scatter(xx[[0,-1]],[y,y],s=32,facecolor='white',edgecolor=INK,lw=1.2,zorder=4)
-        ax.text(left,y+.068,name,color=color,fontsize=10,fontweight='bold',va='center')
+        ax.text(left,y+.068,name,color=color,fontsize=10,fontweight='bold',va='center',
+                bbox=dict(facecolor='white',edgecolor='none',pad=1.2),zorder=5)
     for a,b in zip(geo[1:-1],z[1:-1]):
         ax.plot([left+(right-left)*a,left+(right-left)*b],[.602,.458],
                 color=gray,lw=.7,ls=(0,(3,3)),zorder=0)
@@ -134,7 +135,7 @@ def method_overview():
     curve.tick_params(labelsize=7.5,length=2,pad=2)
     curve.spines[['top','right']].set_visible(False)
     curve.set_ylabel(r'$m_k$',rotation=0,labelpad=7,fontsize=9)
-    curve.yaxis.set_label_coords(-.052,.77)
+    curve.yaxis.set_label_coords(-.055,.53)
     curve.text(-2,1.20,'Keep',ha='center',fontsize=8,clip_on=False)
     curve.text(n/2,1.20,'Redistribute',ha='center',fontsize=8,clip_on=False)
     curve.text(n+2,1.20,r'Interpolate $/s$',ha='center',fontsize=8,clip_on=False)
@@ -198,13 +199,22 @@ def tailspline():
         w=np.array([.25,.5,.25])
         for col,metric in [(0,'full13'),(2,'ppl')]:
             ax=axes[row,col]
-            for method,color in [('MrPro',BLUE),('TailSpline',ORANGE)]:
-                ax.plot(x,np.array(t[metric][method])*(100 if metric=='full13' else 1),color=color,marker='o',ms=3,label=method)
+            if metric=='full13':
+                for method,color in [('MrPro',BLUE),('TailSpline',ORANGE)]:
+                    ax.plot(x,np.array(t[metric][method])*100,color=color,marker='o',ms=3,label=method)
+            else:
+                relative=100*(np.array(t['ppl']['TailSpline'])/np.array(t['ppl']['MrPro'])-1)
+                ax.axhline(0,color=INK,lw=.7)
+                ax.plot(x,relative,color=ORANGE,marker='o',ms=3)
+                for xx,yy in zip(x,relative):
+                    ax.annotate(f'{yy:+.2f}%',(xx,yy),xytext=(0,6),textcoords='offset points',
+                                ha='center',fontsize=7)
+                ax.margins(x=.14,y=.25)
             assert abs(w@(np.array(t[metric]['TailSpline'])-t[metric]['MrPro'])-t['auc_delta'][metric])<2e-6
-            ax.set(ylabel='Task macro (%)' if col==0 else 'PPL')
+            ax.set(ylabel='Task macro (%)' if col==0 else 'PPL change (%)')
             if row==0 and col==0:ax.legend(frameon=False,fontsize=7)
         ax=axes[row,1];ax.axhline(0,color=INK,lw=.7);ax.plot(x,np.array(t['niah_delta'])*100,color=ORANGE,marker='o',ms=3);ax.set(ylabel='Difference (pp)')
-        for col,title in enumerate(['RULER-13','NIAH difference','Natural-text PPL']):
+        for col,title in enumerate(['RULER-13','NIAH difference','PPL vs MrPro']):
             ax=axes[row,col];ax.set(xticks=x,xlabel='Length (K tokens)');ax.set_title(f'({chr(98+row*3+col)}) {name}: {title}',loc='left',fontsize=8.5);axis_style(ax)
     fig.subplots_adjust(left=.075,right=.99,bottom=.10,top=.95,wspace=.60,hspace=.90);finish(fig,'fig_tailspline_main')
 
@@ -215,7 +225,7 @@ def table():
         rows.append(f"MLA, {stage.replace('%',r'\%')} budget & PPL at $16$K & {vals[0]:.1f} & {vals[1]:.1f} "+r'\\')
     text=r'''\begin{table}[t]
 \centering\small
-\caption{\textbf{Allocation benefits across learning protocols.} Each block compares matched arms, with its own metric. MLA uses three seeds, midpoint Cosh and $8$K training. The $750$M pair uses fixed endpoints and one seed. OLMo uses one matched adaptation pair with physical inputs $\le4$K and explicit long-phase exposure; its score requires the full answer and EOS. These blocks are not pooled.}
+\caption{\textbf{Allocation benefits across learning protocols.} MLA uses three seeds, unanchored midpoint Cosh and $8$K training. The $750$M pair fixes endpoints and uses one seed. OLMo uses one matched adaptation pair with physical inputs $\le4$K and explicit long-phase exposure; its score requires the full answer and EOS.}
 \label{tab:training-models}
 \begin{tabular}{@{}llrr@{}}
 \toprule

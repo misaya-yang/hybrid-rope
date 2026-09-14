@@ -5,13 +5,13 @@ We test Cosh under matched learning recipes and TailSpline/BM under frozen deplo
 
 \subsection{Learning to use an explicit allocation}
 \label{sec:exp-capability}
-Does allocation help across lengths and throughout learning? A $432$M MLA-style model uses $16$ rotary pairs, $500$M training tokens at $8$K and three seeds \citep{deepseekv2,deepseekv3}. This shared-corpus length stress test does not establish document-disjoint evaluation; its unanchored midpoint Cosh table also changes sampled endpoints (Appendix~\ref{sec:mla-results}).
+Does allocation help across lengths and throughout learning? A $432$M MLA-style model uses $16$ rotary pairs, $500$M training tokens at $8$K and three seeds \citep{deepseekv2,deepseekv3}. Its unanchored midpoint Cosh table also changes sampled endpoints (Appendix~\ref{sec:mla-results}).
 
 Cosh improves all five extended lengths from $16$K through $32$K in every seed (Fig.~\ref{fig:allocation-basis}b); its $16$K advantage is present at half and three-quarters of training (Table~\ref{tab:training-models}).
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_allocation_learning.pdf}
-\caption{\textbf{Finite-window geometry and learning-time allocation.} (a) Full-pair canonical overlap on the $b=256$, $K=32$, $L=256$ identification grid under uniform separation measure. (b) Three-seed mean PPL of the $432$M MLA shared-corpus stress test. Solid curves use trained tables; dashed curves apply the same wavelength blend ($s=4$). Shading is the three-seed range. Panels retain their respective configurations.}
+\caption{\textbf{Finite-window geometry and learning-time allocation.} (a) Full-pair canonical overlap on the $b=256$, $K=32$, $L=256$ identification grid under uniform separation measure. (b) Three-seed mean PPL of the $432$M MLA extrapolation evaluation. Solid curves use trained tables; dashed curves apply the same wavelength blend ($s=4$). Shading is the three-seed range. Panels retain their respective configurations.}
 \label{fig:allocation-basis}
 \end{figure}
 
@@ -27,7 +27,7 @@ Allocation can also support complete answers after matched adaptation. The OLMo 
 \label{sec:tailspline-evaluation}
 We compare exact finite-grid TailSpline and MrRoPE-Pro on frozen Llama-$3$-$8$B-Instruct, using $s=4$, native window $8192$, band $[18,35]$, and common gain $1.1386294361$.
 
-Each method installs one static table; weights, inputs, greedy decoder, precision and scorer are shared. A depth-balanced RULER-13 panel has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). NIAH depth selection and fixed-budget padding use no model outputs (Appendix~\ref{sec:tailspline-implementation}). PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents ($138$ rows per arm) \citep{azerbayev2022proofpile,rae2020compressive}.
+Each method installs one static table; weights, inputs, greedy decoder, precision and scorer are shared. A depth-balanced RULER-13 panel has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). NIAH depth selection and fixed-budget padding use no model outputs (Appendix~\ref{sec:tailspline-implementation}). PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents ($138$ rows per arm) \citep{azerbayev2022proofpile,rae2019compressive}.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_tailspline_main.pdf}
@@ -37,11 +37,11 @@ Each method installs one static table; weights, inputs, greedy decoder, precisio
 
 We aggregate lengths using normalized trapezoidal area in log length: weights $1/4,1/2,1/4$ at $8/16/32$K. TailSpline raises RULER-13 AUC from $75.60$ to $78.80\%$, a $+3.20$-point difference (paired $95\%$ interval $[+0.65,+5.79]$). NIAH AUC improves by $3.75$ points ($[+0.55,+7.03]$); its single-key passkey subtask has AUC $100.0$ versus $97.5\%$. These are task-equal scores under the recorded scorers, including partial credit.
 
-PPL AUC decreases from $4.62112$ to $4.61664$ ($-0.097\%$), with paired difference $-0.00449$ and interval $[-0.00872,-0.00121]$. Relative to MrPro, PPL slightly increases at $8/16$K and decreases at $32$K (Fig.~\ref{fig:tailspline-main}d). Full-13 improves at all three lengths. Retrieval, tracking and aggregation improve in AUC; QA decreases by $1.25$ points. Appendix~\ref{sec:tailspline-details} gives the complete available results.
+PPL AUC decreases from $4.62112$ to $4.61664$ ($-0.097\%$), with paired difference $-0.00449$ and interval $[-0.00872,-0.00121]$. Relative to MrPro, PPL slightly increases at $8/16$K and decreases at $32$K (Fig.~\ref{fig:tailspline-main}d). Full-13 improves at all three lengths. Retrieval, tracking and aggregation improve in AUC; QA decreases by $1.25$ points. Appendix~\ref{sec:tailspline-details} gives the length and termination results.
 
 
-\paragraph{Prospective OLMo confirmation.}
-The same frozen formula is tested on OLMo-$2$-$1$B-Instruct at $s=4$, band $[14,32]$ and $4/8/16$K, with $390$ RULER prompts and $138$ LM rows per arm. The exact table was frozen before reading this OLMo evaluation; historical OLMo development had supplied direction priors. Full-13 AUC rises from $17.36$ to $66.60\%$ ($+49.23$ points, $95\%$ interval $[45.34,53.04]$). NIAH improves by $64.45$ points and PPL AUC decreases by $3.853$; all $13$ task AUC differences are positive. This confirms the method direction on a second model family. TailSpline and MrPro reach the generation cap on $133$ and $142$ of $390$ OLMo inputs, respectively, so official scores do not imply complete-answer-plus-EOS success. Full responses and interval definitions appear in Appendix~\ref{sec:tailspline-details}.
+\paragraph{Zero-training transfer to OLMo.}
+The same frozen formula is tested on OLMo-$2$-$1$B-Instruct at $s=4$, band $[14,32]$ and $4/8/16$K, with $390$ RULER prompts and $138$ LM rows per arm. Full-13 AUC rises from $17.36$ to $66.60\%$ ($+49.23$ points, $95\%$ interval $[45.34,53.04]$). NIAH improves by $64.45$ points and PPL AUC decreases by $3.853$; all $13$ task AUC differences are positive. TailSpline and MrPro reach the generation cap on $133$ and $142$ of $390$ OLMo inputs, respectively, so official scores do not imply complete-answer-plus-EOS success. Full responses and interval definitions appear in Appendix~\ref{sec:tailspline-details}.
 
 \subsection{Natural QA with the symmetric construction}
 The complementary symmetric construction, BM, tests allocation design on natural outputs. On frozen OLMo it improves each of five task means (Table~\ref{tab:bm-qa-main}). The complete available untruncated pool contains $778$ paired inputs; the reported long-input stratum contains $631$ inputs exceeding $4$K. With the same band, $s=4$, amplitude and decoder, macro F1 rises from $21.62$ to $25.44$, a $3.82$-point gain with paired interval $[1.32,6.29]$.

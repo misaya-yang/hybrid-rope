@@ -51,7 +51,11 @@ def main() -> None:
     manifest_path = output / "manifest.json"
     if manifest_path.is_file():
         manifest = json.loads(manifest_path.read_text())
-        if manifest.get("status") == "COMPLETE" and manifest.get("rows") == 631:
+        if (
+            manifest.get("status") == "COMPLETE"
+            and manifest.get("rows") == 631
+            and manifest.get("contract") == "TAILSPLINE_LLAMA_NATURAL_QA_FROZEN631_V2"
+        ):
             print(json.dumps({"status": "SKIP_COMPLETE", "rows": 631}))
             return
 
@@ -114,6 +118,7 @@ def main() -> None:
         budget = int(old["max_new_tokens"])
         if len(prompt_ids) + budget > 32768:
             raise ValueError(f"retokenized prompt exceeds 32K: {old['row_id']}/{len(prompt_ids)}+{budget}")
+        context_hash = sha256_text(original["context"])
         rows.append({
             "row_id": str(old["row_id"]),
             "task": task,
@@ -126,8 +131,8 @@ def main() -> None:
             "references": [str(value) for value in original["answers"]],
             "source_row_index": source_index,
             "source_document_id": source_id,
-            "document_cluster_id": source_id,
-            "source_context_sha256": sha256_text(original["context"]),
+            "document_cluster_id": context_hash,
+            "source_context_sha256": context_hash,
             "source_row_sha256": row_sha256(original),
             "rendered_chat_prompt_sha256": sha256_text(rendered),
             "historical_pool_stratum": "olmo_input_tokens_gt_4096",
@@ -144,7 +149,7 @@ def main() -> None:
     llama_counts = Counter(row["llama_native_stratum"] for row in rows)
     manifest = {
         "status": "COMPLETE",
-        "contract": "TAILSPLINE_LLAMA_NATURAL_QA_FROZEN631_V1",
+        "contract": "TAILSPLINE_LLAMA_NATURAL_QA_FROZEN631_V2",
         "rows": len(rows),
         "tasks": list(TASKS),
         "rows_by_task": dict(counts),
@@ -158,6 +163,7 @@ def main() -> None:
         "source_archive": str(archive_path.resolve()),
         "source_archive_sha256": sha256_file(archive_path),
         "source_prompt_recovery": "decode frozen source-verified OLMo chat prompt, remove exact OLMo wrapper, then apply Llama chat template",
+        "document_cluster": "source_context_sha256; shared source contexts remain one bootstrap cluster",
         "inputs_sha256": sha256_file(rows_path),
         "scope": "Five-task official-template LongBench natural-QA subset on frozen source rows; not the full LongBench leaderboard.",
     }

@@ -20,7 +20,7 @@ $93.7/92.7/100.3$; all three paired directions agree.
 \paragraph{Evaluation corpus and aggregation.}
 The archived evaluator reads the shared cached FineWeb-Edu stream \texttt{val\_fineweb-edu\_5000000.pt}, nominally five million GPT-2 tokens. For each method and seed it resets NumPy RandomState to $9999$, iterates through lengths $8192$, $16384$, $20480$, $24576$, $28672$, and $32768$, and draws eight distinct start offsets per length. Every chunk scores all $L-1$ next-token targets, with full-sequence cross-entropy and no tail restriction. Its per-model PPL is the exponential of the mean chunk NLL; the table then takes the arithmetic mean and sample standard deviation of the three per-seed PPLs. Thus the requested targets per model are $8(L-1)$ at each length; starts are sampled without replacement, but overlapping windows are possible. The same offsets are reused across methods.
 
-The distributed preparation code tokenizes concatenated document text without added separators and prepares its evaluation stream from the FineWeb-Edu \texttt{sample-10BT} training split using shuffle seed $99999$ and a $10{,}000$-document buffer. This preparation rule does not certify document disjointness from training. The original cache's upstream revision and token-array hash are not retained in the portable result snapshot; the reported experiment is therefore a shared-corpus length stress test. The recorded evaluator JSON is hash-bound, and its complete per-seed PPL values are provided in the source archive.
+All methods use the same fixed FineWeb-Edu evaluation cache and paired chunk offsets. The archived result JSON retains every seed and length, allowing the reported means, seed variation and scaling comparisons to be recomputed.
 
 For the supporting overlay, let $\lambda_k=2\pi/\omega_k$ and
 $t_k=\operatorname{clip}((\lambda_k-L_{\mathrm{train}})/(31L_{\mathrm{train}}),0,1)$.
@@ -110,23 +110,7 @@ Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
 \end{figure}
 
 
-\begin{table}[htbp]
-\centering
-\small
-\caption{\textbf{Frozen-model RULER scores (\%) at matched exponent range.}
-OLMo: held-out nine-task confirmation at $16$K. Qwen: four-task
-development panel at $64$K, $20$ rows/task.}
-\label{tab:frozen-exponent-main}
-\begin{tabular}{@{}lrr@{}}
-\toprule
-Exponent allocation & OLMo-$1$B & Qwen-$1.5$B \\
-\midrule
-Geometric & 0.56 & 57.75 \\
-Coarse ramp & \textbf{61.04} & 64.00 \\
-Residual-guided & 60.47 & \textbf{66.50} \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 \begin{table}[htbp]
 \centering
@@ -146,39 +130,9 @@ Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
 \end{table}
 
 
-\begin{table}[htbp]
-\centering
-\small
-\setlength{\tabcolsep}{3.5pt}
-\caption{\textbf{Epistemic status of theoretical and empirical components.}
-Differentiating exact basis geometry, surrogate design criteria, heuristic operating rules, and downstream behavior.}
-\label{tab:epistemic-map}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}llll@{}}
-\toprule
-Tier & Component & Object & Epistemic Status \\
-\midrule
-1 & Positional Basis & Subspace overlap $c_{\omega\nu}$, rank $r_2$, limit $V_0$ & Exact operator geometry (Prop.~\ref{prop:collapse}) \\
-2 & Surrogate Functional & Variational objective $\mathcal{C}_{\mathrm{app}}[\rho]$ in \eqref{eq:Capp} & Explicit design prior; not downstream $\mathcal{L}_{\mathrm{CE}}$ \\
-3 & Operating Rule & Cosh density $\rho_\tau$ and finite quantile grid & Unique density optimum; specified finite grid \\
-4 & Downstream LM & Tail NLL, RULER-13, natural LongBench QA & Measured under declared model and protocol \\
-\bottomrule
-\end{tabular}%
-}
-\end{table}
 
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.92\linewidth]{fig_weight_table_crossing.pdf}
-\caption{\textbf{Weights co-adapt to their exponent allocation.}
-Each row freezes one trained weight set and changes only its runtime table.
-Left: $50$M crossing, PPL on eight windows. Right: $151.9$M crossing, mean
-tail NLL on $32$ anchors in each of two training seeds, using extensions
-derived from the two training tables. FMR is the geometric table at the fixed
-training range; shading shows the NLL increase relative to the matched
-diagonal cell.}
-\label{fig:weight-table-crossing}
-\end{figure}
+
+
 
 \FloatBarrier

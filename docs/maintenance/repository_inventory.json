@@ -2164,6 +2164,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/LLAMA_FINAL_BENCHMARK_EXECUTION_HANDOFF_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md",
       "area": "docs",
       "category": "document"
@@ -4659,6 +4664,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/matched_naturalqa_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/matched_point_report.py",
       "area": "experiments",
       "category": "code"
@@ -4704,7 +4714,17 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_32k_ruler200_clean.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_classic_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_naturalqa631.py",
       "area": "experiments",
       "category": "code"
     },
@@ -4749,12 +4769,37 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_final_benchmark_chain.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_naturalqa631.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_32k_full500.sh",
       "area": "experiments",
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_32k_ruler200_clean.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_32k_ruler200_staged.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_classic.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_classic_strong_baselines.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4765,6 +4810,11 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_core6.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_matched_dose_c.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -8174,6 +8224,16 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/fig_method_overview.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_method_overview.svg",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/figs/fig_olmo_scale_crossover.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -9792,6 +9852,11 @@
       "path": "paper-2027/rope-spectral-budget-iclr2027-supplement.zip",
       "area": "paper-2027",
       "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/runtime/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
     },
     {
       "path": "paper-2027/sections/00_abstract.tex",

@@ -133,8 +133,8 @@
         {
           "path": "paper-2027/sections/03_compatibility.tex",
           "availability": "local-untracked",
-          "sha256": "5bda99a32c8b6e1c1a71da4d65bff2cd5dcd3d9f97d3a8e3e2418845046c4815",
-          "revision_note": "2026-09-13: updated transition to deployment-first ordering; measurements unchanged."
+          "sha256": "828119d5e119696a280d102f71b7675cf2def9473df3e17f75743686cb551852",
+          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
         }
       ]
     },
@@ -150,8 +150,8 @@
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "a34363b075debc238582f585c1c878c830797e83cd77df32475285c4d3c8a33f",
-          "revision_note": "2026-09-12 Pro field-map refinement: exposition and Green-energy classification; existing theorem/experiment identities retained."
+          "sha256": "74f82311c7ead3b5153d258fce41258023133714bdf3c71427661a5ef9b5b30e",
+          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
         },
         {
           "path": "paper-2027/sections/04_construction.tex",
@@ -188,8 +188,8 @@
       "priority": "P1",
       "question": "有限旋转通道中的实用价值",
       "evidence_grade": "三seed曲线摘要",
-      "manuscript_location": "§6.1 / Fig2b / Table1 / a3",
-      "interpretation": "历史cache不能认证文档独立holdout",
+      "manuscript_location": "§6.1 / Fig3b / Table1 / a3",
+      "interpretation": "432M MLA三seed配对外推评测；原始结果及逐seed数值可复算，频率表与评价规则见附录。",
       "sources": [
         {
           "path": "data/curated/table18_mla_3seed_aggregate.json",
@@ -620,7 +620,8 @@
         {
           "path": "paper-2027/sections/05_threeband.tex",
           "availability": "local-untracked",
-          "sha256": "338f3c03eba39a8e03f692c2c404a6d94173928fafe87129c01e768abe5070be"
+          "sha256": "dec1731db0bb6f1080f16053a6b4a8c95f91f3e4e42bec2abed0f8e36ce1aaf2",
+          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
         },
         {
           "path": "paper-2027/figs/verify_interval_design.py",

@@ -39,7 +39,8 @@ PY
     --skip-lm \
     --length-cap 32768 \
     --prefill-chunk-size 8192 \
-    --batch-size 1 \
+    --batch-size 2 \
+    --left-pad-batches \
     --static-table-json "${base_root}/tables/${arm}.json" \
     --table-label "llama3_8b_s4_naturalqa631_${arm}" \
     --out "${run_dir}" \

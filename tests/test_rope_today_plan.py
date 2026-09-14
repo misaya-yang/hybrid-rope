@@ -94,6 +94,23 @@ def test_tailspline_is_exact_finite_grid_solution_and_not_mix075(n):
         )
 
 
+@pytest.mark.parametrize("n", [3, 17, 18, 31])
+def test_tailspline_dose_control_matches_sum_and_endpoints(n):
+    pairs = n + 5
+    low, high = 2, 2 + n
+    tailspline = table_module.analytic_exponents(
+        "tailspline", pairs, low=low, high=high,
+    )
+    control = table_module.analytic_exponents(
+        "tailspline_dose_control", pairs, low=low, high=high,
+    )
+    assert control[low] == 0.0
+    assert control[high] == 1.0
+    assert np.all(np.diff(control) >= 0.0)
+    assert np.sum(control) == pytest.approx(np.sum(tailspline), abs=2e-14)
+    assert not np.array_equal(control, tailspline)
+
+
 def test_tailspline_builder_enforces_shared_mrpro_band_and_gain(monkeypatch):
     config = {
         "model_type": "llama", "hidden_size": 16, "num_attention_heads": 2,
