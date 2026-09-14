@@ -103,6 +103,16 @@ OLMo机制块已经完成，[结果owner](../../docs/research/next_stage_2026091
   同一324条Qwen2.5-3B面板比较；旧mix075只作为近似开发prior，不冒充精确表结果。
 - `chain_current_mix_to_tailspline.sh`：等待已接近完成的mix075首臂写出324行和COMPLETE，
   随即终止已冻结的旧监督器并启动TailSpline；不会继续旧S2三基线或Llama局部修复队列。
+- `run_tailspline_qwen25_s4_core6.sh`：复用已有Qwen3B完整Core-6资产，在同一S4静态表下
+  运行32/64/128K；TailSpline、MrPro、static YaRN、BM共享canonical `[23,40]`与gain，
+  近端batch2、128K batch1。它是远端统一判决，不冒充Full-13/PPL/Passkey闭环。
+- `chain_tailspline_s2_to_s4.sh`：在S2四臂各324行完成后立即启动S4，CPU报告可与新GPU
+  进程并行；S2监督器异常退出时拒绝越过失败。
+- `run_tailspline_llama_s4_core6.sh`：作者要求两个新文档的后续GPU测评全部使用Llama；
+  首判使用canonical `[18,35]`、共同S4 gain和同一Core-6×8/16/32K×6行/格，依次运行
+  TailSpline、MrPro、static YaRN和BM。没有可复用的完全同表Llama基线，因此四臂均需实测。
+- `chain_qwen_tailspline_to_llama.sh`：只等待当前Qwen TailSpline一臂完成并写324行存档回执，
+  随即终止冻结的Qwen监督器、拒绝其后续三臂并启动Llama；不再运行任何Qwen后继评测。
 - `../../tests/test_rope_today_plan.py`：fixed-u数值/复合性、capsule、四格分解、案例冻结
   与完整key竞争有限干预的CPU检查。
 

@@ -4519,12 +4519,22 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_qwen_tailspline_to_llama.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/chain_qwen_to_analysis.sh",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/chain_qwen_to_llama_factorial.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/chain_tailspline_s2_to_s4.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4614,7 +4624,17 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_core6.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s2_full324.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s4_core6.sh",
       "area": "experiments",
       "category": "code"
     },
