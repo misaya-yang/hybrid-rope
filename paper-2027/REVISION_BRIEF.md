@@ -24,7 +24,7 @@
 
 不采纳“gain收益大所以隐藏”或“原始文件未commit所以不能引用”的规则；联合方法不要求z是最大单独杠杆。A31–A34旧mix075不与exact TailSpline混用。E3有报告线索但暂无本机raw复核，暂不追加新的正文方法。数学no-go、离散DP、τ-floor等不挤占当前核心构造。B8的TailSpline零命中已过时，且n=2的单侧/对称解并不重合。
 
-Final build: 9 scientific-body pages, 54 total pages; three main figures and two main tables. Undefined references/citations and overfull boxes: zero.
+Final build: 9 scientific-body pages, 55 total pages; three main figures and two main tables. Undefined references/citations and overfull boxes: zero.
 
 ## 深入理论与文献复核
 
@@ -37,3 +37,5 @@ Final build: 9 scientific-body pages, 54 total pages; three main figures and two
 追回历史native Std-RoPE三seed对照：明确14974976 tokens、L128、等span的独立实验身份，主文一句+附录完整长度，数值从git 79e52bb报告导入。交叉实验4.57秩按midpoint/离散整数lag复算一致；补全测度而非误判无效。
 
 文献复核入口：[MrRoPE](https://arxiv.org/html/2601.22181v1)、[LeRoPE](https://arxiv.org/html/2607.10134v1)、[YaRN](https://arxiv.org/html/2309.00071v3)、[DoPE](https://arxiv.org/html/2511.09146v1)。未据异协议公开分数作跨论文SOTA排名。
+
+当前仍不作全球SOTA判断：两个模型族的S4/MrPro匹配结果支持方法有效；缺少与所有当代方法在同一完整独立协议上的比较，不能用修辞补出排名。后续更强实验应由研究任务实际执行，本轮不增加GPU运行。构造器已在两种Native长度×三倍率的六个输入上与现有实验公式逐位一致，独立CPU核验通过。

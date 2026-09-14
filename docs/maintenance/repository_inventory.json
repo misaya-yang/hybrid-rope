@@ -4699,6 +4699,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_32k_full500_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_classic_assets.sh",
       "area": "experiments",
       "category": "code"
@@ -4710,6 +4715,16 @@
     },
     {
       "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_olmo_classic_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_olmo_full50_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_qwen_full50_assets.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4744,6 +4759,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_32k_full500.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_llama_s4_classic.sh",
       "area": "experiments",
       "category": "code"
@@ -4769,6 +4789,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_olmo_s4_full50.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s2_32k64k.sh",
       "area": "experiments",
       "category": "code"
@@ -4779,7 +4804,17 @@
       "category": "code"
     },
     {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s2_full50.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/fixed_rope_three_interfaces_20260913/run_tailspline_qwen25_s4_core6.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/fixed_rope_three_interfaces_20260913/run_three_model_full50_overnight.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -7977,6 +8012,11 @@
       "path": "paper-2027/fancyhdr.sty",
       "area": "paper-2027",
       "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/allocation_design.py",
+      "area": "paper-2027",
+      "category": "code"
     },
     {
       "path": "paper-2027/figs/allocation_value_inputs.json",
