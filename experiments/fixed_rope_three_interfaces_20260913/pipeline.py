@@ -797,6 +797,8 @@ def bootstrap_range_contrast(
     import numpy as np
 
     def auc(curve: dict[int, float]) -> float:
+        if len(lengths) == 1:
+            return float(curve[lengths[0]])
         numerator = sum(
             0.5 * (curve[left] + curve[right]) * (math.log(right) - math.log(left))
             for left, right in zip(lengths, lengths[1:])
