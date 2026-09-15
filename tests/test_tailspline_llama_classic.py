@@ -23,6 +23,7 @@ from experiments.fixed_rope_three_interfaces_20260913.tailspline_llama_classic_r
 from experiments.llama3_60dir_20260911.prepare_planb_panel import (
     REGISTERED_TASKS,
     select_depth_balanced,
+    validate_qa_index_range,
 )
 
 
@@ -51,6 +52,12 @@ def test_depth_selector_freezes_10_30_50_70_90_without_model_outputs():
         (targets[index % 5],) for index in range(10)
     ]
     assert all(row["depth_error_mean_abs"] == 0.0 for row in selected)
+
+
+def test_qa_range_validation_rejects_an_offset_beyond_dataset():
+    validate_qa_index_range(task="qa_1", start=5800, count=50, available=5928)
+    with pytest.raises(ValueError, match="exceeds"):
+        validate_qa_index_range(task="qa_1", start=8000, count=50, available=5928)
 
 
 def test_ppl46_source_validation_preserves_32_proofpile_14_pg19(tmp_path):

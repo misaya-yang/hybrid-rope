@@ -30,7 +30,7 @@ for index in "${!tasks[@]}"; do
     --model "${model}" --upstream "${upstream}" --out "${part}" \
     --stage H --contract planb --tasks "${task}" --caps 16384 \
     --counts-by-cap 16384:50 --selection-mode source-order \
-    --qa-base-offset 8000 --seed "$((20261001 + index))" \
+    --qa-base-offset 5800 --seed "$((20261001 + index))" \
     >"${root}/logs/prepare_16k_${task}.log" 2>&1 &
   pids+=("$!")
 done

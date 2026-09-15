@@ -103,6 +103,30 @@ def token_index_for_char(offsets, char_index):
     return None
 
 
+def qa_dataset_row_count(path, dataset):
+    """Count valid QA rows before invoking the upstream generator."""
+    value = json.loads(Path(path).read_text())
+    if dataset == "squad":
+        return sum(
+            not qa["is_impossible"]
+            for item in value["data"]
+            for paragraph in item["paragraphs"]
+            for qa in paragraph["qas"]
+        )
+    if dataset == "hotpotqa":
+        return len(value)
+    raise ValueError(f"unsupported QA dataset for range validation: {dataset}")
+
+
+def validate_qa_index_range(*, task, start, count, available):
+    """Fail instead of entering upstream QA's exception-swallowing retry loop."""
+    if start < 0 or count < 1 or start + count > available:
+        raise ValueError(
+            f"{task} QA source range [{start}, {start + count}) exceeds "
+            f"the {available}-row dataset"
+        )
+
+
 def select_depth_balanced(
     task, candidates, count, cap, pilot, *, depth_targets=DEPTH_TARGETS,
 ):
@@ -357,8 +381,16 @@ def main(argv=None):
                 prior_cap_rows = sum(
                     rows_for_cap(prior_cap)
                     for prior_cap in caps[:cap_index])
-                command.extend(["--pre_samples", str(
-                    qa_base_offset + prior_cap_rows)])
+                qa_start = qa_base_offset + prior_cap_rows
+                dataset = task_config["args"]["dataset"]
+                available = qa_dataset_row_count(
+                    upstream / "scripts" / "data" / "synthetic" / "json" / f"{dataset}.json",
+                    dataset,
+                )
+                validate_qa_index_range(
+                    task=task, start=qa_start, count=source_count, available=available
+                )
+                command.extend(["--pre_samples", str(qa_start)])
 
             if not source_path.exists():
                 old_argv, old_path, old_cwd = sys.argv, sys.path[:], os.getcwd()
