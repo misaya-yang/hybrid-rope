@@ -99,9 +99,16 @@ def check_coordinate_relations() -> list[dict]:
                 native_x = [index * math.log(base) / pair_count for index in range(pair_count)]
                 native_span = native_x[-1] - native_x[0]
                 m = [index / (pair_count - 1) for index in range(pair_count)]
+                alternative = [(index / (pair_count - 1)) ** 2 for index in range(pair_count)]
                 transformed = [x + math.log(scale) * exponent for x, exponent in zip(native_x, m)]
+                transformed_alternative = [
+                    x + math.log(scale) * exponent for x, exponent in zip(native_x, alternative)
+                ]
                 span = native_span + math.log(scale)
                 z = [(value - transformed[0]) / span for value in transformed]
+                z_alternative = [
+                    (value - transformed_alternative[0]) / span for value in transformed_alternative
+                ]
                 expected = [
                     (native_span * (x - native_x[0]) / native_span + math.log(scale) * exponent) / span
                     for x, exponent in zip(native_x, m)
@@ -113,8 +120,56 @@ def check_coordinate_relations() -> list[dict]:
                     for index in range(1, pair_count)
                 ]
                 assert max(abs(left - right) for left, right in zip(z, expected)) < 1e-14
+                assert max(
+                    abs(
+                        (left - right)
+                        - math.log(scale) / span * (first - second)
+                    )
+                    for left, right, first, second in zip(z, z_alternative, m, alternative)
+                ) < 1e-14
                 assert max(abs(left - right) for left, right in zip(gaps, expected_gaps)) < 1e-14
                 checks.append({"pair_count": pair_count, "base": base, "scale": scale})
+    return checks
+
+
+def simpson(function, intervals: int = 20_000) -> float:
+    if intervals % 2:
+        raise ValueError("Simpson integration requires an even interval count")
+    step = 1.0 / intervals
+    odd = math.fsum(function(index * step) for index in range(1, intervals, 2))
+    even = math.fsum(function(index * step) for index in range(2, intervals, 2))
+    return step / 3.0 * (function(0.0) + function(1.0) + 4.0 * odd + 2.0 * even)
+
+
+def check_cosh_change_of_variables() -> list[dict]:
+    """Numerically check T10 for smooth positive-spacing bijections."""
+    checks = []
+    for coefficient in (0.3, 1.0, 2.0):
+        denominator = math.exp(coefficient) - 1.0
+
+        def f(x):
+            return math.expm1(coefficient * x) / denominator
+
+        def derivative(x):
+            return coefficient * math.exp(coefficient * x) / denominator
+
+        def inverse_derivative(u):
+            return denominator / (coefficient * (1.0 + denominator * u))
+
+        for alpha, beta in ((1.0, 1.0), (0.7, 2.3), (3.0, 0.2)):
+            original = 0.5 * simpson(
+                lambda x: alpha * derivative(x) ** 2 + beta * (1.0 - f(x)) ** 2
+            )
+            transformed = 0.5 * simpson(
+                lambda u: alpha / inverse_derivative(u)
+                + beta * (1.0 - u) ** 2 * inverse_derivative(u)
+            )
+            error = abs(original - transformed)
+            assert error < 1e-12
+            checks.append({
+                "coefficient": coefficient, "alpha": alpha, "beta": beta,
+                "absolute_error": error,
+            })
     return checks
 
 
@@ -149,17 +204,20 @@ def main() -> None:
     for n in range(2, 65):
         check_quadratic_identity(n)
     coordinate = check_coordinate_relations()
+    cosh_change = check_cosh_change_of_variables()
     result = {
         "status": "ICLR2027_SPRINT_MATH_CHECKS_COMPLETE_V1",
         "exact_n_range": [1, 64],
         "profiles_per_n": 6,
         "coordinate_cases": len(coordinate),
+        "cosh_change_of_variables_cases": len(cosh_change),
         "verified": [
-            "T1/T3 native-relative coordinate and gap relations",
+            "T1/T2/T3 native-relative coordinate, two-table difference and gap relations",
             "T4/T5 displacement-centroid identity",
             "T6/T7 exact TailSpline-control difference",
             "T8 equal interior displacement",
             "T9 boundary increment differences and n=1/2 degeneracy",
+            "T10 Cosh inverse-coordinate density change of variables",
             "T11 quadratic excess identity",
         ],
         "n17": rows[16],
