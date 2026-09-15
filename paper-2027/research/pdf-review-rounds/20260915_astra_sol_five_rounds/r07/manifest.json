@@ -4,5 +4,12 @@
     "gpt-6-astra",
     "gpt-5.6-sol"
   ],
-  "context": "fresh; PDF only; identical four-perspective plus AC prompt"
+  "context": "fresh; PDF only; identical four-perspective plus AC prompt",
+  "optimized_sha256": "649fdb68e7b39d2bcbd986db5263c2fda4cc8c10326a3377d4600faf59a2058f",
+  "scores": {
+    "astra": 7,
+    "sol": 8
+  },
+  "scores_apply_to": "frozen input, before round integration",
+  "status": "COMPLETE"
 }

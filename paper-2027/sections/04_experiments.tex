@@ -99,7 +99,8 @@ three-quarters of training and persists under a common wavelength blend
 \label{fig:allocation-learning}
 \end{figure}
 
-A $750$M single-seed continuation also improves $16$K PPL and $8$K answer-token
-exact match, with a small $4$K cost. Matched OLMo adaptation uses explicit
-long-phase exposure and exhibits native/extended-length trade-offs. Their full
-budgets, scores and supervision remain in Appendix~\ref{sec:learning-summary}.
+A $750$M single-seed continuation from a shared checkpoint fixes endpoints
+and reduces $16$K PPL from $45.1$ to $24.4$; $8$K answer-token exact match
+rises from $0/40$ to $31/40$, with $4$K PPL changing from $22.0$ to $22.3$.
+This uses the recorded mixed-training recipe. Full budgets, supervision and
+matched OLMo adaptation results are in Appendix~\ref{sec:learning-summary}.

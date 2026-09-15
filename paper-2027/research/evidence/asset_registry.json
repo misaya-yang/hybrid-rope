@@ -9,7 +9,7 @@
       "priority": "P0",
       "question": "相同实际support与训练配置下，只改变30个interior z能否改善外推",
       "evidence_grade": "三seed配对；带raw hash摘要",
-      "manuscript_location": "§3.1 / Fig2 / a5",
+      "manuscript_location": "§3.1 / Fig. 1b / Appendix B.1",
       "interpretation": "保留训练support时三seed的2×/4×/8× NLL均改善；target-matched时排序反转，说明所测排序依赖support policy。几何配置源自FMRoPE，不作方法排名；绝对四格NLL尚未追回，配对差已确认",
       "sources": [
         {
@@ -25,7 +25,7 @@
       "priority": "P0",
       "question": "设计价值是否超出一条曲线",
       "evidence_grade": "12配置×3seed；摘要",
-      "manuscript_location": "§3多形状段 / a5",
+      "manuscript_location": "§3.1 multi-shape paragraph / Appendix B.3",
       "interpretation": "128步；reference7/12，1.25×10/12，Exp9/12",
       "sources": [
         {
@@ -35,19 +35,19 @@
         },
         {
           "path": "paper-2027/figs/make_m4_tradeoff.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "ed9f5720529adc9f5945f49b0a635e42e2a9a2f1a6c466e699e8f80011f529f9",
           "role": "derived joint operating-point display; original M4 owner unchanged"
         },
         {
           "path": "paper-2027/figs/m4_tradeoff_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "0950b1c2aa32ba455b14a7ac8f9dfb9daf2a01b9317ad8a4700d6a59bfc5f937",
           "role": "derived joint operating-point display; original M4 owner unchanged"
         },
         {
           "path": "paper-2027/figs/m4_tradeoff_points.csv",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "21f476c21a7d77f12d2bffdff3fa98a382192bb80168956adca451d797be86b1",
           "role": "derived joint operating-point display; original M4 owner unchanged"
         }
@@ -59,7 +59,7 @@
       "priority": "P0",
       "question": "有限坐标提供哪些位置方向",
       "evidence_grade": "证明和独立数值核验",
-      "manuscript_location": "§4.1 / Fig3 / a1",
+      "manuscript_location": "§4.1 / Fig. 2 / Appendix A.1",
       "interpretation": "block whitening对象，不是模型loss预测器",
       "sources": [
         {
@@ -80,17 +80,17 @@
       "priority": "P0",
       "question": "慢频几何怎样落到核心参数",
       "evidence_grade": "有限矩阵与独立求积",
-      "manuscript_location": "§4.2 / Fig3 / a1",
+      "manuscript_location": "§4.2 / Fig. 2 / Appendix A.2",
       "interpretation": "b256不能直接套ωL≪1",
       "sources": [
         {
           "path": "paper-2027/research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md",
-          "availability": "local-untracked",
-          "sha256": "e9b55d6c017561c2abb03ab391e4b7b08a37069b43453d37901f657b385990a3"
+          "availability": "tracked",
+          "sha256": "55ff0a2e69d11f961228cde90fefd40e4869850731886db865a18a9a426fb84a"
         },
         {
           "path": "paper-2027/figs/finite_window_geometry.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "fedd90ce853b03f474856cfbc7745b08c7d2fe215b876a3ce220bf2c46e20556"
         }
       ]
@@ -101,7 +101,7 @@
       "priority": "P0",
       "question": "权重如何学得使用分配",
       "evidence_grade": "50M报告、151M两seed摘要",
-      "manuscript_location": "Main Fig. 1c and identification paragraph; explicit crossing construction in appendix",
+      "manuscript_location": "§3.1 / Fig. 1c / Appendix B.2 and I.2",
       "interpretation": "50M/151M指标不同；range差值不是四格绝对排序",
       "sources": [
         {
@@ -122,7 +122,7 @@
       "priority": "P0",
       "question": "频率集与安装方式是否不同",
       "evidence_grade": "置换定理、冻结干预报告",
-      "manuscript_location": "Appendix compatibility / a1",
+      "manuscript_location": "Appendix I.3–I.4 / Appendix A.7",
       "interpretation": "Historical report-backed same-spectrum slot effects; exact realized permutation and OLMo scoring-window receipt not recovered. Algebraic compensation is distinct from measured model recovery.",
       "sources": [
         {
@@ -144,7 +144,7 @@
       "priority": "P0",
       "question": "怎样系统构造有限分配",
       "evidence_grade": "显式凸目标推导",
-      "manuscript_location": "§5.1 / a1",
+      "manuscript_location": "§5.2 / Appendix A Cosh proofs",
       "interpretation": "唯一性相对stated functional；τ为参考工作点",
       "sources": [
         {
@@ -156,7 +156,7 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "tracked",
-          "sha256": "6580b9d98ad1c8a9fcd3e2c25daf3c3dfbc384552d1c228f906b8fb8a00ec1fd",
+          "sha256": "addbf2083377161ebf1df42667a37ddb5b21d3b33404207294f066585beb7b9c",
           "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         }
       ]
@@ -167,7 +167,7 @@
       "priority": "P0",
       "question": "已有权重下变量是否仍有效",
       "evidence_grade": "held-out与curated摘要",
-      "manuscript_location": "§3.2 / Fig1c / a6",
+      "manuscript_location": "§3.2 / Appendix F.2",
       "interpretation": "与BM改变范围的应用对比分开",
       "sources": [
         {
@@ -188,13 +188,18 @@
       "priority": "P1",
       "question": "有限旋转通道中的实用价值",
       "evidence_grade": "三seed曲线摘要",
-      "manuscript_location": "Supporting Cosh extrapolation / Figure4 / AppendixE.1",
+      "manuscript_location": "§6.2 / Fig. 5 / Appendix E.1",
       "interpretation": "Three-seed learning utility with shared evaluation chunks and unanchored midpoint endpoints. The review did not establish that original data-construction records are absent; no contamination finding is recorded.",
       "sources": [
         {
           "path": "data/curated/table18_mla_3seed_aggregate.json",
           "availability": "tracked",
-          "sha256": "ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d"
+          "sha256": "8018fc1567df775efa9c0981ee4cf7439bbc64f1143219f804cd5a3d08d8b63b"
+        },
+        {
+          "path": "data/curated/eval_3seeds_full_results.json",
+          "availability": "tracked",
+          "sha256": "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953"
         },
         {
           "path": "results/eval_3seeds_full_results.json",
@@ -209,7 +214,7 @@
       "priority": "P1",
       "question": "继续学习能否利用新分配",
       "evidence_grade": "单seed配对摘要",
-      "manuscript_location": "§6.1 / Table1 / a2",
+      "manuscript_location": "§6.2 continuation paragraph / Appendix D.5 and E.3",
       "interpretation": "answer-token exact不含终止EOS要求",
       "sources": [
         {
@@ -225,7 +230,7 @@
       "priority": "P1",
       "question": "长程来源如何进入表征",
       "evidence_grade": "单适配pair；curated与报告",
-      "manuscript_location": "§6末指针 / a6",
+      "manuscript_location": "Appendix F.3",
       "interpretation": "native-endpoint vs midpoint conversion；同adapter任务负结果保留",
       "sources": [
         {
@@ -251,7 +256,7 @@
       "priority": "P1",
       "question": "能否成功读出远处答案",
       "evidence_grade": "raw-hash lineage；100提示/长度",
-      "manuscript_location": "§6.1 / Table1 / a6",
+      "manuscript_location": "§6.2 supporting pointer / Appendix E.3 and F.1",
       "interpretation": "单seed；物理≤4K而训练暴露长目标相位",
       "sources": [
         {
@@ -261,7 +266,7 @@
         },
         {
           "path": "paper-2027/figs/routing_protocol_receipts.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "605fd1431b86023cbbae0e3b844622c6f5d6eddcbc9d434a7ac406259cc6dfcc"
         }
       ]
@@ -272,7 +277,7 @@
       "priority": "P1",
       "question": "位置相关适配能否改善自然输出",
       "evidence_grade": "匹配独立适配摘要",
-      "manuscript_location": "§6末指针 / a6",
+      "manuscript_location": "Appendix F.1 selective-QK adaptation",
       "interpretation": "与EOS/8B不同adapter和协议",
       "sources": [
         {
@@ -288,7 +293,7 @@
       "priority": "P1",
       "question": "成熟构造的任务价值",
       "evidence_grade": "QA逐行重算；匹配摘要",
-      "manuscript_location": "§6.3 / Table2 / a7",
+      "manuscript_location": "Appendix G.5 and G.8 / Table 23",
       "interpretation": "自然QA631长层与48长RULER提示不混；F1含触顶响应",
       "sources": [
         {
@@ -314,7 +319,7 @@
       "priority": "P1",
       "question": "有效配置能否用低维结构描述",
       "evidence_grade": "CPU构造和GPU回执",
-      "manuscript_location": "§6末指针 / a9",
+      "manuscript_location": "Appendix G.6",
       "interpretation": "无Qwen重拟合；native窗口代价保留",
       "sources": [
         {
@@ -330,7 +335,7 @@
       "priority": "P1",
       "question": "相同总位移下更高阶increment形状是否仍影响任务",
       "evidence_grade": "350开发raw rows；另16文档NLL",
-      "manuscript_location": "§3末指针 / a9",
+      "manuscript_location": "§3.2 equal-displacement paragraph / Appendix G.7",
       "interpretation": "开发面板；固定band和倍率时质心由总位移确定，不是额外独立控制",
       "sources": [
         {
@@ -361,7 +366,7 @@
       "priority": "P1",
       "question": "连续profile如何安装到不同K",
       "evidence_grade": "预注册确认回执",
-      "manuscript_location": "§6末指针 / a7",
+      "manuscript_location": "Appendix G.1–G.2",
       "interpretation": "K与checkpoint共变；full13为table×amplitude联合收益",
       "sources": [
         {
@@ -382,7 +387,7 @@
       "priority": "P2",
       "question": "分配与部署算子怎样组合",
       "evidence_grade": "三seed表摘要",
-      "manuscript_location": "a2",
+      "manuscript_location": "Appendix D.4",
       "interpretation": "repo fixed-ramp不是officialYaRN；PK为teacher-forced",
       "sources": [
         {
@@ -398,7 +403,7 @@
       "priority": "P2",
       "question": "更大模型中的分配后果",
       "evidence_grade": "报告与文档配对",
-      "manuscript_location": "a6",
+      "manuscript_location": "Appendix F.1",
       "interpretation": "from-init trainer差异与released配对分开",
       "sources": [
         {
@@ -414,7 +419,7 @@
       "priority": "P2",
       "question": "架构与旋转预算的关系",
       "evidence_grade": "历史report-backed",
-      "manuscript_location": "a2",
+      "manuscript_location": "Appendix D.9",
       "interpretation": "完整五配置非单调",
       "sources": [
         {
@@ -430,7 +435,7 @@
       "priority": "P2",
       "question": "分配在另一模态有何后果",
       "evidence_grade": "单seed结果报告",
-      "manuscript_location": "a3",
+      "manuscript_location": "Appendix D.6–D.7",
       "interpretation": "MSE和文本生成端点不同",
       "sources": [
         {
@@ -446,7 +451,7 @@
       "priority": "P2",
       "question": "进一步学习后的任务输出",
       "evidence_grade": "独立适配pair摘要",
-      "manuscript_location": "a6",
+      "manuscript_location": "Appendix F.3",
       "interpretation": "与300步A11不可拼接",
       "sources": [
         {
@@ -462,7 +467,7 @@
       "priority": "P2",
       "question": "full-pair几何能否引出其他构造",
       "evidence_grade": "小面板结果JSON",
-      "manuscript_location": "a9",
+      "manuscript_location": "Appendix G.9",
       "interpretation": "全任务与迁移负格保留",
       "sources": [
         {
@@ -483,7 +488,7 @@
       "priority": "P2",
       "question": "不等谱关系能否近似补偿",
       "evidence_grade": "历史报告",
-      "manuscript_location": "a1",
+      "manuscript_location": "Appendix A.6 approximate-recovery paragraph",
       "interpretation": "冻结近似恢复不能代替训练期纯z归因",
       "sources": [
         {
@@ -499,12 +504,12 @@
       "priority": "P2",
       "question": "静态结构是否预测能力",
       "evidence_grade": "12表重建与后续报告",
-      "manuscript_location": "a8,a9",
+      "manuscript_location": "Appendix J.5–J.6",
       "interpretation": "拟合与预测验证分开",
       "sources": [
         {
           "path": "paper-2027/figs/profile_diagnostic_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "4a3d6c1f522a9798b6b6495a664b6238fa6692afa394370f20f19156767af764"
         },
         {
@@ -520,7 +525,7 @@
       "priority": "P2",
       "question": "配置作用怎样依赖checkpoint",
       "evidence_grade": "小面板配对摘要",
-      "manuscript_location": "a3,a7",
+      "manuscript_location": "Appendix E.2 and G.4",
       "interpretation": "区间与样本量，不将不显著格称确定反转",
       "sources": [
         {
@@ -598,12 +603,12 @@
       "priority": "P1",
       "question": "端点分数是否充分描述可用窗口",
       "evidence_grade": "report-backed开发汇总；仅AUC算术复算",
-      "manuscript_location": "§6.2末指针 / App.H",
+      "manuscript_location": "Appendix J.3 / Table 44",
       "interpretation": "不同panel严格分开；OLMo差区间跨零；未raw复核",
       "sources": [
         {
           "path": "paper-2027/figs/interval_development_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "182565c3bc66e0bf06c27d795ffeb3a902d5bbbda8cf9d8e25c5e5553f79a5d3"
         }
       ]
@@ -614,18 +619,18 @@
       "priority": "P1",
       "question": "端点/s何时不同于声明的区间最优",
       "evidence_grade": "完整条件证明与独立标量数值核验",
-      "manuscript_location": "Appendix interval design",
+      "manuscript_location": "Appendix J interval design",
       "interpretation": "不预言真实checkpoint最优深度；replay仍待验证",
       "sources": [
         {
           "path": "paper-2027/sections/05_threeband.tex",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "a65f91c9bc50b4995fa84680095b6554fcfbf4531b4344d308c56ffe76a2bf01",
           "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
         },
         {
           "path": "paper-2027/figs/verify_interval_design.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "e445c3b531b92747cc608c75682649920e408c8392d8a667c434800c4b8f2aaa"
         }
       ]
@@ -826,8 +831,8 @@
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md",
-          "availability": "local-untracked",
-          "sha256": "7d4770ac681c53d0fc12d6438f2d57044b97cf4619d2b2a86989b7fd9141cc56"
+          "availability": "tracked",
+          "sha256": "ca2b18129bd4eb7577682622ab930af6ef23bb24e3cc663b901834f2235ef526"
         }
       ]
     },
@@ -837,17 +842,17 @@
       "priority": "P0",
       "question": "one-sided与symmetric边界roughness分别导出什么中频allocation，真实任务是否偏好early transport与smooth tail landing",
       "evidence_grade": "两种严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；任务结果另见A39",
-      "manuscript_location": "§5.2 / TailSpline proof appendix",
+      "manuscript_location": "§5.1 / Fig. 3 / Appendix H construction and proof",
       "interpretation": "one-sided唯一解是TailSpline，symmetric唯一解是BM；边界条件本身不能由CPU选择，不证明任务优势，旧mix075只作近似prior",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "978f105aab17fe642284a7ff9c221826efbfa0e5cdf9240269dd7cbe8365ada0"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "d1506c172a75baa095257b56e478cb5c7d699c82df7e7a132b2488d112b1c7af"
         },
         {
@@ -876,12 +881,12 @@
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "7714c5d6740b029d4aff02a349ae903681178fa5097cfc64781fec63bb1fd5c7"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "304c6336551f3906d1a5eebf644693d4ba0ef96602768393fd53f1fbd80ce747"
         }
       ]
@@ -892,7 +897,7 @@
       "priority": "P0",
       "question": "不训练且固定checkpoint、band、gain与评测协议时，exact TailSpline能否在经典多长度和clean 32K大样本上整体胜过exact MrPro",
       "evidence_grade": "Llama-3-8B-Instruct；经典Full-13 13任务×3长度×10行与PPL46×3长度；clean 32K为13任务×200行、2,600严格配对prompt/臂；20k paired bootstrap",
-      "manuscript_location": "§6.2 / Fig5b / a10",
+      "manuscript_location": "§6.1 / Table 2 / Fig. 4 / Appendix H.5, H.7–H.8 / Fig. 16",
       "interpretation": "经典三个方向3/3通过；clean 32K task macro +11.72pp、CI95 [+10.32,+13.11]pp，12/13任务与四family为正且输出健康更好。保留classic PPL短端代价和clean multivalue负格；不单独推出one-sided机制、YaRN胜负或跨checkpoint普适性",
       "sources": [
         {
@@ -918,13 +923,13 @@
         },
         {
           "path": "paper-2027/figs/field_gap_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "0e824df50a87208a4194f9995eeaefd83c5bc5c3af33b85a253f43bcd04130f6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         },
         {
           "path": "paper-2027/figs/verify_field_gap.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "5ac088b92e647a12c76b27f5abea6f532d82870562fd9867a08dd2b9b075bde6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         }
@@ -936,12 +941,12 @@
       "priority": "P0",
       "question": "不读取本次OLMo输出选表时，exact TailSpline相对exact MrPro的方法优势能否迁移到另一模型家族与Native窗口",
       "evidence_grade": "OLMo-2-0425-1B-Instruct；Full-13 13任务×3长度×10行与PPL46×3长度全量配对；20k paired bootstrap",
-      "manuscript_location": "§6.2 / Fig5c / a10",
+      "manuscript_location": "§6.1 classic transfer paragraph / Appendix H / Fig. 16",
       "interpretation": "三个预注册方向3/3通过：Full-13 +49.23pp、NIAH +64.45pp、PPL AUC -3.853，13任务差全部为正；OLMo历史方向先验和总剂量混杂禁止将其写成完全独立盲测或one-sided机制证明",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "c2ab489e921dea8e3a5b605a2130123fe32ff8ae813325eadaf0051cf0dea042"
         }
       ]
@@ -952,7 +957,7 @@
       "priority": "P1",
       "question": "历史外推改善是否仅来自midpoint参照",
       "evidence_grade": "历史git报告聚合；本轮未重跑训练",
-      "manuscript_location": "§3末 / Appendix native-grid-control",
+      "manuscript_location": "Appendix C.1",
       "interpretation": "L128、14974976 tokens、三seed、原生Std参照和span匹配形状；不同于500M严格固定支持主实验",
       "sources": [
         {
@@ -996,7 +1001,7 @@
       "priority": "P1",
       "question": "E1 qualified equal-dose diagnostic",
       "evidence_grade": "T-C -0.41pp [-2.63,1.82], QUALIFIED_ONLY; E0 does not establish full runtime equivalence.",
-      "manuscript_location": "TailSpline control appendix",
+      "manuscript_location": "§5.1 diagnostic paragraph / Appendix H.2 and H.8",
       "interpretation": "T-C -0.41pp [-2.63,1.82], QUALIFIED_ONLY; E0 does not establish full runtime equivalence.",
       "sources": [
         {
@@ -1006,7 +1011,7 @@
         },
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "13d18ac130eae4a4b50aaabb9c1c42bc23ba3c8d0a8ab3d7c5ec978a89604ddf"
         }
       ]
@@ -1017,17 +1022,17 @@
       "priority": "P1",
       "question": "Integer-position kernel equivalence",
       "evidence_grade": "Conditional similarity corollary: no-alias frequencies in (0,pi), full kernel, integer distances 0 and 1. CPU only.",
-      "manuscript_location": "Main theory and proof appendix",
+      "manuscript_location": "§4 kernel equivalence / Appendix A.6",
       "interpretation": "Conditional similarity corollary: no-alias frequencies in (0,pi), full kernel, integer distances 0 and 1. CPU only.",
       "sources": [
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "ad24cf40c0085ff26a133dc5b9b9e1587814617c5a961c701385de54646cbea8"
         },
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "b11f64fc507a6a133894bd4e026f7bd54b9ddd6ab86a289d6e4018104872ca2d"
         }
       ]
@@ -1038,23 +1043,23 @@
       "priority": "P0",
       "question": "Does TailSpline transfer its clean RULER gain to the frozen natural-input pool?",
       "evidence_grade": "All 1262 answers locally rescored; primary and stratum source-context intervals exactly reproduced",
-      "manuscript_location": "Main natural-QA paragraph and AppendixH.9",
+      "manuscript_location": "§6.1 natural-QA paragraph / Appendix H.9 / Table 41",
       "interpretation": "631 questions / 524 clusters; primary +0.1957pp [-1.5311,+1.8864], extended315 -0.9383pp [-4.1494,+1.9539]; no resolved ranking or equivalence claim",
       "sources": [
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "f203c70f713bd6a8c9b9ef2130ca137eb7a73bb6c0740b8b8359a6f53d75ccde"
         },
         {
           "path": "paper-2027/figs/field_gap_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "0e824df50a87208a4194f9995eeaefd83c5bc5c3af33b85a253f43bcd04130f6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         },
         {
           "path": "paper-2027/figs/verify_field_gap.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "5ac088b92e647a12c76b27f5abea6f532d82870562fd9867a08dd2b9b075bde6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         }
@@ -1066,12 +1071,12 @@
       "priority": "P0",
       "question": "Does the static S4 table improve task quality at the intermediate 2L length?",
       "evidence_grade": "Completed matched report; all13 task means and aggregate checked",
-      "manuscript_location": "Main Table2 / Figure3 / AppendixH.10",
+      "manuscript_location": "§6.1 / Table 2 / Fig. 4 / Appendix H.10",
       "interpretation": "650 pairs, 50/task; Full13 +3.3897pp [1.5307,5.3385]; QA +8pp [1,15]. Same construction at2L and4L; no continuum-length or natural-QA equivalence claim.",
       "sources": [
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "12e0ac6c7e5d5047268bcf15d033d43a8e09886b86694b22c5f0f0eb391b540b"
         }
       ]

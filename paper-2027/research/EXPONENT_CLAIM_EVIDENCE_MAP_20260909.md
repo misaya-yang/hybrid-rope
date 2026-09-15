@@ -8,18 +8,18 @@ its value, positional geometry explains the structural change, and TailSpline pr
 frequency transport for extrapolation. Clean RULER-200 is the main frozen result,
 with the observed native trade-off adjacent. The detailed T/C identities are in
 Appendix H.2; the main method preserves their purpose and measured comparison.
-Figure2 leads with TailSpline. Figure3 focuses on clean16K/32K; classic
+Figure2 presents finite-window geometry; Figure3 presents TailSpline. Figure4 focuses on clean16K/32K; classic
 curves remain in the TailSpline appendix.
 
 | Claim | Evidence and source | Boundary / location |
 |---|---|---|
-| Interior placement matters at fixed support | A01, A13; three paired training seeds and frozen controls | Main identification; Fig. 1; native cost retained |
-| Spectrum and coordinate assignment differ | Two-seed 151.9M crossed weights/tables promoted to Fig. 1c; historical same-spectrum slot intervention remains secondary | Main identification + discrete criterion; archived permutation identity gap stated in appendix |
+| Interior placement matters at fixed support | A01, A08; three paired training seeds and frozen controls | §3.1–3.2; Fig. 1; native cost retained |
+| Spectrum and coordinate assignment differ | A05, A06; two-seed 151.9M crossed weights/tables in Fig. 1c; same-spectrum slot intervention remains secondary | Main identification + discrete criterion; crossing details in Appendix B.2 and slot protocol in Appendix I.4 |
 | Integer kernel equivalence | CPU checker and proof, no-alias (0,pi), full Q/K bilinear kernel | Standard similarity corollary, not a task predictor |
-| Cosh / TailSpline are explicit constructors | Existing density and boundary objectives; T/C zero-sum exchange | Fig. 2; distinct objectives, no universal task optimum |
-| Cosh improves learning | Three-seed shared-cache MLA, unanchored midpoint endpoints | Main learning + Fig. 3; common evaluation chunks and aggregation in appendix. No finding of absent historical records or contamination is established |
-| Clean16K TailSpline > MrPro | A46;650 pairs: +3.39pp [1.53,5.34], QA +8pp [1,15] | Main Table2 / Fig3; at2L using the S4 table |
-| Clean32K TailSpline > MrPro | 2600 complete pairs: +11.72pp [10.32,13.11], 12/13 positive tasks | Main frozen result + Fig. 3; source-order 32K, not classic AUC or YaRN comparison |
+| Cosh / TailSpline are explicit constructors | A07, A37; existing density and boundary objectives; T/C zero-sum exchange | §5.1–5.2; Fig. 3 shows TailSpline; distinct objectives and appendix proofs |
+| Cosh improves learning | Three-seed shared-cache MLA, unanchored midpoint endpoints | Supporting Cosh + Fig. 5; common evaluation chunks and aggregation in appendix. No finding of absent historical records or contamination is established |
+| Clean16K TailSpline > MrPro | A46;650 pairs: +3.39pp [1.53,5.34], QA +8pp [1,15] | Main Table2 / Fig4; at2L using the S4 table |
+| Clean32K TailSpline > MrPro | 2600 complete pairs: +11.72pp [10.32,13.11], 12/13 positive tasks | Main frozen result + Fig. 4; source-order 32K, not classic AUC or YaRN comparison |
 | Classic transfer remains valid | Llama +3.20pp, OLMo +49.23pp under their recorded contracts | Separate appendix curve panels; no clean/classic curve splice |
 | Native cost | Original Native table/gain; LM +0.01936 PPL; task T-Native -2.14pp [-6.14,1.92] | LM cost; no lossless/noninferiority claim |
 | Residual T/C effect unresolved | E1 raw audit V2: -0.41pp [-2.63,1.82], cross-batch | QUALIFIED_ONLY; E0 zero score drift with six changed sequences cannot promote it |
@@ -30,9 +30,11 @@ Sources: [current Llama result owner](../../docs/research/next_stage_20260912/TA
 [decisions and experiment arrangements](COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md),
 [asset registry](evidence/asset_registry.json).
 
-No proposed A1, M1 or Native-Z5 outcome is used as manuscript evidence.
+No proposed A1 or M1 outcome is used as manuscript evidence. Completed Native-Z5
+exploration remains in its separate research owner and has not been promoted into this manuscript.
 Legacy source paths and result roles below remain historical provenance.
 
+## Historical placement map (2026-09-14; superseded by the current table above)
 
 更新：2026-09-14。主文以z价值和可执行构造为主线：§3受控收益，§4几何，§5 Cosh/TailSpline/BM，§6学习与零训练实证。作者提供的新OLMo TailSpline结果已与Llama一起纳入。当前修订见[修订目标](../REVISION_BRIEF.md)。
 
@@ -42,7 +44,7 @@ Legacy source paths and result roles below remain historical provenance.
 
 A27中的step42保留新面板失败及原始报告数字，但新面板不含旧增益来源`niah_single_3`；任务构成变化与开发选择并存，不能单独识别为“就是噪声”或“干预本身没有方向”。该纠正不改变原报告哈希，也不构成C42/C42V24的负复现。详见[Pro审计处理](../../docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md)。
 
-## 当前主张链
+### 历史主张链
 
 上位主张：内部频率分配z是改善RoPE模型表现的有效设计变量。外推、窗口内/外联合改善、学习和零训练任务是不同证据路径；具体实验的长度范围不定义z的全部用途。
 
@@ -82,7 +84,7 @@ A27中的step42保留新面板失败及原始报告数字，但新面板不含�
 
 151.9M的主张：相同频率端点与训练协议下，仅重新分配中间30个频率，三个seed在2×/4×/8×的NLL均改善，说明allocation有效。“固定支持”只是这一控制条件的术语。27bE的Cosh形状/τ/理论链问题与此项收益分开，避免把额外归因任务堆到151.9M上。
 
-## 本轮图表与证据职责
+### 历史图表与证据职责
 
 - Fig.2(a)显示target-matched三seed响应，(b)保留训练支持的收益，(c)冻结同支持任务；两种support政策在§3.1共同呈现。FMRoPE只注明几何配置来源。
 - Fig.3在§4展示full-pair overlap与慢频块effective rank；Fig.4在§6展示三seed MLA曲线，两者不再共用面板。

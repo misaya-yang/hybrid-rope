@@ -17,6 +17,13 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 MAINTENANCE = ROOT / 'docs/maintenance'
+PORTABLE_REPORT_ROOTS = (
+    ROOT / 'docs/research/next_stage_20260912',
+    ROOT / 'paper-2027/research/evidence',
+    ROOT / 'experiments/iclr2027_three_track_sprint_20260915/reports',
+)
+PERSONAL_PATH_PATTERN = re.compile(
+    r'(?:/Users/[^/\s`]+/|[A-Za-z]:\\Users\\[^\\\s`]+\\)')
 
 
 def refresh_inventory() -> None:
@@ -108,9 +115,22 @@ def check(local_evidence: bool = False) -> dict:
     for move in relocations['moves']:
         if not (ROOT / move['new']).is_file():
             errors.append(f'Missing relocation target: {move["new"]}')
+    portable_reports = 0
+    for report_root in PORTABLE_REPORT_ROOTS:
+        if not report_root.is_dir():
+            continue
+        for path in report_root.rglob('*'):
+            if not path.is_file() or path.suffix.lower() not in {'.md', '.json', '.csv'}:
+                continue
+            portable_reports += 1
+            match = PERSONAL_PATH_PATTERN.search(path.read_text(errors='replace'))
+            if match:
+                relative = path.relative_to(ROOT).as_posix()
+                errors.append(f'Personal absolute path in report: {relative} -> {match.group(0)}')
     result = {'managed_documents': len(inventory['managed_documents']),
               'local_links_checked': links, 'assets': len(registry['assets']),
               'source_occurrences_checked': sources, 'relocations': len(relocations['moves']),
+              'portable_reports_checked': portable_reports,
               'local_source_occurrences': local_sources,
               'mode': 'local-evidence' if local_evidence else 'git-portable',
               'errors': errors, 'model_execution': False}

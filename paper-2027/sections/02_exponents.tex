@@ -17,22 +17,11 @@ Changing frequencies preserves RoPE's relative-position composition and norm pre
 
 Geo denotes each protocol's geometric reference and Native a released model's inherited table. Standard and midpoint geometric grids share $z$ but differ by an overall frequency offset. Exact grid and endpoint conventions are in Appendix~\ref{sec:table-identities}.
 
-\paragraph{What each control fixes.}
-With fast endpoint unchanged and slow endpoint divided by $s$,
-$z'_k=(Rz_k+\log s\,m_k)/(R+\log s)$.
-For a transition with $n$ gaps, let $\epsilon_q=m_q-m_{q-1}$, $m_0=0$, $m_n=1$. The controls fix different quantities:
-\begin{center}\small
-\begin{tabular}{@{}p{.26\linewidth}p{.32\linewidth}p{.34\linewidth}@{}}
-\toprule
-Held fixed & Meaning & Remaining intervention \\
-\midrule
-Actual endpoints & Sampled support $(a,R)$ & Interior allocation \\
-$\sum_q\epsilon_q=1$ & Added log span $\log s$ & Total displacement and shape \\
-$D=\log s\sum_k m_k$ & Total log displacement (dose) & Residual shape \\
-Frequency multiset & Same supplied spectrum & Coordinate assignment \\
-Gain $g$ & Rotary score amplitude & Frequency effects \\
-\bottomrule
-\end{tabular}
-\end{center}
-At fixed band and $s>1$, $\sum_{q=1}^n q\epsilon_q=n-\sum_{q=1}^{n-1}m_q$:
-fixing dose already fixes the increment centroid. It is not a second independent control.
+\paragraph{Separating the effects of allocation.}
+Fixed endpoints isolate internal placement. Holding $D=\sum_kd_k$ fixed
+then compares allocations with equal total log displacement; permuting a fixed
+frequency multiset tests coordinate assignment. At fixed native table and
+target endpoints, $D$ is itself a statistic of $z$. Equal-displacement
+controls therefore resolve finer configuration effects within this design
+space. The complete control definitions are in
+Appendix~\ref{sec:identification-details}.
