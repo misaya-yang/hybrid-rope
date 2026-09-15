@@ -160,8 +160,13 @@ def log_frequency_jacobian(knot) -> np.ndarray:
         )[0]
         rows.append(gradient.detach().double().cpu().numpy())
     result = np.stack(rows)
-    if not np.isfinite(result).all() or np.max(np.abs(result.sum(axis=1))) > 1e-8:
+    null_residual = float(np.max(np.abs(result.sum(axis=1))))
+    if not np.isfinite(result).all() or null_residual > 1e-5:
         raise RuntimeError("log-frequency Jacobian does not respect the softmax null direction")
+    # Autograd is sourced from FP32 gap logits, so the exact softmax-shift null
+    # identity arrives with roughly 1e-7 round-off.  Project it explicitly
+    # before constructing the five-dimensional metric.
+    result -= result.mean(axis=1, keepdims=True)
     return result
 
 
@@ -186,7 +191,9 @@ def block_gradients(model, knot, token_rows, blocks) -> tuple[np.ndarray, list[d
         knot.gap_logits.grad = None
         segment_values = []
         for index in indices:
-            ids = torch.as_tensor(token_rows[index], dtype=torch.long, device="cuda").unsqueeze(0)
+            ids = torch.as_tensor(
+                token_rows[index].copy(), dtype=torch.long, device="cuda",
+            ).unsqueeze(0)
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 segments = segment_losses(model, ids)
                 objective = segments.mean()
