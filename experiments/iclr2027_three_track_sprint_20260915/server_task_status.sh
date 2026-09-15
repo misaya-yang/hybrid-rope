@@ -67,6 +67,13 @@ fi
 printf '  LAUNCHER  %s/experiments/iclr2027_three_track_sprint_20260915/run_llama_s16_128k_gate_48gb.sh\n' "${repo_root}"
 printf '  CONTRACT  refuses GPUs below 45000 MiB; prefill strategies are selected on the destination GPU\n'
 
+printf '\nREADY ON 32GB, NOT STARTED\n'
+file_state 'OLMo QA631 assets' "${plan_root}/tailspline_olmo_s4_naturalqa631/assets/manifest.json"
+file_state 'OLMo RULER200 assets' "${plan_root}/tailspline_olmo_s4_16k_ruler200_clean/assets/manifest.json"
+file_state 'OLMo QA report' "${plan_root}/tailspline_olmo_s4_naturalqa631/reports/tailspline_vs_mrpro_naturalqa631.json"
+file_state 'OLMo RULER200 report' "${plan_root}/tailspline_olmo_s4_16k_ruler200_clean/reports/tailspline_vs_mrpro_16384.json"
+printf '  ORDER     run_olmo_qa_then_ruler200.sh keeps QA first and RULER-200 last; --execute is required.\n'
+
 printf '\nDO NOT LAUNCH AS A QUEUE\n'
 printf '  run_original_gpu_queue.sh and run_clone_gpu_queue.sh are dated sprint wrappers, not current priorities.\n'
 printf '  Completed directories and canaries remain evidence sources; their presence is not pending work.\n'

@@ -66,12 +66,14 @@ state require the checks above.
 
 ## B. Ready on a 32 GB GPU, but parked
 
-There is no additional 32 GB job currently authorized to follow Full20. The
-only complete, runnable follow-up in this layer is YaRN Natural-QA, and YaRN is
-explicitly last-priority work.
+There is no automatically authorized follow-on after Full20. The strong-evidence
+wrappers and OLMo assets below are prepared, but their default commands are dry
+runs; code readiness does not authorize GPU execution.
 
 | Task | Entry point | Output root | State / launch rule |
 |---|---|---|---|
+| OLMo S4 Natural-QA631, TailSpline/MrPro | `experiments/iclr2027_strong_evidence_20260915/run_olmo_naturalqa631.sh --execute` | `/root/autodl-tmp/today_rope_plan_20260914/tailspline_olmo_s4_naturalqa631` | CPU panel complete: 631 rows, 524 source clusters. A four-row canary selects exact batch4 left-padding or falls back to batch1. GPU execution not started. |
+| OLMo QA then clean16K Full13×200 | `experiments/iclr2027_strong_evidence_20260915/run_olmo_qa_then_ruler200.sh --execute` | QA root above, then `/root/autodl-tmp/today_rope_plan_20260914/tailspline_olmo_s4_16k_ruler200_clean` | CPU RULER asset complete: 2,600 source-order unpadded rows. Wrapper enforces QA first and RULER-200 last; default invocation only prints the plan. |
 | One YaRN arm on the frozen Natural-QA631 inputs | `run_naturalqa_yarn.sh --execute` | `/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_naturalqa631_yarn_a1` | Code-ready; not launched; default invocation is a dry run. Launch only after an explicit YaRN decision. Reuses completed TailSpline/MrPro generations. |
 
 Do not label a proposed Native-Z successor as ready. The existing Native-Z5,
