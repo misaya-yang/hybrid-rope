@@ -133,8 +133,8 @@
         {
           "path": "paper-2027/sections/03_compatibility.tex",
           "availability": "local-untracked",
-          "sha256": "828119d5e119696a280d102f71b7675cf2def9473df3e17f75743686cb551852",
-          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
+          "sha256": "4435aa9717d9b27fb56fcacfbbc655ef6c587b4567b6d35dde73f440008d1e60",
+          "revision_note": "2026-09-15 field-gap revision: current exposition and completed clean/control evidence; prior evidence retained."
         }
       ]
     },
@@ -150,14 +150,14 @@
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "aeef785d3887d276e26cee675646085a2f374dec608e1e1d1ab44fe0b9fb5485",
-          "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
+          "sha256": "b1058d3b437f628caf5f4354806c65e858f1495dcf7615ea4f9e9f64cebbbb20",
+          "revision_note": "2026-09-15 field-gap revision: current exposition and completed clean/control evidence; prior evidence retained."
         },
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "ee601e8f15505cf3624cac1c680642cebadb10594ef2b6107189d7fdc83f6eee",
-          "revision_note": "2026-09-15 field-gap integration: completed clean/control evidence and clarified construction exposition; historical observed scores retained."
+          "sha256": "292b4ce7ff7ca4dbe75715c70b3900a135a2cbc2db24d9037e00e1601831f85e",
+          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
         }
       ]
     },
@@ -853,9 +853,9 @@
         {
           "path": "paper-2027/appendix/a10_tailspline.tex",
           "availability": "tracked",
-          "sha256": "55e231a4ad78c04787d5d031a3430ab7685df4e816ef212d019a1c145dfdfc31",
+          "sha256": "77f45b7340c1a5229df9b063eae59fd721ac96e8167c04093df36178d64d159c",
           "role": "Exact matched-displacement T-C identity and centroid equivalence; mathematical verification only, no E1 task scores.",
-          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
+          "revision_note": "2026-09-15 field-gap revision: current exposition and completed clean/control evidence; prior evidence retained."
         },
         {
           "path": "paper-2027/figs/allocation_design.py",
@@ -974,74 +974,6 @@
           "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
           "availability": "tracked",
           "sha256": "1d623100da8e6e8fd11a85177f3771ab61be4b7b78de1213da5be0a9b2baf6df"
-        }
-      ]
-    },
-    {
-      "id": "A43",
-      "name": "Clean RULER-200 source-order confirmation and Native controls",
-      "priority": "P0",
-      "question": "Does frozen TailSpline improve a larger clean task panel?",
-      "evidence_grade": "Complete 2600 paired output scores recomputed; E0 and Native reports independently read",
-      "manuscript_location": "Main frozen results, Fig. 4; clean/control appendices",
-      "interpretation": "T-P +11.72pp [10.32,13.11]; 12/13 task means positive. Native task noninferiority not established; native LM cost reported.",
-      "sources": [
-        {
-          "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
-          "availability": "tracked",
-          "sha256": "95ddb6ec4d7c24b17372b793bcb012c3bfa3f008afb3dc564741444dbda05096"
-        },
-        {
-          "path": "paper-2027/figs/field_gap_inputs.json",
-          "availability": "tracked",
-          "sha256": "6939ac6530e4a4fe0460531a81a9345fea95bcd618b8586168a246071aa25c1d"
-        },
-        {
-          "path": "paper-2027/figs/verify_field_gap.py",
-          "availability": "tracked",
-          "sha256": "9cedd2c6bad783597a8680895efd4cca0d296916b4d97986e74313710f3fdbfa"
-        }
-      ]
-    },
-    {
-      "id": "A44",
-      "name": "E1 qualified equal-dose diagnostic",
-      "priority": "P1",
-      "question": "Does the fixed T/C residual-shape exchange help?",
-      "evidence_grade": "390 generation and 138 LM rows per arm checked; legacy interval retained",
-      "manuscript_location": "Main limitations; TailSpline control appendix",
-      "interpretation": "T-C -0.41pp [-2.63,1.82], QUALIFIED_ONLY cross-runtime; no equivalence or tail-only mediation.",
-      "sources": [
-        {
-          "path": "experiments/iclr2027_three_track_sprint_20260915/e1_experimental_audit.py",
-          "availability": "tracked",
-          "sha256": "2871917b4312fdc67bd1bf12d63a1f70dedabc9dd4df96d06fc3e0c900b3c55a"
-        },
-        {
-          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json",
-          "availability": "tracked",
-          "sha256": "13d18ac130eae4a4b50aaabb9c1c42bc23ba3c8d0a8ab3d7c5ec978a89604ddf"
-        }
-      ]
-    },
-    {
-      "id": "A45",
-      "name": "Integer-position kernel equivalence",
-      "priority": "P1",
-      "question": "When can a fixed invertible Q/K map absorb a frequency change?",
-      "evidence_grade": "Conditional mathematical corollary and CPU counterexamples",
-      "manuscript_location": "Main theory; proof appendix",
-      "interpretation": "Frequencies in (0,pi), full kernel, distances 0 and 1; standard similarity result, not model performance.",
-      "sources": [
-        {
-          "path": "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
-          "availability": "tracked",
-          "sha256": "ad24cf40c0085ff26a133dc5b9b9e1587814617c5a961c701385de54646cbea8"
-        },
-        {
-          "path": "experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json",
-          "availability": "tracked",
-          "sha256": "b11f64fc507a6a133894bd4e026f7bd54b9ddd6ab86a289d6e4018104872ca2d"
         }
       ]
     }
