@@ -35,7 +35,7 @@ for index in "${!tasks[@]}"; do
     --model "${model}" --upstream "${upstream}" --out "${part}" \
     --stage H --contract planb --tasks "${task}" --caps 131072 \
     --counts-by-cap 131072:10 --selection-mode source-order \
-    --qa-base-offset 5800 --seed "$((20262001 + index))" \
+    --qa-base-offset 5800 --source-only --seed "$((20262001 + index))" \
     >"${root}/logs/prepare_${task}.log" 2>&1 &
   running+=("$!")
   if [[ ${#running[@]} -ge 4 ]]; then wait_one; fi
