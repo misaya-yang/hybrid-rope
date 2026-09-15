@@ -1,21 +1,4 @@
 {
-  "schema_version": 1,
-  "provenance_status": "raw-json-backed",
-  "artifact_role": "Portable copy of the ignored three-seed MLA evaluation JSON.",
-  "source": {
-    "path": "data/curated/eval_3seeds_full_results.json",
-    "path_hint": "results/eval_3seeds_full_results.json",
-    "sha256": "1e44d30bb880e4b7427ae55bd7034782989152bd2afca9217495f9b8ece30953",
-    "local_source_policy": "The server-side original under results/ is ignored by .gitignore rule 'results/'. A tracked copy with this exact sha256 was restored from git history commit 8463a98 (2026-07-10), which is the last commit holding it before 6b636e5 removed it. Use the tracked path; do not search results/ for it.",
-    "recovered_from": {
-      "commit": "8463a98",
-      "commit_date": "2026-07-10",
-      "commit_subject": "merge: consolidate rebuttal evidence from all branches into main",
-      "removed_by": "6b636e5",
-      "removed_by_subject": "Slim working branch: keep paper-2027 + docs + live code apparatus"
-    }
-  },
-  "claim_boundary": "Primary III 8K/500M scarce-channel stress test only. The tested tau=1.414 is an empirical d_eff=128 operating convention, not a global theorem or a direct comparison of d_eff conventions.",
   "seeds": [
     42,
     43,
