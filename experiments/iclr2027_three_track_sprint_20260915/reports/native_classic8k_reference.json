@@ -1,0 +1,30 @@
+{
+  "by_task": {
+    "cwe": 1.0,
+    "fwe": 0.9,
+    "niah_multikey_1": 1.0,
+    "niah_multikey_2": 0.9,
+    "niah_multikey_3": 1.0,
+    "niah_multiquery": 1.0,
+    "niah_multivalue": 0.925,
+    "niah_single_1": 1.0,
+    "niah_single_2": 1.0,
+    "niah_single_3": 1.0,
+    "qa_1": 1.0,
+    "qa_2": 0.3,
+    "vt": 0.9200000000000002
+  },
+  "claim_boundary": "One-arm Native reference on the classic 8K panel; comparisons require matched T/P rows and a declared non-inferiority margin.",
+  "length": 8192,
+  "output_health": {
+    "empty": 0,
+    "ended_eos": 130,
+    "hit_cap": 0
+  },
+  "panel_sha256": "15643ed93509a019012f532f5d61d36068713e5aa5ae1ed0c467d86864c9b469",
+  "raw_sha256": "0323dc60eff438a9733398d8b7709dec3636eab5b0e6353040d092d690ca337b",
+  "rows": 130,
+  "rows_per_task": 10,
+  "status": "LLAMA_NATIVE_8K_RULER_REFERENCE_COMPLETE_V1",
+  "task_equal_macro": 0.918846153846154
+}

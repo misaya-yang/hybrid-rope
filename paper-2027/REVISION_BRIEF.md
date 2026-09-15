@@ -1,5 +1,35 @@
 # 当前论文修订目标与完成范围
 
+## 2026-09-15：给Astra的下一轮叙事边界
+
+本节覆盖下方历史改稿回执中的旧优先级，但**不授权本轮自动修改论文源码**。论文唯一一级
+身份是allocation研究：固定支持识别内部`z`的作用，刻画它改变的位置结构，并展示它可在
+学习与零训练两种阶段被构造利用。零训练是核心落地，TailSpline是唯一重点展开的部署构造；
+它不是全文唯一科学贡献。
+
+clean Llama 32K Full RULER-13×200已经成为唯一hero：TailSpline/MrPro为
+`68.27/56.54%`，差`+11.72pp`，95%区间`[+10.32,+13.11]pp`；12/13任务、四family
+及所有leave-one-task-out读数均为正，且EOS/cap健康更好。Astra只从
+[Llama结果owner](../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)
+和便携JSON取数，不从对话或Pro回答转抄。
+
+对Web Pro建议采用以下取舍：
+
+- **接受：**allocation为一级贡献；TailSpline为零训练核心实例；clean RULER为hero；
+  Natural-QA631为真实任务支撑；不把one-sided目标写成任务最优或经验中介。
+- **修正：**Cosh不再与TailSpline争主角，但保留一段学习期构造与最强学习证据，否则
+  “allocation研究”会退化成纯TailSpline方法论文。OLMo/classic结果可压缩呈现，但不因
+  数字大或cap高而删除跨checkpoint信息。
+- **拒绝：**不按重复答案、模板或source index为synthetic RULER伪造cluster sidecar；
+  维持任务分层、行内严格配对bootstrap。Natural-QA才按真实source document聚类。
+  不预先写死四图两表或逐节页数，图表只服从论证职责。
+
+建议论证顺序是：`allocation识别 → 最小位置结构/共适应 → 学习期Cosh紧凑证据 →
+冻结TailSpline构造 → clean hero → Natural-QA → 适用边界`。BM、T--C、旧Qwen、
+fixed-u及搜索失败留作附录边界；Native-Z5是独立研究，不并入当前claim。Natural-QA未完成
+前不填结果、不借BM结果替代。YaRN只在作者后续决定需要常用静态基线时进入同合同单臂，
+不阻塞当前TailSpline相对MrPro的主结论。
+
 2026-09-14。当前主线：**z的实用价值 → 受控归因 → 位置基结构 → 解析构造 → 学习与零训练任务收益**。标题保持 Beyond the Base: Exponent Allocation in RoPE。
 
 固定支持实验识别z独立作用；完整方法可联合改变范围、band、终点和gain，收益归完整方法。窗口内增强是后续目标，M4联合改善是初步证据。

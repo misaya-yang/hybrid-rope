@@ -20,12 +20,12 @@ present-state evidence.
 
 | Sprint item | Execution owner |
 |---|---|
-| E0 classic runtime identity | Frozen 39-cell TailSpline batch-2 replay on the clone; compare with completed batch-1 raw |
+| E0 classic runtime identity | Complete: 39-cell TailSpline batch-2 replay has zero score drift versus batch 1; six texts differ, so this is not bitwise equivalence |
 | E1 matched-displacement shape | Completed raw plus `e1_experimental_audit.py`; E0 remains the runtime-sensitivity qualifier |
-| E2 clean RULER-200 | Existing TailSpline/MrPro pair on the original; clean YaRN on the clone |
+| E2 clean RULER-200 | TailSpline/MrPro complete: `0.682660/0.565436`, delta `+0.117224`, CI95 `[+0.103231,+0.131148]`; clean YaRN remains optional and unscheduled |
 | E3 Natural-QA631 | Original GPU; enriched within/extended, task, source-cluster, health and sensitivity report |
 | E4 strong static baseline | YaRN only, on both clean and batch-1 classic contracts; BM is excluded |
-| E5 Native reference | Completed matched Native-8K PPL CPU summary plus one-arm Native-8K RULER run on the clone |
+| E5 Native reference | Native PPL summary and Native-8K RULER complete; task macro `0.918846`, Native-minus-TailSpline CI95 `[-0.019231,+0.061410]` |
 
 Native-Z5 is an additional checkpoint-calibrated question requested after the
 sprint proposal; it follows Natural-QA on the original GPU and does not replace
@@ -45,6 +45,10 @@ checkpoint or touch CUDA.
 The interpretation owner for the theory receipt is
 [THEORY_DEEPENING_CPU_VERIFICATION_20260915.md](../../docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md).
 
+Compact completed reports are stored in [reports](reports/). Large generation
+streams remain on the experiment server and are identified by SHA256 in the
+Llama result owner; score-only changes reuse those streams.
+
 ## GPU entry points
 
 After the data disk has been cloned and each server endpoint is known, launch
@@ -57,3 +61,7 @@ experiments/iclr2027_three_track_sprint_20260915/run_clone_gpu_queue.sh
 
 Both scripts are restartable at completed-arm boundaries and preserve existing
 raw generations. Do not run both scripts on the same GPU.
+
+## Field-gap follow-ups
+
+[Current arrangement](../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md) preserves queue ownership and prioritizes the frozen Natural-QA T/P comparison. [A1 YaRN launcher](run_naturalqa_yarn.sh) is prepared separately, prints its action by default and is not queued. E1 V2 retains `QUALIFIED_ONLY` after E0; the 39-row probe cannot establish full T/C runtime equivalence. [Discrete CPU examples](verify_discrete_kernel_equivalence.py) verify mathematical boundaries only.

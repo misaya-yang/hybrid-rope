@@ -156,8 +156,8 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "local-untracked",
-          "sha256": "292b4ce7ff7ca4dbe75715c70b3900a135a2cbc2db24d9037e00e1601831f85e",
-          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
+          "sha256": "ee601e8f15505cf3624cac1c680642cebadb10594ef2b6107189d7fdc83f6eee",
+          "revision_note": "2026-09-15 field-gap integration: completed clean/control evidence and clarified construction exposition; historical observed scores retained."
         }
       ]
     },
@@ -888,17 +888,32 @@
     },
     {
       "id": "A39",
-      "name": "TailSpline–MrPro Llama S4经典两臂判决",
+      "name": "TailSpline–MrPro Llama S4经典多长度与clean 32K判决",
       "priority": "P0",
-      "question": "不训练且固定checkpoint、band、gain与评测协议时，exact TailSpline能否在经典长上下文任务整体胜过exact MrPro",
-      "evidence_grade": "Llama-3-8B-Instruct；Full-13 13任务×3长度×10行与PPL46×3长度全量配对；20k paired bootstrap",
+      "question": "不训练且固定checkpoint、band、gain与评测协议时，exact TailSpline能否在经典多长度和clean 32K大样本上整体胜过exact MrPro",
+      "evidence_grade": "Llama-3-8B-Instruct；经典Full-13 13任务×3长度×10行与PPL46×3长度；clean 32K为13任务×200行、2,600严格配对prompt/臂；20k paired bootstrap",
       "manuscript_location": "§6.2 / Fig5b / a10",
-      "interpretation": "三个预注册方向3/3通过：Full-13 +3.20pp且区间为正，NIAH +3.75pp，PPL AUC -0.00449；保留PPL短端与QA/单任务反转，不单独推出one-sided机制或跨checkpoint普适性",
+      "interpretation": "经典三个方向3/3通过；clean 32K task macro +11.72pp、CI95 [+10.32,+13.11]pp，12/13任务与四family为正且输出健康更好。保留classic PPL短端代价和clean multivalue负格；不单独推出one-sided机制、YaRN胜负或跨checkpoint普适性",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
-          "availability": "local-untracked",
-          "sha256": "775028994884acb1a3a507366a383f9b78e2724d693d26515a7f89001156481d"
+          "availability": "tracked",
+          "sha256": "95ddb6ec4d7c24b17372b793bcb012c3bfa3f008afb3dc564741444dbda05096"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean_ruler200_tailspline_vs_mrpro.json",
+          "availability": "tracked",
+          "sha256": "5c7e2fe7275029c4aad98520a420a05e170bbe5dcea354f1e01f190e4ee1fe4b"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/batch_sensitivity_probe39.json",
+          "availability": "tracked",
+          "sha256": "1c1d74818e9a868c310ed8f303a7e0f9a253400d42de66b70760251514203464"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/native_vs_tailspline_mrpro_classic8k.json",
+          "availability": "tracked",
+          "sha256": "6d033a4f7d766cf25dbec38c215e416b7fb813d1da8fbff711ae0a07ea372164"
         }
       ]
     },
@@ -959,6 +974,74 @@
           "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
           "availability": "tracked",
           "sha256": "1d623100da8e6e8fd11a85177f3771ab61be4b7b78de1213da5be0a9b2baf6df"
+        }
+      ]
+    },
+    {
+      "id": "A43",
+      "name": "Clean RULER-200 source-order confirmation and Native controls",
+      "priority": "P0",
+      "question": "Does frozen TailSpline improve a larger clean task panel?",
+      "evidence_grade": "Complete 2600 paired output scores recomputed; E0 and Native reports independently read",
+      "manuscript_location": "Main frozen results, Fig. 4; clean/control appendices",
+      "interpretation": "T-P +11.72pp [10.32,13.11]; 12/13 task means positive. Native task noninferiority not established; native LM cost reported.",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
+          "availability": "tracked",
+          "sha256": "95ddb6ec4d7c24b17372b793bcb012c3bfa3f008afb3dc564741444dbda05096"
+        },
+        {
+          "path": "paper-2027/figs/field_gap_inputs.json",
+          "availability": "tracked",
+          "sha256": "6939ac6530e4a4fe0460531a81a9345fea95bcd618b8586168a246071aa25c1d"
+        },
+        {
+          "path": "paper-2027/figs/verify_field_gap.py",
+          "availability": "tracked",
+          "sha256": "9cedd2c6bad783597a8680895efd4cca0d296916b4d97986e74313710f3fdbfa"
+        }
+      ]
+    },
+    {
+      "id": "A44",
+      "name": "E1 qualified equal-dose diagnostic",
+      "priority": "P1",
+      "question": "Does the fixed T/C residual-shape exchange help?",
+      "evidence_grade": "390 generation and 138 LM rows per arm checked; legacy interval retained",
+      "manuscript_location": "Main limitations; TailSpline control appendix",
+      "interpretation": "T-C -0.41pp [-2.63,1.82], QUALIFIED_ONLY cross-runtime; no equivalence or tail-only mediation.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/e1_experimental_audit.py",
+          "availability": "tracked",
+          "sha256": "2871917b4312fdc67bd1bf12d63a1f70dedabc9dd4df96d06fc3e0c900b3c55a"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json",
+          "availability": "tracked",
+          "sha256": "13d18ac130eae4a4b50aaabb9c1c42bc23ba3c8d0a8ab3d7c5ec978a89604ddf"
+        }
+      ]
+    },
+    {
+      "id": "A45",
+      "name": "Integer-position kernel equivalence",
+      "priority": "P1",
+      "question": "When can a fixed invertible Q/K map absorb a frequency change?",
+      "evidence_grade": "Conditional mathematical corollary and CPU counterexamples",
+      "manuscript_location": "Main theory; proof appendix",
+      "interpretation": "Frequencies in (0,pi), full kernel, distances 0 and 1; standard similarity result, not model performance.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
+          "availability": "tracked",
+          "sha256": "ad24cf40c0085ff26a133dc5b9b9e1587814617c5a961c701385de54646cbea8"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json",
+          "availability": "tracked",
+          "sha256": "b11f64fc507a6a133894bd4e026f7bd54b9ddd6ab86a289d6e4018104872ca2d"
         }
       ]
     }
