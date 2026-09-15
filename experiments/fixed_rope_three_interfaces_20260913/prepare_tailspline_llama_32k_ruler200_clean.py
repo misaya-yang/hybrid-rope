@@ -43,9 +43,17 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--length", type=int, default=32768)
     parser.add_argument("--rows-per-task", type=int, default=200)
+    parser.add_argument("--tasks", default=",".join(TASKS))
     args = parser.parse_args()
     if args.length <= 0 or args.rows_per_task <= 0:
         raise ValueError("length and rows-per-task must be positive")
+    selected_tasks = tuple(value.strip() for value in args.tasks.split(",") if value.strip())
+    if (
+        not selected_tasks
+        or len(set(selected_tasks)) != len(selected_tasks)
+        or not set(selected_tasks).issubset(TASKS)
+    ):
+        raise ValueError("tasks must be a unique non-empty subset of RULER-13")
 
     output = args.out.resolve()
     manifest_path = output / "manifest.json"
@@ -53,9 +61,10 @@ def main() -> None:
         manifest = json.loads(manifest_path.read_text())
         if (
             manifest.get("status") == "COMPLETE"
-            and manifest.get("rows") == len(TASKS) * args.rows_per_task
+            and manifest.get("rows") == len(selected_tasks) * args.rows_per_task
             and manifest.get("rows_per_task") == args.rows_per_task
             and manifest.get("length_cap") == args.length
+            and manifest.get("tasks") == list(selected_tasks)
             and manifest.get("batching_scope") == "batch=1 with exact unpadded prompt_ids; no runtime padding"
         ):
             print(json.dumps({"status": "SKIP_COMPLETE", "rows": manifest["rows"]}))
@@ -66,7 +75,7 @@ def main() -> None:
     tokenizer = AutoTokenizer.from_pretrained(args.model.resolve(), local_files_only=True)
     rows = []
     sources = {}
-    for task in TASKS:
+    for task in selected_tasks:
         part = args.source_parts / task
         main_source = part / "source" / str(args.length) / task / "validation.jsonl"
         raw = read_jsonl(main_source)
@@ -113,10 +122,10 @@ def main() -> None:
 
     counts = Counter(row["task"] for row in rows)
     prompts = {row["prompt_sha256"] for row in rows}
-    expected_rows = len(TASKS) * args.rows_per_task
+    expected_rows = len(selected_tasks) * args.rows_per_task
     if (
         len(rows) != expected_rows
-        or counts != Counter({task: args.rows_per_task for task in TASKS})
+        or counts != Counter({task: args.rows_per_task for task in selected_tasks})
         or len(prompts) != expected_rows
     ):
         raise ValueError("clean RULER task or prompt coverage drift")
@@ -130,13 +139,13 @@ def main() -> None:
     manifest = {
         "status": "COMPLETE",
         "contract": (
-            f"TAILSPLINE_LLAMA_{args.length}_RULER13_{args.rows_per_task}_"
+            f"TAILSPLINE_LLAMA_{args.length}_RULER{len(selected_tasks)}_{args.rows_per_task}_"
             "SOURCE_ORDER_UNPADDED_V1"
         ),
         "upstream_revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
         "rows": expected_rows,
         "rows_per_task": args.rows_per_task,
-        "tasks": list(TASKS),
+        "tasks": list(selected_tasks),
         "length_cap": args.length,
         "selection_mode": "source-order",
         "depth_balancing": False,
