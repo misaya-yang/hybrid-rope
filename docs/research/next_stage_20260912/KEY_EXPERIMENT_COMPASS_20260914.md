@@ -47,7 +47,7 @@ Cosh保留辅助外推及配对学习证据。
 |---|---|---|---|
 | **Qwen2.5-3B S2小面板** | Core-6、32K/64K各18行/任务；32K `+1.99pp`，64K `−2.13pp`；AUC `−0.07pp`，区间`[−3.06,+2.89]pp` | 当前216对面板未确认优势或劣势；保留长度间方向变化，不与OLMo classic或Llama clean合并 | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md#1-qwen25-3b32k64k跨模型小面板) |
 | **Native-Z5原生增强** | V1在46文档4K NLL为`−0.002109`，区间`[−0.004207,−0.000148]`；RULER `+1.68pp`、Natural-QA `+1.98pp`但区间均跨0。consensus-plus的4K NLL为`−0.000631`且区间跨0；all50 refit为`−0.001543`且区间跨0，晋级门失败 | 只支持“一个checkpoint上存在post-hoc z-only NLL改进”的初步证据；**稳健原生增强与任务增强均未关闭**，后续两种改法没有超过V1 | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md)；服务器raw位于`olmo_native_z5_enhancement/` |
-| **Llama NIAH深度小样本** | 4长度×9深度×3重复，T/P `88.89/92.59%`，差`−3.70pp`，区间`[−7.41,0]pp`；24K持平，32K均100%，额外失败集中8/16K | 不显著负点估计且长端天花板，既不证明MrPro胜，也不支持TailSpline胜；只用于定位可能的短端retrieval代价 | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md#2-llama-s4niah长度深度诊断) |
+| **Llama NIAH Full20及pilot** | Full20为4长度×9深度×20重复，T/P `87.50/88.47%`，差`−0.97pp`，区间`[−3.06,+1.11]pp`；8K `−3.89pp`且区间跨0，16K持平，32K近饱和。三重复pilot另为`−3.70pp` | 大样本确认没有分出总体胜负，pilot较大负点估计明显收缩；保留可能的短端retrieval代价，不与Full-13总体优势冲突，也不再增加同类heatmap | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md#2-llama-s4niah长度深度诊断与full20确认) |
 | **C2紧凑profile** | Qwen 64/128K保留部分64维transport行为，但Native 32K由`0.82`降至`0.7125`，注册双门失败 | 低维描述可行，不是合格统一部署法；停止调C2 | [A15证据owner](../../../paper-2027/research/attention-aware-retrofit/evidence/LOW_DIM_COUPLING_GPU_RECEIPT_20260901.json) |
 | **fixed-u倍率迁移** | OLMo S4→S8同prompt下显著差于fixed-m | 当前迁移规则已否决，不换模型/倍率继续救 | [A36结果owner](OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md) |
 | **proxy选表与继续调曲线** | OOD/SEP、Fisher、局部margin、coherence及开发赢家多次与完整任务反转 | proxy仅可事后解释；不再据此调系数、band、gain、lambda或新曲线 | [当前理论完成标准](THEOREM_FIRST_ROPE_DESIGN_20260913.md) |
@@ -73,14 +73,13 @@ CPU结果只验证定义、恒等式和条件唯一性，不作为GPU任务胜�
 
 | 状态 | 实验合同 | 现在能说什么 | 执行入口 |
 |---|---|---|---|
-| **RUNNING：Llama NIAH Full20** | 8/16/24/32K×9 depths×20全新重复=`720 prompts/arm`，TailSpline→MrPro，batch 1 | 资产已冻结、队列在运行；**当前没有可引用分数**，不能把中途正确率写入论文 | [Full20 launcher](../../../experiments/iclr2027_three_track_sprint_20260915/run_mrrope_niah_heatmap_full20.sh)；服务器根`tailspline_llama_s4_mrrope_niah_heatmap_full20/` |
 | **READY ONLY：Llama S16 128K gate** | 128K Full-13×10=`130 prompts/arm`＋ProofPile10 PPL；TailSpline/MrPro，band `[18,35]`，gain `1.2772588722` | CPU资产与两张表已准备；`gpu_execution=false`，**没有128K模型结果**；入口要求至少48GB显存并在目标机先选prefill策略 | [48GB入口](../../../experiments/iclr2027_three_track_sprint_20260915/run_llama_s16_128k_gate_48gb.sh)；服务器`tailspline_llama_s16_128k_gate/assets/ready.json` |
 | **PREPARED、未排队：YaRN** | Natural-QA与classic launcher存在 | 代码准备不等于基线结果；按作者决定后置 | [YaRN launcher](../../../experiments/iclr2027_three_track_sprint_20260915/run_naturalqa_yarn.sh) |
 
 ## 六、后续判决顺序
 
-1. 完成Full20后报告各长度、深度及总体差值与不确定性，与三重复pilot并列判读并保留两者；
-   更新同一NIAH结果owner，不以负点估计是否消失决定报告取舍。
+1. Full20已完成并与三重复pilot并列记录；不再扩增同类NIAH网格。其总体未分胜负和短端负点估计
+   都保留，但不覆盖clean Full-13主结论。
 2. 需要48GB/96GB服务器时直接运行已冻结S16 gate；先报告128K Full-13与PPL两臂，
    不在揭盲后改band、gain或任务子集。
 3. Native-Z5若继续，只能使用新确认数据回答稳健性；不能继续复用已经看过的PPL46、

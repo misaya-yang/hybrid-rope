@@ -74,6 +74,7 @@
 | A44 | 整数位置上的核等价边界 | [CPU核验](../../../experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json)、[实现](../../../experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py)；无混叠频率区间内的条件相似性推论；§4 / Appendix A.6 |
 | A45 | TailSpline Natural-QA631完整配对 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json)；631题、524文档簇，`+0.20pp`、区间`[−1.53,+1.89]pp`；排序未决；§6.1段落 / Appendix H.9 / Table 41 |
 | A46 | TailSpline clean16K中间长度确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json)；650对、每任务50条，Full-13 `+3.39pp`、区间`[+1.53,+5.34]pp`；§6.1 / Table 2 / Fig. 4 / Appendix H.10 |
+| A47 | TailSpline–MrPro NIAH Full20确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)、[解释owner](../../../docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md#2-llama-s4niah长度深度诊断与full20确认)；720对/臂、36格，`−0.97pp`、区间`[−3.06,+1.11]pp`；总体未分胜负，三重复pilot的较大负点估计收缩；RULER retrieval内部诊断，不是独立benchmark |
 
 ## 使用时的解释边界
 

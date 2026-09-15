@@ -33,18 +33,19 @@ Llama clean Full-13主结果，也不合并成一个总分。
 `/root/autodl-tmp/today_rope_plan_20260914/tailspline_qwen25_s2_32k64k/reports/tailspline_vs_mrpro_32k64k.json`
 （SHA256 `9fb351b32ecd148cfc16f2286e75049c8a6b2fe7d8e522949da9ada780f72535`）。
 
-## 2. Llama S4：NIAH长度×深度诊断
+## 2. Llama S4：NIAH长度×深度诊断与Full20确认
 
 ### 合同
 
 - checkpoint：`Meta-Llama-3-8B-Instruct`；exact TailSpline vs exact MrPro，沿用经典S4
   两臂的同band、gain和静态表；
-- 网格：8K/16K/24K/32K × depth 10%至90%（步长10%）× 3 repeats，108行/臂；
+- pilot网格：8K/16K/24K/32K × depth 10%至90%（步长10%）× 3 repeats，108行/臂；
+- Full20确认：相同36格、全新seed、每格20 repeats，720行/臂；两次运行的样本与结果分开；
 - 任务：Paul Graham filler中的单个数字needle；指标为ROUGE-1 recall，且报告确认每一行都与
   official substring recall一致；
 - 推断：在每个冻结length-depth格内成对重采样repeat，再对36个格等权汇总。
 
-### 结果
+### 三重复pilot
 
 TailSpline/MrPro全格macro为`88.89%/92.59%`，差`−3.70pp`，95%区间
 `[−7.41,0.00]pp`。按长度：
@@ -65,8 +66,33 @@ family的新benchmark。
 `/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_mrrope_niah_heatmap/reports/tailspline_vs_mrpro_niah_heatmap.json`
 （SHA256 `f6d1a30e0254fbc681aba104c414cceb72093f2dee017c40e73e4bf8b1f88ae4`）。
 
-新的Full20确认使用全新seed运行中（20 repeats/cell，720行/臂）；本页不记录中途分数，
-待完整报告生成后再独立判读。
+### Full20确认
+
+两臂各720条均完成，正式全格macro为TailSpline/MrPro `87.50%/88.47%`，差
+`−0.97pp`，配对格内重采样95%区间`[−3.06,+1.11]pp`。720个配对中TailSpline独对26条、
+MrPro独对33条、两者同结果661条；两臂均无空输出或触顶输出。因此确认集没有支持任一方法
+在该NIAH网格上总体更强，也没有复现pilot的较大负点估计。
+
+| 长度 | TailSpline | MrPro | 差值 | 95%配对区间 |
+|---|---:|---:|---:|---:|
+| 8K | 74.44% | 78.33% | −3.89pp | [−9.44,+1.67]pp |
+| 16K | 81.11% | 81.11% | 0.00pp | [−5.00,+5.00]pp |
+| 24K | 94.44% | 95.56% | −1.11pp | [−4.44,+1.67]pp |
+| 32K | 100.00% | 98.89% | +1.11pp | [0.00,+2.78]pp |
+
+8K仍保留负点估计但区间很宽；32K几乎完全饱和，不能用其两条TailSpline独对记录声称稳定
+优势。九个depth分解中40% depth为`−5.00pp`且未校正区间低于零；这是多重分解中的局部格，
+只作定位，不升级为确认性结论。相对于pilot，Full20总体差从`−3.70pp`收缩到`−0.97pp`，
+说明原先小样本波动解释了大部分表面差距。
+
+便携报告：
+`experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json`
+（SHA256 `d29f78ab35921912bce717198bbfe26809dda1a6a436cada5cbdc938b90d6b18`）。服务器raw SHA256：
+TailSpline `90fa3fcbfdc5ef386254b96293edca39270c3f2e05ed7693a83342c9666ce19d`，
+MrPro `faf1a2867a8f572e3b5fcfeee1e64a2580f8e850ed6b7fbcea25eb056964373b`。
+
+本实验仍属于RULER retrieval family内部诊断，不是新的独立benchmark。正确论文表述是：
+**TailSpline在完整RULER-13上有明确总体收益，但在这个单针NIAH网格上与MrPro未分出总体胜负。**
 
 ## 3. Llama S4：ProofPile-only PPL曲线
 

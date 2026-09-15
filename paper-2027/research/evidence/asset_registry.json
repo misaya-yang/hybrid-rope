@@ -1080,6 +1080,27 @@
           "sha256": "12e0ac6c7e5d5047268bcf15d033d43a8e09886b86694b22c5f0f0eb391b540b"
         }
       ]
+    },
+    {
+      "id": "A47",
+      "name": "TailSpline-MrPro Llama S4 NIAH Full20 confirmation",
+      "priority": "P1",
+      "question": "Does the three-repeat NIAH negative point estimate persist with 20 fresh repeats per frozen length-depth cell?",
+      "evidence_grade": "Completed matched report; 720 prompts per arm over 36 cells; paired within-cell bootstrap",
+      "manuscript_location": "next-stage auxiliary result; not an independent benchmark beyond the RULER retrieval family",
+      "interpretation": "TailSpline/MrPro 87.50/88.47%, delta -0.97pp [-3.06,+1.11]; no resolved overall ranking. The pilot delta of -3.70pp shrank toward zero; 8K retains an uncertain negative point estimate and 32K is near ceiling.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json",
+          "availability": "tracked",
+          "sha256": "d29f78ab35921912bce717198bbfe26809dda1a6a436cada5cbdc938b90d6b18"
+        },
+        {
+          "path": "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
+          "availability": "tracked",
+          "sha256": "80cf166200ba51c6cb07eab4b17b98be704447a34e0d8657b6efe1db80150ed6"
+        }
+      ]
     }
   ]
 }
