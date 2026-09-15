@@ -10,9 +10,10 @@ panel=${root}/assets/ruler/panel/inputs.jsonl
 v1=${plan}/olmo_native_z5_enhancement/optimization/table.json
 python_bin=/root/miniconda3/bin/python
 
-if [[ "${1:-}" != "--execute" ]]; then
+mode=${1:-}
+if [[ "${mode}" != "--execute" && "${mode}" != "--execute-shared" ]]; then
   printf '%s\n' 'PLAN_ONLY: OLMo Native-4K RULER-13x60, arms Native/contract/reverse/V1.'
-  printf '%s\n' 'No model is loaded without --execute.'
+  printf '%s\n' 'No model is loaded without --execute or --execute-shared.'
   exit 0
 fi
 
@@ -20,10 +21,36 @@ cd "${repo}"
 export PYTHONPATH=.
 mkdir -p "${root}/runs" "${root}/logs" "${root}/reports"
 
-exec 9>/tmp/hybrid-rope-gpu0.lock
-if ! flock -n 9; then
-  printf '%s\n' 'REFUSE: another Hybrid-RoPE GPU task holds the global lock' >&2
-  exit 1
+shared_marker=${root}/shared_gpu_task_active.json
+if [[ "${mode}" == "--execute" ]]; then
+  exec 9>/tmp/hybrid-rope-gpu0.lock
+  if ! flock -n 9; then
+    printf '%s\n' 'REFUSE: another Hybrid-RoPE GPU task holds the global lock' >&2
+    exit 1
+  fi
+else
+  if ! pgrep -af 'tailspline_olmo_s4_16k_ruler200_clean.*recovery_v2_eval|recovery_v2_eval.*tailspline_olmo_s4_16k_ruler200_clean' >/dev/null; then
+    printf '%s\n' 'REFUSE: shared mode requires the exact OLMo clean16K co-runner' >&2
+    exit 1
+  fi
+  "${python_bin}" - "${shared_marker}" <<'PY'
+from pathlib import Path
+import json,subprocess,sys,time
+path=Path(sys.argv[1])
+if path.exists(): raise SystemExit('shared GPU marker already exists')
+used=int(subprocess.check_output([
+    'nvidia-smi','--query-gpu=memory.used','--format=csv,noheader,nounits'
+],text=True).strip())
+if used >= 12000: raise SystemExit(f'shared GPU preflight memory is too high: {used} MiB')
+path.write_text(json.dumps({
+    'status':'ACTIVE','mode':'shared_with_olmo_clean16k','started_at_unix':time.time(),
+    'preflight_memory_used_mib':used,
+    'canary':{'rows':104,'peak_memory_used_mib':10026,'main_rows_per_second_baseline':0.4,
+              'main_rows_per_second_shared':0.25,'shared_rows_per_second':1.05},
+    'claim_boundary':'Runtime scheduling receipt only; not model-quality evidence.'
+},indent=2)+'\n')
+PY
+  trap 'rm -f "${shared_marker}"' EXIT
 fi
 
 "${python_bin}" - "${root}" "${v1}" <<'PY'
@@ -105,4 +132,3 @@ run_arm v1 "${v1}" olmo2_1b_native_z5_v1_reference
 
 printf 'OLMO_NATIVE_HALFTURN_RULER_GATE_COMPLETE %s\n' "$(date -u +%FT%TZ)" \
   | tee "${root}/ruler_gate_complete.txt"
-
