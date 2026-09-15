@@ -1,0 +1,40 @@
+{
+  "status": "CPU_PREPARED",
+  "contract": "native-counterfactual-mechanism-v1",
+  "rows": 288,
+  "groups": 72,
+  "worlds_per_task_length": 12,
+  "lengths": [
+    1024,
+    2048,
+    4096
+  ],
+  "seed": 20261217,
+  "model": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+  "tokenizer_class": "TokenizersBackend",
+  "model_weights_loaded": false,
+  "gpu_execution": false,
+  "model_output_selection": false,
+  "synthetic_distractor_load": true,
+  "content_truncation": false,
+  "minimum_input_tokens_by_length": {
+    "1024": 983,
+    "2048": 2006,
+    "4096": 4055
+  },
+  "maximum_input_tokens_by_length": {
+    "1024": 992,
+    "2048": 2016,
+    "4096": 4064
+  },
+  "interpretation": "New synthetic mechanism panel; output-blind construction, not broad benchmark confirmation.",
+  "primary_endpoints": [
+    "per-length task-equal complete-answer exact accuracy",
+    "all-four-correct world rate"
+  ],
+  "secondary_endpoints": [
+    "query-pair both-correct",
+    "binding far-minus-near and its between-arm interaction",
+    "rewired-minus-base"
+  ]
+}

@@ -33,6 +33,13 @@ BM、YaRN、旧mix075和Native-Z探索各保留其证据角色。
 
 ## 下一轮强实验计划（尚未执行）
 
+[Native增强与oral补强准备计划](NATIVE_ORAL_PREPARATION_PLAN_20260915.md)是本轮理论、实验、行为
+三条线的协调owner：含[成果与缺口分析](ORAL_EVIDENCE_GAP_REVIEW_20260915.md)、
+[native/外推理论桥接](NATIVE_EXTENSION_THEORY_BRIDGE_20260915.md)、
+[RULER吞吐分析](RULER_THROUGHPUT_PREPARATION_20260915.md)及
+[CPU实验包](../../../experiments/native_enhancement_oral_20260915/index.md)。
+本轮只授权服务器代码与CPU准备，native零校准增强是研究主线之一；不修改主稿或现有GPU队列。
+
 [面向强接收与突出研究评价的实验计划](STRONG_EXPERIMENT_PLAN_20260915.md)：
 统一clean跨模型矩阵、自然长文、等位移配置对照与部署取舍；列明已有入口和待实现包装器。
 这是后续执行规格，不自动改变当前队列或YaRN停放状态。

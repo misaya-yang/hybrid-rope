@@ -1,0 +1,91 @@
+{
+  "status": "NATIVE_EXTENSION_THEORY_CPU_V1",
+  "model_execution": false,
+  "seed": 20260915,
+  "fourier_points": 2048,
+  "fourier_modes": 32,
+  "reflection_identity_max_error": 5.551115123125783e-16,
+  "first_harmonic": -0.5,
+  "higher_odd_harmonics_max_abs": 1.452174173966281e-17,
+  "slow_phase_coefficient": 0.021469971863566934,
+  "slow_phase_examples": [
+    {
+      "phase": 0.1,
+      "u": 0.0002147414044070292,
+      "u_over_phase_squared": 0.021474140440702914
+    },
+    {
+      "phase": 0.01,
+      "u": 2.147001386379216e-06,
+      "u_over_phase_squared": 0.02147001386379216
+    },
+    {
+      "phase": 0.001,
+      "u": 2.1469972418639603e-08,
+      "u_over_phase_squared": 0.021469972418639603
+    }
+  ],
+  "high_phase_examples": [
+    {
+      "j": 100,
+      "phase": 633.0309196983434,
+      "u": 0.0006717245835230925,
+      "full_window_phase_change": 0.425079646683806,
+      "rotation_operator_difference": 0.4218865011315052
+    },
+    {
+      "j": 1000,
+      "phase": 6287.89769615997,
+      "u": 6.734856190590865e-05,
+      "full_window_phase_change": 0.4234666071542823,
+      "rotation_operator_difference": 0.420309620676086
+    },
+    {
+      "j": 10000,
+      "phase": 62836.56546077625,
+      "u": 6.736616682399019e-06,
+      "full_window_phase_change": 0.4233044293262822,
+      "rotation_operator_difference": 0.42015106320196427
+    }
+  ],
+  "mathematical_fp64_olmo_grid": {
+    "maximum_relative_slowdown": 0.16716386848023915,
+    "peak_pair": 33,
+    "runtime_table_identity_claimed": false
+  },
+  "margin_audit": {
+    "rows": 10000,
+    "pairs": 8,
+    "bound_violations": 0,
+    "false_positive_certificates": 0,
+    "maximum_remainder_bound_ratio": 0.9659420144552903,
+    "positive_certificates": 3490
+  },
+  "rotation_identity_max_error": 6.661338147750939e-16,
+  "counterexample": {
+    "native": [
+      1.0,
+      0.5,
+      0.1
+    ],
+    "candidate": [
+      1.0,
+      0.25,
+      0.1
+    ],
+    "distance": 2.0,
+    "examples": {
+      "pre_rotation_aligned": {
+        "native_margin": 1.0806046117362795,
+        "candidate_margin": 1.7551651237807455,
+        "exact_change": 0.674560512044466
+      },
+      "native_phase_matched": {
+        "native_margin": 2.0,
+        "candidate_margin": 1.7551651237807455,
+        "exact_change": -0.24483487621925448
+      }
+    }
+  },
+  "claim_boundary": "Reference-risk asymptotics, explicit full-pair algebra, and synthetic fixed-content certificates; not Transformer NLL, task results, a proof of asymptotic convergence from finite samples, or a universal gain guarantee."
+}
