@@ -39,8 +39,7 @@ PY
     --skip-lm \
     --length-cap 32768 \
     --prefill-chunk-size 8192 \
-    --batch-size 2 \
-    --left-pad-batches \
+    --batch-size 1 \
     --static-table-json "${base_root}/tables/${arm}.json" \
     --table-label "llama3_8b_s4_32k_ruler200_clean_${arm}" \
     --out "${run_dir}" \

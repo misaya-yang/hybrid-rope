@@ -261,6 +261,17 @@ def main():
         table=static_table
     tokenizer=AutoTokenizer.from_pretrained(args.model,local_files_only=True)
     eos=model.generation_config.eos_token_id;eos=set(eos if isinstance(eos,list) else [eos])
+    pad_token_id = tokenizer.pad_token_id
+    if pad_token_id is None:
+        pad_token_id = model.generation_config.pad_token_id
+    if pad_token_id is None:
+        pad_token_id = min(eos)
+    write(args.out/'runtime_batching.json',{
+        'batch_size':args.batch_size,
+        'left_pad_batches':bool(args.left_pad_batches),
+        'pad_token_id':int(pad_token_id),
+        'pad_tokens_attention_masked':bool(args.left_pad_batches),
+    })
     path=args.out/'generations.jsonl';saved=read_rows(path) if path.exists() else []
     if len(saved)>len(rows) or any(row['eval_id']!=rows[i]['eval_id'] for i,row in enumerate(saved)):
         raise ValueError('saved generations are not the expected prefix')
@@ -279,13 +290,13 @@ def main():
                 ids=torch.tensor([first['prompt_ids']],device='cuda',dtype=torch.long)
                 token_batches=[greedy_tokens(
                     model,ids,max_new_tokens=first['max_new_tokens'],eos_ids=eos,
-                    pad_token_id=tokenizer.pad_token_id,prefill_chunk_size=args.prefill_chunk_size,
+                    pad_token_id=pad_token_id,prefill_chunk_size=args.prefill_chunk_size,
                 )]
             else:
                 token_batches=batched_greedy_tokens(
                     model,[row['prompt_ids'] for row in batch],
                     max_new_tokens=first['max_new_tokens'],eos_ids=eos,
-                    pad_token_id=tokenizer.pad_token_id,
+                    pad_token_id=pad_token_id,
                     left_pad=args.left_pad_batches,
                 )
             for row,tokens in zip(batch,token_batches):
