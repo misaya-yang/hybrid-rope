@@ -10264,12 +10264,42 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/input.pdf",
       "area": "paper-2027",
       "category": "manuscript"
     },
     {
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/sol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/manifest.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
     },

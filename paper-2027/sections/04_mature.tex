@@ -15,7 +15,7 @@ MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$. We instead smooth 
 \sum_{q=1}^{n-1}(\epsilon_{q+1}-\epsilon_q)^2+\epsilon_n^2.
 \label{eq:tailspline-objective}
 \end{equation}
-The first term smooths neighboring extra gaps; the second matches the low-frequency junction. Leaving the high-frequency entry unpenalized prioritizes the tail connection while preserving the high-frequency outer band. The fully interpolated tail supplies the zero-extra-gap boundary used to close the transition.
+The first term smooths neighboring extra gaps; the second closes the transition at the zero-extra-gap boundary supplied by the fully interpolated tail. The high-frequency outer band is fixed by construction. Leaving the entry unpenalized allows a larger first extra gap while prioritizing the smooth tail connection.
 \begin{theorem}[Finite-grid TailSpline]\label{thm:tailspline}
 The unique minimizer of Eq.~\eqref{eq:tailspline-objective} has positive increments and cumulative profile
 \begin{equation}
