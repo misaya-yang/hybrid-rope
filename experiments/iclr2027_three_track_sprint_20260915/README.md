@@ -6,8 +6,9 @@ queues and CPU-only frozen assets. It does not add a curve search or a model.
 ## Queue ownership
 
 - Original GPU: finish clean TailSpline/MrPro, then Natural-QA631 and Native-Z5.
-- Cloned GPU: 39-row classic TailSpline batch sensitivity, clean 32K YaRN on the
-  exact 2,600 prompts, then classic YaRN at batch 1.
+- Cloned GPU: 39-row classic TailSpline batch sensitivity, a one-arm Native 8K
+  task reference, clean 32K YaRN on the exact 2,600 prompts, then classic YaRN
+  at batch 1.
 - BM is excluded by the author's 2026-09-15 decision.
 
 The clean RULER runtime is batch 1 with exact unpadded prompt IDs. This is the
@@ -18,15 +19,12 @@ present-state evidence.
 ## CPU preparation
 
 ```bash
-python -m experiments.iclr2027_three_track_sprint_20260915.verify_sprint_math \
-  --out /root/autodl-tmp/iclr2027_three_track_sprint_20260915/reports/sprint_math_checks.json
-python -m experiments.iclr2027_three_track_sprint_20260915.prepare_sprint_cpu \
-  --plan-root /root/autodl-tmp/today_rope_plan_20260914 \
-  --out /root/autodl-tmp/iclr2027_three_track_sprint_20260915
+experiments/iclr2027_three_track_sprint_20260915/run_cpu_reports.sh
 ```
 
-CPU preparation writes the 39-row fixed probe and a path/hash/status ledger. It
-does not load a checkpoint or touch CUDA.
+CPU preparation writes the 39-row fixed probe, a path/hash/status ledger, the
+exact sprint-math receipt, the completed E1 audit, and the matched Native-8K PPL
+summary. It does not load a checkpoint or touch CUDA.
 
 ## GPU entry points
 

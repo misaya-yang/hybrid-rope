@@ -4949,12 +4949,32 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/e1_experimental_audit.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/native_ppl_summary.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/native_task_reference_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_sprint_cpu.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/run_clone_gpu_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_cpu_reports.sh",
       "area": "experiments",
       "category": "code"
     },

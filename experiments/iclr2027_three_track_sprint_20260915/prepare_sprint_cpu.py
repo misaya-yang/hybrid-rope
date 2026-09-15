@@ -153,7 +153,10 @@ def main() -> None:
         "status": "ICLR2027_SPRINT_CPU_ASSETS_COMPLETE_V1",
         "policy": {
             "original_gpu_order": ["clean T/P completion", "Natural-QA631 T/P", "Native-Z5"],
-            "clone_gpu_order": ["classic TailSpline batch sensitivity 39", "clean 32K YaRN 2600", "classic YaRN batch1"],
+            "clone_gpu_order": [
+                "classic TailSpline batch sensitivity 39", "Native classic 8K reference 130",
+                "clean 32K YaRN 2600", "classic YaRN batch1",
+            ],
             "excluded": ["BM", "new curve search", "new model", "HELMET"],
         },
         "classic": {"path": str(classic_panel), "rows": 390, "sha256": sha256(classic_panel)},
