@@ -1,0 +1,30 @@
+{
+  "mode": "one_pdf_only_review_then_one_optimization",
+  "input_sha256": "2c1e9f9988b398897181b5f2511e85b260822a01ad25ed7b66125e195da5ab6c",
+  "review_score_before_optimization": 6,
+  "post_optimization_independent_review": false,
+  "output_pdf": "paper-2027/main.pdf",
+  "output_pdf_sha256": "ef216deb2f84dff7f70dc68e01b687e98857acad7208dc8eb66eedf2165af1ab",
+  "main_pages": 9,
+  "total_pages": 56,
+  "main_figures": 5,
+  "main_tables": 2,
+  "formal_math_blocks_preserved": 75,
+  "all_existing_table_and_figure_values_preserved": true,
+  "new_exposed_qk_deltas_verified_from_owner": [
+    -29.75,
+    29.61,
+    4.65
+  ],
+  "undefined_references_or_citations": 0,
+  "overfull_boxes": 0,
+  "anonymity_and_fonts": "pass",
+  "source_archive_manifest_entries": 124,
+  "independent_source_build": "pass",
+  "visual_review": "all main-text and affected appendix pages inspected",
+  "new_model_experiments": false,
+  "document_check_remaining_errors": [
+    "Source changed since registry snapshot: paper-2027/research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md",
+    "Source changed since registry snapshot: docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md"
+  ]
+}

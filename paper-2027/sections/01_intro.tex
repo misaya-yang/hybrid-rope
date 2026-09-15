@@ -1,7 +1,9 @@
 \section{Introduction}
 \label{sec:intro}
 
-Standard RoPE ties frequency placement to a geometric grid: changing the base changes the range but leaves normalized spacing uniform. Internal exponent allocation $z$ opens this spacing to design. Existing extensions alter it through bandwise scaling, mixed-radix conversion or learned frequencies \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We isolate the value of allocation and derive explicit constructions that improve language modeling, retrieval and natural QA during learning and zero-training deployment.
+RoPE tables can share their fastest and slowest frequencies yet place their interior frequencies differently. Can this allocation improve model performance without changing the frequency range?
+
+YaRN, MrRoPE and LeRoPE establish useful frequency changes \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We distinguish sampled range, native-relative displacement and interior arrangement through paired training and frozen interventions, then construct allocations for learning and static deployment.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
@@ -9,7 +11,7 @@ Standard RoPE ties frequency placement to a geometric grid: changing the base ch
 \label{fig:method-overview}
 \end{figure}
 
-Controlled experiments identify this value. With initialization, data, optimization and actual frequency endpoints fixed, moving $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three seeds. Frozen-model controls show gains at fixed support and differences at equal total displacement. Internal shape therefore matters beyond the range and amount of frequency change (Fig.~\ref{fig:method-overview}).
+Against a matched geometric control, changing only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three paired seeds. The endpoints and training recipe are matched; retargeting support reverses the preference (Fig.~\ref{fig:spectral-budget-overview}). Frozen controls identify gains at fixed support; a separate equal-displacement comparison further isolates shape.
 
 Changing $z$ changes the positional basis: distinct frequencies can supply overlapping directions over a finite window. We characterize this structure and design frequency spacing in two settings: Cosh specifies a training-time table through a density objective; TailSpline smooths the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
 

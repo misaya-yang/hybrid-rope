@@ -1,6 +1,6 @@
 \section{Explicit Allocation Constructions}
 \label{sec:allocation-methods}
-Both constructions design adjacent log-frequency intervals. During learning, we choose a density whose quantiles place the finite frequencies. For frozen deployment, we distribute additional span across a native transition band. The common object is frequency spacing; the objectives reflect these different settings.
+Finite-window overlap identifies frequency spacing as a structural design choice. Learning can adapt to a newly supplied basis, whereas frozen deployment uses an existing frequency--coordinate association. This motivates two separate spacing priors: a full-table density objective for learning and a native-relative boundary objective for deployment. They encode design preferences; model evaluations test their value.
 \subsection{An analytic construction from a tail-energy prior}
 \label{sec:construction}
 
@@ -26,6 +26,6 @@ z_{\tau,k}=\frac{Q_\tau(u_k)-Q_\tau(u_0)}{Q_\tau(u_{K-1})-Q_\tau(u_0)}
 \omega_{\tau,k}\ge\omega_{\mathrm{Geo},k}
 \label{eq:anchored-cosh-order}
 \end{equation}
-at fixed $(a,R)$: convexity places each quantile below the chord between the extreme nodes. Interior pairs move toward faster frequencies while endpoints remain fixed (Fig.~\ref{fig:spectral-budget-overview}a). Once $\tau$, grid, and endpoint anchoring are specified, installation evaluates the table once without changing the rotary operator or trainable parameter count.
+at fixed $(a,R)$: convexity places each quantile below the chord between the extreme nodes. Interior pairs move toward faster frequencies while endpoints remain fixed (Fig.~\ref{fig:method-overview}a). Once $\tau$, grid, and endpoint anchoring are specified, installation evaluates the table once without changing the rotary operator or trainable parameter count.
 
 The strength $\tau$ sets this trade-off. We use declared reference settings and compare neighboring strengths and a second analytic family in Appendix~\ref{sec:exact-range-factorial}; Appendix~\ref{sec:tau-scaling} gives the operating rules and their empirical basis.

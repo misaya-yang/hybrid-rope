@@ -1054,7 +1054,13 @@
           "138",
           "6ade51ef4f866857b5ef08571d08a6b4dda620641811dc55a6c9e294acc3e182"
         ]
-      ]
+      ],
+      "auc_delta_ci95": {
+        "full13": [
+          0.006538,
+          0.057853
+        ]
+      }
     },
     "tailspline_olmo": {
       "source_tier": "reported aggregate",
@@ -1119,7 +1125,13 @@
           "138",
           "6a4b9b4e0720fd33e7d1b52f134dff938cf9d16ec463455b0032b6fbe01f2351"
         ]
-      ]
+      ],
+      "auc_delta_ci95": {
+        "full13": [
+          0.453365,
+          0.530449
+        ]
+      }
     },
     "llama_three_arm": {
       "evq_lora": {

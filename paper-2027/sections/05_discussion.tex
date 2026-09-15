@@ -1,5 +1,5 @@
 \section{Discussion and Conclusion}
 \label{sec:discussion}
-Internal exponent allocation $z$ is a design freedom for improving RoPE-based models. Fixed-support and equal-displacement controls identify the value of internal placement; full-pair geometry characterizes the positional structure it controls. Cosh and TailSpline turn this freedom into explicit density and boundary designs, with language-modeling, retrieval and natural-QA gains.
+Internal exponent allocation $z$ is a design freedom for improving RoPE-based models. Paired training identifies extrapolation gains from interior placement at fixed support; the ordering changes when support is retargeted. Equal-displacement controls further isolate shape, and full-pair geometry characterizes positional overlap. Cosh improves language modeling, TailSpline improves frozen retrieval, and BM improves natural QA under their respective protocols.
 
 The resulting design space extends from learned allocations to static, zero-training adjustments. Internal placement can be optimized jointly with support, boundaries and amplitude to serve different model and task requirements. The joint in-window/OOD gains in controlled configurations motivate systematic in-window enhancement of mature models as a further application.

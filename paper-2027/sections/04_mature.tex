@@ -26,5 +26,13 @@ m_q^{\rm TS}=\frac{q(3n^2+3n+1-q^2)}{n(n+1)(2n+1)}.
 \end{theorem}
 Strict convexity and the tridiagonal stationarity system give Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the entry penalty $\epsilon_1^2$ yields the symmetric construction BM, with increments proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). Relative to MrPro, TailSpline accepts a larger entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$ (Fig.~\ref{fig:tailspline-main}a). These guarantees solve the declared objectives; task value is tested below.
 
+\paragraph{Separating shape from total displacement.}
+An equal-displacement control $C$ gives the exact contrast
+\begin{equation}
+m^{\rm TS}-m^C=(1-w_n)(m^{\rm BM}-m^{\rm Uni}),\qquad w_n=\frac{3n}{2(2n+1)}.
+\label{eq:tailspline-shape-contrast}
+\end{equation}
+TailSpline and $C$ share band and endpoints; the correction has zero total displacement. Appendix~\ref{sec:tailspline-dose-control} constructs $C$ and proves the identity.
+
 \paragraph{Installation.}
 (1) Read the public native grid, reference length and scale $s$; (2) compute the $32/1$-turn band; (3) evaluate $m_k$, $\omega'_k=\omega_k^Ns^{-m_k}$ and $g=1+0.1\ln s$; (4) install before prefill, retaining one table across layers and input lengths. The baseline shares $g$. Construction costs $O(K)$ and leaves the rotary computation unchanged. Neither constructor reads weights, activations or calibration outputs.

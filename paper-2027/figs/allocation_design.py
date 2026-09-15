@@ -34,7 +34,40 @@ def tailspline(native_inv_freq, reference_length: int, scale: float):
     return result,1+0.1*math.log(scale),(low,high)
 
 
+def verify_displacement_control():
+    """Exact finite-sum and T-C identities, independent of model/task scores."""
+    from fractions import Fraction as F
+    for n in [1, 2, 3, 4, 17, 18, 32, 64]:
+        w = F(3*n, 2*(2*n+1))
+        u = [F(q, n) for q in range(n+1)]
+        p = [F(q*(q+1), n*(n+1)) for q in range(n+1)]
+        b = [F(q*(q+1)*(3*n+2-2*q), n*(n+1)*(n+2)) for q in range(n+1)]
+        t = [F(q*(3*n*n+3*n+1-q*q), n*(n+1)*(2*n+1)) for q in range(n+1)]
+        front = [2*uq-pq for uq, pq in zip(u, p)]
+        control = [(1-w)*uq+w*fq for uq, fq in zip(u, front)]
+        delta = [tq-cq for tq, cq in zip(t, control)]
+        for q in range(n+1):
+            assert t[q] == (1-w)*b[q]+w*front[q]
+            assert delta[q] == (1-w)*(b[q]-u[q])
+            assert delta[q] == F(q*(n-q)*(2*q-n), 2*n*(n+1)*(2*n+1))
+            assert delta[q] == -delta[n-q]
+        assert sum(t) == sum(control) and sum(delta) == 0
+        if n <= 2:
+            assert t == control
+        centroids = []
+        for profile in [u, p, b, t, control]:
+            increments = [profile[q]-profile[q-1] for q in range(1, n+1)]
+            centroid = sum(q*e for q, e in enumerate(increments, 1))
+            assert all(e > 0 for e in increments) and sum(increments) == 1
+            assert profile[0] == 0 and profile[n] == 1
+            assert sum(profile[1:n]) == n-centroid
+            centroids.append(centroid)
+        assert centroids[-1] == centroids[-2]
+    print('PASS: exact displacement-centroid identity and T-C = (1-w)(BM-Uni), including n=1,2.')
+
+
 def verify():
+    verify_displacement_control()
     from fractions import Fraction as F
     for n in [1,2,3,17,18,32,64]:
         q=np.arange(1,n+1,dtype=float)

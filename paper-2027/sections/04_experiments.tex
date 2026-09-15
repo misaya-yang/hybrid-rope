@@ -2,48 +2,52 @@
 \section{Using \texorpdfstring{$z$}{z} in Learning and Zero-Training Deployment}
 \label{sec:experiments}\label{sec:exp-mature}
 
-We test Cosh under matched learning recipes and TailSpline/BM under frozen deployment. Matched adaptation tests readout after learning and is reported separately. Table~\ref{tab:protocol-glossary} summarizes the protocols.
+We now test the Cosh construction under further learning recipes, and TailSpline/BM under frozen deployment. Matched adaptation tests readout after learning and is reported separately. Table~\ref{tab:protocol-glossary} summarizes the protocols.
 
 \subsection{Learning to use an explicit allocation}
 \label{sec:exp-capability}
 A $432$M MLA-style model tests allocation across lengths and training progress, using $16$ rotary pairs, $500$M training tokens at $8$K and three seeds \citep{deepseekv2,deepseekv3}. Its unanchored midpoint Cosh table also changes sampled endpoints (Appendix~\ref{sec:mla-results}).
 
-Cosh improves all five extended lengths from $16$K through $32$K in every seed (Fig.~\ref{fig:allocation-basis}b); its $16$K advantage is present at half and three-quarters of training (Table~\ref{tab:training-models}).
+Cosh improves all five extended lengths from $16$K through $32$K in every seed (Fig.~\ref{fig:allocation-learning}); its $16$K advantage is present at half and three-quarters of training (Table~\ref{tab:training-models}).
 
-\begin{figure}[!b]
-\centering\includegraphics[width=\linewidth]{fig_allocation_learning.pdf}
-\caption{\textbf{Finite-window geometry and learning-time allocation.} (a) Full-pair canonical overlap on the $b=256$, $K=32$, $L=256$ identification grid under uniform separation measure. (b) Three-seed mean PPL of the $432$M MLA extrapolation evaluation. Solid curves use trained tables; dashed curves apply the same wavelength blend ($s=4$). Shading is the three-seed range.}
-\label{fig:allocation-basis}
+\begin{figure}[!ht]
+\centering\includegraphics[width=.78\linewidth]{fig_allocation_learning.pdf}
+\caption{\textbf{Cosh improves learning-time extrapolation.} Three-seed mean PPL of the $432$M MLA model. Solid curves use trained tables; dashed curves apply the same wavelength blend ($s=4$). Shading shows the three-seed range of the trained-table results.}
+\label{fig:allocation-learning}
 \end{figure}
 
 \input{tables/table_learning_main}
 
-Applying the same wavelength blend to both learned tables preserves the advantage. Thus allocation remains useful across training checkpoints and when composed with the shared scaling rule (Appendix~\ref{sec:mla-results}).
+The same wavelength blend preserves the advantage across the extended lengths (Appendix~\ref{sec:mla-results}).
 
 A $750$M pair continues from the same $2$K Geo checkpoint for $500$M tokens at $4$K. Cosh reduces $16$K PPL by $45.9\%$ and raises $8$K greedy answer-token exact match from $0/40$ to $31/40$, with a small $4$K PPL cost. This single-seed continuation includes $3\%$ passkey and $10\%$ downstream mix (Appendix~\ref{sec:larger-scale-supporting}).
 
-Allocation can also support complete answers after matched adaptation. The OLMo pair in Table~\ref{tab:training-models} undergoes the same routing and answer-plus-EOS continuation. It uses physical inputs of at most $4$K with explicit target-range position IDs, then evaluates real contiguous prompts. The $8/16$K gains therefore demonstrate successful length transfer after phase exposure; they are separate from our zero-training results. Appendix~\ref{sec:olmo2-1b} retains the complete lineage, supervision and native-window controls.
+The OLMo pair in Table~\ref{tab:training-models} produces complete answers after matched routing and answer-plus-EOS continuation. Training uses physical inputs of at most $4$K with explicit target-range position IDs; evaluation uses real contiguous prompts. Its $8/16$K gains demonstrate length transfer after phase exposure. Appendix~\ref{sec:olmo2-1b} gives the lineage, supervision and native-window controls.
 
 \FloatBarrier
 \subsection{Zero-training deployment on Llama and OLMo}
 \label{sec:tailspline-evaluation}
 We compare exact finite-grid TailSpline and MrRoPE-Pro on frozen Llama-$3$-$8$B-Instruct, using $s=4$, native window $8192$, band $[18,35]$, and common gain $1+0.1\ln4$.
 
-Each method installs one static table. The arms differ in interior allocation while sharing the outer frequency bands, endpoints, gain, weights, inputs and decoder. A depth-balanced RULER-13 panel has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). NIAH depth selection and fixed-budget padding use no model outputs (Appendix~\ref{sec:tailspline-implementation}). PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents ($138$ rows per arm) \citep{azerbayev2022proofpile,rae2019compressive}.
+Each method installs one static table. The arms differ in interior allocation while sharing the outer frequency bands, endpoints, gain, weights, inputs and decoder. Their total displacement also differs; the equal-displacement control in Appendix~\ref{sec:tailspline-dose-control} defines a separate shape contrast, whose task effect is not reported here. The depth-selected, prefix-padded RULER-13 panel has $10$ paired prompts per task at $8/16/32$K ($390$ per arm). NIAH depth selection and fixed-budget padding use no model outputs (Appendix~\ref{sec:tailspline-implementation}). PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents ($138$ rows per arm) \citep{azerbayev2022proofpile,rae2019compressive}.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{fig_tailspline_main.pdf}
-\caption{\textbf{Explicit boundary design and training-free gains.} (a) At $n=17$, TailSpline accepts a larger entry jump than MrPro to reduce the tail jump. Rows show Llama ($8/16/32$K) and OLMo ($4/8/16$K); columns show depth-balanced RULER-13 macro, its NIAH subset difference, and relative PPL change versus MrPro. PPL axes have different scales; absolute PPL is in Appendix~\ref{sec:tailspline-details}. Arms share band, endpoints, gain and inputs within each model.}
+\caption{\textbf{TailSpline improves over MrPro on the matched panels.} (a) At $n=17$, TailSpline trades a larger entry jump for a smaller tail jump. (b,c) Depth-balanced RULER-13 curves; annotations give log-length AUC differences and paired $95\%$ intervals, not per-length intervals. Arms share band, endpoints, gain and inputs within each model. NIAH/PPL responses are in Appendix~\ref{sec:tailspline-details}.}
 \label{fig:tailspline-main}
 \end{figure}
 
 We aggregate lengths using normalized trapezoidal area in log length: weights $1/4,1/2,1/4$ at $8/16/32$K. TailSpline raises RULER-13 AUC from $75.60$ to $78.80\%$, a $+3.20$-point difference (paired $95\%$ interval $[+0.65,+5.79]$). NIAH AUC improves by $3.75$ points ($[+0.55,+7.03]$); its single-key passkey subtask has AUC $100.0$ versus $97.5\%$. These are task-equal scores under the recorded scorers, including partial credit.
 
-PPL AUC decreases from $4.62112$ to $4.61664$ ($-0.097\%$), with paired difference $-0.00449$ and interval $[-0.00872,-0.00121]$. Relative to MrPro, PPL slightly increases at $8/16$K and decreases at $32$K (Fig.~\ref{fig:tailspline-main}d). Full-13 improves at all three lengths. Retrieval, tracking and aggregation improve in AUC; QA decreases by $1.25$ points. Appendix~\ref{sec:tailspline-details} gives the length and termination results.
+\begin{samepage}
+PPL AUC decreases from $4.62112$ to $4.61664$ ($-0.097\%$; paired difference $-0.00449$, interval $[-0.00872,-0.00121]$). PPL slightly increases at $8/16$K and decreases at $32$K. Full-13 improves at all three lengths; retrieval, tracking and aggregation improve in AUC, while QA-family AUC changes by $-1.25$ points. Appendix~\ref{sec:tailspline-details} gives complete length and termination results.
+\end{samepage}
 
-
+\begin{samepage}
 \paragraph{Zero-training transfer to OLMo.}
 The same frozen formula is tested on OLMo-$2$-$1$B-Instruct at $s=4$, band $[14,32]$ and $4/8/16$K, with $390$ RULER prompts and $138$ LM rows per arm. Full-13 AUC rises from $17.36$ to $66.60\%$ ($+49.23$ points, $95\%$ interval $[45.34,53.04]$). NIAH improves by $64.45$ points and PPL AUC decreases by $3.853$; all $13$ task AUC differences are positive. TailSpline and MrPro reach the generation cap on $133$ and $142$ of $390$ OLMo inputs, respectively; these responses remain in the official task scores. Termination counts and interval definitions appear in Appendix~\ref{sec:tailspline-details}.
+
+\end{samepage}
 
 \subsection{Natural QA with the symmetric construction}
 The complementary symmetric construction, BM, tests allocation design on natural outputs. On frozen OLMo it improves each of five task means (Table~\ref{tab:bm-qa-main}). The complete available untruncated pool contains $778$ paired inputs; the reported long-input stratum contains $631$ inputs exceeding $4$K. With the same band, $s=4$, amplitude and decoder, macro F1 rises from $21.62$ to $25.44$, a $3.82$-point gain with paired interval $[1.32,6.29]$.
@@ -51,5 +55,5 @@ The complementary symmetric construction, BM, tests allocation design on natural
 
 BM's natural-QA result complements TailSpline's two-model confirmation and the equal-displacement control in \S\ref{sec:equal-displacement}. Small Qwen $128$K panels favor MrPro over BM ($78.13/70.83\%$ at $3$B and $84.44/71.11\%$ at $7$B), illustrating the different tested scopes of these constructions.
 
-Separate protocols broaden the evidence: a frozen Qwen-$0.5$B configuration improves $64$K RULER-13 over YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}); selective-Q/K adaptation improves long-input natural QA (Appendix~\ref{sec:olmo2-1b}); Video DiT shows temporal extrapolation gains (Appendix~\ref{sec:video-dit}).
+In a separate OLMo Q/K-only RULER adaptation, Cosh-minus-Native macro is $-29.75/+29.61/+4.65$ points at $4/8/16$K, showing the native/extended-length trade-off (Appendix~\ref{sec:olmo2-1b}). Frozen Qwen-$0.5$B also improves $64$K RULER-13 over YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}).
 \label{sec:interval-main}

@@ -154,9 +154,11 @@ MrRoPE-Pro and BM, with FP32 frequency tables and BF16 model execution.
 The shared task types are NIAH single-2, multikey-2, multiquery, variable
 tracking, frequent words, and QA-1. OLMo's confirmation uses seed $20260910$
 with four short and eight long examples per task, after a separate development
-panel with seed $20260909$. Its $4$K/$16$K scores are listed in
-Table~\ref{tab:bm-models}; MrRoPE-Uni on the same confirmation inputs scores
-$76.88/32.12\%$, and official YaRN scores $54.38/6.94\%$.
+panel with seed $20260909$; BM's formula was fixed before the confirmation.
+Its $4$K/$16$K scores are listed in Table~\ref{tab:bm-models}.
+MrRoPE-Uni and official YaRN were subsequently evaluated on these same
+inputs, scoring $76.88/32.12\%$ and $54.38/6.94\%$. These are follow-up
+controls on the BM--MrPro confirmation panel, not new independent confirmations.
 The Qwen-$3$B panel has two $32$K and four $128$K examples per task.
 The $7$B screen reuses the first one short and two long examples per task;
 this selection was fixed before its outputs were inspected.

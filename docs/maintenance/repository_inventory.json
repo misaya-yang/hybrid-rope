@@ -8179,6 +8179,16 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/fig_allocation_geometry.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_allocation_geometry.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/figs/fig_allocation_learning.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8220,6 +8230,11 @@
     },
     {
       "path": "paper-2027/figs/fig_exact_range_control.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_exact_range_control.png",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -8290,6 +8305,16 @@
     },
     {
       "path": "paper-2027/figs/fig_spectral_budget_scaling.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_details.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_details.png",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -9845,6 +9870,26 @@
     },
     {
       "path": "paper-2027/research/pdf-review-rounds/20260912_story/r02/review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/paper.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/review.md",
       "area": "paper-2027",
       "category": "document"
     },
