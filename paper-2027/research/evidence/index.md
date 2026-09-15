@@ -110,3 +110,7 @@
 本轮正文已纳入A37构造及A39/A40 TailSpline两模型结果（§5.2、§6.2、Fig5）；BM自然QA仍属A14。兼容性完整内容移入附录，主要证据身份不变。当前版面以[主张映射](../EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)为准。
 
 A41：历史原生Std-RoPE三seed对照已追回，见[可移植输入](../../figs/allocation_value_inputs.json)的native_grid_historical及[附录](../../appendix/a5_identification.tex)。严格保持短训练、span匹配、报告聚合身份；不替代A01。
+
+- Current field-gap additions: [paired clean score records](../../figs/field_gap_inputs.json), [reproduction](../../figs/verify_field_gap.py), [qualified E1 audit](../../../experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json), and [discrete kernel checks](../../../experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json).
+
+- [TailSpline Natural-QA631 V2](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json): complete, independently rescored 631-pair result with source-context intervals; main table and detailed appendix.

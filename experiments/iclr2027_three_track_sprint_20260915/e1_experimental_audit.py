@@ -54,6 +54,34 @@ def run_health(path: Path) -> dict:
     }
 
 
+def qualify_runtime(candidate_contract, control_contract, candidate_rows, control_rows):
+    """Fail known identity drift; missing historical metadata never becomes PASS."""
+    keys = ("batch_size", "prefill_chunk_size", "row_ids", "generation_length_caps",
+            "left_pad_batches", "row_split", "unadapted", "base_arm")
+    differences = [key for key in keys if candidate_contract.get(key, False if key == "left_pad_batches" else None)
+                   != control_contract.get(key, False if key == "left_pad_batches" else None)]
+    if any(not row.get("prompt_sha256") for row in candidate_rows + control_rows):
+        raise ValueError("E1 raw lacks prompt identity")
+    candidate = {row["eval_id"]: row for row in candidate_rows}
+    control = {row["eval_id"]: row for row in control_rows}
+    if len(candidate) != 390 or len(control) != 390 or set(candidate) != set(control):
+        raise ValueError("Incomplete or duplicated E1 raw identities")
+    for key in candidate:
+        for field in ("prompt_sha256", "input_tokens", "length_cap", "task", "references", "max_new_tokens"):
+            if candidate[key].get(field) != control[key].get(field):
+                raise ValueError(f"E1 raw identity drift: {key}/{field}")
+    # These receipts are optional for old runs, but equality of missing values
+    # cannot establish checkpoint, tokenizer or implementation identity.
+    required = ("model_revision", "tokenizer_revision", "chat_template_sha256",
+                "backend", "precision", "positions_mask_identity", "decoder_identity", "scorer_identity")
+    missing = [key for key in required if candidate_contract.get(key) is None or control_contract.get(key) is None]
+    differences += [key for key in required if key not in missing and candidate_contract[key] != control_contract[key]]
+    hard = [key for key in differences if key not in {"batch_size", "row_ids"}]
+    status = "FAIL" if hard else "QUALIFIED_ONLY" if differences or missing else "PASS"
+    return {"status": status, "different_fields": differences, "unrecorded_fields": missing,
+            "probe_scope": "E0 covers 39 TailSpline rows only; it cannot promote a full T/C comparison to PASS."}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", type=Path, required=True)
@@ -70,6 +98,10 @@ def main() -> None:
         raise ValueError("E1 report is incomplete")
     if candidate["band_envelope"] != control["band_envelope"] or candidate["gain"] != control["gain"]:
         raise ValueError("E1 table support/gain drift")
+    cv, uv = candidate["table"]["values_float32"], control["table"]["values_float32"]
+    lo, hi = candidate["band_envelope"]
+    if len(cv) != len(uv) or cv[:lo+1] != uv[:lo+1] or cv[hi:] != uv[hi:] or candidate["scale"] != control["scale"]:
+        raise ValueError("E1 actual support or outer bands differ")
     delta_sum = float(candidate["sum_m"]) - float(control["sum_m"])
     if abs(delta_sum) > 1e-6:
         raise ValueError("E1 installed exponent sums are not matched")
@@ -90,9 +122,38 @@ def main() -> None:
     increments_control = control["increments"]
     candidate_contract = read(args.candidate_run / "contract.json")
     control_contract = read(args.control_run / "contract.json")
+    candidate_rows = rows(args.candidate_run / "generations.jsonl")
+    control_rows = rows(args.control_run / "generations.jsonl")
+    runtime = qualify_runtime(candidate_contract, control_contract, candidate_rows, control_rows)
+    # Recompute the point estimand from raw scores, rather than trusting report status.
+    for values, summary in [(candidate_rows, candidate_summary), (control_rows, control_summary)]:
+        for task in tasks:
+            raw_auc = 0.0
+            for length, weight in zip(LENGTHS, WEIGHTS):
+                cell = [r for r in values if r["task"] == task and int(r["length_cap"]) == length]
+                if len(cell) != 10:
+                    raise ValueError("E1 must contain 10 rows in every task-length cell")
+                raw_auc += weight * sum(float(r["ruler_official_score"]) for r in cell) / len(cell)
+            if abs(raw_auc - task_auc(summary, task)) > 1e-12:
+                raise ValueError("E1 report disagrees with raw scores")
+    lm = {}
+    for name, run in [("tailspline", args.candidate_run), ("dose_control_c", args.control_run)]:
+        lm_path = run / "lm_rows.jsonl"
+        values = rows(lm_path)
+        identities = {(int(row["document"]), int(row["length"])) for row in values}
+        if len(values) != 138 or identities != {(d, length) for d in range(46) for length in LENGTHS}:
+            raise ValueError("E1 LM raw is not the complete matched 46 x 3 panel")
+        lm[name] = {"rows": len(values), "sha256": sha256(lm_path)}
     contrast = report["contrasts"]["dose_control_c"]
     result = {
-        "status": "E1_MATCHED_DISPLACEMENT_EXPERIMENT_AUDIT_COMPLETE_V1",
+        "status": "E1_MATCHED_DISPLACEMENT_EXPERIMENT_AUDIT_COMPLETE_V2",
+        "mathematical_constraints": "PASS",
+        "runtime_match": runtime["status"],
+        "raw_complete": True,
+        "evidence_role": "confirmatory_shape" if runtime["status"] == "PASS" else "cross_runtime_diagnostic",
+        "primary_estimand": "task_equal_full13_log_auc_T_minus_C",
+        "supports_tail_only_mediation": False,
+        "runtime_qualification": runtime,
         "comparison": "TailSpline minus dose-control C",
         "table_identity": {
             "band": candidate["band_envelope"], "scale": candidate["scale"], "gain": candidate["gain"],
@@ -114,7 +175,7 @@ def main() -> None:
             "dose_control_c_batch_size": control_contract["batch_size"],
             "prefill_chunk_size_equal": candidate_contract["prefill_chunk_size"] == control_contract["prefill_chunk_size"],
             "prompt_set_equal": set(candidate_contract["row_ids"]) == set(control_contract["row_ids"]),
-            "remaining_issue": "Batch1 versus batch2 sensitivity is measured by the frozen 39-cell E0 probe.",
+            "remaining_issue": "A 39-row E0 probe does not establish complete T/C runtime equivalence.",
         },
         "results": {
             "tailspline_full13_auc": candidate_summary["log_length_auc"],
@@ -130,11 +191,12 @@ def main() -> None:
             "tailspline": run_health(args.candidate_run / "generations.jsonl"),
             "dose_control_c": run_health(args.control_run / "generations.jsonl"),
         },
+        "lm_raw_health": lm,
         "source_sha256": {
             "report": sha256(args.report), "candidate_table": sha256(args.candidate_table),
             "control_table": sha256(args.control_table),
         },
-        "claim_boundary": "E1 isolates a matched-total-displacement shape change, but its current generation comparison is cross-batch until E0 sensitivity is read.",
+        "claim_boundary": "Matched-dose mathematics; task attribution requires full runtime identity. E0 alone cannot qualify E1. No tail-only mediation or equivalence claim follows.",
     }
     atomic_json(args.out, result)
     print(json.dumps(result, indent=2, sort_keys=True))

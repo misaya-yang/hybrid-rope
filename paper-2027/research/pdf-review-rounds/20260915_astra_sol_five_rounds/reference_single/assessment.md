@@ -1,0 +1,5 @@
+# Reference calibration
+
+The author supplied MrRoPE Markdown. A fresh Astra agent used the R03/R04 single-review rubric, without being told the author's comparison purpose, Oral status or prior scores. It gave4/10; the source retained publication information and the review could not inspect full figures. This differs from the known ICLR2026 Oral outcome. It shows the simulated score is not calibrated to real acceptance or presentation tier; it does not prove every criticism is false or allow a direct PDF-layout comparison.
+
+The report distinguishes the missing YaRN monotonicity condition from the valid S4/S16 experiment range. That is a bounded theorem wording issue, not a disproof of the measured method. It also identifies table/text contradictions whose severity must be evaluated separately from substantive retrieval gains. These observations support evidence-based review with a separate contribution assessment and AC reconciliation, not target-score prompting. No speculative claims about data quality are imported into either manuscript.

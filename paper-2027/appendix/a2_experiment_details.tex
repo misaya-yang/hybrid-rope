@@ -19,6 +19,15 @@ Geo is a geometric RoPE table with $\omega_k=b^{-u_k}$. For standard $u_k=k/K$ a
 Both are geometric RoPE with identical normalized allocation $z$ and log-span $R$; the midpoint offset changes $a$ in Eq.~\eqref{eq:table-decomposition}. For $b>1$, the factor is below one, giving uniformly slower rotation at the same token separation. The midpoint Cosh family's $\tau\to0$ limit is this midpoint Geo. Native identifies the inherited table of a specified released model. Each experiment retains its actual grid and baseline; geometric equivalence of the family does not by itself quantify a task-score difference.
 
 \paragraph{Cosh shape and finite installation.}
+For $\tau>0$, the Cosh density is decreasing, so $Q_\tau$ is convex. Affine
+endpoint anchoring on equally spaced quantile nodes gives
+\begin{equation}
+z_{\tau,k}=\frac{Q_\tau(u_k)-Q_\tau(u_0)}{Q_\tau(u_{K-1})-Q_\tau(u_0)}
+\le\frac{k}{K-1},\qquad\omega_{\tau,k}\ge\omega_{\mathrm{Geo},k}.
+\label{eq:anchored-cosh-order}
+\end{equation}
+The inequality follows from convexity relative to the endpoint chord.
+
 The family in Eq.~\eqref{eq:warp} uses $\phi_\tau(u)=1-\operatorname{arcsinh}((1-u)\sinh\tau)/\tau$. Grid choice and optional affine anchoring determine the installed tensor. At fixed endpoints, the anchored shape satisfies Eq.~\eqref{eq:anchored-cosh-order}; a midpoint deployment without anchoring also changes the sampled range. Results are assigned to these actual installations, not to the family name alone.
 
 \paragraph{Extension operators.}

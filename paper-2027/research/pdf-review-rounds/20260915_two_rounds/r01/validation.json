@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "optimized_pdf": "optimized.pdf",
+  "sha256": "b653458b1563c03868ce4f8014ec239d7221be210fcd5d5765cfbadd0a9e49da",
+  "main_pages": 9,
+  "total_pages": 60,
+  "undefined_references": 0,
+  "overfull_hbox_pt": 0,
+  "main_visual_review": "PASS",
+  "scope": "Existing evidence reused and prose/protocols clarified; no model run",
+  "recomputed": "M4 configuration outcomes and 151.9M crossing matrix",
+  "crossing_interaction_recomputed": 3.3253423906862736,
+  "matches_original_seed_mean": true
+}

@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "optimized_pdf": "optimized.pdf",
+  "sha256": "c269fb42cd99404b5dc515b19fe035036ff15eeb0a76845bf5fa063740c0d81b",
+  "main_pages": 9,
+  "total_pages": 61,
+  "undefined_references": 0,
+  "overfull_hbox_pt": 0,
+  "first_page_figure": false,
+  "abstract_contains_numerical_results": false,
+  "abstract_words": 154,
+  "visual_review": "Main pages 1-9 and changed natural-QA/compatibility appendices inspected; no outstanding layout defects",
+  "qa_verification": {
+    "answers_rescored": 1262,
+    "questions": 631,
+    "source_context_clusters": 524,
+    "primary_and_stratum_bootstrap_intervals": "Exact reproduction of completed V2 report"
+  },
+  "other_checks": {
+    "reporting_regression_tests": 6,
+    "basis_checks": 8,
+    "crossing_interaction": 3.3253423906862736
+  },
+  "scope": "No GPU run launched by this task; existing completed Natural-QA outputs integrated after reviewer input was frozen",
+  "reviewer_score_applies_to": "input.pdf, not optimized.pdf",
+  "source_package_files": 139,
+  "source_package_independent_regeneration_and_compile": "PASS",
+  "source_zip_sha256": "167f07c63390e62ffd4ddacb3e0b0e1ef63cb9ef321abaa90418af6218995d6d",
+  "docs_check": {
+    "managed_documents": 128,
+    "local_links_checked": 1644,
+    "assets": 45,
+    "source_occurrences_checked": 89,
+    "relocations": 5,
+    "local_source_occurrences": 20,
+    "mode": "git-portable",
+    "errors": [
+      "Source changed since registry snapshot: paper-2027/research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md",
+      "Source changed since registry snapshot: docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md"
+    ],
+    "model_execution": false
+  }
+}

@@ -1,9 +1,25 @@
-\section{Identifying the Value of \texorpdfstring{$z$}{z} Beyond Support}
+\section{Frequency Allocation Matters at Fixed Range}
 \label{sec:controlled-findings}
 
-We first test whether internal allocation $z$ is useful after frequency support is fixed. Paired training measures its contribution to learned extrapolation; frozen interventions test task gains without weight updates.
+We first isolate the effect of interior placement by fixing the frequency endpoints. We then examine how that effect depends on training, total frequency displacement, and the model's learned use of its coordinates.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
+\caption{\textbf{Fixed-support allocation and learned compatibility.} (a) Fixed endpoints leave internal spacing free ($K=8$ illustration). (b) Three paired training seeds favor Cosh at extended lengths with retained support; native NLL increases. (c) Two-seed mean tail NLL for the $151.9$M weights-by-derived-table crossing at $1$K. Rows freeze trained weights; columns install runtime tables. The matched diagonals outperform the crossed installations.}
+\label{fig:method-overview}
+\end{figure}
 
 \input{sections/02_identification}
+
+\paragraph{The effect extends beyond one allocation family.}\label{sec:factorial}
+A $50.9$M short-training factorial ($8.39$M tokens per arm) with three paired seeds tests two bases, two training lengths
+and three head dimensions. Reference Cosh, its preassigned $1.25\times$
+strength, and a displacement-matched exponential improve OOD NLL in $7/12$,
+$10/12$, and $9/12$ configurations. Cosh and the matched exponential perform
+similarly (mean difference $+0.00074$ NLL, interval $[-0.006,0.008]$).
+These results support nonuniform allocation across families, with strength-dependent
+trade-offs; full settings and a separate standard-grid control are in
+Appendices~\ref{sec:exact-range-factorial} and~\ref{sec:native-grid-control}.
 
 \subsection{The effect remains in frozen models}
 \label{sec:exp-frozen-support}
@@ -11,7 +27,14 @@ We first test whether internal allocation $z$ is useful after frequency support 
 On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we fix the checkpoint, sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The range extends from the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents score $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$. Qwen's four-task development comparison gives $57.75/64.00/66.50\%$ (Appendix~\ref{sec:frozen-fixed-support}). Both reallocations yield large OLMo gains while retaining the same sampled range.
 
 \paragraph{Internal shape beyond total displacement.}\label{sec:equal-displacement}
-Fixed endpoints do not fix the sum of native-relative shifts $\sum_k d_k$. A separate frozen OLMo comparison holds that sum, endpoints, band and gain fixed: the symmetric profile BM and uniform transition MrRoPE-Uni score $51.32$ and $32.12\%$ in a six-task, $48$-input $16$K follow-up comparison. Total displacement therefore does not explain this score difference (Appendix~\ref{sec:four-method-control}). A further development control tests higher-order increment shape at the same total displacement, which already fixes the increment centroid (Appendix~\ref{sec:fixed-total-profile}).
+Fixed endpoints do not fix the sum of native-relative shifts $\sum_k d_k$. A separate frozen OLMo comparison holds that sum, endpoints, band and gain fixed: the symmetric profile BM and uniform transition MrRoPE-Uni score $51.32$ and $32.12\%$ in a six-task, $48$-input $16$K follow-up comparison. Total displacement therefore does not explain this score difference (Appendix~\ref{sec:four-method-control}).
 
-\paragraph{Beyond one shape.}\label{sec:factorial}
-The three-seed short-run M4 factorial varies base, training length and head dimension, comparing Cosh strengths and an exponential matched in RMS node displacement at fixed support. Both families improve OOD loss in multiple configurations, with joint in-window/OOD gains (Appendix~\ref{sec:exact-range-factorial}). A separate three-seed native Std-RoPE comparison improves all five $512$--$8$K lengths (Appendix~\ref{sec:native-grid-control}).
+\paragraph{A learned model uses more than a frequency range.}
+Crossing the runtime tables of the paired $151.9$M models tests whether weights
+can use a different allocation interchangeably. Both seeds favor the table
+derived from their training allocation (Fig.~\ref{fig:method-overview}c;
+Appendix~\ref{sec:crossing-151m}). A complementary frozen intervention permutes
+the same frequency multiset across coordinates and changes model performance
+(Appendix~\ref{sec:slot-protocol}). These findings connect the two operating
+settings: learning can adapt weights to an allocation, whereas frozen extension
+must work with the model's existing frequency--coordinate association.

@@ -36,3 +36,8 @@ fixed-u已退出；旧mix075、局部修复和Qwen后继队列不再执行。旧
 追溯此前推导、迁移结果或旧计划时使用[历史研究目录](CATALOG_20260914.md)，无需作为当前任务前置阅读。
 
 本轮论文升级与后续实验的具体安排见[差距与决策映射](../../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)：摘要不放数字，clean主结果已入稿，Natural-QA优先，YaRN可选，M1待条件成立。
+
+2026-09-15两轮PDF审稿优化已完成；Natural-QA631已取得完整T/P结果并入稿：
+F1为41.08/40.88%，主差+0.20pp、簇配对区间[−1.53,+1.89]pp。
+见[Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)及
+[两轮审稿与处理](../../../paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md)。

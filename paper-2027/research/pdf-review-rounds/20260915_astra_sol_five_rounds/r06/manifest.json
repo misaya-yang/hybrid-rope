@@ -1,0 +1,8 @@
+{
+  "input_sha256": "c34d6c87f91f28cd84a59b25fa196ece9c9802eab1990a4f7c93e68971499c21",
+  "review_models": [
+    "gpt-6-astra",
+    "gpt-5.6-sol"
+  ],
+  "context": "fresh; PDF only; identical four-perspective plus AC prompt"
+}

@@ -42,6 +42,7 @@ run_arm tailspline
 run_arm mrpro
 
 "${python_bin}" -m experiments.iclr2027_three_track_sprint_20260915.mrrope_niah_heatmap_report \
+  --manifest "${root}/assets/manifest.json" \
   --panel "${root}/assets/inputs.jsonl" \
   --run "tailspline=${root}/runs/tailspline" --run "mrpro=${root}/runs/mrpro" \
   --out "${root}/reports/tailspline_vs_mrpro_niah_heatmap.json" \

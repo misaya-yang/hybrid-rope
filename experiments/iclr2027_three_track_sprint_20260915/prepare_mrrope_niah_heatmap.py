@@ -32,12 +32,12 @@ def token_digest(values: list[int]) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def grid_cells():
+def grid_cells(repeats: int = REPEATS):
     return [
         (length, depth, repeat)
         for length in LENGTHS
         for depth in DEPTHS
-        for repeat in range(REPEATS)
+        for repeat in range(repeats)
     ]
 
 
@@ -67,9 +67,9 @@ def chat_shell(tokenizer) -> tuple[list[int], list[int]]:
 
 def build_row(
     *, tokenizer, shell_prefix: list[int], shell_suffix: list[int],
-    filler: list[int], length: int, depth: int, repeat: int,
+    filler: list[int], length: int, depth: int, repeat: int, seed: int = SEED,
 ) -> dict:
-    rng = random.Random(SEED + length * 1009 + depth * 101 + repeat)
+    rng = random.Random(seed + length * 1009 + depth * 101 + repeat)
     passkey = str(rng.randrange(10_000_000, 100_000_000))
     intro = tokenizer.encode(
         "You will read a long context containing one special magic number. "
@@ -120,7 +120,7 @@ def build_row(
         "source_document_id": row_id,
         "document_cluster_id": row_id,
         "semantic_group_id": row_id,
-        "source_seed": SEED,
+        "source_seed": seed,
         "filler_start_token": start,
         "selection_mode": "predeclared_length_depth_grid",
         "selection_uses_model_outputs": False,
@@ -133,12 +133,22 @@ def main() -> None:
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--paul-graham-json", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--repeats-per-cell", type=int, default=REPEATS)
+    parser.add_argument("--seed", type=int, default=SEED)
     args = parser.parse_args()
+    if args.repeats_per_cell < 1:
+        raise ValueError("repeats-per-cell must be positive")
+    expected_rows = len(LENGTHS) * len(DEPTHS) * args.repeats_per_cell
     output = args.out.resolve()
     manifest_path = output / "manifest.json"
     if manifest_path.is_file():
         value = json.loads(manifest_path.read_text())
-        if value.get("status") == "COMPLETE" and value.get("rows") == len(grid_cells()):
+        if (
+            value.get("status") == "COMPLETE"
+            and value.get("rows") == expected_rows
+            and value.get("repeats_per_cell") == args.repeats_per_cell
+            and value.get("seed") == args.seed
+        ):
             print(json.dumps({"status": "SKIP_COMPLETE", "rows": value["rows"]}))
             return
         raise FileExistsError("NIAH output contains a different or incomplete manifest")
@@ -165,20 +175,20 @@ def main() -> None:
     rows = [
         build_row(
             tokenizer=tokenizer, shell_prefix=shell_prefix, shell_suffix=shell_suffix,
-            filler=filler, length=length, depth=depth, repeat=repeat,
+            filler=filler, length=length, depth=depth, repeat=repeat, seed=args.seed,
         )
-        for length, depth, repeat in grid_cells()
+        for length, depth, repeat in grid_cells(args.repeats_per_cell)
     ]
     if (
-        len(rows) != 108
-        or len({row["row_id"] for row in rows}) != 108
-        or len({row["prompt_sha256"] for row in rows}) != 108
+        len(rows) != expected_rows
+        or len({row["row_id"] for row in rows}) != expected_rows
+        or len({row["prompt_sha256"] for row in rows}) != expected_rows
     ):
         raise ValueError("NIAH grid coverage or prompt uniqueness drift")
     for length in LENGTHS:
         for depth in DEPTHS:
             cell = [row for row in rows if row["length_cap"] == length and row["depth_percent"] == depth]
-            if len(cell) != REPEATS:
+            if len(cell) != args.repeats_per_cell:
                 raise ValueError(f"NIAH cell coverage drift: {length}/{depth}")
 
     output.mkdir(parents=True)
@@ -188,7 +198,7 @@ def main() -> None:
             stream.write(json.dumps(row, sort_keys=True) + "\n")
     manifest = {
         "status": "COMPLETE",
-        "contract": "TAILSPLINE_MRPRO_LLAMA_S4_NIAH_HEATMAP_V1",
+        "contract": "TAILSPLINE_MRPRO_LLAMA_S4_NIAH_HEATMAP_V2",
         "model": str(args.model.resolve()),
         "model_config_sha256": sha256(args.model / "config.json"),
         "tokenizer_sha256": sha256(args.model / "tokenizer.json"),
@@ -196,7 +206,8 @@ def main() -> None:
         "filler_source_sha256": sha256(args.paul_graham_json),
         "lengths": list(LENGTHS),
         "depths_percent": list(DEPTHS),
-        "repeats_per_cell": REPEATS,
+        "repeats_per_cell": args.repeats_per_cell,
+        "seed": args.seed,
         "rows": len(rows),
         "max_new_tokens": MAX_NEW_TOKENS,
         "input_tokens_by_length": {

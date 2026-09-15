@@ -57,102 +57,49 @@ def verify():
         for v in values.values():assert abs(np.exp(v['nll'])-v['ppl'])<1e-8
 
 def method_overview():
-    """Analytic method schematic: exact quantiles and finite-grid profiles.
-
-    K=8 and tau=2 make the allocation illustration legible; n=17 is the
-    Llama transition width. No model observations or generated artwork enter.
-    """
-    tau=2.;k=8;u=(np.arange(k)+.5)/k
-    quant=1-np.arcsinh((1-u)*np.sinh(tau))/tau
-    z=(quant-quant[0])/(quant[-1]-quant[0]);geo=np.linspace(0,1,k)
-    assert len(z)==len(geo)==k and z[0]==0 and z[-1]==1
-    assert np.all(np.diff(z)>0) and np.all(z<=geo+1e-14)
-    n=17;indices=np.arange(-4,n+5);q=np.clip(indices,0,n)
-    ts=q*(3*n*n+3*n+1-q*q)/(n*(n+1)*(2*n+1))
-    bm=q*(q+1)*(3*n+2-2*q)/(n*(n+1)*(n+2))
-    for m in [ts,bm]:
-        assert np.all(np.diff(m)>=0) and np.all(m[indices<=0]==0)
-        assert np.all(m[indices>=n]==1)
-    fig=plt.figure(figsize=(7.25,3.5),facecolor='white')
-    ax=fig.add_axes([0,0,1,1]);ax.set(xlim=(0,1),ylim=(0,1));ax.axis('off')
-    teal='#008577';gray='#929BA4'
-    def label(x,y,s,**kw):
-        return ax.text(x,y,s,**({'color':INK,'fontsize':9,'va':'center'}|kw))
-    def arrow(start,end,color=INK,lw=1.,scale=10):
-        ax.add_patch(FancyArrowPatch(start,end,arrowstyle='-|>',mutation_scale=scale,
-                                    linewidth=lw,color=color,shrinkA=0,shrinkB=0))
-    label(.025,.955,'(a) Allocation beyond the base',fontsize=10.5,fontweight='bold')
-    label(.255,.825,r'$x_k=a+Rz_k$',fontsize=18,ha='center')
-    left,right=.095,.425
-    for values,y,color,name in [(geo,.635,BLUE,'Geometric'),(z,.425,ORANGE,'Reallocated')]:
-        ax.plot([left,right],[y,y],color=INK,lw=1.0)
-        xx=left+(right-left)*values
-        ax.vlines(xx[1:-1],y-.027,y+.027,color=color,lw=2.1)
-        ax.scatter(xx[[0,-1]],[y,y],s=32,facecolor='white',edgecolor=INK,lw=1.2,zorder=4)
-        ax.text(left,y+.068,name,color=color,fontsize=10,fontweight='bold',va='center',
-                bbox=dict(facecolor='white',edgecolor='none',pad=1.2),zorder=5)
-    for a,b in zip(geo[1:-1],z[1:-1]):
-        ax.plot([left+(right-left)*a,left+(right-left)*b],[.602,.458],
-                color=gray,lw=.7,ls=(0,(3,3)),zorder=0)
-    ax.vlines([left,right],.265,.685,color=gray,lw=.8,ls=(0,(3,3)),zorder=0)
-    arrow((left,.335),(right,.335),lw=.7,scale=8)
-    label(left,.30,'Fast',ha='center',fontsize=8)
-    label(right,.30,'Slow',ha='center',fontsize=8)
-    label(.26,.29,r'Normalized exponent $z$',ha='center',fontsize=8)
-    ax.plot([left,left,right,right],[.225,.245,.245,.225],color=INK,lw=.9)
-    label(.26,.195,'Same frequency range',ha='center',fontsize=9)
-    label(.255,.075,'Fixed endpoints, different spacing',ha='center',
-          fontsize=10,fontweight='bold')
-
-    label(.478,.53,'Design\nspacing',ha='center',fontsize=9.5,fontweight='bold',linespacing=1.4)
-    arrow((.468,.625),(.523,.775),lw=1.1,scale=11)
-    arrow((.468,.43),(.523,.285),lw=1.1,scale=11)
-
-    label(.54,.955,'(b) Learning: Cosh',fontsize=10.5,fontweight='bold')
-    ax.plot([.54,.98],[.915,.915],color=ORANGE,lw=1.1)
-    density=fig.add_axes([.55,.655,.145,.195])
-    phi=np.linspace(0,1,161);rho=tau*np.cosh(tau*(1-phi))/np.sinh(tau)
-    density.fill_between(phi,0,rho,color=ORANGE,alpha=.09)
-    density.plot(phi,rho,color=ORANGE,lw=1.6)
-    density.set(xlim=(0,1.04),ylim=(0,rho[0]*1.08));density.axis('off')
-    density.annotate('',xy=(1.04,0),xytext=(0,0),arrowprops=dict(arrowstyle='->',lw=.7,color=INK))
-    density.annotate('',xy=(0,rho[0]*1.08),xytext=(0,0),arrowprops=dict(arrowstyle='->',lw=.7,color=INK))
-    label(.552,.882,r'Density $\rho(\phi)$',fontsize=8.5)
-    label(.625,.609,'Density prior',ha='center',fontsize=8.5)
-    arrow((.705,.745),(.745,.745),lw=1.0)
-    xx=.765+.21*z
-    ax.plot([xx[0],xx[-1]],[.745,.745],color=INK,lw=.9)
-    ax.vlines(xx[1:-1],.718,.772,color=ORANGE,lw=1.8)
-    ax.scatter(xx[[0,-1]],[.745,.745],s=23,facecolor='white',edgecolor=INK,lw=1.,zorder=4)
-    label(.872,.84,'Analytic quantiles',fontsize=8.5,ha='center')
-    label(.872,.658,'Train with the table',fontsize=8.5,ha='center',fontweight='bold')
-
-    label(.54,.505,'(c) Zero training: TailSpline / BM',fontsize=10.5,fontweight='bold')
-    ax.plot([.54,.98],[.464,.464],color=teal,lw=1.1)
-    curve=fig.add_axes([.558,.145,.42,.215])
-    curve.axvspan(-4,0,color='#F0F2F4',zorder=0)
-    curve.axvspan(n,n+4,color='#F0F2F4',zorder=0)
-    curve.plot(indices,ts,color=ORANGE,lw=1.6,marker='o',ms=2.2,label='TailSpline')
-    curve.plot(indices,bm,color=teal,lw=1.4,ls='--',marker='s',ms=1.8,label='BM')
-    curve.axvline(0,color=gray,lw=.65,ls=':');curve.axvline(n,color=gray,lw=.65,ls=':')
-    curve.set(xlim=(-4,n+4),ylim=(-.06,1.09),xticks=[0,n],xticklabels=[r'$l$',r'$h$'],yticks=[0,1])
-    curve.tick_params(labelsize=7.5,length=2,pad=2)
-    curve.spines[['top','right']].set_visible(False)
-    curve.set_ylabel(r'$m_k$',rotation=0,labelpad=7,fontsize=9)
-    curve.yaxis.set_label_coords(-.055,.53)
-    curve.text(-2,1.20,'Keep',ha='center',fontsize=8,clip_on=False)
-    curve.text(n/2,1.20,'Redistribute',ha='center',fontsize=8,clip_on=False)
-    curve.text(n+2,1.20,r'Interpolate $/s$',ha='center',fontsize=8,clip_on=False)
-    curve.text(4.7,.78,'TailSpline',color=ORANGE,fontsize=8)
-    curve.text(10.4,.25,'BM',color=teal,fontsize=8)
-    label(.768,.069,r'Public grid, $L$, $s$ $\longrightarrow$ one static table',ha='center',fontsize=8.5)
-    label(.768,.016,'No weight updates or activation fitting',ha='center',fontsize=8)
+    """Lead with distinct interventions, using existing recorded observations."""
+    fig, axes = plt.subplots(1, 3, figsize=(7.25, 2.05))
+    u=(np.arange(8)+.5)/8
+    q=1-np.arcsinh((1-u)*np.sinh(2))/2
+    z=(q-q[0])/(q[-1]-q[0])
+    ax=axes[0]
+    for y, values, color, label in [(1,np.linspace(0,1,8),BLUE,'Geometric'),(0,z,ORANGE,'Cosh')]:
+        ax.hlines(y,0,1,color=INK,lw=.7)
+        ax.scatter(values[1:-1],np.full(6,y),s=20,color=color)
+        ax.scatter([0,1],[y,y],s=23,facecolor='white',edgecolor=INK,zorder=3)
+        ax.text(.05,y+.17,label,fontsize=8,color=color)
+    ax.set(xlim=(-.05,1.05),ylim=(-.25,1.48),yticks=[],xticks=[0,1],xlabel='Normalized exponent z')
+    ax.set_title('(a) Fixed support',loc='left',fontsize=9)
+    axis_style(ax)
+    ax=axes[1];lengths=[256,512,1024,2048]
+    block=D['range']['fixed_training_range']
+    values=np.array([[block[str(length)]['seed_values'][str(seed)] for length in lengths] for seed in [42,137,256]])
+    for row in values: ax.plot(range(4),row,color='#B4BBC2',lw=.8,marker='o',ms=2)
+    ax.plot(range(4),values.mean(0),color=ORANGE,lw=1.5,marker='D',ms=3)
+    ax.axhline(0,color=INK,lw=.7)
+    ax.set(xticks=range(4),xticklabels=['1x','2x','4x','8x'],xlabel='Eval. / train length',ylabel='Cosh - Geo NLL')
+    ax.set_title('(b) Three paired seeds',loc='left',fontsize=9);axis_style(ax)
+    ax=axes[2]
+    crossing=D['controlled_crossing']['mean_tail_nll_two_seed_length1024']
+    matrix=np.array([[crossing[w][t] for t in ['fmrope_derived','cosh_derived']]
+                     for w in ['fmrope_weights','anchored_cosh_weights']])
+    assert matrix[0,0]<matrix[0,1] and matrix[1,1]<matrix[1,0]
+    ax.imshow(matrix,cmap='Blues',vmin=3,vmax=6,aspect='auto')
+    for row in range(2):
+        for col in range(2):
+            ax.text(col,row,f'{matrix[row,col]:.3f}',ha='center',va='center',fontsize=9,
+                    color='white' if matrix[row,col]>4.5 else INK,
+                    fontweight='bold' if row==col else 'normal')
+    ax.set(xticks=[0,1],xticklabels=['Geo table','Cosh table'],yticks=[0,1],yticklabels=['Geo W','Cosh W'])
+    ax.tick_params(length=0,labelsize=7.5)
+    ax.set_title('(c) Learned compatibility',loc='left',fontsize=9)
+    fig.subplots_adjust(left=.035,right=.99,bottom=.26,top=.86,wspace=.65)
     finish(fig,'fig_method_overview')
-    # An editable text-preserving SVG accompanies the print PDF.
     with plt.rc_context({'svg.fonttype':'none'}):
         fig.savefig(HERE/'fig_method_overview.svg',bbox_inches='tight',pad_inches=.035)
     svg=HERE/'fig_method_overview.svg'
     svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
+
 
 def overview():
     fig,axes=plt.subplots(1,3,figsize=(7.25,2.45))
@@ -226,37 +173,61 @@ def learning():
 
 
 def tailspline():
-    fig=plt.figure(figsize=(7.25,3.7))
-    gs=fig.add_gridspec(2,2,height_ratios=[.65,1])
-    top=fig.add_subplot(gs[0,:]);n=17;q=np.arange(1,n+1)
-    for values,color,label in [(2*q/(n*(n+1)),BLUE,'MrPro'),
-                               (6*q*(n-q+1)/(n*(n+1)*(n+2)),'#009E73','BM'),
-                               (3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1)),ORANGE,'TailSpline')]:
-        top.plot(np.arange(n+2),np.r_[0,values,0],color=color,lw=1.6,marker='o',ms=2.5,label=label)
-    top.set(xlabel='Gap index (0 and 18: unchanged outer gaps)',ylabel=r'Extra gap / $\log s$',
-            xticks=[0,1,5,9,13,17,18],ylim=(-.004,.16))
-    top.set_title('(a) Boundary increments',loc='left',fontsize=10)
-    top.legend(frameon=False,ncol=3,loc='lower right',bbox_to_anchor=(1,1.01),fontsize=9)
-    top.annotate('Larger entry jump',xy=(1,3/(2*n+1)),xytext=(2.6,.112),fontsize=8,color=ORANGE,
-                 arrowprops=dict(arrowstyle='->',color=ORANGE,lw=.8))
-    top.annotate('Smaller tail jump',xy=(n,6/((n+1)*(2*n+1))),xytext=(11.1,.025),fontsize=8,color=ORANGE,
-                 arrowprops=dict(arrowstyle='->',color=ORANGE,lw=.8))
-    top.axvspan(-.2,.5,color='#F1F3F5',zorder=0);top.axvspan(17.5,18.2,color='#F1F3F5',zorder=0)
-    axis_style(top)
-    for col,(key,name) in enumerate([('tailspline','Llama'),('tailspline_olmo','OLMo')]):
-        ax=fig.add_subplot(gs[1,col]);block=D[key];x=np.array(block['lengths'])/1024
+    data=json.loads((HERE/'field_gap_inputs.json').read_text())
+    clean=data['clean'];mid=data['clean16k']
+    fig,axes=plt.subplots(1,2,figsize=(7.25,2.7),gridspec_kw={'width_ratios':[1,1.55]})
+    ax=axes[0]
+    points=[mid['contrasts']['mrpro']['delta_by_length']['16384'],clean['point']['tailspline']-clean['point']['mrpro']]
+    intervals=[mid['contrasts']['mrpro']['bootstrap']['delta_by_length_interval95']['16384'],clean['contrast']['bootstrap']['delta_log_auc']['interval95']]
+    for y,(point,interval,color) in enumerate(zip(points,intervals,[BLUE,ORANGE])):
+        lo,hi=np.array(interval)*100;point*=100
+        ax.errorbar(point,y,xerr=[[point-lo],[hi-point]],fmt='o',color=color,capsize=3,ms=5)
+        ax.text(point,y+.19,f'{point:+.2f} pp',ha='center',va='top',fontsize=9,color=color)
+    ax.axvline(0,color=INK,lw=.7);ax.set(yticks=[0,1],yticklabels=['16K (2L)','32K (4L)'],ylim=(-.45,1.5),xlim=(-.5,14.5),xticks=[0,5,10],xlabel='Full-13 gain (pp)')
+    ax.invert_yaxis();ax.set_title('(a) Quality at both lengths',loc='left',fontsize=9);axis_style(ax)
+    ax=axes[1];keys=list(clean['task_deltas']);ys=np.arange(len(keys))
+    v32=np.array([clean['task_deltas'][t]for t in keys])*100
+    v16=np.array([mid['summaries']['tailspline']['by_length']['16384']['tasks'][t]['official']-mid['summaries']['mrpro']['by_length']['16384']['tasks'][t]['official']for t in keys])*100
+    names=[k.replace('niah_','').replace('multikey','MK').replace('single','S').replace('multiquery','MQ').replace('multivalue','MV')for k in keys]
+    ax.barh(ys-.18,v16,height=.34,color=BLUE,label='16K: 50/task')
+    ax.barh(ys+.18,v32,height=.34,color=ORANGE,label='32K: 200/task')
+    ax.axvline(0,color=INK,lw=.7);ax.invert_yaxis();ax.set(yticks=ys,yticklabels=names,xlim=(-11,42),xticks=[0,20,40],xlabel='Task gain over MrPro (pp)')
+    ax.tick_params(axis='y',labelsize=7.5);ax.set_title('(b) All task means',loc='left',fontsize=9)
+    ax.legend(frameon=False,fontsize=7,loc='lower right');axis_style(ax)
+    fig.subplots_adjust(left=.12,right=.985,bottom=.20,top=.86,wspace=.58)
+    finish(fig,'fig_tailspline_main')
+
+
+def tailspline_classic():
+    fig,axes=plt.subplots(1,2,figsize=(6.2,2.5))
+    for ax,(key,name) in zip(axes,[('tailspline','Llama'),('tailspline_olmo','OLMo')]):
+        block=D[key];x=np.array(block['lengths'])/1024
         for method,color,marker in [('MrPro',BLUE,'o'),('TailSpline',ORANGE,'D')]:
             ax.plot(x,np.array(block['full13'][method])*100,color=color,marker=marker,ms=3,label=method)
-        delta=block['auc_delta']['full13']*100
-        lo,hi=np.array(block['auc_delta_ci95']['full13'])*100
-        ax.set_title(f'({chr(98+col)}) {name}: RULER-13',loc='left',fontsize=10)
-        ax.text(.02,.07 if col==0 else .43,f'AUC difference {delta:+.2f}pp\nPaired 95% CI [{lo:+.2f}, {hi:+.2f}]',
-                transform=ax.transAxes,fontsize=8.5,bbox=dict(facecolor='white',edgecolor='none',alpha=.85,pad=1.5))
+        delta=block['auc_delta']['full13']*100;lo,hi=np.array(block['auc_delta_ci95']['full13'])*100
+        ax.set_title(f'{name}: classic padded panel',loc='left',fontsize=9)
         ax.set(xticks=x,xlabel='Length (K tokens)',ylabel='Task macro (%)',ylim=(0,103))
-        ax.legend(frameon=False,fontsize=8,ncol=2,loc='upper right')
-        axis_style(ax)
-    fig.subplots_adjust(left=.095,right=.99,bottom=.13,top=.94,wspace=.30,hspace=.95)
-    finish(fig,'fig_tailspline_main')
+        ax.text(.02,-.36,f'AUC {delta:+.2f}pp, 95% CI [{lo:.2f}, {hi:.2f}]',transform=ax.transAxes,fontsize=8)
+        ax.legend(frameon=False,fontsize=7,loc='lower left');axis_style(ax)
+    fig.subplots_adjust(left=.10,right=.985,bottom=.31,top=.88,wspace=.42)
+    finish(fig,'fig_tailspline_classic')
+
+
+def construction_contrast():
+    fig,axes=plt.subplots(1,2,figsize=(7.25,1.95),gridspec_kw={'width_ratios':[1.4,1]})
+    u=np.linspace(0,1,100);tau=2
+    axes[1].plot(u,1-np.arcsinh((1-u)*np.sinh(tau))/tau,color=ORANGE,label='Cosh')
+    axes[1].plot(u,u,color=BLUE,ls='--',label='Uniform')
+    axes[1].set(xlabel='Quantile u',ylabel='Exponent before anchoring');axes[1].set_title('(b) Cosh: extrapolation transport',loc='left',fontsize=9)
+    axes[1].legend(frameon=False,fontsize=7)
+    n=17;q=np.arange(1,n+1)
+    for values,color,name in [(2*q/(n*(n+1)),BLUE,'MrPro'),(3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1)),ORANGE,'TailSpline')]:
+        axes[0].plot(np.arange(n+2),np.r_[0,values,0],color=color,label=name)
+    axes[0].set(xlabel='Gap index',ylabel='Extra gap / log s',xticks=[0,9,18]);axes[0].set_title('(a) TailSpline: frozen extension',loc='left',fontsize=9)
+    axes[0].legend(frameon=False,fontsize=7)
+    for ax in axes:axis_style(ax)
+    fig.subplots_adjust(left=.085,right=.985,bottom=.29,top=.86,wspace=.42)
+    finish(fig,'fig_construction_contrast')
 
 
 def deployment_details():
@@ -308,4 +279,4 @@ After phase exposure & $4$K complete + EOS & $95/100$ & $100/100$ \\
     (HERE.parent/'tables/table_learning_main.tex').write_text(text)
 
 if __name__=='__main__':
-    verify();method_overview();overview();geometry();learning();tailspline();deployment_details();table();print('Five main figures, deployment supplement, learning table and CPU algebra verified.')
+    verify();method_overview();overview();geometry();learning();tailspline();tailspline_classic();construction_contrast();deployment_details();table();print('Five main figures, deployment supplement, learning table and CPU algebra verified.')

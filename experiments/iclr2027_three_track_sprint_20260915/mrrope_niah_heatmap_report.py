@@ -11,13 +11,6 @@ import re
 
 import numpy as np
 
-from experiments.iclr2027_three_track_sprint_20260915.prepare_mrrope_niah_heatmap import (
-    DEPTHS,
-    LENGTHS,
-    REPEATS,
-)
-
-
 ARMS = ("tailspline", "mrpro")
 
 
@@ -32,10 +25,10 @@ def rouge1_recall(output: str, reference: str) -> float:
     return sum(min(predicted[token], count) for token, count in wanted.items()) / total if total else 0.0
 
 
-def load_arm(path: Path, panel: dict[str, dict], arm: str) -> dict[str, dict]:
+def load_arm(path: Path, panel: dict[str, dict], arm: str, expected_rows: int) -> dict[str, dict]:
     status = json.loads((path / "status.json").read_text())
     rows = read_jsonl(path / "generations.jsonl")
-    if status != {"status": "COMPLETE", "rows": 108, "lm_rows": 0} or len(rows) != 108:
+    if status != {"status": "COMPLETE", "rows": expected_rows, "lm_rows": 0} or len(rows) != expected_rows:
         raise ValueError(f"incomplete NIAH arm {arm}: {status}/{len(rows)}")
     mapping = {str(row["row_id"]): row for row in rows}
     if set(mapping) != set(panel):
@@ -52,29 +45,29 @@ def load_arm(path: Path, panel: dict[str, dict], arm: str) -> dict[str, dict]:
     return mapping
 
 
-def cell_matrix(mapping: dict[str, dict], panel: dict[str, dict]) -> dict:
+def cell_matrix(mapping, panel, *, lengths, depths, repeats) -> dict:
     cells = {}
-    for length in LENGTHS:
-        for depth in DEPTHS:
+    for length in lengths:
+        for depth in depths:
             selected = [
                 mapping[row_id]["rouge1_recall"]
                 for row_id, source in panel.items()
                 if source["length_cap"] == length and source["depth_percent"] == depth
             ]
-            if len(selected) != REPEATS:
+            if len(selected) != repeats:
                 raise ValueError(f"NIAH result cell drift: {length}/{depth}")
             cells[f"{length}/{depth}"] = float(np.mean(selected))
     by_length = {
         str(length): float(np.mean([
-            cells[f"{length}/{depth}"] for depth in DEPTHS
-        ])) for length in LENGTHS
+            cells[f"{length}/{depth}"] for depth in depths
+        ])) for length in lengths
     }
     by_depth = {
         str(depth): float(np.mean([
-            cells[f"{length}/{depth}"] for length in LENGTHS
-        ])) for depth in DEPTHS
+            cells[f"{length}/{depth}"] for length in lengths
+        ])) for depth in depths
     }
-    eligible = [length for length in LENGTHS if by_length[str(length)] >= 0.90]
+    eligible = [length for length in lengths if by_length[str(length)] >= 0.90]
     return {
         "cells": cells,
         "by_length_macro": by_length,
@@ -84,23 +77,27 @@ def cell_matrix(mapping: dict[str, dict], panel: dict[str, dict]) -> dict:
     }
 
 
-def paired_bootstrap(runs, panel, *, draws=20_000, seed=20260928):
+def paired_bootstrap(runs, panel, *, lengths, depths, repeats, draws=20_000, seed=20260928):
     rng = np.random.default_rng(seed)
     deltas = []
-    for length in LENGTHS:
-        for depth in DEPTHS:
-            values = []
-            for repeat in range(REPEATS):
-                row_id = f"mrrope_niah_l{length}_d{depth:02d}_r{repeat}"
-                values.append(
+    for length in lengths:
+        for depth in depths:
+            row_ids = sorted(
+                row_id for row_id, row in panel.items()
+                if row["length_cap"] == length and row["depth_percent"] == depth
+            )
+            if len(row_ids) != repeats:
+                raise ValueError(f"NIAH bootstrap cell drift: {length}/{depth}")
+            values = [
                     runs["tailspline"][row_id]["rouge1_recall"]
                     - runs["mrpro"][row_id]["rouge1_recall"]
-                )
+                for row_id in row_ids
+            ]
             deltas.append(values)
     delta = np.asarray(deltas)
     sampled = np.empty(draws)
     for draw in range(draws):
-        indices = rng.integers(REPEATS, size=delta.shape)
+        indices = rng.integers(repeats, size=delta.shape)
         sampled[draw] = np.take_along_axis(delta, indices, axis=1).mean()
     return {
         "draws": draws,
@@ -117,11 +114,13 @@ def plot(report: dict, output: Path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    lengths = report["lengths"]
+    depths = report["depths_percent"]
     arrays = {}
     for arm in ARMS:
         arrays[arm] = np.asarray([
-            [report["arms"][arm]["cells"][f"{length}/{depth}"] for length in LENGTHS]
-            for depth in DEPTHS
+            [report["arms"][arm]["cells"][f"{length}/{depth}"] for length in lengths]
+            for depth in depths
         ])
     arrays["delta"] = arrays["tailspline"] - arrays["mrpro"]
     fig, axes = plt.subplots(1, 3, figsize=(12.2, 4.0), constrained_layout=True)
@@ -134,13 +133,13 @@ def plot(report: dict, output: Path) -> None:
         else:
             image = axis.imshow(data, vmin=0, vmax=1, cmap="RdYlGn", aspect="auto")
         axis.set_title(titles[name])
-        axis.set_xticks(range(len(LENGTHS)), [f"{value // 1024}K" for value in LENGTHS])
-        axis.set_yticks(range(len(DEPTHS)), [f"{value}%" for value in DEPTHS])
+        axis.set_xticks(range(len(lengths)), [f"{value // 1024}K" for value in lengths])
+        axis.set_yticks(range(len(depths)), [f"{value}%" for value in depths])
         axis.set_xlabel("Context cap")
         if axis is axes[0]:
             axis.set_ylabel("Needle depth")
-        for y in range(len(DEPTHS)):
-            for x in range(len(LENGTHS)):
+        for y in range(len(depths)):
+            for x in range(len(lengths)):
                 axis.text(x, y, f"{data[y, x]:.2f}", ha="center", va="center", fontsize=7)
         fig.colorbar(image, ax=axis, fraction=0.046, pad=0.04)
     fig.savefig(output.with_suffix(".png"), dpi=220)
@@ -150,6 +149,7 @@ def plot(report: dict, output: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--panel", type=Path, required=True)
     parser.add_argument("--run", action="append", required=True, help="ARM=RUN_DIR")
     parser.add_argument("--out", type=Path, required=True)
@@ -163,20 +163,32 @@ def main() -> None:
         paths[arm] = Path(value)
     if set(paths) != set(ARMS):
         raise ValueError("NIAH report requires exactly tailspline and mrpro")
+    manifest = json.loads(args.manifest.read_text())
+    if manifest.get("status") != "COMPLETE":
+        raise ValueError("NIAH manifest is incomplete")
+    lengths = tuple(int(value) for value in manifest["lengths"])
+    depths = tuple(int(value) for value in manifest["depths_percent"])
+    repeats = int(manifest["repeats_per_cell"])
+    expected_rows = len(lengths) * len(depths) * repeats
+    if expected_rows != int(manifest["rows"]):
+        raise ValueError("NIAH manifest grid identity drift")
     panel_rows = read_jsonl(args.panel)
     panel = {str(row["row_id"]): row for row in panel_rows}
-    if len(panel) != 108:
-        raise ValueError("NIAH panel must contain 108 unique rows")
-    runs = {arm: load_arm(path, panel, arm) for arm, path in paths.items()}
-    arms = {arm: cell_matrix(mapping, panel) for arm, mapping in runs.items()}
+    if len(panel) != expected_rows:
+        raise ValueError(f"NIAH panel must contain {expected_rows} unique rows")
+    runs = {arm: load_arm(path, panel, arm, expected_rows) for arm, path in paths.items()}
+    arms = {
+        arm: cell_matrix(mapping, panel, lengths=lengths, depths=depths, repeats=repeats)
+        for arm, mapping in runs.items()
+    }
     report = {
-        "status": "TAILSPLINE_MRPRO_LLAMA_S4_NIAH_HEATMAP_COMPLETE_V1",
+        "status": "TAILSPLINE_MRPRO_LLAMA_S4_NIAH_HEATMAP_COMPLETE_V2",
         "model": "Meta-Llama-3-8B-Instruct",
         "candidate": "tailspline",
         "baseline": "mrpro",
-        "lengths": list(LENGTHS),
-        "depths_percent": list(DEPTHS),
-        "repeats_per_cell": REPEATS,
+        "lengths": list(lengths),
+        "depths_percent": list(depths),
+        "repeats_per_cell": repeats,
         "rows_per_arm": len(panel),
         "metric": "ROUGE-1 recall; single numeric reference; exactly equals official substring recall on every row",
         "arms": arms,
@@ -184,7 +196,9 @@ def main() -> None:
             key: arms["tailspline"]["cells"][key] - arms["mrpro"]["cells"][key]
             for key in arms["tailspline"]["cells"]
         },
-        "paired_inference": paired_bootstrap(runs, panel),
+        "paired_inference": paired_bootstrap(
+            runs, panel, lengths=lengths, depths=depths, repeats=repeats,
+        ),
         "scope": (
             "MrRoPE-style diagnostic over 1x-4x; supports location of retrieval failures, "
             "but does not add an independent benchmark beyond the existing RULER retrieval family"

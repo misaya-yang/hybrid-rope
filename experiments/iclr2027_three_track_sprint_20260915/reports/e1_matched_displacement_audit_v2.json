@@ -1,0 +1,118 @@
+{
+  "claim_boundary": "Matched-dose mathematics; task attribution requires full runtime identity. E0 alone cannot qualify E1. No tail-only mediation or equivalence claim follows.",
+  "comparison": "TailSpline minus dose-control C",
+  "evidence_role": "cross_runtime_diagnostic",
+  "lm_raw_health": {
+    "dose_control_c": {
+      "rows": 138,
+      "sha256": "a04641a60e2fcb422276444f471bb37dc17cca17dcdec88a3ed872dc643e9696"
+    },
+    "tailspline": {
+      "rows": 138,
+      "sha256": "ce93310af8f0e5723845d6c5ad4c344eaf58bce112d57c6a21e6250a2b808524"
+    }
+  },
+  "mathematical_constraints": "PASS",
+  "output_health": {
+    "dose_control_c": {
+      "empty": 22,
+      "ended_eos": 380,
+      "hit_cap": 10,
+      "rows": 390,
+      "sha256": "29c2c6ec4d63b8d06925855d9a602c0ec0e30a95363a2678a304d383eca21888"
+    },
+    "tailspline": {
+      "empty": 30,
+      "ended_eos": 388,
+      "hit_cap": 2,
+      "rows": 390,
+      "sha256": "8423a36cc998f609146970227e671ff99777dfd839928cb446da6146f14d2bad"
+    }
+  },
+  "primary_estimand": "task_equal_full13_log_auc_T_minus_C",
+  "raw_complete": true,
+  "results": {
+    "control_full13_auc": 0.7921153846153846,
+    "delta_full13_auc": -0.0041025641025639326,
+    "delta_full13_auc_ci95": [
+      -0.026282051282051192,
+      0.0182051282051281
+    ],
+    "delta_niah_auc": 0.020312499999999956,
+    "delta_ppl_auc": -0.000615813362726314,
+    "tailspline_full13_auc": 0.7880128205128206,
+    "task_auc_delta": {
+      "cwe": -0.03249999999999997,
+      "fwe": -0.15833333333333338,
+      "niah_multikey_1": 0.025000000000000022,
+      "niah_multikey_2": 0.10000000000000009,
+      "niah_multikey_3": 0.04999999999999993,
+      "niah_multiquery": -0.006250000000000089,
+      "niah_multivalue": -0.006250000000000089,
+      "niah_single_1": 0.0,
+      "niah_single_2": 0.0,
+      "niah_single_3": 0.0,
+      "qa_1": 0.0,
+      "qa_2": -0.07499999999999996,
+      "vt": 0.050000000000000044
+    },
+    "task_outcome": {
+      "losses": 5,
+      "ties": 4,
+      "wins": 4
+    }
+  },
+  "runtime_identity": {
+    "dose_control_c_batch_size": 2,
+    "prefill_chunk_size_equal": true,
+    "prompt_set_equal": true,
+    "remaining_issue": "A 39-row E0 probe does not establish complete T/C runtime equivalence.",
+    "tailspline_batch_size": 1
+  },
+  "runtime_match": "QUALIFIED_ONLY",
+  "runtime_qualification": {
+    "different_fields": [
+      "batch_size",
+      "row_ids"
+    ],
+    "probe_scope": "E0 covers 39 TailSpline rows only; it cannot promote a full T/C comparison to PASS.",
+    "status": "QUALIFIED_ONLY",
+    "unrecorded_fields": [
+      "model_revision",
+      "tokenizer_revision",
+      "chat_template_sha256",
+      "backend",
+      "precision",
+      "positions_mask_identity",
+      "decoder_identity",
+      "scorer_identity"
+    ]
+  },
+  "source_sha256": {
+    "candidate_table": "ba54de7e686001e8161a1c640bb46e4b91a9b5509f128d51311bcc4a19d03552",
+    "control_table": "7acd7444b3bfff482a78dd7a09df1891092a4569092477c53cad0347094c00eb",
+    "report": "d12c99f1b70fcb68a6c0ed621d5247cff861a9ccb873f683f57f4e7699334df1"
+  },
+  "status": "E1_MATCHED_DISPLACEMENT_EXPERIMENT_AUDIT_COMPLETE_V2",
+  "supports_tail_only_mediation": false,
+  "table_identity": {
+    "band": [
+      18,
+      35
+    ],
+    "candidate_increment_centroid": 25.05714296315306,
+    "candidate_sum_m": 38.942857036846945,
+    "control_increment_centroid": 25.05714295550758,
+    "control_sum_m": 38.94285704449242,
+    "entry_increment_delta": -0.01120445012749463,
+    "gain": 1.138629436111989,
+    "maximum_absolute_exponent_delta": 0.02184877710051164,
+    "scale": 4.0,
+    "sum_m_delta": -7.645475363915466e-09,
+    "table_sha256_float32": {
+      "dose_control_c": "cc2d04faba2eb92a50221579e8d5fd1bb1e7cde501ae8a475fb0fd7df6590d5a",
+      "tailspline": "594b38f2669b8fe4bf00d6fd2ba61445ba5408acc3103e68386d197e498e6394"
+    },
+    "tail_increment_delta": -0.011204480558282826
+  }
+}

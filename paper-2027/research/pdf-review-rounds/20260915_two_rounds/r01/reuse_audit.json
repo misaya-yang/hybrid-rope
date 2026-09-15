@@ -1,0 +1,57 @@
+{
+  "scope": "Root integrator repository audit, never supplied to PDF-only reviewer",
+  "m4_recomputed_from_existing_config_rows": {
+    "anchored_cosh_m075": {
+      "wins": 8,
+      "configurations": 12,
+      "mean_nll_delta": -0.009115464598167403
+    },
+    "anchored_cosh_rule": {
+      "wins": 7,
+      "configurations": 12,
+      "mean_nll_delta": -0.009879276641342324
+    },
+    "anchored_cosh_m125": {
+      "wins": 10,
+      "configurations": 12,
+      "mean_nll_delta": -0.012100469458640184
+    },
+    "anchored_exp_rule": {
+      "wins": 9,
+      "configurations": 12,
+      "mean_nll_delta": -0.010619027043548742
+    },
+    "best_cosh_counts_recomputed": {
+      "anchored_cosh_m125": 6,
+      "anchored_cosh_rule": 4,
+      "anchored_cosh_m075": 2
+    }
+  },
+  "candidate_reuses": [
+    {
+      "item": "M4 fixed-support two-family comparisons",
+      "action": "Consider concise main-text counts/parameters; preserve short-training scope"
+    },
+    {
+      "item": "151.9M crossed weights x tables",
+      "action": "Prefer controlled lineage over standalone 50M swap anecdote if reviewer finds compatibility integration weak"
+    },
+    {
+      "item": "Parity-lattice recurrence counterexample",
+      "action": "Use existing theorem to explain why finite-window rank alone is not a design objective"
+    },
+    {
+      "item": "MLA tau and evaluation cache",
+      "action": "Bring minimal reproducibility parameters to main text; do not relabel archived cache as an independently audited held-out corpus"
+    },
+    {
+      "item": "Learned inverse-frequency comparator",
+      "action": "Retain appendix-only: 15M-token short run and mixed replication units do not strengthen the principal controlled inference enough to justify main-text space."
+    },
+    {
+      "item": "Historical native standard-grid shape control",
+      "action": "Make the exact existing native-grid result accessible when discussing range choice; avoid claiming its short training substitutes for the 500M-token control."
+    }
+  ],
+  "direct_consistency_issue": "Appendix H.2 says no T-C task result is included, whereas H.8 includes the qualified completed E1 result. Replace stale statement with a cross-reference."
+}

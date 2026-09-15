@@ -193,6 +193,12 @@ Slowest pairs $n$ & Largest $\omega L$ & Coordinates & $r_2$ \\
 
 For $n=8$, the largest two Gram eigenvalues are $7.9681$ and $7.5752$, accounting for $97.1\%$ of the trace; the third is $0.4246$. As faster pairs enter, additional positional directions acquire mass. This is the finite-window overlap represented in Fig.~\ref{fig:allocation-basis}. The accompanying \path{figs/make_story_figures.py} checks the $n=8$ closed-form calculation against independent $256$-node Gauss--Legendre quadrature and also recovers $r_2=2.00013$ for the $23$ slow pairs of the $b=500{,}000$, $K=64$, $L=4096$ grid. The machine-readable calculation is in \path{figs/finite_window_geometry.json}.
 
+\begin{figure}[ht]
+\centering\includegraphics[width=.68\linewidth]{fig_allocation_geometry.pdf}
+\caption{\textbf{Slow pairs share positional directions.} Full-pair canonical overlap on $b=256$, $K=32$, $L=256$ under uniform separations. The slowest eight pairs have $r_2=2.11$ despite $\omega L\in[1.19,4]$.}
+\label{fig:allocation-basis}
+\end{figure}
+
 \subsection{Effective dimension and multiscale coverage}
 \label{sec:rank-coverage}
 
@@ -337,6 +343,35 @@ $\{e^{\pm i\omega_k}\}$ therefore agree, which identifies frequencies up to
 sign, permutation, and the $2\pi$ alias.
 \end{proof}
 
+
+\subsection{Integer-position kernel equivalence and its boundaries}
+\label{sec:discrete-kernel-proof}
+Corollary~\ref{cor:discrete-kernel} applies to the full bilinear kernel on the
+$2K$-dimensional rotary space. Equality for all $q,k$ is matrix equality.
+At $d=0$, $A^\top B=I$; at $d=1$ the two rotation matrices are similar.
+Their complex eigenvalues are $e^{i\omega_k},e^{-i\omega_k}$ including
+multiplicities. On $(0,\pi)$ the positive-angle eigenvalue identifies each
+frequency uniquely, proving necessity even with repeated frequencies.
+For sufficiency choose a block permutation $P$ with
+$\mathcal R_\Lambda(d)=P\mathcal R_\Omega(d)P^\top$, and set
+$A=B=P^\top$. This holds for every integer $d$, including negative distances.
+This is the discrete specialization of Theorem~\ref{thm:obstruction}, using
+standard similarity rather than a new classification of position encodings.
+
+\paragraph{Counterexamples and excluded extensions.}
+A single trace is insufficient: $(\arccos .9,\arccos .1)$ and
+$(\arccos .7,\arccos .3)$ have the same one-step trace, but different
+rotation spectra and different two-step traces. Outside $(0,\pi)$, replacing
+$\omega$ with $\omega+2\pi$ preserves every integer-position rotation while
+changing rotations at fractional positions. Frequencies at zero or $\pi$
+introduce real eigenvalue blocks; a partial rotary operator adds an identity
+subspace. The stated corollary excludes these cases. Nonlinear Q/K
+normalization need not commute with a candidate linear compensation.
+Neither exact non-equivalence nor a slot-permutation loss proves that
+retraining cannot adapt. The supplied CPU checker verifies compensation,
+repeated frequencies, same-trace/different-spectrum examples, integer
+aliasing, and the limits of a scalar gain; it measures no model performance.
+
 \FloatBarrier
 \paragraph{Approximate compatibility within a geometric family.}
 The exact kernel result leaves room for approximate recovery of a model's behavior. In the historical $50$M crossing, three geometric controls were derived from the Cosh table without fitting model loss: matching its slow endpoint ($b=331.6$K), matching its log span ($377.7$K), and minimizing log-frequency RMS within the geometric family ($8.06$K). On Cosh-trained weights these give PPL $21.69$, $22.14$, and $9.63$, compared with $23.05$ for the original Geo table and $7.16$ for the training Cosh table. A coarse geometric approximation can therefore recover substantial frozen compatibility. On Geo-trained weights the respective PPLs are $7.30$, $7.16$, and $45.63$ (original Geo: $7.14$). These historical tables also change support, so the fixed-support training and mature-model controls supply the separate interior-allocation estimates.
@@ -376,6 +411,18 @@ For $\delta=(\omega'-\omega)\Delta$, the second-order cosine remainder is bounde
 \end{equation}
 \FloatBarrier
 \subsection{Proof of the closed-form variational optimum}
+
+Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$. The Cosh density-design objective is
+\begin{equation}
+\Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+
+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
+\qquad \int_0^1\rho=1,\quad\rho\ge0.
+\label{eq:Capp}
+\end{equation}
+With unit mass, the first term favors spreading frequencies. Moving density
+toward slower exponents increases tail mass over the thresholds it crosses;
+the second term penalizes that concentration. These terms specify the
+extrapolation transport prior.
 
 \begin{theorem}[Unique density minimizer]\label{thm:ode}
 For $\alpha>0$ and $\beta\ge0$, the unit-mass nonnegative $L^2$ minimizer of Eq.~\eqref{eq:Capp} is uniquely $\rho_\tau(\phi)=\tau\cosh[\tau(1-\phi)]/\sinh\tau$, with the uniform limit at $\tau=0$.

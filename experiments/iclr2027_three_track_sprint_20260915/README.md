@@ -23,7 +23,7 @@ present-state evidence.
 | E0 classic runtime identity | Complete: 39-cell TailSpline batch-2 replay has zero score drift versus batch 1; six texts differ, so this is not bitwise equivalence |
 | E1 matched-displacement shape | Completed raw plus `e1_experimental_audit.py`; E0 remains the runtime-sensitivity qualifier |
 | E2 clean RULER-200 | TailSpline/MrPro complete: `0.682660/0.565436`, delta `+0.117224`, CI95 `[+0.103231,+0.131148]`; clean YaRN remains optional and unscheduled |
-| E3 Natural-QA631 | Original GPU; enriched within/extended, task, source-cluster, health and sensitivity report |
+| E3 Natural-QA631 | Complete: T/P 41.0791/40.8834% F1; +0.1957pp, cluster CI [−1.5311,+1.8864]pp; all 631 questions and both native strata reported |
 | E4 strong static baseline | YaRN only, on both clean and batch-1 classic contracts; BM is excluded |
 | E5 Native reference | Native PPL summary and Native-8K RULER complete; task macro `0.918846`, Native-minus-TailSpline CI95 `[-0.019231,+0.061410]` |
 
@@ -64,4 +64,4 @@ raw generations. Do not run both scripts on the same GPU.
 
 ## Field-gap follow-ups
 
-[Current arrangement](../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md) preserves queue ownership and prioritizes the frozen Natural-QA T/P comparison. [A1 YaRN launcher](run_naturalqa_yarn.sh) is prepared separately, prints its action by default and is not queued. E1 V2 retains `QUALIFIED_ONLY` after E0; the 39-row probe cannot establish full T/C runtime equivalence. [Discrete CPU examples](verify_discrete_kernel_equivalence.py) verify mathematical boundaries only.
+[Current arrangement](../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md) preserves queue ownership; the frozen Natural-QA T/P comparison is complete and registered. [A1 YaRN launcher](run_naturalqa_yarn.sh) is prepared separately, prints its action by default and is not queued. E1 V2 retains `QUALIFIED_ONLY` after E0; the 39-row probe cannot establish full T/C runtime equivalence. [Discrete CPU examples](verify_discrete_kernel_equivalence.py) verify mathematical boundaries only.

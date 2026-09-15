@@ -14,6 +14,7 @@ def test_niah_grid_has_four_lengths_nine_depths_three_repeats():
     cells = grid_cells()
     assert len(cells) == 108
     assert len(set(cells)) == 108
+    assert len(grid_cells(20)) == 720
 
 
 def test_cyclic_slice_wraps_without_changing_requested_count():

@@ -16,6 +16,12 @@ def runtime_sources() -> dict[str, bytes]:
     """Bundle existing frozen-evaluation entrypoints and their local imports."""
     repo = PAPER / 'runtime' if (PAPER / 'runtime/experiments').is_dir() else PAPER.parent
     roots = [
+        "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
+        "experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py",
+        "experiments/fixed_rope_three_interfaces_20260913/matched_naturalqa_report.py",
+        "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_32k_ruler200_clean.py",
+        "experiments/fixed_rope_three_interfaces_20260913/prepare_tailspline_llama_naturalqa631.py",
+        "experiments/fixed_rope_three_interfaces_20260913/matched_generation_report.py",
         "experiments/llama3_60dir_20260911/prepare_planb_panel.py",
         "experiments/nongeometric_screen/prepare_long_sources.py",
         "experiments/fixed_rope_three_interfaces_20260913/prepare_llama_ppl46.py",
@@ -80,8 +86,9 @@ def source_files() -> set[Path]:
                 add(PAPER / (part + ".bib"))
 
     add(PAPER / "main.tex")
-    for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py", "SUPPLEMENT_README.md",
+    for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py", "SUPPLEMENT_README.md", "title_abstract.txt",
                  "runtime/README.md", "figs/fig_method_overview.svg",
+                 "figs/field_gap_inputs.json", "figs/verify_field_gap.py",
                  "figs/allocation_design.py", "figs/make_allocation_value.py", "figs/allocation_value_inputs.json",
                  "figs/make_fig_exact_range_control.py",
                  "figs/verify_interval_design.py", "figs/interval_development_inputs.json",
@@ -117,7 +124,7 @@ def main() -> None:
             manifest.append(f"{hashlib.sha256(content).hexdigest()}  {relative}")
         archive.writestr("SHA256SUMS", "\n".join(manifest) + "\n")
         archive.writestr("README.txt", (
-            "Beyond the Base: Exponent Allocation in RoPE\n\n"
+            "Beyond the Base: Frequency Allocation in RoPE\n\n"
             "This archive contains the complete active TeX source, bibliography,\n"
             "local style files, plotted figures, and compiled manuscript PDF.\n"
             "Unzip into an empty directory and run: bash compile.sh\n"
@@ -134,6 +141,7 @@ def main() -> None:
             "Python requirements: NumPy and Matplotlib. Regeneration performs no\n"
             "model execution. The remaining historical figures are supplied as PDF.\n\n"
             "Verify the two explicit finite-frequency examples:\n"
+            "  python3 figs/verify_field_gap.py\n"
             "  python3 figs/verify_explicit_geometry.py\n"
             "  python3 figs/verify_interval_design.py\n"
             "  python3 figs/verify_profile_diagnostics.py\n"

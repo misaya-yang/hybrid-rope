@@ -142,3 +142,44 @@ T−Native +0.019364，文档配对区间[+0.006602,+0.034861]。与classic PPL 
 
 论文与下一步的具体落点见[差距与决策映射](../../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)。
 本轮只读取既有服务器产物并运行本地CPU；未更改远端进程或启动新GPU臂。
+
+## 8. Natural-QA631 V2完整结果（2026-09-15）
+
+冻结的TailSpline/MrPro两臂均完成631条，原始报告见
+[Natural-QA631](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json)。
+本轮论文优化读取完整raw并重算全部1262个回答的F1，主估计及20000次文档簇bootstrap
+区间与原报告逐值一致。两个run contract仅arm label和static table不同，均batch1无pad。
+
+| 输入层 | 数量 | TailSpline F1 | MrPro F1 | T−P / pp | 95%文档簇配对区间 / pp |
+|---|---:|---:|---:|---:|---|
+| 全部（主估计） | 631 | 41.0791% | 40.8834% | +0.1957 | [−1.5311,+1.8864] |
+| Llama native以内 | 316 | 46.4322% | 45.7324% | +0.6998 | [−1.2478,+2.8073] |
+| Llama native以外 | 315 | 37.4321% | 38.3704% | −0.9383 | [−4.1494,+1.9539] |
+
+共有524个source-context簇；实际输入3694–16304 tokens。主估计先在各任务内问题等权，
+再五任务等权；Native分层同样使用两张S4扩展表，不是与原始Native对比。EOS T/P=625/624，
+cap=6/7，empty=0/0。文档等权敏感性T/P=40.8141/40.8375%，不替换主估计。
+
+该完整结果呈现TailSpline自己的自然输入表现：点估计接近，排序未决；clean RULER的
+明确收益仍按其合同成立。既有BM自然QA保持独立身份，不与该结果混算。
+
+服务器根目录保持`/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_naturalqa631`。
+T raw SHA256 `6b161a1538cdcd7af8ab33a3d39529f49dd689184255d69129a4c603e4265ac3`；
+P raw SHA256 `e5e56121ab37d135ceb5ffa3914155883aa5fb162057b3adfb5771b4f93b2ce1`；
+完整prompt panel SHA256 `7c4524fc89b6910fde8239ebbc1cf440fff61ed4523569052a7e67f933011767`。
+[便携score-only记录](../../../paper-2027/figs/field_gap_inputs.json)及
+[独立检查器](../../../paper-2027/figs/verify_field_gap.py)已包含全池和两个分层。
+
+## 9. Clean16K intermediate-length result (2026-09-15)
+
+The completed matched report contains650 pairs (50/task). TailSpline/MrPro
+Full13 scores are86.0949/82.7051%, difference+3.3897pp, paired95% interval
+[1.5307,5.3385]. Retrieval gains4.50pp; QA scores68/60%, difference+8pp
+[1,15]. Aggregation and tracking are retained in the Full13 mean. Together
+with clean32K, these are task gains at the tested2L and4L points for the same
+S4 construction. The report is in
+[clean16K matched result](../../../experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json).
+
+The paper now centers quality within the intended context window. Cosh remains
+a supporting extrapolation transport, not a claimed native-quality method.
+Potential S1/native improvements and S16/128K evaluation remain future work.

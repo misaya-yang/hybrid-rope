@@ -1,5 +1,39 @@
 # Beyond the Base：当前论证与证据安放表
 
+## Current field-gap revision (2026-09-15; supersedes older section/figure locations)
+
+The abstract contains no numerical results, per the author. The contribution is
+frequency allocation beyond the chosen range: controlled interventions establish
+its value, positional geometry explains the structural change, and TailSpline provides the main frozen extension, while Cosh is a supporting
+frequency transport for extrapolation. Clean RULER-200 is the main frozen result,
+with the observed native trade-off adjacent. The detailed T/C identities are in
+Appendix H.2; the main method preserves their purpose and measured comparison.
+Figure2 leads with TailSpline. Figure3 focuses on clean16K/32K; classic
+curves remain in the TailSpline appendix.
+
+| Claim | Evidence and source | Boundary / location |
+|---|---|---|
+| Interior placement matters at fixed support | A01, A13; three paired training seeds and frozen controls | Main identification; Fig. 1; native cost retained |
+| Spectrum and coordinate assignment differ | Two-seed 151.9M crossed weights/tables promoted to Fig. 1c; historical same-spectrum slot intervention remains secondary | Main identification + discrete criterion; archived permutation identity gap stated in appendix |
+| Integer kernel equivalence | CPU checker and proof, no-alias (0,pi), full Q/K bilinear kernel | Standard similarity corollary, not a task predictor |
+| Cosh / TailSpline are explicit constructors | Existing density and boundary objectives; T/C zero-sum exchange | Fig. 2; distinct objectives, no universal task optimum |
+| Cosh improves learning | Three-seed shared-cache MLA, unanchored midpoint endpoints | Main learning + Fig. 3; common evaluation chunks and aggregation in appendix. No finding of absent historical records or contamination is established |
+| Clean16K TailSpline > MrPro | A46;650 pairs: +3.39pp [1.53,5.34], QA +8pp [1,15] | Main Table2 / Fig3; at2L using the S4 table |
+| Clean32K TailSpline > MrPro | 2600 complete pairs: +11.72pp [10.32,13.11], 12/13 positive tasks | Main frozen result + Fig. 3; source-order 32K, not classic AUC or YaRN comparison |
+| Classic transfer remains valid | Llama +3.20pp, OLMo +49.23pp under their recorded contracts | Separate appendix curve panels; no clean/classic curve splice |
+| Native cost | Original Native table/gain; LM +0.01936 PPL; task T-Native -2.14pp [-6.14,1.92] | LM cost; no lossless/noninferiority claim |
+| Residual T/C effect unresolved | E1 raw audit V2: -0.41pp [-2.63,1.82], cross-batch | QUALIFIED_ONLY; E0 zero score drift with six changed sequences cannot promote it |
+| TailSpline natural QA | Complete 631 paired questions / 524 source contexts: T/P 41.08/40.88% F1, +0.20pp [−1.53,+1.89]; >8K −0.94pp [−4.15,+1.95] | Main natural-QA paragraph and full task appendix; ranking unresolved, BM remains separate |
+
+Sources: [current Llama result owner](../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md),
+[portable scored pairs and controls](../figs/field_gap_inputs.json),
+[decisions and experiment arrangements](COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md),
+[asset registry](evidence/asset_registry.json).
+
+No proposed A1, M1 or Native-Z5 outcome is used as manuscript evidence.
+Legacy source paths and result roles below remain historical provenance.
+
+
 更新：2026-09-14。主文以z价值和可执行构造为主线：§3受控收益，§4几何，§5 Cosh/TailSpline/BM，§6学习与零训练实证。作者提供的新OLMo TailSpline结果已与Llama一起纳入。当前修订见[修订目标](../REVISION_BRIEF.md)。
 
 ## 证据解读（2026-09-14）
