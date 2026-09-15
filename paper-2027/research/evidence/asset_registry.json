@@ -1022,7 +1022,7 @@
       "priority": "P1",
       "question": "Integer-position kernel equivalence",
       "evidence_grade": "Conditional similarity corollary: no-alias frequencies in (0,pi), full kernel, integer distances 0 and 1. CPU only.",
-      "manuscript_location": "§4 kernel equivalence / Appendix A.6",
+      "manuscript_location": "Section 4 short criterion; full corollary and proof in Appendix A.6",
       "interpretation": "Conditional similarity corollary: no-alias frequencies in (0,pi), full kernel, integer distances 0 and 1. CPU only.",
       "sources": [
         {
@@ -1099,6 +1099,32 @@
           "path": "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
           "availability": "tracked",
           "sha256": "80cf166200ba51c6cb07eab4b17b98be704447a34e0d8657b6efe1db80150ed6"
+        }
+      ]
+    },
+    {
+      "id": "A48",
+      "name": "Allocation distance response and positional-rank / task-quality separation",
+      "priority": "P0",
+      "question": "How do fixed-range allocations change distance response while preserving content coordinates?",
+      "evidence_grade": "Public-parameter CPU identities and full-pair geometry, combined with existing clean task reports; no new model runs",
+      "manuscript_location": "Section 4.3, Section 5.1; Appendix K.1-K.4 / Table 46",
+      "interpretation": "T/P rank ordering is opposite to clean16K/32K task quality. Scale response and phase intervals characterize fixed constructors, not a universal task-ranking rule or an identified mediation mechanism.",
+      "sources": [
+        {
+          "path": "paper-2027/figs/verify_allocation_response.py",
+          "availability": "tracked",
+          "sha256": "cac13bf836d198eee5d8efa7e5bf5e2dee3b26a9e630ec54729394ed75928b74"
+        },
+        {
+          "path": "paper-2027/figs/allocation_response_inputs.json",
+          "availability": "tracked",
+          "sha256": "a192217981c87003442df79b703d7f756de281ff51df8152913abc6c36fd6583"
+        },
+        {
+          "path": "paper-2027/figs/allocation_response_verification.json",
+          "availability": "tracked",
+          "sha256": "363b1dcb2f352d1d6ad752b202c2e73278079f267e8044cf05b1a0721f7da08b"
         }
       ]
     }

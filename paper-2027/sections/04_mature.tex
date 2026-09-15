@@ -7,9 +7,18 @@ The increments have a direct spectral meaning. For a geometric native grid with 
 x'_{l+q}-x'_{l+q-1}=c+\epsilon_q\log s.
 \label{eq:increment-log-gap}
 \end{equation}
-Their unit sum allocates exactly $\log s$ of extra span across the band. Beyond it, constant displacement $m=1$ preserves native adjacent gaps: the extra gap returns to zero. The remaining choice is how to reach this junction.
+Their unit sum allocates exactly $\log s$ of extra span across the band.
+At pair $q$, a fixed exponent $m_q$ assigns wavelength growth $s^{m_q}$;
+the endpoints fix the total span, while the interior profile determines
+how this growth is distributed across channels.
+The outer bands preserve two distance references: high frequencies retain
+$R_{\omega^N}(d)$, while the low-frequency tail satisfies
+$R_{\omega^N/s}(sd)=R_{\omega^N}(d)$. At the tail, constant displacement
+$m=1$ preserves native adjacent gaps, so the extra gap returns to zero.
 
-MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$. We instead smooth the transition into the fully interpolated tail, whose subsequent increments are zero:
+MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$.
+We formulate a discrete tail-connection problem by penalizing variation
+in the extra log gaps and their mismatch with the fully interpolated tail:
 \begin{equation}
 \min_{\epsilon:\,\sum_{q=1}^n\epsilon_q=1}
 \sum_{q=1}^{n-1}(\epsilon_{q+1}-\epsilon_q)^2+\epsilon_n^2.
@@ -24,17 +33,19 @@ m_q^{\rm TS}=\frac{q(3n^2+3n+1-q^2)}{n(n+1)(2n+1)}.
 \label{eq:tailspline}
 \end{equation}
 \end{theorem}
-Strict convexity and the tridiagonal stationarity system give Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the entry penalty $\epsilon_1^2$ yields the symmetric construction BM, with increments proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). Relative to MrPro, TailSpline accepts a larger entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$ (Fig.~\ref{fig:construction-contrast}). These guarantees solve the declared objectives; task value is tested below.
+Strict convexity and the tridiagonal stationarity system give Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the entry penalty $\epsilon_1^2$ yields the symmetric construction BM, with increments proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). Relative to MrPro, TailSpline accepts a larger entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$ (Fig.~\ref{fig:construction-contrast}). TailSpline also redistributes scaling across the entire transition:
+its wavelength multiplier is $s^{m_q^{\rm TS}}$, with
+$m_q^{\rm TS}\ge m_q^{\rm Pro}$ at every interior pair. On the Llama
+$s=4$ grid, the largest TailSpline/MrPro wavelength ratio is $1.766$.
+Appendix~\ref{sec:allocation-scale-response} derives this ordering and
+compares the response to scale with YaRN's frequency blend.
 
 \paragraph{What the comparison isolates.}
 TailSpline and MrPro retain the same outer bands and endpoints, so their
-comparison tests complete internal allocations. Total displacement is one
-statistic of that allocation. An additional control $C$ matches
-TailSpline's total displacement to test the remaining shape difference
-(Appendix~\ref{sec:tailspline-dose-control}). The completed classic diagnostic
-gives T--C $-0.41$ points in Full-13 AUC, with interval $[-2.63,1.82]$;
-T uses batch $1$ and C batch $2$, leaving this finer ordering unresolved
-(Appendix~\ref{sec:current-controls}).
+comparison tests complete internal allocations. At fixed support, total
+log-frequency displacement is a statistic of $z$. The control $C$ also
+matches this statistic to study the remaining shape difference
+(Appendices~\ref{sec:tailspline-dose-control} and~\ref{sec:current-controls}).
 
 \paragraph{Installation.}
 (1) Read the public native grid, reference length and scale $s$; (2) compute the $32/1$-turn band; (3) evaluate $m_k$, $\omega'_k=\omega_k^Ns^{-m_k}$ and $g=1+0.1\ln s$; (4) install before prefill, retaining one table across layers and input lengths. The baseline shares $g$. Construction costs $O(K)$ and leaves the rotary computation unchanged. Neither constructor reads weights, activations or calibration outputs.

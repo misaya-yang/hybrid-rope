@@ -76,6 +76,8 @@
 | A46 | TailSpline clean16K中间长度确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json)；650对、每任务50条，Full-13 `+3.39pp`、区间`[+1.53,+5.34]pp`；§6.1 / Table 2 / Fig. 4 / Appendix H.10 |
 | A47 | TailSpline–MrPro NIAH Full20确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)、[解释owner](../../../docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md#2-llama-s4niah长度深度诊断与full20确认)；720对/臂、36格，`−0.97pp`、区间`[−3.06,+1.11]pp`；总体未分胜负，三重复pilot的较大负点估计收缩；RULER retrieval内部诊断，不是独立benchmark |
 
+| A48 | 距离响应与位置有效秩/任务质量的区分 | [计算输入](../../figs/allocation_response_inputs.json)、[独立复算](../../figs/verify_allocation_response.py)、[核验结果](../../figs/allocation_response_verification.json)；§4.3 / §5.1 / Appendix K；完整pair秩与clean16K/32K任务排序相反，倍率和有限相位式刻画构造，不作为新任务预测器 |
+
 ## 使用时的解释边界
 
 - **A01**：matched support下仅改变30内点，三seed在2×/4×/8×均改善；几何对照配置源自FMRoPE，不作为方法排名。绝对四格NLL尚未追回，配对差已确认。

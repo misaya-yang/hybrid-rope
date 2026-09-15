@@ -1,0 +1,184 @@
+{
+  "seed": 20260915,
+  "scope": "Public-parameter algebra and CPU numerical checks; no model evaluation.",
+  "script_sha256": "b77a97f80e8f73f788ec772e9aee5e4d5eeca3598e80b20b4926bab2b4b6d4ce",
+  "matching": {
+    "cases": 240,
+    "max_orthogonal_attainment_error": 3.552713678800501e-15,
+    "min_orthogonal_slack": -2.220446049250313e-15,
+    "min_general_slack": -6.661338147750939e-16,
+    "min_capacity_slack": -2.220446049250313e-16,
+    "condition_numbers_up_to": 10000
+  },
+  "rank": {
+    "max_independent_continuous_error": 3.813838134192338e-12,
+    "windows": {
+      "8192": {
+        "T": {
+          "continuous_uniform": 7.06816742167486,
+          "integer_uniform": 7.068167258735279,
+          "integer_direct": 7.068167258737542,
+          "integer_causal_pair": 6.828792888280949,
+          "fp32_continuous": 7.068167469196251
+        },
+        "P": {
+          "continuous_uniform": 7.716062773831096,
+          "integer_uniform": 7.716062573835908,
+          "integer_direct": 7.716062573838479,
+          "integer_causal_pair": 7.480235998774638,
+          "fp32_continuous": 7.716062816314336
+        },
+        "C": {
+          "continuous_uniform": 7.104380864924056,
+          "integer_uniform": 7.104380700356422,
+          "integer_direct": 7.104380700358704,
+          "integer_causal_pair": 6.856077180231929,
+          "fp32_continuous": 7.104380900088431
+        }
+      },
+      "16384": {
+        "T": {
+          "continuous_uniform": 8.283391018505306,
+          "integer_uniform": 8.283390961676702,
+          "integer_direct": 8.28339096167861,
+          "integer_causal_pair": 7.953699965470855,
+          "fp32_continuous": 8.283391033133018
+        },
+        "P": {
+          "continuous_uniform": 8.739886925952273,
+          "integer_uniform": 8.739886864829225,
+          "integer_direct": 8.739886864831279,
+          "integer_causal_pair": 8.482204274472805,
+          "fp32_continuous": 8.739886940728852
+        },
+        "C": {
+          "continuous_uniform": 8.3291393185028,
+          "integer_uniform": 8.329139263287194,
+          "integer_direct": 8.329139263289115,
+          "integer_causal_pair": 7.997456405798709,
+          "fp32_continuous": 8.32913935425825
+        }
+      },
+      "32768": {
+        "T": {
+          "continuous_uniform": 10.077270344023034,
+          "integer_uniform": 10.077270323039548,
+          "integer_direct": 10.077270323040446,
+          "integer_causal_pair": 9.567030020706902,
+          "fp32_continuous": 10.077270343801942
+        },
+        "P": {
+          "continuous_uniform": 10.214887633656446,
+          "integer_uniform": 10.214887612203928,
+          "integer_direct": 10.214887612204846,
+          "integer_causal_pair": 9.800188663628575,
+          "fp32_continuous": 10.21488765503267
+        },
+        "C": {
+          "continuous_uniform": 10.092552781308022,
+          "integer_uniform": 10.092552760821635,
+          "integer_direct": 10.092552760822535,
+          "integer_causal_pair": 9.59266764009162,
+          "fp32_continuous": 10.092552774825986
+        }
+      }
+    }
+  },
+  "phase": {
+    "max_direct_sum_error": 4.6629367034256575e-15,
+    "comparisons": {
+      "8192": {
+        "T/P": {
+          "slot_rms": 0.6428967922589892,
+          "best_orthogonal_rms": 0.46866383648419974,
+          "max_unwrapped_phase": 27.046977324804544
+        },
+        "T/C": {
+          "slot_rms": 0.2990885131868541,
+          "best_orthogonal_rms": 0.2990885131868541,
+          "max_unwrapped_phase": 2.6678842998794896
+        }
+      },
+      "16384": {
+        "T/P": {
+          "slot_rms": 0.6691416393858064,
+          "best_orthogonal_rms": 0.5236375477932815,
+          "max_unwrapped_phase": 54.09725668566388
+        },
+        "T/C": {
+          "slot_rms": 0.42046246084997574,
+          "best_orthogonal_rms": 0.3936047629201047,
+          "max_unwrapped_phase": 5.336094308988607
+        }
+      },
+      "32768": {
+        "T/P": {
+          "slot_rms": 0.6875425083757736,
+          "best_orthogonal_rms": 0.5940326935758407,
+          "max_unwrapped_phase": 108.19781540738255
+        },
+        "T/C": {
+          "slot_rms": 0.4483293207254365,
+          "best_orthogonal_rms": 0.4374619392330542,
+          "max_unwrapped_phase": 10.67251432720684
+        }
+      }
+    }
+  },
+  "boundary": {
+    "boundary_phase": {
+      "T": {
+        "entry_increment": 0.08571428571428572,
+        "exit_increment": 0.00952380952380949,
+        "entry_monotone_distance_limit": 1379.335859711183,
+        "exit_monotone_distance_limit": 1007514.7537349424
+      },
+      "P": {
+        "entry_increment": 0.006535947712418301,
+        "exit_increment": 0.11111111111111116,
+        "entry_monotone_distance_limit": 17133.00720639192,
+        "exit_monotone_distance_limit": 80407.711449319
+      },
+      "C": {
+        "entry_increment": 0.09691876750700279,
+        "exit_increment": 0.020728291316526537,
+        "entry_monotone_distance_limit": 1229.1845583287025,
+        "exit_monotone_distance_limit": 459318.5012706646
+      }
+    },
+    "centered_eigenvalue_asymptotics": [
+      {
+        "x": 0.1,
+        "largest_ratio": 0.9995001190310862,
+        "smallest_ratio": 0.9996429166606545
+      },
+      {
+        "x": 0.01,
+        "largest_ratio": 0.9999950000119048,
+        "smallest_ratio": 0.9999964285773809
+      },
+      {
+        "x": 0.001,
+        "largest_ratio": 0.9999999500000012,
+        "smallest_ratio": 0.9999999642857149
+      },
+      {
+        "x": 0.0001,
+        "largest_ratio": 0.9999999995,
+        "smallest_ratio": 0.9999999996428571
+      }
+    ],
+    "entry_three_slot_strict_amplitude_bound": 0.02801120448179271
+  },
+  "content": {
+    "cases": 100,
+    "max_finite_odds_error": 2.220446049250313e-16,
+    "max_phase_path_derivative_error": 9.239910725433731e-09,
+    "max_readout_error": 6.106226635438361e-16,
+    "nonzero_mean_counterexample": {
+      "covariance_only": 1.0,
+      "actual_second_moment": 5.0
+    }
+  },
+  "status": "PASS"
+}

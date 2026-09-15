@@ -28,12 +28,16 @@ python3 figs/allocation_design.py
 python3 figs/make_allocation_value.py
 python3 figs/make_fig_exact_range_control.py
 python3 figs/verify_explicit_geometry.py
+python3 figs/verify_allocation_response.py
 python3 figs/verify_profile_diagnostics.py
 python3 figs/verify_recovered_assets.py
 python3 figs/verify_routing_schedule.py
 ```
 
 These check the packaged mathematical examples or recorded numerical summaries.
+The allocation-response check reproduces Appendix K's full-pair ranks, scale
+response, finite-profile ordering, phase differences and slow-content bound.
+Its task values are existing report-backed observations, not new model outputs.
 They do not rerun training or model generation. Figures already included in the
 archive are sufficient to compile the manuscript.
 

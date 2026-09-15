@@ -2164,6 +2164,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/INDEPENDENT_MIDBAND_THEORY_ANALYSIS_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/KEY_EXPERIMENT_COMPASS_20260914.md",
       "area": "docs",
       "category": "document"
@@ -2309,6 +2314,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/THREE_BAND_RESEARCH_SYNTHESIS_FOR_PRO_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/THREE_INTERFACE_REPLAY_THEORY_AUDIT_20260913.md",
       "area": "docs",
       "category": "document"
@@ -2319,12 +2329,27 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_FINITE_WINDOW_AUDIT_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/WEB_PRO_POST_TAILSPLINE_MRPRO_PROMPT_TEMPLATE_20260914.md",
       "area": "docs",
       "category": "document"
     },
     {
       "path": "docs/research/next_stage_20260912/WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_THREE_BAND_FOLLOWUP_PROMPT_20260915.md",
       "area": "docs",
       "category": "document"
     },
@@ -5044,6 +5069,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/analyze_midband_scale_response.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/benchmark_prefill_chunks.py",
       "area": "experiments",
       "category": "code"
@@ -5062,6 +5092,21 @@
       "path": "experiments/iclr2027_three_track_sprint_20260915/llama_s16_128k_report.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/midband_scale_analysis/midband_scale_response.png",
+      "area": "experiments",
+      "category": "other"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/midband_scale_analysis/midband_scale_response.svg",
+      "area": "experiments",
+      "category": "other"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/midband_scale_analysis/midband_scale_response_checks.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/mrrope_niah_heatmap_report.py",
@@ -5154,6 +5199,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/run_clean16k_ruler50.sh",
       "area": "experiments",
       "category": "code"
@@ -5227,6 +5277,16 @@
       "path": "experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/verify_web_pro_finite_window.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/web_pro_finite_window_checks.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
     },
     {
       "path": "experiments/index.md",
@@ -5655,6 +5715,31 @@
     },
     {
       "path": "experiments/mla_yarn_short_s42/train.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_halfturn_phase_20260915/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_halfturn_phase_20260915/prepare_ruler.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_halfturn_phase_20260915/report_ruler.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_halfturn_phase_20260915/run_ruler_gate.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_halfturn_phase_20260915/tables.py",
       "area": "experiments",
       "category": "code"
     },
@@ -7979,6 +8064,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/appendix/a11_allocation_response.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/appendix/a1_proofs.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8394,6 +8484,16 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/allocation_response_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/allocation_response_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/allocation_value_inputs.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
@@ -8804,6 +8904,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/figs/verify_allocation_response.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/verify_explicit_geometry.py",
       "area": "paper-2027",
       "category": "code"
@@ -8932,6 +9037,11 @@
       "path": "paper-2027/research/FIELD_GAP_REVISION_VALIDATION_20260915.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md",
+      "area": "paper-2027",
+      "category": "document"
     },
     {
       "path": "paper-2027/research/ICLR2027_STABLE7_STRATEGY_20260915.md",
@@ -10439,6 +10549,21 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/common_prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
       "area": "paper-2027",
       "category": "navigation"
@@ -10517,6 +10642,61 @@
       "path": "paper-2027/research/pro_field_map_validation.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/MANUSCRIPT_DELTA.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/MANUSCRIPT_DELTA_v1.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/SELF_REVIEW.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/THEORY_SYNTHESIS.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/build_proposal.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/candidate.patch",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/candidate_v1.patch",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/proposal_manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/proposal_manifest_v1.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/theory_revision_proposal_20260915/proposed_appendix.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
     },
     {
       "path": "paper-2027/research/three_completions/README.md",
@@ -13694,6 +13874,16 @@
       "category": "code"
     },
     {
+      "path": "tests/test_native_halfturn_phase.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_halfturn_report.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_native_qk_calibration.py",
       "area": "tests",
       "category": "code"
@@ -14478,6 +14668,8 @@
     "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
     "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/disposition.md",
     "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/disposition.md",
-    "paper-2027/research/audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md"
+    "paper-2027/research/audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md",
+    "paper-2027/research/ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md",
+    "docs/research/next_stage_20260912/WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md"
   ]
 }
