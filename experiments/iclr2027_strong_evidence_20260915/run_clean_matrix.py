@@ -14,9 +14,9 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
-import tempfile
 from typing import Any
 
 from experiments.fixed_rope_three_interfaces_20260913 import TABLE_FORMAT
@@ -35,6 +35,9 @@ ARM_SPECS = {
 }
 PLAN_STATUS = "STRONG_CLEAN_MATRIX_PLAN_V1"
 LAUNCH_STATUS = "STRONG_CLEAN_MATRIX_ARM_CONTRACT_V1"
+MATRIX_SOURCE_SCHEMA = "STRONG_MATRIX_SOURCE_V1"
+EVALUATION_CONTRACT = "full13-source-order-unpadded-ruler-official-batch1-v1"
+_SLUG = re.compile(r"^[a-z0-9][a-z0-9_.-]*$")
 
 
 def sha256(path: Path) -> str:
@@ -399,6 +402,93 @@ def validate_report(args: argparse.Namespace, complete: list[str], path: Path, r
         raise ValueError(f"matched report contract drift: {path}")
 
 
+def matrix_source_payload(
+    args: argparse.Namespace, manifest: dict, complete: list[str], report: dict,
+) -> dict:
+    """Adapt one validated matched report to the strict matrix-source schema."""
+    scale = int(args.scale)
+    native_length = int(manifest["model_identity"]["native_length"])
+    required_arms = ["tailspline", "mrpro"] + (["native"] if "native" in complete else [])
+    required_contrasts = [
+        {"candidate": "tailspline", "baseline": baseline}
+        for baseline in required_arms if baseline != "tailspline"
+    ]
+    cells = []
+    for length in args.lengths:
+        length_key = str(length)
+        arms = {}
+        for arm in required_arms:
+            summary = report["summaries"][arm]["by_length"].get(length_key)
+            if not isinstance(summary, dict) or set(summary.get("tasks", {})) != set(RULER_TASKS):
+                raise ValueError(f"matched report lacks complete RULER-13 at {length}/{arm}")
+            task_rows = [int(summary["tasks"][task].get("rows", -1)) for task in RULER_TASKS]
+            if task_rows != [args.rows_per_task] * len(RULER_TASKS):
+                raise ValueError(f"matched report has incomplete task rows at {length}/{arm}")
+            arms[arm] = {
+                "status": "complete", "rows": sum(task_rows),
+                "score": float(summary["task_macro_official"]),
+            }
+        contrasts = []
+        for baseline in required_arms[1:]:
+            source = report["contrasts"][baseline]
+            delta = float(source["delta_by_length"][length_key])
+            expected_delta = arms["tailspline"]["score"] - arms[baseline]["score"]
+            if abs(delta - expected_delta) > 1e-10:
+                raise ValueError(f"matched report contrast disagrees with scores at {length}/{baseline}")
+            ci95 = source.get("bootstrap", {}).get("delta_by_length_interval95", {}).get(length_key)
+            if not isinstance(ci95, list) or len(ci95) != 2:
+                raise ValueError(f"matched report lacks paired interval at {length}/{baseline}")
+            contrasts.append({
+                "candidate": "tailspline", "baseline": baseline, "delta": delta,
+                "ci95": [float(ci95[0]), float(ci95[1])],
+                "uncertainty_unit": "paired_prompts",
+            })
+        cells.append({
+            "length_tokens": length,
+            "length_multiple": length / native_length,
+            "expected_rows_per_arm": len(RULER_TASKS) * args.rows_per_task,
+            "paired_rows": len(RULER_TASKS) * args.rows_per_task,
+            "arms": arms,
+            "contrasts": contrasts,
+        })
+    length_label = "_".join(f"{length / native_length:g}l" for length in args.lengths)
+    payload = {
+        "schema": MATRIX_SOURCE_SCHEMA,
+        "status": "complete",
+        "experiment_id": (
+            f"strong_{args.model_id}_s{scale}_clean_ruler_{length_label}_r{args.rows_per_task}"
+        ),
+        "identity": {
+            "model_id": args.model_id,
+            "benchmark_family": "ruler",
+            "data_contract": "clean",
+            "scale": scale,
+            "native_length_tokens": native_length,
+            "evaluation_contract": EVALUATION_CONTRACT,
+            "metric": {"name": "task_macro_official", "direction": "higher", "unit": "fraction"},
+            "expected_length_multiples": [length / native_length for length in args.lengths],
+            "required_arms": required_arms,
+            "required_contrasts": required_contrasts,
+        },
+        "cells": cells,
+    }
+    from experiments.iclr2027_strong_evidence_20260915.summarize_matrix import normalize_source
+    normalize_source(payload, source_name="matrix_source.json")
+    return payload
+
+
+def write_or_validate_matrix_source(path: Path, payload: dict) -> None:
+    from experiments.iclr2027_strong_evidence_20260915.summarize_matrix import normalize_source
+    if path.exists():
+        existing = read_json(path)
+        normalize_source(existing, source_name=path.name)
+        if existing != payload:
+            raise ValueError(f"existing matrix source belongs to a different complete report: {path}")
+        return
+    atomic_json(path, payload)
+    normalize_source(read_json(path), source_name=path.name)
+
+
 def _run(command: list[str], *, cwd: Path, env: dict[str, str]) -> None:
     subprocess.run(command, cwd=cwd, env=env, check=True)
 
@@ -431,7 +521,11 @@ def build_plan(args: argparse.Namespace) -> tuple[dict, list[Path], list[dict]]:
     if len(args.lengths) != len(set(args.lengths)) or any(value <= 0 for value in args.lengths):
         raise ValueError("--lengths must contain unique positive values")
     args.lengths = tuple(args.lengths)
-    if args.rows_per_task <= 0 or args.scale <= 1 or args.batch_size != 1 or args.prefill_chunk_size < 0:
+    if (
+        args.rows_per_task <= 0 or args.scale <= 1 or not float(args.scale).is_integer()
+        or int(args.scale) not in {2, 4, 16} or args.batch_size != 1
+        or args.prefill_chunk_size < 0 or not _SLUG.fullmatch(args.model_id)
+    ):
         raise ValueError("rows/scale/prefill are invalid; clean confirmation is fixed to batch-size 1")
     for path in (args.model / "config.json", args.data_manifest, args.python):
         if not path.is_file():
@@ -439,6 +533,9 @@ def build_plan(args: argparse.Namespace) -> tuple[dict, list[Path], list[dict]]:
     manifest, panels = resolve_panels(args.data_root, args.lengths)
     if manifest.get("model_identity", {}).get("config_sha256") != sha256(args.model / "config.json"):
         raise ValueError("clean root manifest belongs to a different checkpoint config")
+    geometry = tables.model_geometry(read_json(args.model / "config.json"))
+    if int(manifest.get("model_identity", {}).get("native_length", -1)) != geometry["native_length"]:
+        raise ValueError("clean root manifest has a different checkpoint Native length")
     rows = validate_panels(
         manifest, panels, model_id=args.model_id, scale=args.scale,
         lengths=args.lengths, rows_per_task=args.rows_per_task,
@@ -459,6 +556,7 @@ def build_plan(args: argparse.Namespace) -> tuple[dict, list[Path], list[dict]]:
         "prefill_chunk_size": args.prefill_chunk_size, "gpu_lock": str(args.gpu_lock),
         "tables": {arm: table_command(args, arm, table_paths[arm]) for arm in arms},
         "evaluations": eval_commands, "matched_report": planned_report,
+        "matrix_source": str(args.out / "reports" / "matrix_source.json"),
     }
     return plan, panels, rows
 
@@ -501,7 +599,14 @@ def execute(args: argparse.Namespace, plan: dict, panels: list[Path], rows: list
         else:
             _run(command, cwd=repo, env=environment)
             validate_report(args, complete, output_report, len(rows))
-    return {"status": "COMPLETE", "arms": complete, "rows_per_arm": len(rows), "report": str(output_report)}
+        manifest = read_json(args.data_root / "manifest.json")
+        matrix_source = args.out / "reports" / "matrix_source.json"
+        payload = matrix_source_payload(args, manifest, complete, read_json(output_report))
+        write_or_validate_matrix_source(matrix_source, payload)
+    return {
+        "status": "COMPLETE", "arms": complete, "rows_per_arm": len(rows),
+        "report": str(output_report), "matrix_source": str(matrix_source),
+    }
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -533,9 +638,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     args.data_manifest = args.data_manifest.resolve()
     args.python = args.python.resolve()
     if args.gpu_lock is None:
-        visible = os.environ.get("CUDA_VISIBLE_DEVICES", "0").split(",", 1)[0]
-        device = "".join(value if value.isalnum() else "_" for value in visible) or "0"
-        args.gpu_lock = Path(tempfile.gettempdir()) / f"hybrid_rope_clean_gpu_{device}.lock"
+        args.gpu_lock = Path("/tmp/hybrid-rope-gpu0.lock")
     else:
         args.gpu_lock = args.gpu_lock.resolve()
     return args

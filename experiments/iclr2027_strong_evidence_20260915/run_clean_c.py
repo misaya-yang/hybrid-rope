@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from contextlib import contextmanager
 from dataclasses import dataclass
+import fcntl
 import json
 import math
 import os
@@ -35,6 +37,7 @@ NON_QA_TASKS = TASKS[:11]
 QA_TASKS = TASKS[11:]
 SUPPORTED_LENGTHS = (16384, 32768)
 DEFAULT_ROWS_PER_TASK = {16384: 50, 32768: 200}
+GPU_LOCK_PATH = Path("/tmp/hybrid-rope-gpu0.lock")
 RUNTIME_KEYS = (
     "generation_length_caps",
     "limit_per_cell",
@@ -252,6 +255,21 @@ def run_command(command: list[str], *, repo: Path, log_path: Path | None = None)
         subprocess.run(command, check=True, cwd=repo, env=env, stdout=stream, stderr=subprocess.STDOUT)
 
 
+@contextmanager
+def single_gpu_lock(path: Path | None = None):
+    """Hold the shared GPU0 lock, failing before any model process can start."""
+    path = GPU_LOCK_PATH if path is None else path
+    with path.open("a+") as stream:
+        try:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise ValueError(f"GPU0 is already owned via {path}") from error
+        try:
+            yield
+        finally:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+
+
 def table_command(args: argparse.Namespace, table: Path) -> list[str]:
     return [
         str(args.python), "-m", "experiments.fixed_rope_three_interfaces_20260913.tables",
@@ -344,6 +362,8 @@ def resolved_plan(args: argparse.Namespace) -> tuple[dict, list[Job], Path, Path
         "reuse_arms": ["tailspline", "mrpro"],
         "new_arm_only": "dose_control_c",
         "batch_size": 1,
+        "gpu_lock": str(GPU_LOCK_PATH),
+        "gpu_lock_mode": "exclusive_nonblocking_execute_only",
         "forbidden_launcher": "run_tailspline_llama_s4_matched_dose_c.sh",
         "out": str(out),
         "table_command": table_command(args, control_receipt),
@@ -362,7 +382,7 @@ def resolved_plan(args: argparse.Namespace) -> tuple[dict, list[Job], Path, Path
     return plan, jobs, out, tailspline_receipt, control_receipt, mrpro_receipt
 
 
-def execute(args: argparse.Namespace) -> dict:
+def _execute_under_lock(args: argparse.Namespace) -> dict:
     plan, jobs, out, tailspline_receipt, control_receipt, mrpro_receipt = resolved_plan(args)
     source_roots = {
         args.data_root / "tailspline_llama_s4_classic",
@@ -435,6 +455,13 @@ def execute(args: argparse.Namespace) -> dict:
     temporary.write_text(json.dumps(receipt, indent=2) + "\n")
     temporary.replace(out / "execution_receipt.json")
     return receipt
+
+
+def execute(args: argparse.Namespace) -> dict:
+    # This scope deliberately includes table validation, every C shard, and both
+    # reports so no other strong-evidence wrapper can enter GPU0 mid-experiment.
+    with single_gpu_lock():
+        return _execute_under_lock(args)
 
 
 def build_parser() -> argparse.ArgumentParser:

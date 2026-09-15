@@ -21,7 +21,7 @@ cd "${repo}"
 export PYTHONPATH=.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
-gpu_lock=/tmp/hybrid_rope_clean_gpu_${CUDA_VISIBLE_DEVICES:-0}.lock
+gpu_lock=/tmp/hybrid-rope-gpu0.lock
 exec 9>"${gpu_lock}"
 if ! flock -n 9; then
   printf 'REFUSE: another strong-evidence job owns %s\n' "${gpu_lock}" >&2
@@ -168,9 +168,15 @@ PY
 
 run_arm() {
   local arm=$1 run=${root}/runs/$1
-  if [[ "$(validate_state "${arm}")" == "COMPLETE" ]]; then
+  local state
+  state=$(validate_state "${arm}")
+  if [[ "${state}" == "COMPLETE" ]]; then
     printf 'SKIP_COMPLETE %s\n' "${arm}"
     return
+  fi
+  if [[ "${state}" != "INCOMPLETE" ]]; then
+    printf 'REFUSE: unexpected validation state for %s: %s\n' "${arm}" "${state}" >&2
+    exit 1
   fi
   batch_args=(--batch-size "${batch_size}")
   if [[ "${left_pad_batches}" == "true" ]]; then batch_args+=(--left-pad-batches); fi
@@ -180,7 +186,8 @@ run_arm() {
     "${batch_args[@]}" --static-table-json "${classic}/tables/${arm}.json" \
     --table-label "olmo2_1b_s4_naturalqa631_${arm}" --out "${run}" --execute \
     >"${root}/logs/${arm}.log" 2>&1
-  if [[ "$(validate_state "${arm}")" != "COMPLETE" ]]; then
+  state=$(validate_state "${arm}")
+  if [[ "${state}" != "COMPLETE" ]]; then
     printf 'REFUSE: %s returned without a complete validated run\n' "${arm}" >&2
     exit 1
   fi

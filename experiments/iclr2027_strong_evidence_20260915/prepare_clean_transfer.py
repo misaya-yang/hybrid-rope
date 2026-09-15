@@ -64,8 +64,8 @@ def _scale_label(scale: float) -> str:
 
 
 def _validate_model_id(model_id: str) -> str:
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", model_id):
-        raise ValueError("--model-id must be a portable logical identifier")
+    if not re.fullmatch(r"[a-z0-9][a-z0-9._-]*", model_id):
+        raise ValueError("--model-id must be a portable lowercase logical identifier")
     return model_id
 
 
