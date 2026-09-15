@@ -1,6 +1,6 @@
 # 面向强接收与突出研究评价的实验计划
 
-更新：2026-09-15。**交付状态：执行规格已完成；本轮没有启动GPU、下载数据或修改远端。**
+更新：2026-09-15。**交付状态：执行规格与X1--X7通用入口已完成；入口测试不等于模型实验完成。**
 目标是增强论文的可推广方法价值和科学认识，不把模拟评分当作录用概率。
 
 ## 1. 核心决策
@@ -48,13 +48,13 @@ YaRN仍后置；本计划列出其价值，不自动改变其停放状态。
 
 | ID / 优先级 | 实验 | 新增工作量 | 代码状态 | 主要论文落点 |
 |---|---|---:|---|---|
-| X1 / P0 | OLMo S4，clean8K/16K，Full13×50，T/P | 2,600次生成 | 核心准备器/评估器可用，需通用包装器 | 第二模型的同合同确认 |
-| X2 / P0 | Qwen2.5-3B S4，clean64K/128K，Full13×50，T/P | 2,600次生成 | 同上 | 更长native范围下的固定规则迁移 |
-| X3 / P0 | Llama S4，LongBench-v2实际输入8K–32K的完整可容纳子集，T/P | 2N；N由CPU长度普查确定 | 需数据适配与官方评分接入 | 自然长文质量 |
-| X4 / P1 | Llama S4，C在原clean16K/32K面板；复用T/P | 3,250次生成 | C构表和评估器可用，需新clean包装器 | 完整配置效应与残余形状的分解 |
-| X5 / P1 | Llama8K clean Full13×50，Native/T/P | 1,950次生成 | 通用包装器复用X1实现 | 同一部署表的native取舍 |
+| X1 / P0 | OLMo S4，clean8K/16K，Full13×50，T/P | 2,600次生成 | 通用入口已实现并测试；服务器另已冻结16K×200资产，GPU未跑 | 第二模型的同合同确认 |
+| X2 / P0 | Qwen2.5-3B S4，clean64K/128K，Full13×50，T/P | 2,600次生成 | 通用入口已实现并测试；CPU资产与GPU结果未生成 | 更长native范围下的固定规则迁移 |
+| X3 / P0 | Llama S4，LongBench-v2实际输入8K–32K的完整可容纳子集，T/P | 2N；N由CPU长度普查确定 | 官方prompt/评分入口已实现并测试；官方数据尚未取得和普查 | 自然长文质量 |
+| X4 / P1 | Llama S4，C在原clean16K/32K面板；复用T/P | 3,250次生成 | clean C入口已实现并测试；GPU未跑 | 完整配置效应与残余形状的分解 |
+| X5 / P1 | Llama8K clean Full13×50，Native/T/P | 1,950次生成 | 通用入口已实现并测试；CPU资产与GPU结果未生成 | 同一部署表的native取舍 |
 | X6 / 并行 | 已冻结Llama S16/128K gate，T/P | 260次生成 + 20个128K LM文档前向 | **现成可执行**，48GB以上 | 倍率迁移与原论文长度场景 |
-| X7 / 条件增强 | S16自然任务En.Dia/En.QA与独立Full13确认 | 见§8 | 部分复用X3；需新增适配 | 超长真实应用与高倍率确认 |
+| X7 / 条件增强 | S16自然任务En.Dia/En.QA与独立Full13确认 | 见§8 | En.Dia/En.QA适配与评分已实现并测试；数据与GPU均未执行 | 超长真实应用与高倍率确认 |
 | X8 / 后置 | 官方YaRN在原clean32K面板单臂 | 2,600次生成 | 表和评估器可用，clean包装器待接入 | 基线横向定位 |
 
 X1/X2/X4/X5/X6合计 **10,660次新增生成**，另加X3的2N次与S16的20个LM文档前向。
@@ -215,11 +215,12 @@ index-ramp冒充官方YaRN。若实际端点无法完全匹配，准确写出变
 - `experiments.fixed_rope_three_interfaces_20260913.matched_generation_report`
 - `experiments.fixed_rope_three_interfaces_20260913.matched_naturalqa_report`
 
-### 必须先实现，不能伪称已有的入口
+### 已实现入口及其验收边界
 
-在`experiments/iclr2027_strong_evidence_20260915/`增加以下薄包装，不重写模型评估内核：
+以下薄包装已在`experiments/iclr2027_strong_evidence_20260915/`实现并通过本地测试；
+它们不重写模型评估内核，也不把代码通过写成实验结果：
 
-| 新文件 | 职责 | 实现完成判据 |
+| 文件 | 职责 | 已验证边界 |
 |---|---|---|
 | `prepare_clean_transfer.py` | 调用既有source-order准备器与unpadded converter；显式model/caps/counts/seed/QA offset | 正确模型名与tokenizer身份；13×50完整；不产生LLAMA字样的Qwen/OLMo合同 |
 | `run_clean_matrix.py` | X1/X2/X5逐臂执行、续跑、报告 | 默认打印计划；`--execute`才运行；单GPU锁；已有完成臂不重复 |
