@@ -144,10 +144,10 @@ def chunked_greedy_tokens(model, ids, *, max_new_tokens, eos_ids, prefill_chunk_
         total = stop
         del output
     generated = []
-    for _ in range(max_new_tokens):
+    for step in range(max_new_tokens):
         token = logits.argmax(dim=-1)
         value = int(token.item()); generated.append(value)
-        if value in eos_ids:
+        if value in eos_ids or step + 1 == max_new_tokens:
             break
         output = model(input_ids=token[:, None], attention_mask=ids.new_ones((1, total + 1)),
                        past_key_values=cache, use_cache=True,
@@ -264,6 +264,8 @@ def main():
     parser.add_argument('--limit-per-cell',type=int,default=0,help='0 keeps every row; a positive limit is explicitly reported as a subset')
     parser.add_argument('--prefill-chunk-size',type=int,default=0,
                         help='0 uses stock generate; positive values enable exact-context chunked KV prefill')
+    parser.add_argument('--lm-prefill-chunk-size',type=int,default=0,
+                        help='0 uses direct no-cache LM scoring; positive values use exact-context cached chunks')
     parser.add_argument('--batch-size',type=int,default=1,
                         help='contiguous exact-length generation batch using Flash SDPA')
     parser.add_argument('--left-pad-batches',action='store_true',
@@ -279,11 +281,13 @@ def main():
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
                           'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
     lm_lengths=resolve_lm_lengths(args.lm_length_cap,manifest)
-    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0 or args.batch_size<1
+    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0
+            or args.lm_prefill_chunk_size<0 or args.batch_size<1
             or len(set(lm_lengths))!=len(lm_lengths)):
         raise ValueError('limits and prefill chunk size must be nonnegative')
     import numpy as np
     import torch
+    import transformers
     from transformers import AutoTokenizer
     from .recovery_v2_runtime import load_model
     from .runtime import validate_cuda
@@ -322,8 +326,19 @@ def main():
               'lengths':list(LENGTHS),'generation_length_caps':sorted({r['length_cap'] for r in rows}),
               'lm_enabled':bool(lm_path),'lm_limit_documents':args.lm_limit_documents,
               'lm_lengths':list(lm_lengths),
-              'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size,
+              'limit_per_cell':args.limit_per_cell,
+              'prefill_chunk_size':args.prefill_chunk_size,
+              'generation_prefill_strategy':('direct_generate_v1' if args.prefill_chunk_size==0 else 'dynamic_cache_lower_right_v1'),
+              'lm_prefill_chunk_size':args.lm_prefill_chunk_size,
+              'lm_execution_strategy':('direct_no_cache_v1' if args.lm_prefill_chunk_size==0 else 'dynamic_cache_exact_nll_v1'),
               'batch_size':args.batch_size,
+              'runtime_versions':{
+                  'torch':torch.__version__,'transformers':transformers.__version__,
+                  'model_dtype':'bfloat16','loss_logits_dtype':'float32',
+                  'attention_backend':'torch_sdpa_flash_only',
+                  'cache_type':'DynamicCache' if (args.prefill_chunk_size or args.lm_prefill_chunk_size) else None,
+                  'allow_tf32':bool(torch.backends.cuda.matmul.allow_tf32),
+              },
               **({'left_pad_batches':True} if args.left_pad_batches else {}),
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
@@ -408,7 +423,7 @@ def main():
             for document,length in expected[len(lm_saved):]:
                 tokens=torch.tensor(values[document,:length+1].copy(),device='cuda',dtype=torch.long).unsqueeze(0)
                 with torch.autocast('cuda',dtype=torch.bfloat16):record=lm_loss_rows(
-                    model,tokens,prefill_chunk_size=args.prefill_chunk_size)
+                    model,tokens,prefill_chunk_size=args.lm_prefill_chunk_size)
                 record.update(document=document,length=length)
                 stream.write(json.dumps(record)+'\n');stream.flush();lm_saved.append(record)
     cells=defaultdict(list)

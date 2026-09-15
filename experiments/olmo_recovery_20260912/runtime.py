@@ -59,6 +59,8 @@ def blackwell_chunked_causal_flash(module,query,key,value,attention_mask,dropout
     """Flash causal attention aligned to the lower-right of an accumulated KV cache."""
     if key.shape!=value.shape or query.shape[0]!=key.shape[0] or query.shape[-1]!=key.shape[-1]:
         raise RuntimeError('blackwell chunked path received incompatible Q/K/V shapes')
+    if query.shape[0]!=1:
+        raise RuntimeError('blackwell chunked path is restricted to one unpadded sequence')
     if query.shape[-2]>key.shape[-2]:
         raise RuntimeError('blackwell chunked path received more query than key positions')
     groups=int(getattr(module,'num_key_value_groups',query.shape[1]//key.shape[1]))

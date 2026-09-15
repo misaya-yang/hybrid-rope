@@ -27,6 +27,7 @@ def read_jsonl(path: Path) -> list[dict]:
 
 def load_run(path: Path, arm: str):
     status = json.loads((path / "status.json").read_text())
+    contract = json.loads((path / "contract.json").read_text())
     generated = read_jsonl(path / "generations.jsonl")
     lm = read_jsonl(path / "lm_rows.jsonl")
     if status != {"status": "COMPLETE", "rows": 130, "lm_rows": 10}:
@@ -36,7 +37,12 @@ def load_run(path: Path, arm: str):
     mapping = {str(row["row_id"]): row for row in generated}
     if len(mapping) != 130:
         raise ValueError(f"duplicate S16 generation row: {arm}")
-    return mapping, lm
+    expected_lm_chunk = int(contract.get("lm_prefill_chunk_size", -1))
+    actual_lm_chunks = {int(row.get("lm_prefill_chunk_size", -1)) for row in lm}
+    normalized_expected = 0 if expected_lm_chunk == 0 or expected_lm_chunk >= LENGTH else expected_lm_chunk
+    if actual_lm_chunks != {normalized_expected}:
+        raise ValueError(f"S16 LM strategy receipt drift: {arm}/{actual_lm_chunks}/{normalized_expected}")
+    return mapping, lm, contract
 
 
 def task_summary(mapping):
@@ -131,6 +137,16 @@ def main() -> None:
         for key in ("task", "length_cap", "prompt_sha256", "references"):
             if left.get(key) != right.get(key):
                 raise ValueError(f"S16 prompt identity drift: {row_id}/{key}")
+    runtime_keys = (
+        "prefill_chunk_size", "generation_prefill_strategy",
+        "lm_prefill_chunk_size", "lm_execution_strategy",
+        "batch_size", "runtime_versions",
+    )
+    runtime_contracts = {
+        arm: {key: runs[arm][2].get(key) for key in runtime_keys} for arm in ARMS
+    }
+    if runtime_contracts["tailspline"] != runtime_contracts["mrpro"]:
+        raise ValueError("S16 arms used different runtime contracts")
     summaries = {arm: task_summary(runs[arm][0]) for arm in ARMS}
     ppl = {arm: ppl_summary(runs[arm][1]) for arm in ARMS}
     ruler_delta = summaries["tailspline"]["macro"] - summaries["mrpro"]["macro"]
@@ -141,6 +157,7 @@ def main() -> None:
         "scale": 16,
         "native_length": 8192,
         "evaluation_length": LENGTH,
+        "runtime_contract": runtime_contracts["tailspline"],
         "rows_per_arm": 130,
         "ruler": {
             "tasks": list(TASKS), "rows_per_task": 10,
