@@ -2204,6 +2204,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/NATIVE_Z5_EXPLORATION_RESULT_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/OLMO_LORA_V2_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2255,6 +2260,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/SCALE_MODEL_TRANSFER_PLAN_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
       "area": "docs",
       "category": "document"
     },
@@ -4959,6 +4969,11 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -5027,6 +5042,11 @@
       "path": "experiments/iclr2027_three_track_sprint_20260915/proofpile_ppl_parity.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/README.md",
+      "area": "experiments",
+      "category": "navigation"
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/reports/batch_sensitivity_probe39.json",
@@ -5110,6 +5130,11 @@
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/runtime_probe_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/server_task_status.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -10304,6 +10329,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/reference_single/assessment.md",
       "area": "paper-2027",
       "category": "document"
@@ -10317,6 +10347,11 @@
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/review_protocol.md",
       "area": "paper-2027",
       "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
     },
     {
       "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
@@ -14207,6 +14242,11 @@
     "docs/research/history/index.md",
     "docs/research/index.md",
     "docs/research/next_stage_20260912/index.md",
+    "docs/research/next_stage_20260912/KEY_EXPERIMENT_COMPASS_20260914.md",
+    "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
+    "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
+    "docs/research/next_stage_20260912/NATIVE_Z5_EXPLORATION_RESULT_20260915.md",
+    "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
     "docs/research/protocols/index.md",
     "docs/research/results/index.md",
     "docs/research/reviews/index.md",
@@ -14227,6 +14267,9 @@
     "experiments/deepseek_mini_position/index.md",
     "experiments/evq_recovery/index.md",
     "experiments/index.md",
+    "experiments/iclr2027_three_track_sprint_20260915/README.md",
+    "experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md",
+    "experiments/iclr2027_three_track_sprint_20260915/reports/README.md",
     "experiments/joint_kkt_20260910/index.md",
     "experiments/kld_v2/index.md",
     "experiments/llama3_60dir_20260911/index.md",

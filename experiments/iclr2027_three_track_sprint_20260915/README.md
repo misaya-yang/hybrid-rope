@@ -3,6 +3,12 @@
 This directory turns the 2026-09-15 sprint plan into two non-overlapping GPU
 queues and CPU-only frozen assets. It does not add a curve search or a model.
 
+Current operations no longer follow the original two-queue order. Use
+[SERVER_TASK_LAYERS.md](SERVER_TASK_LAYERS.md) for the live/parked/high-memory
+handoff and [reports/README.md](reports/README.md) for completed portable reports.
+The old queue scripts are retained for provenance and must not be launched as the
+current queue.
+
 ## Queue ownership
 
 - Original GPU: finish clean TailSpline/MrPro, then Natural-QA631 and Native-Z5.
@@ -45,7 +51,7 @@ checkpoint or touch CUDA.
 The interpretation owner for the theory receipt is
 [THEORY_DEEPENING_CPU_VERIFICATION_20260915.md](../../docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md).
 
-Compact completed reports are stored in [reports](reports/). Large generation
+Compact completed reports are indexed in [reports/README.md](reports/README.md). Large generation
 streams remain on the experiment server and are identified by SHA256 in the
 Llama result owner; score-only changes reuse those streams.
 

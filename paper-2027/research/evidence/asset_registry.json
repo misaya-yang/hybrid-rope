@@ -35,19 +35,19 @@
         },
         {
           "path": "paper-2027/figs/make_m4_tradeoff.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "ed9f5720529adc9f5945f49b0a635e42e2a9a2f1a6c466e699e8f80011f529f9",
           "role": "derived joint operating-point display; original M4 owner unchanged"
         },
         {
           "path": "paper-2027/figs/m4_tradeoff_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "0950b1c2aa32ba455b14a7ac8f9dfb9daf2a01b9317ad8a4700d6a59bfc5f937",
           "role": "derived joint operating-point display; original M4 owner unchanged"
         },
         {
           "path": "paper-2027/figs/m4_tradeoff_points.csv",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "21f476c21a7d77f12d2bffdff3fa98a382192bb80168956adca451d797be86b1",
           "role": "derived joint operating-point display; original M4 owner unchanged"
         }
@@ -85,12 +85,12 @@
       "sources": [
         {
           "path": "paper-2027/research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md",
-          "availability": "local-untracked",
-          "sha256": "e9b55d6c017561c2abb03ab391e4b7b08a37069b43453d37901f657b385990a3"
+          "availability": "tracked",
+          "sha256": "55ff0a2e69d11f961228cde90fefd40e4869850731886db865a18a9a426fb84a"
         },
         {
           "path": "paper-2027/figs/finite_window_geometry.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "fedd90ce853b03f474856cfbc7745b08c7d2fe215b876a3ce220bf2c46e20556"
         }
       ]
@@ -194,7 +194,7 @@
         {
           "path": "data/curated/table18_mla_3seed_aggregate.json",
           "availability": "tracked",
-          "sha256": "ad751a26fee43939f644a8ee12e5e50b0003d0d490f790ce1cd85971902ffe8d"
+          "sha256": "8018fc1567df775efa9c0981ee4cf7439bbc64f1143219f804cd5a3d08d8b63b"
         },
         {
           "path": "results/eval_3seeds_full_results.json",
@@ -261,7 +261,7 @@
         },
         {
           "path": "paper-2027/figs/routing_protocol_receipts.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "605fd1431b86023cbbae0e3b844622c6f5d6eddcbc9d434a7ac406259cc6dfcc"
         }
       ]
@@ -504,7 +504,7 @@
       "sources": [
         {
           "path": "paper-2027/figs/profile_diagnostic_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "4a3d6c1f522a9798b6b6495a664b6238fa6692afa394370f20f19156767af764"
         },
         {
@@ -603,7 +603,7 @@
       "sources": [
         {
           "path": "paper-2027/figs/interval_development_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "182565c3bc66e0bf06c27d795ffeb3a902d5bbbda8cf9d8e25c5e5553f79a5d3"
         }
       ]
@@ -619,13 +619,13 @@
       "sources": [
         {
           "path": "paper-2027/sections/05_threeband.tex",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "a65f91c9bc50b4995fa84680095b6554fcfbf4531b4344d308c56ffe76a2bf01",
           "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
         },
         {
           "path": "paper-2027/figs/verify_interval_design.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "e445c3b531b92747cc608c75682649920e408c8392d8a667c434800c4b8f2aaa"
         }
       ]
@@ -826,8 +826,8 @@
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md",
-          "availability": "local-untracked",
-          "sha256": "7d4770ac681c53d0fc12d6438f2d57044b97cf4619d2b2a86989b7fd9141cc56"
+          "availability": "tracked",
+          "sha256": "ca2b18129bd4eb7577682622ab930af6ef23bb24e3cc663b901834f2235ef526"
         }
       ]
     },
@@ -842,12 +842,12 @@
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "978f105aab17fe642284a7ff9c221826efbfa0e5cdf9240269dd7cbe8365ada0"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "d1506c172a75baa095257b56e478cb5c7d699c82df7e7a132b2488d112b1c7af"
         },
         {
@@ -876,12 +876,12 @@
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "7714c5d6740b029d4aff02a349ae903681178fa5097cfc64781fec63bb1fd5c7"
         },
         {
           "path": "experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "304c6336551f3906d1a5eebf644693d4ba0ef96602768393fd53f1fbd80ce747"
         }
       ]
@@ -918,13 +918,13 @@
         },
         {
           "path": "paper-2027/figs/field_gap_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "0e824df50a87208a4194f9995eeaefd83c5bc5c3af33b85a253f43bcd04130f6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         },
         {
           "path": "paper-2027/figs/verify_field_gap.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "5ac088b92e647a12c76b27f5abea6f532d82870562fd9867a08dd2b9b075bde6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         }
@@ -941,7 +941,7 @@
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "c2ab489e921dea8e3a5b605a2130123fe32ff8ae813325eadaf0051cf0dea042"
         }
       ]
@@ -1006,7 +1006,7 @@
         },
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "13d18ac130eae4a4b50aaabb9c1c42bc23ba3c8d0a8ab3d7c5ec978a89604ddf"
         }
       ]
@@ -1022,12 +1022,12 @@
       "sources": [
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "ad24cf40c0085ff26a133dc5b9b9e1587814617c5a961c701385de54646cbea8"
         },
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "b11f64fc507a6a133894bd4e026f7bd54b9ddd6ab86a289d6e4018104872ca2d"
         }
       ]
@@ -1043,18 +1043,18 @@
       "sources": [
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "f203c70f713bd6a8c9b9ef2130ca137eb7a73bb6c0740b8b8359a6f53d75ccde"
         },
         {
           "path": "paper-2027/figs/field_gap_inputs.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "0e824df50a87208a4194f9995eeaefd83c5bc5c3af33b85a253f43bcd04130f6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         },
         {
           "path": "paper-2027/figs/verify_field_gap.py",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "5ac088b92e647a12c76b27f5abea6f532d82870562fd9867a08dd2b9b075bde6",
           "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         }
@@ -1071,7 +1071,7 @@
       "sources": [
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json",
-          "availability": "local-untracked",
+          "availability": "tracked",
           "sha256": "12e0ac6c7e5d5047268bcf15d033d43a8e09886b86694b22c5f0f0eb391b540b"
         }
       ]

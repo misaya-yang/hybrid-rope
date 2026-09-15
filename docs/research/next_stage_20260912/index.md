@@ -1,43 +1,37 @@
 # 当前研究入口
 
-论文主线：z发现 → EVQ → full-z → 基于z变化超过YaRN/MrRoPE的实验现象 → 更优理论。
-三个设计问题是高频保持边界、低频缩放终点与中频过渡；全窗口质量用于评价。
+论文一级问题是：在频率支持与端点固定后，RoPE内部allocation是否仍是可识别、可设计并
+参与学习的变量。零训练是核心落地；exact TailSpline是当前重点展开的冻结部署构造，Cosh
+保留学习期构造证据。BM、YaRN、旧mix075和Native-Z探索不与TailSpline并列成方法合集。
 
-理论目标：从RoPE、注意力结构或非均匀傅里叶建模出发，提出不依赖权重/激活的通用构造；公开base、K、L、S可用于计算。模型前向用于验证，不用于拟合选表。详见[理论问题与完成标准](THEOREM_FIRST_ROPE_DESIGN_20260913.md)。
+模型前向只用于验证已经冻结的规则，不用于从权重、激活、Q/K/V、梯度或校准分数中拟合
+通用TailSpline构造。Native-Z5是单独标记的checkpoint-calibrated反事实，不改变这一边界。
 
-**2026-09-14：精确TailSpline是唯一新候选；Llama-3-8B与OLMo-2-1B的统一两臂判决
-均已完成，并在三个预注册family endpoint上胜MrPro。停止新曲线搜索。**
-方法、对照、交付与停止条件以[TailSpline方法与统一评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)为准。
-Llama结果见[经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：Full-13 AUC差
-`+3.20pp`且95%区间为`[+0.65,+5.79]pp`。OLMo前瞻确认见
-[跨模型结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：Full-13差`+49.23pp`，13任务
-AUC差全部为正；两模型均3/3方向通过。YaRN/BM与机制实验后置，不自动启动。
-既有零训练与冻结checkpoint边界见合同，执行沿用目标任务的有效授权。
+## 唯一读取顺序
 
-**2026-09-15：clean Llama 32K Full RULER-13×200确认完成。** TailSpline/MrPro为
-`68.27/56.54%`，差`+11.72pp`，95%区间`[+10.32,+13.11]pp`；12/13任务与四个
-family为正，输出健康更好。它是当前唯一hero experiment；Natural-QA631负责真实输出
-迁移，Cosh保留学习期证据，TailSpline是零训练核心实例。详见[关键实验罗盘](KEY_EXPERIMENT_COMPASS_20260914.md)。
-
-| 任务 | 入口 |
+| 需要回答的问题 | Canonical owner |
 |---|---|
-| 当前实现与结果定位 | [实验流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md) |
-| Llama数据、样本量与执行实现 | [资产审计](LLAMA_CLASSIC_ASSET_AUDIT_20260914.md) |
-| Llama TailSpline–MrPro主结果 | [经典＋clean结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：经典Full-13/NIAH/PPL 3/3通过；clean 32K 2,600配对prompt为`+11.72pp` |
-| OLMo TailSpline–MrPro跨模型确认 | [经典两臂结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，13任务AUC差全部为正 |
-| 理论深化CPU判决 | [15类算子核验](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)：`z→相位→竞争→value`、gain仿射条件、T−C边际配对及架构边界全部通过；不构成性能或中介证据 |
-| YaRN–MrPro理论对照 | [等剂量单交叉后移审计](MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)：CPU闭式已核验，YaRN按作者要求后置 |
-| 核实论文已有证据 | [证据索引](../../../paper-2027/research/evidence/index.md) |
-| Web Pro理论与论文组织讨论 | [十个研究问题与自包含背景](WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md) |
-| Web Pro终审后下一问 | [自包含长提示词模板](WEB_PRO_POST_TAILSPLINE_MRPRO_PROMPT_TEMPLATE_20260914.md)：完成后只替换真实结果区，不依赖GitHub完整检索 |
-| 外部AI分析或公司PC交接 | [独立问题清单](OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md) |
+| 当前有哪些成立、失败、运行中或仅准备好的实验？ | [关键实验罗盘](KEY_EXPERIMENT_COMPASS_20260914.md) |
+| TailSpline的定义、控制变量和统一评测合同是什么？ | [方法与评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
+| Llama classic、clean 16K/32K、Native与Natural-QA的完整结果是什么？ | [Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
+| OLMo跨模型确认是什么？ | [OLMo结果owner](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md) |
+| Qwen 32K/64K、NIAH小样本和ProofPile-only PPL说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
+| Native-Z5究竟成立了什么？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md) |
+| CPU理论核验支持到哪一层？ | [理论深化CPU结果](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md) |
+| 论文已登记证据及来源在哪里？ | [论文证据索引](../../../paper-2027/research/evidence/index.md) |
+| 服务器上哪些任务在跑、能跑或需要48GB以上？ | [服务器任务分层](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md) |
 
-fixed-u已退出；旧mix075、局部修复和Qwen后继队列不再执行。旧结果仍按原证据范围有效，不能充作精确TailSpline统一比较。
-追溯此前推导、迁移结果或旧计划时使用[历史研究目录](CATALOG_20260914.md)，无需作为当前任务前置阅读。
+## 当前执行边界
 
-本轮论文升级与后续实验的具体安排见[差距与决策映射](../../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)：摘要不放数字，clean主结果已入稿，Natural-QA优先，YaRN可选，M1待条件成立。
+- Llama NIAH Full20是当前唯一运行中的32GB任务；完成前没有可引用分数。
+- Llama S16 128K gate的CPU资产已冻结，但GPU尚未执行，且入口要求至少45,000 MiB显存。
+- YaRN代码处于停放状态；没有明确推进决定时不自动运行。
+- Native-Z5的V1、consensus和all-50 refit均已结束；现有结果不支持继续复用同一确认集调表。
+- fixed-u、proxy选表、曲线系数/band/gain追调及旧队列均已退出当前路线。
 
-2026-09-15两轮PDF审稿优化已完成；Natural-QA631已取得完整T/P结果并入稿：
-F1为41.08/40.88%，主差+0.20pp、簇配对区间[−1.53,+1.89]pp。
-见[Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)及
-[两轮审稿与处理](../../../paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md)。
+计划、CPU恒等式、开发proxy和真实模型结果必须分别标记；代码准备不等于GPU完成，报告摘要
+不等于raw-row复核。当前数值只在各结果owner中维护，其他文档通过链接引用，避免多处复制后
+发生漂移。
+
+追溯旧计划、历史候选或外部模型讨论时使用[历史研究目录](CATALOG_20260914.md)，不把它作为
+默认上下文。论文修改、编译与评审另走[论文入口](../../../paper-2027/index.md)。
