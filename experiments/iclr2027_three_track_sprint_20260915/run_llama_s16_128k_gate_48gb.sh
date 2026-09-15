@@ -6,6 +6,7 @@ plan=/root/autodl-tmp/today_rope_plan_20260914
 root=${plan}/tailspline_llama_s16_128k_gate
 model=/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct
 python_bin=/root/miniconda3/bin/python
+prefill_chunk_size=${PREFILL_CHUNK_SIZE:-8192}
 
 mkdir -p "${root}/runs" "${root}/logs" "${root}/reports"
 cd "${repo}"
@@ -32,7 +33,7 @@ PY
   "${python_bin}" -m experiments.olmo_recovery_20260912.recovery_v2_eval \
     --data "${root}/assets/ppl10/manifest.json" --model "${model}" --arm Native \
     --extra-panel "${root}/assets/full13/inputs.jsonl" --only-extra-panels \
-    --length-cap 131072 --lm-length-cap 131072 --prefill-chunk-size 8192 --batch-size 1 \
+    --length-cap 131072 --lm-length-cap 131072 --prefill-chunk-size "${prefill_chunk_size}" --batch-size 1 \
     --static-table-json "${root}/tables/${arm}.json" \
     --table-label "llama3_8b_s16_128k_${arm}" --out "${run}" --execute \
     >"${root}/logs/${arm}.log" 2>&1

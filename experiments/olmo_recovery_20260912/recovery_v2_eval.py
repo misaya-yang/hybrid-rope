@@ -160,11 +160,17 @@ def chunked_greedy_tokens(model, ids, *, max_new_tokens, eos_ids, prefill_chunk_
     return generated
 
 
-def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128):
+def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128, prefill_chunk_size=0):
     """Compute exact next-token NLL without importing unrelated evaluation data code."""
     import torch.nn.functional as F
     if token_ids.ndim != 2 or token_ids.shape[0] != 1 or token_ids.shape[1] < 2:
         raise ValueError('LM window must have shape [1,L+1]')
+    prediction_tokens = token_ids.shape[1] - 1
+    if prefill_chunk_size and prediction_tokens > prefill_chunk_size:
+        return chunked_lm_loss_rows(
+            model, token_ids, tail=tail, logit_chunk_size=chunk_size,
+            prefill_chunk_size=prefill_chunk_size,
+        )
     hidden=model.model(input_ids=token_ids[:,:-1],use_cache=False).last_hidden_state[0]
     targets=token_ids[0,1:];count=int(targets.numel());tail_count=min(int(tail),count)
     whole_sum=tail_sum=0.
@@ -175,7 +181,68 @@ def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128):
         whole_sum+=float(losses.sum().detach());overlap=max(start,count-tail_count)
         if overlap<stop:tail_sum+=float(losses[overlap-start:].sum().detach())
     return {'whole_loss_sum':whole_sum,'whole_target_count':count,
-            'tail128_loss_sum':tail_sum,'tail128_target_count':tail_count}
+            'tail128_loss_sum':tail_sum,'tail128_target_count':tail_count,
+            'lm_prefill_chunk_size':0}
+
+
+def chunked_lm_loss_rows(
+    model, token_ids, *, tail=128, logit_chunk_size=128, prefill_chunk_size,
+):
+    """Score every next token while retaining exact left context in a KV cache."""
+    import torch
+    import torch.nn.functional as F
+    from transformers import DynamicCache
+    from .runtime import register_blackwell_chunked_attention
+
+    count = token_ids.shape[1] - 1
+    if prefill_chunk_size <= 0 or logit_chunk_size <= 0:
+        raise ValueError('chunk sizes must be positive')
+    cache = DynamicCache()
+    whole_sum = 0.0
+    tail_sum = 0.0
+    tail_count = min(int(tail), count)
+    tail_start = count - tail_count
+    previous_attention = model.config._attn_implementation
+    register_blackwell_chunked_attention(model)
+    try:
+        for start in range(0, count, prefill_chunk_size):
+            stop = min(start + prefill_chunk_size, count)
+            piece = token_ids[:, start:stop]
+            output = model.model(
+                input_ids=piece,
+                attention_mask=token_ids.new_ones((1, stop)),
+                past_key_values=cache,
+                use_cache=True,
+                cache_position=torch.arange(start, stop, device=token_ids.device),
+                return_dict=True,
+            )
+            cache = output.past_key_values
+            hidden = output.last_hidden_state[0]
+            targets = token_ids[0, start + 1:stop + 1]
+            for local_start in range(0, stop - start, logit_chunk_size):
+                local_stop = min(local_start + logit_chunk_size, stop - start)
+                logits = F.linear(
+                    hidden[local_start:local_stop], model.lm_head.weight
+                ).float()
+                losses = F.cross_entropy(
+                    logits, targets[local_start:local_stop], reduction='none'
+                )
+                whole_sum += float(losses.sum())
+                global_start = start + local_start
+                global_stop = start + local_stop
+                overlap = max(global_start, tail_start)
+                if overlap < global_stop:
+                    tail_sum += float(losses[overlap - global_start:].sum())
+            del output, hidden
+    finally:
+        model.config._attn_implementation = previous_attention
+    return {
+        'whole_loss_sum': whole_sum,
+        'whole_target_count': count,
+        'tail128_loss_sum': tail_sum,
+        'tail128_target_count': tail_count,
+        'lm_prefill_chunk_size': int(prefill_chunk_size),
+    }
 
 
 def main():
@@ -340,7 +407,8 @@ def main():
         with lm_file.open('a') as stream,torch.inference_mode():
             for document,length in expected[len(lm_saved):]:
                 tokens=torch.tensor(values[document,:length+1].copy(),device='cuda',dtype=torch.long).unsqueeze(0)
-                with torch.autocast('cuda',dtype=torch.bfloat16):record=lm_loss_rows(model,tokens)
+                with torch.autocast('cuda',dtype=torch.bfloat16):record=lm_loss_rows(
+                    model,tokens,prefill_chunk_size=args.prefill_chunk_size)
                 record.update(document=document,length=length)
                 stream.write(json.dumps(record)+'\n');stream.flush();lm_saved.append(record)
     cells=defaultdict(list)
