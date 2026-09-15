@@ -1,0 +1,119 @@
+{
+  "all_passed": true,
+  "check_count": 15,
+  "checks": [
+    {
+      "cases": 12,
+      "maximum_error": 1.7763568394002505e-15,
+      "name": "01_normalized_z_and_native_span",
+      "status": "PASS"
+    },
+    {
+      "cases": 200,
+      "maximum_error": 2.3898970143959833e-10,
+      "name": "02_content_phase_logit_z_gradient",
+      "status": "PASS"
+    },
+    {
+      "cases": 200,
+      "maximum_error": 2.220446049250313e-16,
+      "name": "03_finite_softmax_reweighting",
+      "status": "PASS"
+    },
+    {
+      "cases": 200,
+      "maximum_error": 1.1102230246251565e-15,
+      "name": "04_exact_log_odds_shift",
+      "status": "PASS"
+    },
+    {
+      "cases": 200,
+      "maximum_error": 5.551115123125783e-16,
+      "name": "05_finite_value_covariance_identity",
+      "status": "PASS"
+    },
+    {
+      "cases": 100,
+      "maximum_error": 1.6568932444309586e-10,
+      "name": "06_attention_value_local_chain_rule",
+      "status": "PASS"
+    },
+    {
+      "cases": 100,
+      "maximum_error": 8.881784197001252e-16,
+      "minimum_adapted_eigenvalue": 1.2097912090191307,
+      "name": "07_local_adaptation_schur_complement",
+      "status": "PASS"
+    },
+    {
+      "cases": 100,
+      "maximum_error": 1.7763568394002505e-15,
+      "name": "08_gain_squared_logit_and_competitor_compensation",
+      "status": "PASS"
+    },
+    {
+      "cases": 100,
+      "maximum_error": 4.440892098500626e-16,
+      "minimum_non_affine_centered_residual": 0.21796052199179017,
+      "name": "09_gain_affine_softmax_recoverability",
+      "status": "PASS"
+    },
+    {
+      "cases": 200,
+      "maximum_error": 1.1343703754107537e-13,
+      "name": "10_threeband_phase_invariance_and_midband_optimum",
+      "status": "PASS"
+    },
+    {
+      "cases": 4,
+      "maximum_error": 0.0,
+      "minimum_first_difference": 0.0002796576452257445,
+      "minimum_second_difference": 2.713126374988273e-07,
+      "name": "11_yarn_convex_ramp_and_scale_saturation",
+      "status": "PASS"
+    },
+    {
+      "cases": 64,
+      "maximum_error": 2.1510571102112408e-16,
+      "name": "12_deployment_z_transform_and_tc_exact_identities",
+      "status": "PASS"
+    },
+    {
+      "cases": 200,
+      "maximum_error": 5.002942504717112e-15,
+      "name": "13_tc_conditional_marginal_pairing",
+      "status": "PASS"
+    },
+    {
+      "cases": 263,
+      "maximum_error": 1.1002310174035301e-13,
+      "name": "14_roughness_excess_and_rotation_operator_bound",
+      "status": "PASS"
+    },
+    {
+      "cases": 500,
+      "maximum_doubly_stochastic_residual": 3.3306690738754696e-16,
+      "maximum_error": 1.354667489295025e-10,
+      "maximum_rotary_value_derivative_error": 1.354667489295025e-10,
+      "maximum_state_decomposition_error": 4.440892098500626e-16,
+      "minimum_compression_bound_slack": 1.0752897853236795e-06,
+      "minimum_error_when_direct_value_term_omitted": 0.10735246582559477,
+      "minimum_sparse_bound_slack": 0.2566282644251096,
+      "moe_margin_cases": 100,
+      "name": "15_sparse_access_compression_rotary_value_moe_mhc",
+      "status": "PASS",
+      "topk_margin_cases": 200
+    }
+  ],
+  "not_cpu_verifiable": [
+    "TailSpline, C, MrPro or YaRN task ordering",
+    "whether key competition changes improve useful evidence aggregation in a checkpoint",
+    "whether gain-frequency effects transfer across heads, layers or architectures",
+    "whether sparse routing or rotary values improve complete generated answers",
+    "whether post-hoc Native-z calibration improves a mature checkpoint"
+  ],
+  "scope": "Algebraic and numerical operator checks only; no checkpoint, task score, causal mediation or performance optimum is validated.",
+  "script_sha256": "59214c2669265836f302445980d640f198f1e8c6ce2128a31b9d76adf450a8a1",
+  "seed": 20260914,
+  "status": "HYBRID_ROPE_THEORY_DEEPENING_CPU_CHECKS_COMPLETE_V1"
+}

@@ -51,6 +51,7 @@
 | A38 | YaRN–MrPro等剂量单交叉后移对照 | [理论审计](../../../docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py)；`n=17`唯一`S*=7.51324282212058`、等总log位移、单交叉；尚无模型性能结论 |
 | A39 | TailSpline–MrPro Llama S4经典两臂判决 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)；Full-13与PPL46全量配对raw；Full-13 `+3.20pp`、NIAH `+3.75pp`、PPL AUC `−0.00449`，3/3方向通过；跨模型见A40，机制仍待解混 |
 | A40 | TailSpline–MrPro OLMo S4跨模型确认 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)；Full-13与PPL46全量配对raw；Full-13 `+49.23pp`、NIAH `+64.45pp`、PPL AUC `−3.853`，13任务差全部为正；机制仍混入总剂量 |
+| A42 | Hybrid-RoPE理论深化算子链 | [结果owner](../../../docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)、[固定JSON](../../../experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json)、[复算脚本](../../../experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py)；15类CPU检查全部通过；只支持条件算子关系，不支持任务排序、实证中介或通用最优表 |
 
 ## 使用时的解释边界
 
@@ -92,6 +93,7 @@
 - **A38**：等剂量构造排除了YaRN–MrPro原整数倍率比较中的总位移混杂，但CPU没有证明后移更好；只有按冻结两臂合同取得任务结果后，才能评价back-loading原则，且该分支不插队当前TailSpline–MrPro主判决。
 - **A39**：支持的是冻结Llama-3-8B S4、canonical `[18,35]`、同gain合同下的整体方法优势。PPL优势很小且由32K驱动，8/16K轻微变差；QA与若干单任务反转保留。当前数据不证明one-sided边界机制、YaRN胜负或跨checkpoint普适性。
 - **A40**：与A39共同支持两个模型族对应canonical S4合同上的TailSpline方法优势，但OLMo历史BM/front-loaded方向已经提供先验，不能称完全独立盲测。高cap率保留；巨大差值不识别`sum(m)`、early transport与tail landing各自贡献。
+- **A42**：有限softmax/value、gain仿射可恢复条件、T−C边际配对、稀疏访问／压缩／旋转value等算子关系通过独立CPU核验。标准恒等式本身不作为新颖性主张；没有路径干预时使用`acts through`而非经验性的`mediated by`，不从CPU检查推出任何方法胜负。
 
 ## 添加或更正结果
 

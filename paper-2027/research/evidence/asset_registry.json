@@ -1,6 +1,6 @@
 {
   "schema": "paper_asset_registry_v1",
-  "as_of": "2026-09-14",
+  "as_of": "2026-09-15",
   "scope": "current manuscript assets; local availability snapshot, no model execution",
   "assets": [
     {
@@ -933,6 +933,32 @@
           "sha256": "365f15e5c29932a2858141d61f01b01679256f379625928b53cab1b41afff03b",
           "role": "data.native_grid_historical; sources.native_grid_historical identifies git 79e52bb report",
           "revision_note": "2026-09-14 writing-anchor revision: exposition/figure organization and existing report-backed AUC intervals; original observations and constructions unchanged."
+        }
+      ]
+    },
+    {
+      "id": "A42",
+      "name": "Hybrid-RoPE理论深化算子链CPU核验",
+      "priority": "P1",
+      "question": "z如何通过内容相位、key相对竞争、value聚合与架构访问路径产生条件性作用，哪些关系可由CPU独立核验",
+      "evidence_grade": "15类代数与数值算子检查；固定seed；无checkpoint、CUDA或任务分数",
+      "manuscript_location": "next-stage theory result owner; selected identities may enter main theory and proof appendix",
+      "interpretation": "有限softmax/value关系、gain仿射可恢复条件、T-C边际配对及稀疏/压缩/旋转value边界通过；不证明任务排序、实证中介、跨架构迁移或通用最优表",
+      "sources": [
+        {
+          "path": "docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md",
+          "availability": "tracked",
+          "sha256": "f6d07398ec930f6cd141156b14591f11134467b3d6dd5c6e201ff181e456ce17"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py",
+          "availability": "tracked",
+          "sha256": "59214c2669265836f302445980d640f198f1e8c6ce2128a31b9d76adf450a8a1"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
+          "availability": "tracked",
+          "sha256": "1d623100da8e6e8fd11a85177f3771ab61be4b7b78de1213da5be0a9b2baf6df"
         }
       ]
     }

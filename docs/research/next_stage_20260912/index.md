@@ -26,6 +26,7 @@ Native表是否仍是该checkpoint的事后最优点。该实验是checkpoint-ca
 | Llama TailSpline–MrPro主结果 | [经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，局部反转与证据边界完整保留 |
 | OLMo TailSpline–MrPro跨模型确认 | [经典两臂结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，13任务AUC差全部为正 |
 | 成熟checkpoint Native `z`增强探索 | [Native-Z5预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md)：OLMo-2-1B、零权重更新、五自由度、独立NLL与原生窗口任务判决；只支持checkpoint-calibrated结论 |
+| 理论深化CPU判决 | [15类算子核验](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)：`z→相位→竞争→value`、gain仿射条件、T−C边际配对及架构边界全部通过；不构成性能或中介证据 |
 | YaRN–MrPro理论对照 | [等剂量单交叉后移审计](MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)：CPU闭式已核验，YaRN按作者要求后置 |
 | 核实论文已有证据 | [证据索引](../../../paper-2027/research/evidence/index.md) |
 | Web Pro理论与论文组织讨论 | [十个研究问题与自包含背景](WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md) |

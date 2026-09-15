@@ -2284,6 +2284,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/THREE_INTERFACE_REPLAY_THEORY_AUDIT_20260913.md",
       "area": "docs",
       "category": "document"
@@ -4940,6 +4945,71 @@
     },
     {
       "path": "experiments/fixed_support_joint_151m_20260912/shutdown_after_seed42.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/e1_experimental_audit.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/native_ppl_summary.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/native_task_reference_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_sprint_cpu.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_clone_gpu_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_cpu_reports.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_original_gpu_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/runtime_probe_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/verify_sprint_math.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py",
       "area": "experiments",
       "category": "code"
     },
@@ -12865,6 +12935,11 @@
     },
     {
       "path": "tests/test_historical_ruler_replay.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_iclr2027_sprint.py",
       "area": "tests",
       "category": "code"
     },
