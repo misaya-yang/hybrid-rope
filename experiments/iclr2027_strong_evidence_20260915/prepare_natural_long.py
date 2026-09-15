@@ -250,6 +250,10 @@ def encode_chat_prompt(tokenizer: Any, prompt: str) -> list[int]:
     values = tokenizer.apply_chat_template(
         [{"role": "user", "content": prompt}], tokenize=True, add_generation_prompt=True,
     )
+    # Newer Transformers may return a BatchEncoding even without an explicit
+    # return_dict request. Iterating it yields Encoding objects, not token IDs.
+    if isinstance(values, Mapping):
+        values = values["input_ids"]
     if hasattr(values, "tolist"):
         values = values.tolist()
     if values and isinstance(values[0], list):

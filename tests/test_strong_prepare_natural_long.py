@@ -8,6 +8,7 @@ from experiments.iclr2027_strong_evidence_20260915.prepare_natural_long import (
     INFINITEBENCH,
     LONGBENCH_V2,
     PrepareConfig,
+    encode_chat_prompt,
     locate_sources,
     longbench_v2_prompt,
     main,
@@ -22,6 +23,16 @@ class WordTokenizer:
         assert tokenize and add_generation_prompt
         text = "<user> " + messages[0]["content"] + " <assistant>"
         return list(range(1, len(text.split()) + 1))
+
+
+class MappingTokenizer:
+    def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+        assert tokenize and add_generation_prompt
+        return {"input_ids": [1, 2, 3]}
+
+
+def test_encode_chat_prompt_accepts_mapping_style_batch_encoding():
+    assert encode_chat_prompt(MappingTokenizer(), "prompt") == [1, 2, 3]
 
 
 def write_jsonl(path: Path, rows: list[dict]) -> None:
