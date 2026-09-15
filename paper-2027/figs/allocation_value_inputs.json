@@ -42,6 +42,11 @@
         7
       ],
       "tier": "historical report-backed; raw training not rerun"
+    },
+    "controlled_crossing": {
+      "path": "paper-2027/research/attention-aware-retrofit/evidence/SAME_SUPPORT_FROZEN_CHECKPOINT_RESULTS_20260823.json",
+      "sha256": "13e81612564eb4780266a72abb567bd968b76ccf450fe38236dde3f687c8a9cb",
+      "scope": "Two training seeds, 32 anchors per seed, 1K final-128-token NLL; factor-four derived tables"
     }
   },
   "data": {
@@ -1243,6 +1248,48 @@
         ]
       ],
       "scope": "Three-seed matched training; standard endpoint-grid reference; non-Geo tables match its span and a common RMS deformation. Not the 500M-token fixed-support replication."
+    },
+    "controlled_crossing": {
+      "raw_receipt_sha256": "9304752d885d73af38262958f033843c642f394a448e2306fbfb57a4e1996e22",
+      "checkpoint_seeds": [
+        137,
+        256
+      ],
+      "anchors": 32,
+      "tail_tokens": 128,
+      "lengths": [
+        512,
+        1024
+      ],
+      "mean_tail_nll_two_seed_length1024": {
+        "fmrope_weights": {
+          "fmrope_derived": 3.4264323711395264,
+          "cosh_derived": 5.775900103151798,
+          "same_support_geometric": 3.4292640164494514
+        },
+        "anchored_cosh_weights": {
+          "fmrope_derived": 4.454919379204512,
+          "cosh_derived": 3.47904472053051,
+          "same_support_geometric": 4.177154567092657
+        }
+      },
+      "budgeted_crossover_interaction": {
+        "definition": "[L(W_F,T_C)-L(W_F,T_F)]-[L(W_C,T_C)-L(W_C,T_F)]",
+        "length512": {
+          "seed137": 2.6629523187875748,
+          "seed256": 2.5642652809619904
+        },
+        "length1024": {
+          "seed137": 3.399742268025875,
+          "seed256": 3.250942513346672
+        }
+      },
+      "checkpoint_sha256": {
+        "seed137_fmrope": "ae065557f4f14ee4f221b551a32b5b8e7c41c495c742005cd5dab9ef3db1cf9d",
+        "seed137_anchored_cosh": "b99224608cfc1e3bb743e8ebfca6da38ec3affedd9dac640c410d31277405669",
+        "seed256_fmrope": "841724fafb21f2b4a4bfa8459ee78a7d4cdc5c495fb4aa1876adf237a93e802a",
+        "seed256_anchored_cosh": "1387f28fe2190a59d922f33a68743dac5c21ef7d670db78e1d38d96118f72c09"
+      }
     }
   }
 }

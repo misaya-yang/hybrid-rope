@@ -114,11 +114,11 @@ class Z5KnotRotaryEmbedding(nn.Module):
         u = torch.cat(
             (
                 torch.zeros(1, dtype=z_knot.dtype, device=z_knot.device),
-                self.knot_u.to(z_knot.dtype),
+                self.knot_u.to(device=z_knot.device, dtype=z_knot.dtype),
                 torch.ones(1, dtype=z_knot.dtype, device=z_knot.device),
             )
         )
-        phi = self.pair_phi.to(z_knot.dtype)
+        phi = self.pair_phi.to(device=z_knot.device, dtype=z_knot.dtype)
         return _piecewise_linear(u, z_knot, phi)
 
     def realized_inv_freq(self) -> torch.Tensor:

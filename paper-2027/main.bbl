@@ -1,4 +1,4 @@
-\begin{thebibliography}{45}
+\begin{thebibliography}{44}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -81,6 +81,16 @@ Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuandong Tian.
 \newblock \doi{10.48550/arXiv.2306.15595}.
 \newblock URL \url{https://arxiv.org/abs/2306.15595}.
 
+\bibitem[Chen et~al.(2025)Chen, Lv, Luan, Wang, and Liu]{chen2025hope}
+Yuhan Chen, Ang Lv, Jian Luan, Bin Wang, and Wei Liu.
+\newblock {HoPE}: A novel positional encoding without long-term decay for
+  enhanced context awareness and extrapolation.
+\newblock In \emph{Proceedings of the 63rd Annual Meeting of the Association
+  for Computational Linguistics (Volume 1: Long Papers)}, pp.\  23044--23056,
+  2025.
+\newblock \doi{10.18653/v1/2025.acl-long.1123}.
+\newblock URL \url{https://aclanthology.org/2025.acl-long.1123/}.
+
 \bibitem[Chen et~al.(2023{\natexlab{b}})Chen, Qian, Tang, Lai, Liu, Han, and
   Jia]{chen2023longlora}
 Yukang Chen, Shengju Qian, Haotian Tang, Xin Lai, Zhijian Liu, Song Han, and
@@ -112,14 +122,6 @@ Yiran Ding, Li~Lyna Zhang, Chengruidong Zhang, Yuanyuan Xu, Ning Shang, Jiahang
 \newblock In \emph{Proceedings of the 41st International Conference on Machine
   Learning}, volume 235 of \emph{PMLR}, pp.\  11091--11104, 2024.
 \newblock URL \url{https://proceedings.mlr.press/v235/ding24i.html}.
-
-\bibitem[{emozilla}(2023)]{emozilla2023dynamic}
-{emozilla}.
-\newblock Dynamically scaled {RoPE} further increases performance of long
-  context {LLaMA} with zero fine-tuning.
-\newblock Reddit, r/LocalLLaMA, 2023.
-\newblock URL
-  \url{https://www.reddit.com/r/LocalLLaMA/comments/14mrgpr/dynamically_scaled_rope_further_increases/}.
 
 \bibitem[Grattafiori et~al.(2024)Grattafiori, Dubey, Jauhri,
   et~al.]{grattafiori2024llama3}
@@ -173,6 +175,15 @@ Ermo Hua, Che Jiang, Xingtai Lv, Kaiyan Zhang, Youbang Sun, Yuchen Fan, Xuekai
   Learning}, volume 267 of \emph{PMLR}, pp.\  24932--24949, 2025.
 \newblock URL \url{https://proceedings.mlr.press/v267/hua25b.html}.
 
+\bibitem[Jin et~al.(2025)Jin, Mei, Xu, Sun, Tang, Du, Liu, and
+  Zhang]{jin2025massive}
+Mingyu Jin, Kai Mei, Wujiang Xu, Mingjie Sun, Ruixiang Tang, Mengnan Du, Zirui
+  Liu, and Yongfeng Zhang.
+\newblock Massive values in self-attention modules are the key to contextual
+  knowledge understanding.
+\newblock \emph{arXiv preprint arXiv:2502.01563}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2502.01563}.
+
 \bibitem[Karypis et~al.(2026)Karypis, O'Brien, Kadekodi, Zhu, and
   McAuley]{karypis2026lerope}
 Petros Karypis, Sean O'Brien, Shreyas Kadekodi, Rui Zhu, and Julian McAuley.
@@ -188,6 +199,12 @@ Huayang Li, Tianyu Zhao, Deng Cai, and Richard Sproat.
   Learning}, 2026.
 \newblock URL \url{https://icml.cc/virtual/2026/poster/64002}.
 \newblock arXiv:2512.14391.
+
+\bibitem[Li et~al.(2025)Li, Yi, Liu, Gao, Ma, and Kanazawa]{li2025cameras}
+Ruilong Li, Brent Yi, Junchen Liu, Hang Gao, Yi~Ma, and Angjoo Kanazawa.
+\newblock Cameras as relative positional encoding.
+\newblock \emph{arXiv preprint arXiv:2507.10496}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2507.10496}.
 
 \bibitem[Liu et~al.(2024)Liu, Yan, An, Qiu, and Lin]{liu2024scaling}
 Xiaoran Liu, Hang Yan, Chenxin An, Xipeng Qiu, and Dahua Lin.
@@ -215,21 +232,12 @@ Sajad Movahedi, Timur Carstensen, Arshia Afzal, Frank Hutter, Antonio Orvieto,
   (ICLR)}, 2026.
 \newblock URL \url{https://openreview.net/forum?id=AQo1SEElNb}.
 
-\bibitem[Oka et~al.(2026{\natexlab{a}})Oka, Hanafusa, Hasegawa, Nishida, and
-  Saito]{oka2026frequencyentropy}
-Yui Oka, Kentaro Hanafusa, Taku Hasegawa, Kyosuke Nishida, and Kuniko Saito.
-\newblock Probing rotary position embeddings through frequency entropy.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2026{\natexlab{a}}.
-\newblock URL \url{https://openreview.net/forum?id=1JZuEDq62N}.
-
-\bibitem[Oka et~al.(2026{\natexlab{b}})Oka, Saito, Nishida, and
-  Saito]{oka2026fmrope}
+\bibitem[Oka et~al.(2026)Oka, Saito, Nishida, and Saito]{oka2026fmrope}
 Yui Oka, Itsumi Saito, Kyosuke Nishida, and Kuniko Saito.
 \newblock Frequency bands in {RoPE}: Base frequency and context length shape
   the interpolation--extrapolation trade-off.
 \newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2026{\natexlab{b}}.
+  (ICLR)}, 2026.
 \newblock URL \url{https://openreview.net/forum?id=PR1PPxvG9Q}.
 
 \bibitem[Penedo et~al.(2024)Penedo, Kydl{\'i}{\v c}ek, Ben~Allal, Lozhkov,
@@ -254,6 +262,12 @@ Jack~W. Rae, Anna Potapenko, Siddhant~M. Jayakumar, and Timothy~P. Lillicrap.
 \newblock Compressive transformers for long-range sequence modelling.
 \newblock \emph{arXiv preprint arXiv:1911.05507}, 2019.
 \newblock URL \url{https://arxiv.org/abs/1911.05507}.
+
+\bibitem[Schenck et~al.(2025)Schenck, Reid, Jacob, et~al.]{schenck2025string}
+Connor Schenck, Isaac Reid, Mithun~George Jacob, et~al.
+\newblock Learning the ropes: Better 2d and 3d position encodings with string.
+\newblock \emph{arXiv preprint arXiv:2502.02562}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2502.02562}.
 
 \bibitem[Shang et~al.(2025)Shang, Zhang, Wang, Zhang, Lopez, Yang, Chen, and
   Yang]{shang2025longrope2}
@@ -306,35 +320,23 @@ Qingyuan Tian, Wenhong Zhu, Xiaoran Liu, Xiaofeng Wang, and Rui Wang.
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2026/hash/69413f87e5a34897cd010ca698097d0a-Abstract-Conference.html}.
 
-\bibitem[Urrutia et~al.(2026)Urrutia, Salas, Kozachinskiy, Buc~Calderon,
-  Pasten, and Rojas]{urrutia2026decoupling}
-Felipe Urrutia, Jorge Salas, Alexander Kozachinskiy, Cristian Buc~Calderon,
-  Hector Pasten, and Cristobal Rojas.
-\newblock Decoupling positional and symbolic attention behavior in
-  transformers.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2026.
-\newblock URL \url{https://openreview.net/forum?id=V38yAoqddQ}.
-
-\bibitem[Wang et~al.(2026)Wang, Zheng, Zhu, Chen, Liu, Zheng, and
-  Li]{wang2026adarope}
-Shaowen Wang, Yuke Zheng, Tansheng Zhu, Shuang Chen, Shaofan Liu, Suncong
-  Zheng, and Jian Li.
-\newblock {AdaRoPE}: Not all attention heads should rotate and scale equally.
-\newblock In \emph{Proceedings of the 43rd International Conference on Machine
-  Learning}, 2026.
-\newblock URL \url{https://icml.cc/virtual/2026/poster/60704}.
-\newblock arXiv:2607.19363.
-
-\bibitem[Wang et~al.(2024)Wang, Kobyzev, Lu, Rezagholizadeh, and
+\bibitem[Wang et~al.(2024{\natexlab{a}})Wang, Kobyzev, Lu, Rezagholizadeh, and
   Liu]{wang2024resonance}
 Suyuchen Wang, Ivan Kobyzev, Peng Lu, Mehdi Rezagholizadeh, and Bang Liu.
 \newblock Resonance {RoPE}: Improving context length generalization of large
   language models.
 \newblock In \emph{Findings of the Association for Computational Linguistics:
-  ACL 2024}, pp.\  586--598, 2024.
+  ACL 2024}, pp.\  586--598, 2024{\natexlab{a}}.
 \newblock \doi{10.18653/v1/2024.findings-acl.32}.
 \newblock URL \url{https://aclanthology.org/2024.findings-acl.32/}.
+
+\bibitem[Wang et~al.(2024{\natexlab{b}})Wang, Zhang, Li, Huang, Han, Ji,
+  Kakade, Peng, and Ji]{wang2024pine}
+Ziqi Wang, Hanlin Zhang, Xiner Li, Kuan-Hao Huang, Chi Han, Shuiwang Ji,
+  Sham~M. Kakade, Hao Peng, and Heng Ji.
+\newblock Eliminating position bias of language models: A mechanistic approach.
+\newblock \emph{arXiv preprint arXiv:2407.01100}, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2407.01100}.
 
 \bibitem[Wei et~al.(2025)Wei, Liu, Zang, Dong, Zhang, Cao, Tong, Duan, Guo,
   Wang, Qiu, and Lin]{videorope2025}
@@ -344,23 +346,6 @@ Xilin Wei, Xiaoran Liu, Yuhang Zang, Xiaoyi Dong, Pan Zhang, Yuhang Cao, Jian
 \newblock In \emph{Proceedings of the 42nd International Conference on Machine
   Learning}, volume 267 of \emph{PMLR}, pp.\  66118--66136, 2025.
 \newblock URL \url{https://proceedings.mlr.press/v267/wei25h.html}.
-
-\bibitem[Wu et~al.(2026)Wu, Liu, and Jadbabaie]{wu2026datashapes}
-Xinyi Wu, Siyuan Liu, and Ali Jadbabaie.
-\newblock How data shapes {RoPE} frequency usage: From positional scale
-  matching to length generalization.
-\newblock \emph{arXiv preprint arXiv:2607.07678}, 2026.
-\newblock \doi{10.48550/arXiv.2607.07678}.
-\newblock URL \url{https://arxiv.org/abs/2607.07678}.
-
-\bibitem[Xiong et~al.(2025)Xiong, Fan, Shen, Su, Yang, Kong, and
-  Wong]{xiong2025dope}
-Jing Xiong, Liyang Fan, Hui Shen, Zunhai Su, Min Yang, Lingpeng Kong, and Ngai
-  Wong.
-\newblock {DoPE}: Denoising rotary position embedding.
-\newblock \emph{arXiv preprint arXiv:2511.09146}, 2025.
-\newblock \doi{10.48550/arXiv.2511.09146}.
-\newblock URL \url{https://arxiv.org/abs/2511.09146}.
 
 \bibitem[Xu et~al.(2024)Xu, Men, Wang, Zhang, Lin, Lu, Han, and
   Chen]{xu2024base}
@@ -382,6 +367,15 @@ An~Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo~Zheng, Bowen Yu,
 \newblock \doi{10.48550/arXiv.2412.15115}.
 \newblock URL \url{https://arxiv.org/abs/2412.15115}.
 
+\bibitem[Yen et~al.(2024)Yen, Gao, Hou, Ding, Fleischer, Izsak, Wasserblat, and
+  Chen]{yen2024helmet}
+Howard Yen, Tianyu Gao, Minmin Hou, Ke~Ding, Daniel Fleischer, Peter Izsak,
+  Moshe Wasserblat, and Danqi Chen.
+\newblock Helmet: How to evaluate long-context language models effectively and
+  thoroughly.
+\newblock \emph{arXiv preprint arXiv:2410.02694}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2410.02694}.
+
 \bibitem[Zhang et~al.(2026)Zhang, Chen, Liu, Qin, Yuan, Xu, Yuan, Gu, and
   Yao]{zhang2026grape}
 Yifan Zhang, Zixiang Chen, Yifeng Liu, Zhen Qin, Huizhuo Yuan, Kangping Xu,
@@ -391,12 +385,6 @@ Yifan Zhang, Zixiang Chen, Yifeng Liu, Zhen Qin, Huizhuo Yuan, Kangping Xu,
   (ICLR)}, 2026.
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2026/file/5cb58625f49ddf70fe2d527e9e4bbae5-Paper-Conference.pdf}.
-
-\bibitem[Zhang et~al.(2025)Zhang, Yang, and Yan]{zhang2025s3pe}
-Zhu Zhang, Tianxing Yang, and Zihan Yan.
-\newblock {S3PE}: A simple scalable sigmoid-style position encoding.
-\newblock OpenReview preprint, 2025.
-\newblock URL \url{https://openreview.net/attachment?id=9xuGBOrIW7&name=pdf}.
 
 \bibitem[Zhao et~al.(2025)Zhao, He, Chen, Zhu, Li, and Zhu]{zhao2025riflex}
 Min Zhao, Guande He, Yixiao Chen, Hongzhou Zhu, Chongxuan Li, and Jun Zhu.

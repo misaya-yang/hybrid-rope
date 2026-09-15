@@ -1,0 +1,7 @@
+{
+  "input": "input.pdf",
+  "sha256": "ce968fbf3936614fd48299f6060202877cfe6717e8b16c76280aeb951a13f3c5",
+  "git_head": "ed1b114503d79b130454af46250f1438b5c59ae4",
+  "working_tree": "pre-existing changes preserved; reviewer receives only frozen PDF",
+  "review_mode": "independent PDF-only; no repository or prior review access"
+}

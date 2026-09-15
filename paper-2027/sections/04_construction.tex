@@ -1,31 +1,35 @@
-\section{Explicit Allocation Constructions}
+\section{Explicit Frequency Allocations}
 \label{sec:allocation-methods}
-Finite-window overlap identifies frequency spacing as a structural design choice. Learning can adapt to a newly supplied basis, whereas frozen deployment uses an existing frequency--coordinate association. This motivates two separate spacing priors: a full-table density objective for learning and a native-relative boundary objective for deployment. They encode design preferences; model evaluations test their value.
-\subsection{An analytic construction from a tail-energy prior}
+Allocation changes how a fixed number of rotary pairs covers the frequency
+range. Our main frozen construction, TailSpline, designs this change around
+the model's native table. Cosh supplies a complementary transport used to
+study extrapolation through paired training.
+\begin{figure}[ht]
+\centering\includegraphics[width=\linewidth]{fig_construction_contrast.pdf}
+\caption{\textbf{Explicit ways to change allocation.} (a) TailSpline allocates extra log-frequency span around a native table, smoothing the connection to the extended low-frequency tail ($n=17$). (b) Cosh supplies a complementary extrapolation transport, shown as quantiles before endpoint anchoring ($\tau=2$).}
+\label{fig:construction-contrast}
+\end{figure}
+\input{sections/04_mature}
+
+\subsection{Cosh as a supporting extrapolation transport}
 \label{sec:construction}
-
-During learning, a model can adapt to the supplied allocation. Finite-window overlap motivates avoiding excessive concentration, especially among slow pairs. We encode this preference as a density-design prior over normalized exponents $[0,1]$, where larger exponents denote slower frequencies. Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$, and consider
+Cosh changes $z$ through a monotone map of normalized exponents. Motivated by
+finite-window overlap among slow pairs, it balances frequency concentration
+against slow-end tail mass. The density objective and its unique minimizer
+are derived in Appendix~\ref{sec:proofs}. Its inverse CDF is
 \begin{equation}
-\Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
-\qquad \text{s.t. } \int_0^1\rho=1,\ \rho\ge0.
-\label{eq:Capp}
-\end{equation}
-With unit mass, the density-square term favors spreading frequencies. Moving mass toward the slow end increases the tail mass over the thresholds it crosses, raising the second term. Their balance favors faster frequencies while controlling concentration. Appendix~\ref{sec:cosh-gap-form} gives the equivalent objective in quantile-spacing coordinates.
-
-For $\alpha>0$, $\beta\ge0$, this criterion has a unique positive minimizer, $\rho_\tau(\phi)=\tau\cosh[\tau(1-\phi)]/\sinh\tau$, where $\tau=\sqrt{\beta/\alpha}$. Its inverse CDF gives
-\begin{equation}
-Q_\tau(u)=1-\frac{\operatorname{arcsinh}((1-u)\sinh\tau)}{\tau},\qquad u_k=\frac{k+1/2}{K}.
+Q_\tau(u)=1-\frac{\operatorname{arcsinh}((1-u)\sinh\tau)}{\tau},\qquad
+u_k=\frac{k+1/2}{K}.
 \label{eq:warp}
 \end{equation}
-The uniform-density limit is recovered as $\tau\to0$. Theorem~\ref{thm:ode} in Appendix~\ref{sec:proofs} gives the complete construction proof.
-
-\evq{} converts the optimal density into a finite table through \eqref{eq:warp}. We use Cosh for the analytic shape and state the grid and endpoint treatment for each finite EVQ-Cosh table. For $\tau>0$, $\rho_\tau$ is decreasing, so its inverse CDF $Q_\tau$ is convex. For equally spaced nodes $u_k$, affine endpoint anchoring therefore gives
-\begin{equation}
-z_{\tau,k}=\frac{Q_\tau(u_k)-Q_\tau(u_0)}{Q_\tau(u_{K-1})-Q_\tau(u_0)}
-\le \frac{k}{K-1},\qquad
-\omega_{\tau,k}\ge\omega_{\mathrm{Geo},k}
-\label{eq:anchored-cosh-order}
-\end{equation}
-at fixed $(a,R)$: convexity places each quantile below the chord between the extreme nodes. Interior pairs move toward faster frequencies while endpoints remain fixed (Fig.~\ref{fig:method-overview}a). Once $\tau$, grid, and endpoint anchoring are specified, installation evaluates the table once without changing the rotary operator or trainable parameter count.
-
-The strength $\tau$ sets this trade-off. We use declared reference settings and compare neighboring strengths and a second analytic family in Appendix~\ref{sec:exact-range-factorial}; Appendix~\ref{sec:tau-scaling} gives the operating rules and their empirical basis.
+The uniform-density limit is recovered as $\tau\to0$. Affine anchoring of
+$Q_\tau(u_k)$ to the chosen endpoints gives a convex allocation that moves
+interior frequencies toward the faster end; Appendix~\ref{sec:table-identities}
+gives the installed grid and Eq.~\eqref{eq:anchored-cosh-order}.
+This is the transport used in the fixed-range training intervention of
+\S\ref{sec:exp-identify}. The strength $\tau$ determines the amount moved:
+the fixed-support reference is $d_{\rm head}/\sqrt{L_{\rm train}}$, and the
+MLA extrapolation recipe uses $1.414$. The factorial compares neighboring
+strengths and a matched exponential transport
+(Appendix~\ref{sec:exact-range-factorial}). Every installation retains the
+standard rotary operator.

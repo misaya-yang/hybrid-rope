@@ -1,5 +1,84 @@
 # 当前论文修订目标与完成范围
 
+## 已完成：以研究主线重写叙事（2026-09-15）
+
+当前正文按“固定范围后的配置问题—受控发现—位置结构—两种构造—应用收益”推进。
+摘要141词，无数字；引言先建立问题与相对MrRoPE的研究增量，再给出核心结果。
+Cosh对应训练时的频率分布，TailSpline对应冻结模型的频率扩展，方法图只保留这两个
+场景。T/C详细恒等式移入既有附录H.2，正文保留对照目的及结果。主结果与native
+trade-off相邻，历史控制的具体数值在对应附录保留。标题维持Beyond the Base。
+
+后续独立审稿使用统一、无分数预设的标准，仅向代理提供冻结PDF；不得读取仓库、
+历史评审或其他任务。每条关键意见须提供PDF页码和依据，区分实际错误、表达不清
+及可选增强，并评估已展示的新知识与实际价值。不得以目标分数或作者期待引导判断。
+
+
+
+## 当前纠正：审稿推断不作为实验事实
+
+撤回“432M 原始缓存构建／文档排除记录未保留”的断言：本轮检查没有证明记录不存在。
+该措辞由主代理在第一轮审稿后加入，第二轮再次引用，不能视为独立核实。已移除论文
+图注警示与新增的来源推断段落，保留实际评估协议及结果。下方审稿历史中的该项
+判断已被此纠正覆盖，不再作为复评任务依据。作者讨论期间的新叙事改写已暂停并恢复。
+
+
+## 两轮PDF审稿与优化完成
+
+两位新上下文子代理各自仅阅读冻结PDF，均给出内部6/10、弱接收。
+[审稿与逐项处理](research/pdf-review-rounds/20260915_two_rounds/README.md)区分输入评分和修改后产物。
+新增完整Natural-QA631结果：41.08/40.88% F1，差+0.20pp、区间[−1.53,+1.89]pp；
+保留native分层、全任务与输出健康。首图换用151.9M明确协议交叉对照，正文加入M4完整
+家族比较，E1诊断和native点估计区间直接可见。历史MLA缓存和slot置换的来源缺口明确记录。
+
+## 投稿标题与摘要定稿优化
+
+当前标题为 **Beyond the Base: Frequency Allocation in RoPE**。摘要141词，
+以固定范围下allocation的作用开篇，按识别、位置结构、构造与实证收益展开，
+不放数字、不堆叠命题术语。可直接提交的纯文本见[title_abstract.txt](title_abstract.txt)。
+完整选择理由见[决策映射](research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)。
+下方旧标题保留为历史记录；正文仍用normalized exponent精确定义allocation。
+
+## 已实施：2026-09-15 field-gap升级
+
+用户本轮已明确要求按指导文件完成论文升级，并追加两条写作原则：摘要不放数字；用
+直接的收益与trade-off叙事，原生任务实测为2.33%相对下降（2.14pp，低于3%）。
+clean RULER-200已成为正文主要冻结确认，具体实现、完整来源与下一步安排见
+[本轮决策映射](research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)。
+全文保留allocation主体、Cosh学习证据、TailSpline构造，整数核等价推论入正文；
+经典结果、BM自然QA与E1运行细节各按原协议保留。下面的“下一轮”建议及回执保留
+其历史时间，不覆盖当前用户授权与已完成修订。
+
+
+## 2026-09-15：给Astra的下一轮叙事边界
+
+本节覆盖下方历史改稿回执中的旧优先级，但**不授权本轮自动修改论文源码**。论文唯一一级
+身份是allocation研究：固定支持识别内部`z`的作用，刻画它改变的位置结构，并展示它可在
+学习与零训练两种阶段被构造利用。零训练是核心落地，TailSpline是唯一重点展开的部署构造；
+它不是全文唯一科学贡献。
+
+clean Llama 32K Full RULER-13×200已经成为唯一hero：TailSpline/MrPro为
+`68.27/56.54%`，差`+11.72pp`，95%区间`[+10.32,+13.11]pp`；12/13任务、四family
+及所有leave-one-task-out读数均为正，且EOS/cap健康更好。Astra只从
+[Llama结果owner](../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)
+和便携JSON取数，不从对话或Pro回答转抄。
+
+对Web Pro建议采用以下取舍：
+
+- **接受：**allocation为一级贡献；TailSpline为零训练核心实例；clean RULER为hero；
+  Natural-QA631为真实任务支撑；不把one-sided目标写成任务最优或经验中介。
+- **修正：**Cosh不再与TailSpline争主角，但保留一段学习期构造与最强学习证据，否则
+  “allocation研究”会退化成纯TailSpline方法论文。OLMo/classic结果可压缩呈现，但不因
+  数字大或cap高而删除跨checkpoint信息。
+- **拒绝：**不按重复答案、模板或source index为synthetic RULER伪造cluster sidecar；
+  维持任务分层、行内严格配对bootstrap。Natural-QA才按真实source document聚类。
+  不预先写死四图两表或逐节页数，图表只服从论证职责。
+
+建议论证顺序是：`allocation识别 → 最小位置结构/共适应 → 学习期Cosh紧凑证据 →
+冻结TailSpline构造 → clean hero → Natural-QA → 适用边界`。BM、T--C、旧Qwen、
+fixed-u及搜索失败留作附录边界；Native-Z5是独立研究，不并入当前claim。Natural-QA未完成
+前不填结果、不借BM结果替代。YaRN只在作者后续决定需要常用静态基线时进入同合同单臂，
+不阻塞当前TailSpline相对MrPro的主结论。
+
 2026-09-14。当前主线：**z的实用价值 → 受控归因 → 位置基结构 → 解析构造 → 学习与零训练任务收益**。标题保持 Beyond the Base: Exponent Allocation in RoPE。
 
 固定支持实验识别z独立作用；完整方法可联合改变范围、band、终点和gain，收益归完整方法。窗口内增强是后续目标，M4联合改善是初步证据。

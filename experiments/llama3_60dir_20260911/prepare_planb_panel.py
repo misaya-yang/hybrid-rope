@@ -103,6 +103,30 @@ def token_index_for_char(offsets, char_index):
     return None
 
 
+def qa_dataset_row_count(path, dataset):
+    """Count valid QA rows before invoking the upstream generator."""
+    value = json.loads(Path(path).read_text())
+    if dataset == "squad":
+        return sum(
+            not qa["is_impossible"]
+            for item in value["data"]
+            for paragraph in item["paragraphs"]
+            for qa in paragraph["qas"]
+        )
+    if dataset == "hotpotqa":
+        return len(value)
+    raise ValueError(f"unsupported QA dataset for range validation: {dataset}")
+
+
+def validate_qa_index_range(*, task, start, count, available):
+    """Fail instead of entering upstream QA's exception-swallowing retry loop."""
+    if start < 0 or count < 1 or start + count > available:
+        raise ValueError(
+            f"{task} QA source range [{start}, {start + count}) exceeds "
+            f"the {available}-row dataset"
+        )
+
+
 def select_depth_balanced(
     task, candidates, count, cap, pilot, *, depth_targets=DEPTH_TARGETS,
 ):
@@ -179,6 +203,13 @@ def main(argv=None):
             "requested official generator sample count without model-based selection"
         ),
     )
+    ap.add_argument(
+        "--source-only", action="store_true",
+        help=(
+            "retain source-order generator rows and generation budgets without token-level "
+            "padding/evidence maps; intended only as input to the clean unpadded converter"
+        ),
+    )
     args = ap.parse_args(argv)
 
     caps = tuple(int(x) for x in args.caps.split(",") if x.strip())
@@ -224,6 +255,8 @@ def main(argv=None):
             )
     if args.qa_base_offset is not None and args.qa_base_offset < 0:
         raise SystemExit("REFUSING: --qa-base-offset must be nonnegative")
+    if args.source_only and args.selection_mode != "source-order":
+        raise SystemExit("REFUSING: --source-only requires --selection-mode source-order")
     qa_base_offset = (
         QA_STAGE_ROW_OFFSET[args.stage]
         if args.qa_base_offset is None else args.qa_base_offset
@@ -357,8 +390,16 @@ def main(argv=None):
                 prior_cap_rows = sum(
                     rows_for_cap(prior_cap)
                     for prior_cap in caps[:cap_index])
-                command.extend(["--pre_samples", str(
-                    qa_base_offset + prior_cap_rows)])
+                qa_start = qa_base_offset + prior_cap_rows
+                dataset = task_config["args"]["dataset"]
+                available = qa_dataset_row_count(
+                    upstream / "scripts" / "data" / "synthetic" / "json" / f"{dataset}.json",
+                    dataset,
+                )
+                validate_qa_index_range(
+                    task=task, start=qa_start, count=source_count, available=available
+                )
+                command.extend(["--pre_samples", str(qa_start)])
 
             if not source_path.exists():
                 old_argv, old_path, old_cwd = sys.argv, sys.path[:], os.getcwd()
@@ -378,6 +419,31 @@ def main(argv=None):
                 raise SystemExit(
                     f"REFUSING: {task}/{cap} generated {len(generated)}, "
                     f"expected {source_count}")
+            if args.source_only:
+                for index, raw in enumerate(generated[:count]):
+                    refs = raw.get("outputs") or []
+                    if not refs or any(not isinstance(x, str) or not x.strip() for x in refs):
+                        raise SystemExit(f"REFUSING: {task}/{cap}/{index} has invalid references")
+                    source_digest = digest([
+                        "source-only-v1", args.stage, task, cap, cell_seed, index,
+                        raw.get("input"), raw.get("answer_prefix", ""), refs,
+                    ])
+                    rows.append({
+                        "row_id": f"{args.stage}_{task}_{cap}_{index:04d}",
+                        "task": task, "family": FAMILIES[task], "length_cap": cap,
+                        "references": refs, "max_new_tokens": budget,
+                        "prompt_sha256": source_digest,
+                        "source_document_id": source_digest,
+                        "selection_mode": "source-order",
+                        "selection_uses_model_outputs": False,
+                        "source_only": True,
+                    })
+                checkpoint_rows()
+                print(json.dumps({
+                    "task": task, "cap": cap, "rows": count,
+                    "generated_pool": source_count, "source_only": True,
+                }), flush=True)
+                continue
             cell_rows = []
             for index, raw in enumerate(generated):
                 text = raw["input"] + raw.get("answer_prefix", "")
@@ -512,6 +578,7 @@ def main(argv=None):
             "generated_rows_retained": "all requested rows in generator order",
         } if not pilot else "not applied to engineering pilot"),
         "selection_mode": args.selection_mode,
+        "source_only": bool(args.source_only),
         "claim_scope": (
             "TailSpline unified Full-13 classic benchmark; task evidence only after paired controls"
             if args.contract == "tailspline-classic"

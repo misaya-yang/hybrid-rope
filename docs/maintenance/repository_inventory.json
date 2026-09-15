@@ -1074,6 +1074,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "data/curated/eval_3seeds_full_results.json",
+      "area": "data",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "data/curated/frozen_fixed_support_mature_20260823.json",
       "area": "data",
       "category": "data-or-receipt"
@@ -1085,6 +1090,11 @@
     },
     {
       "path": "data/curated/lora_longalpaca_temporal_s42_20260712.json",
+      "area": "data",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "data/curated/mla_channel_count_125m_pilot.json",
       "area": "data",
       "category": "data-or-receipt"
     },
@@ -4959,7 +4969,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/benchmark_prefill_chunks.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/e1_experimental_audit.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/llama_s16_128k_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/mrrope_niah_heatmap_report.py",
       "area": "experiments",
       "category": "code"
     },
@@ -4974,7 +5004,77 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_clean16k_ruler50.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_llama_s16_128k_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_llama_s16_ppl10.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_mrrope_niah_heatmap.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_sprint_cpu.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/proofpile_ppl_parity.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/batch_sensitivity_probe39.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean_ruler200_tailspline_vs_mrpro.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/native8k_ppl_comparison.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/native_classic8k_reference.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/native_vs_tailspline_mrpro_classic8k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_clean16k_ruler50.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -4989,6 +5089,26 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_llama_s16_128k_gate_48gb.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_mrrope_niah_heatmap.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_mrrope_niah_heatmap_full20.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_naturalqa_yarn.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/run_original_gpu_queue.sh",
       "area": "experiments",
       "category": "code"
@@ -4999,9 +5119,19 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/test_field_gap_controls.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
       "area": "experiments",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
+      "area": "experiments",
+      "category": "code"
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/verify_sprint_math.py",
@@ -5434,6 +5564,16 @@
       "category": "code"
     },
     {
+      "path": "experiments/mla_yarn_short_s42/evaluate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/mla_yarn_short_s42/train.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_rope_evq_150m/index.md",
       "area": "experiments",
       "category": "navigation"
@@ -5709,6 +5849,16 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_z_enhancement_20260914/consensus_direction.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/consensus_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_z_enhancement_20260914/followup_chain.sh",
       "area": "experiments",
       "category": "code"
@@ -5724,12 +5874,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_z_enhancement_20260914/refit.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_z_enhancement_20260914/report.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/native_z_enhancement_20260914/run.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/run_consensus.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/run_refit.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -8174,6 +8339,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/figs/field_gap_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/fig0_main_story.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8289,6 +8459,16 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/fig_construction_contrast.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_construction_contrast.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/figs/fig_evidence_overview.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8375,6 +8555,16 @@
     },
     {
       "path": "paper-2027/figs/fig_spectral_budget_scaling.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_classic.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_tailspline_classic.png",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -8539,6 +8729,11 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/verify_field_gap.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/verify_interval_design.py",
       "area": "paper-2027",
       "category": "code"
@@ -8614,6 +8809,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/CROSS_AUDIT_EXPERIMENT_PROTOCOL_20260907.md",
       "area": "paper-2027",
       "category": "document"
@@ -8645,6 +8845,16 @@
     },
     {
       "path": "paper-2027/research/EXPONENT_SECOND_REVIEW_20260909.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/FIELD_GAP_REVISION_VALIDATION_20260915.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/ICLR2027_STABLE7_STRATEGY_20260915.md",
       "area": "paper-2027",
       "category": "document"
     },
@@ -9969,6 +10179,226 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r03/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r03/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r03/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r03/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r03/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r03/sol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r04/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r04/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r04/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r04/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r04/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r04/sol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r05/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r05/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r05/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r05/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r05/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r05/sol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r06/sol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/reference_single/assessment.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/reference_single/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/review_protocol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/input_manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/reuse_audit.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/input.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/input_manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/optimized.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/index.md",
       "area": "paper-2027",
       "category": "navigation"
@@ -10169,6 +10599,21 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_clean16k_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_clean_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_clean_length_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_coadapt.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -10224,7 +10669,22 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_tailspline_natural_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_tailspline_natural_tasks.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_zero_training_system.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/title_abstract.txt",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -10247,6 +10707,11 @@
       "path": "paper-2027/venue_icml_fallback/icml2027.sty",
       "area": "paper-2027",
       "category": "manuscript"
+    },
+    {
+      "path": "paper_experiments/code/scripts/core_text_phases/mla_patch.py",
+      "area": "paper_experiments",
+      "category": "code"
     },
     {
       "path": "pytest.ini",
@@ -10289,6 +10754,86 @@
       "category": "navigation"
     },
     {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/README.md",
+      "area": "rebuttal",
+      "category": "navigation"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/__init__.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/analyze_schedules.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/prepare.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/protocol.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/run_5090.sh",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_scarcity_5090/run_experiment.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/README.md",
+      "area": "rebuttal",
+      "category": "navigation"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/__init__.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/prepare.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/protocol.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/report.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/run_5090.sh",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/run_experiment.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/experiments/mla_yarn_operator_parity_5090/status.py",
+      "area": "rebuttal",
+      "category": "code"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/MLA_YARN_OPERATOR_PARITY_5090_PLAN.md",
+      "area": "rebuttal",
+      "category": "document"
+    },
+    {
       "path": "rebuttal/rebuttal_0723/theory_results/OLMO2_1B_RELEASED_ROPE_BASELINE_20260725.md",
       "area": "rebuttal",
       "category": "document"
@@ -10305,6 +10850,11 @@
     },
     {
       "path": "rebuttal/rebuttal_0723/theory_results/m4_exact_range_factorial_evidence_20260726.json",
+      "area": "rebuttal",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "rebuttal/rebuttal_0723/theory_results/mla_scarcity_seed42_result_20260724.json",
       "area": "rebuttal",
       "category": "data-or-receipt"
     },
@@ -12979,6 +13529,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_llama_s16_128k_gate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_log_p2_phase_transfer_lora.py",
       "area": "tests",
       "category": "code"
@@ -12995,6 +13550,21 @@
     },
     {
       "path": "tests/test_missing_observables_adversarial_challenge.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_mla_scarcity_5090.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_mla_yarn_operator_parity_5090.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_mrrope_parity_eval.py",
       "area": "tests",
       "category": "code"
     },
@@ -13039,6 +13609,16 @@
       "category": "code"
     },
     {
+      "path": "tests/test_native_z_consensus.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_z_refit.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_natural_fixed_candidate.py",
       "area": "tests",
       "category": "code"
@@ -13075,6 +13655,11 @@
     },
     {
       "path": "tests/test_position_visibility.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_prefill_chunk_contract.py",
       "area": "tests",
       "category": "code"
     },
@@ -13740,6 +14325,10 @@
     "docs/research/next_stage_20260912/WEB_PRO_WEIGHT_INDEPENDENT_FOLLOWUP_20260914.md",
     "paper-2027/research/LUNA_FIVE_DIMENSION_REVIEW_20260914.md",
     "paper-2027/SUPPLEMENT_README.md",
-    "paper-2027/research/THREE_DISCOVERIES_REVISION_20260914.md"
+    "paper-2027/research/THREE_DISCOVERIES_REVISION_20260914.md",
+    "paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md",
+    "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
+    "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/disposition.md",
+    "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/disposition.md"
   ]
 }

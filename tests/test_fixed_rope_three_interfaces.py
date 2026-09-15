@@ -269,6 +269,27 @@ def test_range_bootstrap_recomputes_worst_length_inside_every_draw():
     assert result["delta_curve_simultaneous95_halfwidth"] == 0.0
 
 
+def test_range_bootstrap_treats_single_length_auc_as_point_score():
+    candidate = []
+    baseline = []
+    for task in ("a", "b"):
+        for case in range(3):
+            common = {
+                "task": task, "length_cap": 32,
+                "prompt_sha256": f"{task}-32-{case}",
+                "mini_semantic_id": f"{task}-{case}",
+            }
+            candidate.append({**common, "official_score": 0.75})
+            baseline.append({**common, "official_score": 0.25})
+    result = bootstrap_range_contrast(
+        candidate, baseline, tasks=["a", "b"], lengths=[32],
+        task_families={"a": "family_a", "b": "family_b"}, draws=20, seed=7,
+    )
+    assert result["delta_log_auc"]["mean"] == pytest.approx(0.5)
+    assert result["delta_log_auc"]["interval95"] == pytest.approx([0.5, 0.5])
+    assert result["delta_worst_length_score"]["mean"] == pytest.approx(0.5)
+
+
 def test_constrained_full_z_step_stays_in_monotone_exponent_box():
     initial = np.asarray([0.0, 0.0, 0.2, 0.7, 1.0, 1.0])
     margins = np.asarray([-0.2, -0.1])

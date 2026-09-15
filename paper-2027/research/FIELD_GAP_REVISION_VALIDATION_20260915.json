@@ -1,0 +1,56 @@
+{
+  "status": "COMPLETE",
+  "main_body_pages": 9,
+  "total_pages": 61,
+  "undefined_references": 0,
+  "overfull_hbox_pt": 0,
+  "anonymous_metadata": true,
+  "all_fonts_embedded": true,
+  "source_package_files": 139,
+  "source_package_independent_compile": "PASS after regenerated main figures and clean/natural tables",
+  "cpu_operator_checks": 15,
+  "discrete_kernel_examples": "PASS",
+  "evidence_qualification_regression_tests": 6,
+  "clean_raw_pairs_rescored": 2600,
+  "no_numbers_in_abstract": true,
+  "first_page_figure_count": 0,
+  "native_task_relative_tradeoff_percent": 2.330124180270696,
+  "pdf_sha256": "c269fb42cd99404b5dc515b19fe035036ff15eeb0a76845bf5fa063740c0d81b",
+  "source_zip_sha256": "167f07c63390e62ffd4ddacb3e0b0e1ef63cb9ef321abaa90418af6218995d6d",
+  "remote_actions": "Read-only report/raw retrieval; no GPU launched by this revision",
+  "docs_check": {
+    "managed_documents": 128,
+    "local_links_checked": 1644,
+    "assets": 45,
+    "source_occurrences_checked": 89,
+    "relocations": 5,
+    "local_source_occurrences": 20,
+    "mode": "git-portable",
+    "errors": [
+      "Source changed since registry snapshot: paper-2027/research/evidence/FINITE_WINDOW_SLOW_RANK_RECEIPT_20260911.md",
+      "Source changed since registry snapshot: docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md"
+    ],
+    "model_execution": false
+  },
+  "source_package_discrete_checker": "PASS (NumPy environment explicitly selected)",
+  "visual_review": "Final main pages 1-9 and changed proof/control pages inspected; zero outstanding layout defects",
+  "git_diff_check": "PASS",
+  "current_title": "Beyond the Base: Frequency Allocation in RoPE",
+  "current_abstract_words": 154,
+  "title_abstract_refinement": "PASS: no numerical results, first page contains no figure",
+  "current_review_status": {
+    "cycles_completed": 2,
+    "reviewer_inputs": "Independent fresh-context PDF-only reviewers",
+    "internal_scores": [
+      6,
+      6
+    ],
+    "scores_apply_to": "Frozen review inputs, not post-optimization output",
+    "record": "pdf-review-rounds/20260915_two_rounds/README.md"
+  },
+  "natural_qa": {
+    "all_answers_rescored": 1262,
+    "primary_cluster_ci_exactly_reproduced": true,
+    "within_and_extended_ci_exactly_reproduced": true
+  }
+}

@@ -1,0 +1,416 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": 0.3519405450041288,
+        "hotpotqa": 0.5308730302640726,
+        "multifieldqa_en": 0.5132716962820004,
+        "narrativeqa": 0.23770646475564505,
+        "qasper": 0.4103804511339937
+      },
+      "macro_f1": 0.4088344374879681
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": 0.36956817409044546,
+        "hotpotqa": 0.5298382076600212,
+        "multifieldqa_en": 0.5191129352414549,
+        "narrativeqa": 0.22817607088530295,
+        "qasper": 0.40726201761519737
+      },
+      "macro_f1": 0.4107914810984844
+    }
+  },
+  "bootstrap_estimand": "Within each task, resample source_context_sha256 clusters and divide sampled cluster score sums by sampled question counts; then average task means equally. This matches the row-weighted point estimand while preserving document clustering.",
+  "candidate_minus_baseline": {
+    "bootstrap_mean": 0.001796699697398794,
+    "by_task": {
+      "2wikimqa": 0.017627629086316654,
+      "hotpotqa": -0.0010348226040514108,
+      "multifieldqa_en": 0.005841238959454431,
+      "narrativeqa": -0.009530393870342102,
+      "qasper": -0.0031184335187963153
+    },
+    "ci95": [
+      -0.015311042032731452,
+      0.018863762973665273
+    ],
+    "draws": 20000,
+    "estimate": 0.001957043610516296,
+    "probability_delta_gt_zero": 0.5823
+  },
+  "contract": "TAILSPLINE_LLAMA_NATURAL_QA_FROZEN631_PAIRED_V2",
+  "llama_length_audit": {
+    "extended_effect": {
+      "baseline_macro_f1": 0.3837041165021747,
+      "candidate_macro_f1": 0.37432146636564556,
+      "candidate_minus_baseline": {
+        "bootstrap_mean": -0.009790388033885156,
+        "by_task": {
+          "2wikimqa": 0.0036091359620771257,
+          "hotpotqa": -0.009425684640416931,
+          "multifieldqa_en": -0.0023415926378470564,
+          "narrativeqa": -0.003152232298210461,
+          "qasper": -0.03560287706824816
+        },
+        "ci95": [
+          -0.04149383268476576,
+          0.019538993894607486
+        ],
+        "draws": 20000,
+        "estimate": -0.009382650136529114,
+        "probability_delta_gt_zero": 0.2638
+      },
+      "output_health": {
+        "mrpro": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 52,
+              "hit_cap": 0,
+              "rows": 52
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 141,
+              "hit_cap": 1,
+              "rows": 142
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 56,
+              "hit_cap": 1,
+              "rows": 57
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 53,
+              "hit_cap": 0,
+              "rows": 53
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 11,
+              "hit_cap": 0,
+              "rows": 11
+            }
+          },
+          "empty": 0,
+          "ended_eos": 313,
+          "hit_cap": 2,
+          "rows": 315
+        },
+        "tailspline": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 51,
+              "hit_cap": 1,
+              "rows": 52
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 142,
+              "hit_cap": 0,
+              "rows": 142
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 57,
+              "hit_cap": 0,
+              "rows": 57
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 53,
+              "hit_cap": 0,
+              "rows": 53
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 11,
+              "hit_cap": 0,
+              "rows": 11
+            }
+          },
+          "empty": 0,
+          "ended_eos": 314,
+          "hit_cap": 1,
+          "rows": 315
+        }
+      },
+      "question_equal_sensitivity": {
+        "bootstrap_mean": -0.005820077000456305,
+        "ci95": [
+          -0.033351193976529935,
+          0.021489247089934504
+        ],
+        "draws": 20000,
+        "estimate": -0.005850612345474186,
+        "probability_delta_gt_zero": 0.33505
+      },
+      "rows": 315,
+      "rows_by_task": {
+        "2wikimqa": 52,
+        "hotpotqa": 142,
+        "multifieldqa_en": 57,
+        "narrativeqa": 53,
+        "qasper": 11
+      },
+      "source_documents_by_task": {
+        "2wikimqa": 52,
+        "hotpotqa": 142,
+        "multifieldqa_en": 46,
+        "narrativeqa": 5,
+        "qasper": 9
+      }
+    },
+    "extended_rows": 315,
+    "input_token_max": 16304,
+    "input_token_min": 3694,
+    "native_length": 8192,
+    "rows_by_task": {
+      "2wikimqa": 173,
+      "hotpotqa": 166,
+      "multifieldqa_en": 112,
+      "narrativeqa": 61,
+      "qasper": 119
+    },
+    "within_native_effect": {
+      "baseline_macro_f1": 0.45732382321519205,
+      "candidate_macro_f1": 0.4643216827308243,
+      "candidate_minus_baseline": {
+        "bootstrap_mean": 0.006891472292526777,
+        "by_task": {
+          "2wikimqa": 0.023652105470287343,
+          "hotpotqa": 0.04861111111111116,
+          "multifieldqa_en": 0.014321628069384917,
+          "narrativeqa": -0.051785714285714324,
+          "qasper": 0.0001901672130922849
+        },
+        "ci95": [
+          -0.012477535605049987,
+          0.02807290573850347
+        ],
+        "draws": 20000,
+        "estimate": 0.006997859515632254,
+        "probability_delta_gt_zero": 0.743
+      },
+      "output_health": {
+        "mrpro": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 120,
+              "hit_cap": 1,
+              "rows": 121
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 24,
+              "hit_cap": 0,
+              "rows": 24
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 51,
+              "hit_cap": 4,
+              "rows": 55
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 8,
+              "hit_cap": 0,
+              "rows": 8
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 108,
+              "hit_cap": 0,
+              "rows": 108
+            }
+          },
+          "empty": 0,
+          "ended_eos": 311,
+          "hit_cap": 5,
+          "rows": 316
+        },
+        "tailspline": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 120,
+              "hit_cap": 1,
+              "rows": 121
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 24,
+              "hit_cap": 0,
+              "rows": 24
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 51,
+              "hit_cap": 4,
+              "rows": 55
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 8,
+              "hit_cap": 0,
+              "rows": 8
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 108,
+              "hit_cap": 0,
+              "rows": 108
+            }
+          },
+          "empty": 0,
+          "ended_eos": 311,
+          "hit_cap": 5,
+          "rows": 316
+        }
+      },
+      "question_equal_sensitivity": {
+        "bootstrap_mean": 0.014057785659729984,
+        "ci95": [
+          -0.012721923458095212,
+          0.041515606143437064
+        ],
+        "draws": 20000,
+        "estimate": 0.01399529530732867,
+        "probability_delta_gt_zero": 0.8438
+      },
+      "rows": 316,
+      "rows_by_task": {
+        "2wikimqa": 121,
+        "hotpotqa": 24,
+        "multifieldqa_en": 55,
+        "narrativeqa": 8,
+        "qasper": 108
+      },
+      "source_documents_by_task": {
+        "2wikimqa": 121,
+        "hotpotqa": 24,
+        "multifieldqa_en": 44,
+        "narrativeqa": 1,
+        "qasper": 80
+      }
+    },
+    "within_native_rows": 316
+  },
+  "metric": "five-task equal macro whole-response LongBench-normalized token F1",
+  "output_health": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": {
+          "empty": 0,
+          "ended_eos": 172,
+          "hit_cap": 1,
+          "rows": 173
+        },
+        "hotpotqa": {
+          "empty": 0,
+          "ended_eos": 165,
+          "hit_cap": 1,
+          "rows": 166
+        },
+        "multifieldqa_en": {
+          "empty": 0,
+          "ended_eos": 107,
+          "hit_cap": 5,
+          "rows": 112
+        },
+        "narrativeqa": {
+          "empty": 0,
+          "ended_eos": 61,
+          "hit_cap": 0,
+          "rows": 61
+        },
+        "qasper": {
+          "empty": 0,
+          "ended_eos": 119,
+          "hit_cap": 0,
+          "rows": 119
+        }
+      },
+      "empty": 0,
+      "ended_eos": 624,
+      "hit_cap": 7,
+      "rows": 631
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": {
+          "empty": 0,
+          "ended_eos": 171,
+          "hit_cap": 2,
+          "rows": 173
+        },
+        "hotpotqa": {
+          "empty": 0,
+          "ended_eos": 166,
+          "hit_cap": 0,
+          "rows": 166
+        },
+        "multifieldqa_en": {
+          "empty": 0,
+          "ended_eos": 108,
+          "hit_cap": 4,
+          "rows": 112
+        },
+        "narrativeqa": {
+          "empty": 0,
+          "ended_eos": 61,
+          "hit_cap": 0,
+          "rows": 61
+        },
+        "qasper": {
+          "empty": 0,
+          "ended_eos": 119,
+          "hit_cap": 0,
+          "rows": 119
+        }
+      },
+      "empty": 0,
+      "ended_eos": 625,
+      "hit_cap": 6,
+      "rows": 631
+    }
+  },
+  "panel_sha256": "7c4524fc89b6910fde8239ebbc1cf440fff61ed4523569052a7e67f933011767",
+  "primary_pool": "exact historical 631-row OLMo-tokenizer >4096 frozen source pool, retokenized from original LongBench rows for Llama",
+  "question_equal_sensitivity": {
+    "bootstrap_mean": 0.004187622156785025,
+    "ci95": [
+      -0.015018113441100038,
+      0.02349058758639216
+    ],
+    "draws": 20000,
+    "estimate": 0.004088067239764642,
+    "probability_delta_gt_zero": 0.66265
+  },
+  "raw_sha256": {
+    "mrpro": "e5e56121ab37d135ceb5ffa3914155883aa5fb162057b3adfb5771b4f93b2ce1",
+    "tailspline": "6b161a1538cdcd7af8ab33a3d39529f49dd689184255d69129a4c603e4265ac3"
+  },
+  "rows_per_arm": 631,
+  "scope": "Paired five-task natural-QA transfer evidence on a previously defined finite source pool; not full LongBench and not an independent sample.",
+  "source_cluster_audit": {
+    "clusters_shared_across_tasks": 0,
+    "interpretation": "No cross-task cluster correction is needed.",
+    "shared_cluster_tasks": {},
+    "unique_source_documents": 524
+  },
+  "status": "COMPLETE",
+  "tasks": [
+    "hotpotqa",
+    "2wikimqa",
+    "qasper",
+    "narrativeqa",
+    "multifieldqa_en"
+  ]
+}

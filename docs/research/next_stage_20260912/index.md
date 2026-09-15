@@ -14,6 +14,11 @@ Llama结果见[经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)�
 AUC差全部为正；两模型均3/3方向通过。YaRN/BM与机制实验后置，不自动启动。
 既有零训练与冻结checkpoint边界见合同，执行沿用目标任务的有效授权。
 
+**2026-09-15：clean Llama 32K Full RULER-13×200确认完成。** TailSpline/MrPro为
+`68.27/56.54%`，差`+11.72pp`，95%区间`[+10.32,+13.11]pp`；12/13任务与四个
+family为正，输出健康更好。它是当前唯一hero experiment；Natural-QA631负责真实输出
+迁移，Cosh保留学习期证据，TailSpline是零训练核心实例。详见[关键实验罗盘](KEY_EXPERIMENT_COMPASS_20260914.md)。
+
 另有一条不改变TailSpline主线优先级的Native窗口探索：冻结成熟OLMo-2-1B全部
 权重与Native频率support，仅以五个有效自由度校准interior `z`，检验geometric
 Native表是否仍是该checkpoint的事后最优点。该实验是checkpoint-calibrated反事实，
@@ -23,7 +28,7 @@ Native表是否仍是该checkpoint的事后最优点。该实验是checkpoint-ca
 |---|---|
 | 当前实现与结果定位 | [实验流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md) |
 | Llama数据、样本量与执行实现 | [资产审计](LLAMA_CLASSIC_ASSET_AUDIT_20260914.md) |
-| Llama TailSpline–MrPro主结果 | [经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，局部反转与证据边界完整保留 |
+| Llama TailSpline–MrPro主结果 | [经典＋clean结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：经典Full-13/NIAH/PPL 3/3通过；clean 32K 2,600配对prompt为`+11.72pp` |
 | OLMo TailSpline–MrPro跨模型确认 | [经典两臂结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，13任务AUC差全部为正 |
 | 成熟checkpoint Native `z`增强探索 | [Native-Z5预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md)：OLMo-2-1B、零权重更新、五自由度、独立NLL与原生窗口任务判决；只支持checkpoint-calibrated结论 |
 | 理论深化CPU判决 | [15类算子核验](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)：`z→相位→竞争→value`、gain仿射条件、T−C边际配对及架构边界全部通过；不构成性能或中介证据 |
@@ -35,3 +40,10 @@ Native表是否仍是该checkpoint的事后最优点。该实验是checkpoint-ca
 
 fixed-u已退出；旧mix075、局部修复和Qwen后继队列不再执行。旧结果仍按原证据范围有效，不能充作精确TailSpline统一比较。
 追溯此前推导、迁移结果或旧计划时使用[历史研究目录](CATALOG_20260914.md)，无需作为当前任务前置阅读。
+
+本轮论文升级与后续实验的具体安排见[差距与决策映射](../../../paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)：摘要不放数字，clean主结果已入稿，Natural-QA优先，YaRN可选，M1待条件成立。
+
+2026-09-15两轮PDF审稿优化已完成；Natural-QA631已取得完整T/P结果并入稿：
+F1为41.08/40.88%，主差+0.20pp、簇配对区间[−1.53,+1.89]pp。
+见[Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)及
+[两轮审稿与处理](../../../paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md)。

@@ -101,7 +101,7 @@
       "priority": "P0",
       "question": "权重如何学得使用分配",
       "evidence_grade": "50M报告、151M两seed摘要",
-      "manuscript_location": "Appendix compatibility / former Fig3",
+      "manuscript_location": "Main Fig. 1c and identification paragraph; explicit crossing construction in appendix",
       "interpretation": "50M/151M指标不同；range差值不是四格绝对排序",
       "sources": [
         {
@@ -123,7 +123,7 @@
       "question": "频率集与安装方式是否不同",
       "evidence_grade": "置换定理、冻结干预报告",
       "manuscript_location": "Appendix compatibility / a1",
-      "interpretation": "固定权重置换与同步Q/K补偿分开",
+      "interpretation": "Historical report-backed same-spectrum slot effects; exact realized permutation and OLMo scoring-window receipt not recovered. Algebraic compensation is distinct from measured model recovery.",
       "sources": [
         {
           "path": "paper-2027/research/attention-aware-retrofit/results/coupling-transfer/SCALE_CONSISTENT_LOG_PROFILE_RESULT_20260831.md",
@@ -132,9 +132,9 @@
         },
         {
           "path": "paper-2027/sections/03_compatibility.tex",
-          "availability": "local-untracked",
-          "sha256": "828119d5e119696a280d102f71b7675cf2def9473df3e17f75743686cb551852",
-          "revision_note": "2026-09-14 manuscript exposition and reference corrections; experiment data unchanged."
+          "availability": "tracked",
+          "sha256": "5208c37258aecae8bbdd3098f0677e6e3e53d8c00d80096728e08516c8c94fc1",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         }
       ]
     },
@@ -150,14 +150,14 @@
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "aeef785d3887d276e26cee675646085a2f374dec608e1e1d1ab44fe0b9fb5485",
-          "revision_note": "2026-09-14 whole-manuscript exposition review; formulas and recorded observations preserved."
+          "sha256": "e7bd2951c523389626131a235e9f759267beecfdd044283852d89f7929f14394",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         },
         {
           "path": "paper-2027/sections/04_construction.tex",
-          "availability": "local-untracked",
-          "sha256": "292b4ce7ff7ca4dbe75715c70b3900a135a2cbc2db24d9037e00e1601831f85e",
-          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
+          "availability": "tracked",
+          "sha256": "6580b9d98ad1c8a9fcd3e2c25daf3c3dfbc384552d1c228f906b8fb8a00ec1fd",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         }
       ]
     },
@@ -188,8 +188,8 @@
       "priority": "P1",
       "question": "有限旋转通道中的实用价值",
       "evidence_grade": "三seed曲线摘要",
-      "manuscript_location": "§6.1 / Fig4 / Table1 / a3",
-      "interpretation": "432M MLA三seed配对外推评测；原始结果及逐seed数值可复算，频率表与评价规则见附录。",
+      "manuscript_location": "Supporting Cosh extrapolation / Figure4 / AppendixE.1",
+      "interpretation": "Three-seed learning utility with shared evaluation chunks and unanchored midpoint endpoints. The review did not establish that original data-construction records are absent; no contamination finding is recorded.",
       "sources": [
         {
           "path": "data/curated/table18_mla_3seed_aggregate.json",
@@ -853,9 +853,9 @@
         {
           "path": "paper-2027/appendix/a10_tailspline.tex",
           "availability": "tracked",
-          "sha256": "55e231a4ad78c04787d5d031a3430ab7685df4e816ef212d019a1c145dfdfc31",
+          "sha256": "46b039757b735c1b708ff84902a396fb47ad4518abf64d141559b9a1edc5ca39",
           "role": "Exact matched-displacement T-C identity and centroid equivalence; mathematical verification only, no E1 task scores.",
-          "revision_note": "2026-09-14 independent PDF review: exposition/input-construction clarification; mathematical and model results unchanged."
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         },
         {
           "path": "paper-2027/figs/allocation_design.py",
@@ -888,17 +888,45 @@
     },
     {
       "id": "A39",
-      "name": "TailSpline–MrPro Llama S4经典两臂判决",
+      "name": "TailSpline–MrPro Llama S4经典多长度与clean 32K判决",
       "priority": "P0",
-      "question": "不训练且固定checkpoint、band、gain与评测协议时，exact TailSpline能否在经典长上下文任务整体胜过exact MrPro",
-      "evidence_grade": "Llama-3-8B-Instruct；Full-13 13任务×3长度×10行与PPL46×3长度全量配对；20k paired bootstrap",
+      "question": "不训练且固定checkpoint、band、gain与评测协议时，exact TailSpline能否在经典多长度和clean 32K大样本上整体胜过exact MrPro",
+      "evidence_grade": "Llama-3-8B-Instruct；经典Full-13 13任务×3长度×10行与PPL46×3长度；clean 32K为13任务×200行、2,600严格配对prompt/臂；20k paired bootstrap",
       "manuscript_location": "§6.2 / Fig5b / a10",
-      "interpretation": "三个预注册方向3/3通过：Full-13 +3.20pp且区间为正，NIAH +3.75pp，PPL AUC -0.00449；保留PPL短端与QA/单任务反转，不单独推出one-sided机制或跨checkpoint普适性",
+      "interpretation": "经典三个方向3/3通过；clean 32K task macro +11.72pp、CI95 [+10.32,+13.11]pp，12/13任务与四family为正且输出健康更好。保留classic PPL短端代价和clean multivalue负格；不单独推出one-sided机制、YaRN胜负或跨checkpoint普适性",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
+          "availability": "tracked",
+          "sha256": "aed3a6106ab3d5e5da573945a1728e1bdab6dd0070be053d4bcc6f2807213876",
+          "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean_ruler200_tailspline_vs_mrpro.json",
+          "availability": "tracked",
+          "sha256": "5c7e2fe7275029c4aad98520a420a05e170bbe5dcea354f1e01f190e4ee1fe4b"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/batch_sensitivity_probe39.json",
+          "availability": "tracked",
+          "sha256": "1c1d74818e9a868c310ed8f303a7e0f9a253400d42de66b70760251514203464"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/native_vs_tailspline_mrpro_classic8k.json",
+          "availability": "tracked",
+          "sha256": "6d033a4f7d766cf25dbec38c215e416b7fb813d1da8fbff711ae0a07ea372164"
+        },
+        {
+          "path": "paper-2027/figs/field_gap_inputs.json",
           "availability": "local-untracked",
-          "sha256": "775028994884acb1a3a507366a383f9b78e2724d693d26515a7f89001156481d"
+          "sha256": "0e824df50a87208a4194f9995eeaefd83c5bc5c3af33b85a253f43bcd04130f6",
+          "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
+        },
+        {
+          "path": "paper-2027/figs/verify_field_gap.py",
+          "availability": "local-untracked",
+          "sha256": "5ac088b92e647a12c76b27f5abea6f532d82870562fd9867a08dd2b9b075bde6",
+          "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
         }
       ]
     },
@@ -929,10 +957,10 @@
       "sources": [
         {
           "path": "paper-2027/figs/allocation_value_inputs.json",
-          "availability": "local-untracked",
-          "sha256": "365f15e5c29932a2858141d61f01b01679256f379625928b53cab1b41afff03b",
+          "availability": "tracked",
+          "sha256": "130e742980324979d674c0f160f180cbb45e5b6843c9aeada9fa6ffdcb6b7848",
           "role": "data.native_grid_historical; sources.native_grid_historical identifies git 79e52bb report",
-          "revision_note": "2026-09-14 writing-anchor revision: exposition/figure organization and existing report-backed AUC intervals; original observations and constructions unchanged."
+          "revision_note": "2026-09-15 two PDF-review cycles: existing evidence clarified and complete Natural-QA631 integrated; historical source observations retained."
         }
       ]
     },
@@ -959,6 +987,92 @@
           "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
           "availability": "tracked",
           "sha256": "1d623100da8e6e8fd11a85177f3771ab61be4b7b78de1213da5be0a9b2baf6df"
+        }
+      ]
+    },
+    {
+      "id": "A43",
+      "name": "E1 qualified equal-dose diagnostic",
+      "priority": "P1",
+      "question": "E1 qualified equal-dose diagnostic",
+      "evidence_grade": "T-C -0.41pp [-2.63,1.82], QUALIFIED_ONLY; E0 does not establish full runtime equivalence.",
+      "manuscript_location": "TailSpline control appendix",
+      "interpretation": "T-C -0.41pp [-2.63,1.82], QUALIFIED_ONLY; E0 does not establish full runtime equivalence.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/e1_experimental_audit.py",
+          "availability": "tracked",
+          "sha256": "9de972c6930c5c1933a3a3b338b319a349f6af67615412d41a64df01590733c2"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json",
+          "availability": "local-untracked",
+          "sha256": "13d18ac130eae4a4b50aaabb9c1c42bc23ba3c8d0a8ab3d7c5ec978a89604ddf"
+        }
+      ]
+    },
+    {
+      "id": "A44",
+      "name": "Integer-position kernel equivalence",
+      "priority": "P1",
+      "question": "Integer-position kernel equivalence",
+      "evidence_grade": "Conditional similarity corollary: no-alias frequencies in (0,pi), full kernel, integer distances 0 and 1. CPU only.",
+      "manuscript_location": "Main theory and proof appendix",
+      "interpretation": "Conditional similarity corollary: no-alias frequencies in (0,pi), full kernel, integer distances 0 and 1. CPU only.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
+          "availability": "local-untracked",
+          "sha256": "ad24cf40c0085ff26a133dc5b9b9e1587814617c5a961c701385de54646cbea8"
+        },
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json",
+          "availability": "local-untracked",
+          "sha256": "b11f64fc507a6a133894bd4e026f7bd54b9ddd6ab86a289d6e4018104872ca2d"
+        }
+      ]
+    },
+    {
+      "id": "A45",
+      "name": "TailSpline Natural-QA631 V2 complete paired comparison",
+      "priority": "P0",
+      "question": "Does TailSpline transfer its clean RULER gain to the frozen natural-input pool?",
+      "evidence_grade": "All 1262 answers locally rescored; primary and stratum source-context intervals exactly reproduced",
+      "manuscript_location": "Main natural-QA paragraph and AppendixH.9",
+      "interpretation": "631 questions / 524 clusters; primary +0.1957pp [-1.5311,+1.8864], extended315 -0.9383pp [-4.1494,+1.9539]; no resolved ranking or equivalence claim",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json",
+          "availability": "local-untracked",
+          "sha256": "f203c70f713bd6a8c9b9ef2130ca137eb7a73bb6c0740b8b8359a6f53d75ccde"
+        },
+        {
+          "path": "paper-2027/figs/field_gap_inputs.json",
+          "availability": "local-untracked",
+          "sha256": "0e824df50a87208a4194f9995eeaefd83c5bc5c3af33b85a253f43bcd04130f6",
+          "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
+        },
+        {
+          "path": "paper-2027/figs/verify_field_gap.py",
+          "availability": "local-untracked",
+          "sha256": "5ac088b92e647a12c76b27f5abea6f532d82870562fd9867a08dd2b9b075bde6",
+          "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
+        }
+      ]
+    },
+    {
+      "id": "A46",
+      "name": "TailSpline clean RULER16K matched Full13",
+      "priority": "P0",
+      "question": "Does the static S4 table improve task quality at the intermediate 2L length?",
+      "evidence_grade": "Completed matched report; all13 task means and aggregate checked",
+      "manuscript_location": "Main Table2 / Figure3 / AppendixH.10",
+      "interpretation": "650 pairs, 50/task; Full13 +3.3897pp [1.5307,5.3385]; QA +8pp [1,15]. Same construction at2L and4L; no continuum-length or natural-QA equivalence claim.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json",
+          "availability": "local-untracked",
+          "sha256": "12e0ac6c7e5d5047268bcf15d033d43a8e09886b86694b22c5f0f0eb391b540b"
         }
       ]
     }

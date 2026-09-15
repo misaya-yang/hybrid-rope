@@ -35,7 +35,7 @@ def task_macro(values: dict[str, dict], ids: list[str]) -> tuple[float, dict[str
     return float(np.mean(list(means.values()))), means
 
 
-def bootstrap(panel, candidate, baseline, ids, *, draws=20_000, seed=20260914):
+def bootstrap(panel, candidate, baseline, ids, *, draws=20_000, seed=20260914, family_size=1):
     rng = np.random.default_rng(seed)
     task_draws = []
     for task in TASKS:
@@ -56,6 +56,8 @@ def bootstrap(panel, candidate, baseline, ids, *, draws=20_000, seed=20260914):
     return {
         "bootstrap_mean": float(np.mean(result)),
         "ci95": np.quantile(result, [0.025, 0.975]).tolist(),
+        "familywise_ci95_bonferroni": np.quantile(result, [0.025/family_size, 1-0.025/family_size]).tolist(),
+        "comparison_family_size": family_size,
         "probability_delta_gt_zero": float(np.mean(result > 0)),
         "draws": draws,
     }
@@ -90,6 +92,8 @@ def health(values: dict[str, dict], ids: list[str]) -> dict:
             "ended_eos": sum(bool(values[row_id]["ended_eos"]) for row_id in selected),
             "hit_cap": sum(bool(values[row_id]["hit_cap"]) for row_id in selected),
             "empty": sum(bool(values[row_id]["empty"]) for row_id in selected),
+            "generated_tokens": sum(len(values[row_id]["generated_ids"]) for row_id in selected),
+            "output_length_quantiles": np.quantile([len(values[row_id]["generated_ids"]) for row_id in selected], [0, .5, .95, 1]).tolist() if selected else [],
         }
 
     return {
@@ -149,6 +153,7 @@ def main() -> None:
     parser.add_argument("--candidate-name", default="tailspline")
     parser.add_argument("--baseline-name", default="mrpro")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--comparison-family-size", type=int, choices=[1, 2], default=1)
     args = parser.parse_args()
 
     panel_rows = rows(args.panel)
@@ -202,11 +207,19 @@ def main() -> None:
         "candidate_minus_baseline": {
             "estimate": candidate_macro - baseline_macro,
             "by_task": {task: candidate_tasks[task] - baseline_tasks[task] for task in TASKS},
-            **bootstrap(panel, outputs[args.candidate_name], outputs[args.baseline_name], ids),
+            **bootstrap(panel, outputs[args.candidate_name], outputs[args.baseline_name], ids, family_size=args.comparison_family_size),
         },
         "question_equal_sensitivity": pooled_cluster_bootstrap(
             panel, outputs[args.candidate_name], outputs[args.baseline_name], ids,
         ),
+        "document_equal_sensitivity": {
+            name: float(np.mean([
+                np.mean([
+                    np.mean([values[r]["whole_response_f1"] for r in ids if panel[r]["task"] == task and panel[r]["document_cluster_id"] == cluster])
+                    for cluster in {panel[r]["document_cluster_id"] for r in ids if panel[r]["task"] == task}
+                ]) for task in TASKS
+            ])) for name, values in outputs.items()
+        },
         "llama_length_audit": {
             "native_length": 8192,
             "within_native_rows": len(llama_within),

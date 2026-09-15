@@ -49,7 +49,7 @@
 | A36 | OLMo S=4→8 fixed-u倍率迁移反事实 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md)；Core-6×4/16/32K×6行/格；同prompt/gain的fixed-u AUC显著低于fixed-m，终止该迁移分支 |
 | A37 | TailSpline精确有限网格构造及同位移T/C分解 | [方法与评测合同](../../../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py)；one-sided唯一解是TailSpline、symmetric唯一解是BM；CPU不选择边界条件 |
 | A38 | YaRN–MrPro等剂量单交叉后移对照 | [理论审计](../../../docs/research/next_stage_20260912/MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/dose_matched_yarn_mrpro_verification.py)；`n=17`唯一`S*=7.51324282212058`、等总log位移、单交叉；尚无模型性能结论 |
-| A39 | TailSpline–MrPro Llama S4经典两臂判决 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)；Full-13与PPL46全量配对raw；Full-13 `+3.20pp`、NIAH `+3.75pp`、PPL AUC `−0.00449`，3/3方向通过；跨模型见A40，机制仍待解混 |
+| A39 | TailSpline–MrPro Llama S4经典多长度与clean 32K判决 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)；经典Full-13/PPL46与clean 32K各2,600行/臂均严格配对；clean task macro `+11.72pp`、95%区间`[+10.32,+13.11]pp`，12/13任务与四family为正；跨模型见A40，机制仍待解混 |
 | A40 | TailSpline–MrPro OLMo S4跨模型确认 | [结果owner](../../../docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)；Full-13与PPL46全量配对raw；Full-13 `+49.23pp`、NIAH `+64.45pp`、PPL AUC `−3.853`，13任务差全部为正；机制仍混入总剂量 |
 | A42 | Hybrid-RoPE理论深化算子链 | [结果owner](../../../docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)、[固定JSON](../../../experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json)、[复算脚本](../../../experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py)；15类CPU检查全部通过；只支持条件算子关系，不支持任务排序、实证中介或通用最优表 |
 
@@ -91,7 +91,7 @@
 - **A36**：每格6行的机制判别块足以否决当前fixed-u扩展，但不是16/24/8最终样本块；不否决S4直接mix075、z自由度或其他构造。
 - **A37**：one-sided边界是假说而非全局smoothness定理；CPU只证明各声明目标的唯一解，不能从连续边界族中选择任务最优条件。历史mix075是近似prior，不能代替精确TailSpline的GPU结果；Core-6也不能冒充PPL/passkey/full-13闭环。
 - **A38**：等剂量构造排除了YaRN–MrPro原整数倍率比较中的总位移混杂，但CPU没有证明后移更好；只有按冻结两臂合同取得任务结果后，才能评价back-loading原则，且该分支不插队当前TailSpline–MrPro主判决。
-- **A39**：支持的是冻结Llama-3-8B S4、canonical `[18,35]`、同gain合同下的整体方法优势。PPL优势很小且由32K驱动，8/16K轻微变差；QA与若干单任务反转保留。当前数据不证明one-sided边界机制、YaRN胜负或跨checkpoint普适性。
+- **A39**：支持冻结Llama-3-8B S4、canonical `[18,35]`、同gain合同下的整体方法优势。clean确认是source-order、unpadded、单32K端点的13×200子样本，不称上游默认500/task或多长度AUC；经典PPL优势很小且由32K驱动。当前数据不证明one-sided边界机制、YaRN胜负或跨checkpoint普适性。RULER行按任务内配对重采样；不把重复答案或模板伪造为共享自然文档簇。
 - **A40**：与A39共同支持两个模型族对应canonical S4合同上的TailSpline方法优势，但OLMo历史BM/front-loaded方向已经提供先验，不能称完全独立盲测。高cap率保留；巨大差值不识别`sum(m)`、early transport与tail landing各自贡献。
 - **A42**：有限softmax/value、gain仿射可恢复条件、T−C边际配对、稀疏访问／压缩／旋转value等算子关系通过独立CPU核验。标准恒等式本身不作为新颖性主张；没有路径干预时使用`acts through`而非经验性的`mediated by`，不从CPU检查推出任何方法胜负。
 
@@ -110,3 +110,7 @@
 本轮正文已纳入A37构造及A39/A40 TailSpline两模型结果（§5.2、§6.2、Fig5）；BM自然QA仍属A14。兼容性完整内容移入附录，主要证据身份不变。当前版面以[主张映射](../EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md)为准。
 
 A41：历史原生Std-RoPE三seed对照已追回，见[可移植输入](../../figs/allocation_value_inputs.json)的native_grid_historical及[附录](../../appendix/a5_identification.tex)。严格保持短训练、span匹配、报告聚合身份；不替代A01。
+
+- Current field-gap additions: [paired clean score records](../../figs/field_gap_inputs.json), [reproduction](../../figs/verify_field_gap.py), [qualified E1 audit](../../../experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json), and [discrete kernel checks](../../../experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json).
+
+- [TailSpline Natural-QA631 V2](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json): complete, independently rescored 631-pair result with source-context intervals; main table and detailed appendix.

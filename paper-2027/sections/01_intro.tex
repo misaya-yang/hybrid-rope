@@ -1,23 +1,39 @@
 \section{Introduction}
 \label{sec:intro}
+A context window is useful when a model can use the information within it.
+For a model trained to length $L$, an extension factor $s$ specifies a target
+length $sL$; quality at the lengths served by that window determines its value.
+RoPE's base selects a frequency range, while the placement of frequencies
+inside it determines the positional basis. We study how this internal
+allocation can improve model quality within the intended context range.
 
-RoPE tables can share their fastest and slowest frequencies yet place their interior frequencies differently. Can this allocation improve model performance without changing the frequency range?
+MrRoPE unifies frequency rescaling through mixed-radix conversion and proposes
+progressive extension \citep{tian2026mrrope}; YaRN and LeRoPE further demonstrate
+the value of scaling and learning frequencies \citep{peng2024yarn,karypis2026lerope}.
+We investigate the positional structure and quality of these allocations.
+Paired experiments hold the
+frequency endpoints fixed and show that interior placement improves both learned
+extrapolation and frozen-model performance. Additional controls distinguish
+its effects from total frequency displacement and learned coordinate assignment.
 
-YaRN, MrRoPE and LeRoPE establish useful frequency changes \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}. We distinguish sampled range, native-relative displacement and interior arrangement through paired training and frozen interventions, then construct allocations for learning and static deployment.
+Full sine--cosine geometry reveals how distinct frequencies can supply
+overlapping positional directions. For frozen extension, a model already uses
+its native frequencies; we introduce TailSpline to allocate extension through
+a smooth connection to the low-frequency tail. A single static table improves
+clean RULER over MrRoPE-Pro at both $2L$ and $4L$, by $3.39$ and $11.72$
+percentage points, with a small observed native-window trade-off.
+Cosh provides a complementary frequency transport for extrapolation, used in
+paired training to establish the wider value of changing $z$.
 
-\begin{figure}[t]
-\centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
-\caption{\textbf{Allocation is a design freedom with learning and zero-training uses.} (a) Fixed endpoints leave internal spacing free. (b) Cosh turns a density prior into a finite table through quantiles. These illustrations use $K=8$, $\tau=2$ and endpoint anchoring. (c) Exact TailSpline and BM profiles at $n=17$ redistribute extension between unchanged high frequencies and a tail scaled by $1/s$. The two routes use distinct objectives to design frequency spacing.}
-\label{fig:method-overview}
-\end{figure}
-
-Against a matched geometric control, changing only $30$ interior frequencies improves $2\times$, $4\times$ and $8\times$ extrapolation loss in all three paired seeds. The endpoints and training recipe are matched; retargeting support reverses the preference (Fig.~\ref{fig:spectral-budget-overview}). Frozen controls identify gains at fixed support; a separate equal-displacement comparison further isolates shape.
-
-Changing $z$ changes the positional basis: distinct frequencies can supply overlapping directions over a finite window. We characterize this structure and design frequency spacing in two settings: Cosh specifies a training-time table through a density objective; TailSpline smooths the transition into a frozen model's fully interpolated low-frequency tail. Both retain the rotary operator and construct their tables without fitted model statistics.
-
-Cosh improves multi-seed MLA and $750$M continued training. TailSpline improves frozen Llama-$3$-$8$B and OLMo on RULER-13 and NIAH; the symmetric construction BM raises OLMo's five-task natural-QA F1 from $21.62$ to $25.44$. Our contributions are:
+Our contributions are:
 \begin{itemize}
-\item \textbf{Allocation as a design variable.} Matched interventions demonstrate the value of internal frequency placement beyond range and total displacement.
-\item \textbf{Structure and analytic designs.} Full-pair geometry characterizes finite-window overlap; density and boundary objectives yield closed-form Cosh and TailSpline tables.
-\item \textbf{Learning and zero-training gains.} The constructions improve language modeling, retrieval and natural QA across training, continuation and frozen deployment.
+\item \textbf{Identify the value of allocation.} Controlled training and frozen
+interventions separate interior placement from range, total displacement,
+and learned coordinate assignment.
+\item \textbf{Characterize its positional structure.} Full-pair geometry
+quantifies finite-window overlap; a discrete kernel criterion distinguishes
+spectral changes from fixed changes of basis.
+\item \textbf{Improve quality within the extended window.} TailSpline gives a
+closed-form frozen allocation with strong paired task gains at intermediate
+and target lengths. Cosh supplies a supporting extrapolation instance.
 \end{itemize}

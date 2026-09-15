@@ -13,6 +13,17 @@ CHECKPOINT_ARMS=ARMS+('Cosh_tau_sqrt2_gradual_install',)
 LENGTHS=(4096,8192,16384,32768)
 
 
+def resolve_lm_lengths(requested, manifest):
+    """Keep legacy defaults while allowing explicit longer prepared LM grids."""
+    values = tuple(int(value) for value in requested) if requested else LENGTHS
+    if len(set(values)) != len(values) or any(value <= 0 for value in values):
+        raise ValueError('LM lengths must be unique positive integers')
+    prepared = manifest.get('lengths') or []
+    if requested and prepared and not set(values).issubset({int(value) for value in prepared}):
+        raise ValueError('requested LM length is absent from the prepared manifest')
+    return values
+
+
 def read_rows(path):
     with Path(path).open() as stream:
         return [json.loads(line) for line in stream if line.strip()]
@@ -133,10 +144,10 @@ def chunked_greedy_tokens(model, ids, *, max_new_tokens, eos_ids, prefill_chunk_
         total = stop
         del output
     generated = []
-    for _ in range(max_new_tokens):
+    for step in range(max_new_tokens):
         token = logits.argmax(dim=-1)
         value = int(token.item()); generated.append(value)
-        if value in eos_ids:
+        if value in eos_ids or step + 1 == max_new_tokens:
             break
         output = model(input_ids=token[:, None], attention_mask=ids.new_ones((1, total + 1)),
                        past_key_values=cache, use_cache=True,
@@ -149,11 +160,17 @@ def chunked_greedy_tokens(model, ids, *, max_new_tokens, eos_ids, prefill_chunk_
     return generated
 
 
-def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128):
+def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128, prefill_chunk_size=0):
     """Compute exact next-token NLL without importing unrelated evaluation data code."""
     import torch.nn.functional as F
     if token_ids.ndim != 2 or token_ids.shape[0] != 1 or token_ids.shape[1] < 2:
         raise ValueError('LM window must have shape [1,L+1]')
+    prediction_tokens = token_ids.shape[1] - 1
+    if prefill_chunk_size and prediction_tokens > prefill_chunk_size:
+        return chunked_lm_loss_rows(
+            model, token_ids, tail=tail, logit_chunk_size=chunk_size,
+            prefill_chunk_size=prefill_chunk_size,
+        )
     hidden=model.model(input_ids=token_ids[:,:-1],use_cache=False).last_hidden_state[0]
     targets=token_ids[0,1:];count=int(targets.numel());tail_count=min(int(tail),count)
     whole_sum=tail_sum=0.
@@ -164,7 +181,68 @@ def lm_loss_rows(model, token_ids, *, tail=128, chunk_size=128):
         whole_sum+=float(losses.sum().detach());overlap=max(start,count-tail_count)
         if overlap<stop:tail_sum+=float(losses[overlap-start:].sum().detach())
     return {'whole_loss_sum':whole_sum,'whole_target_count':count,
-            'tail128_loss_sum':tail_sum,'tail128_target_count':tail_count}
+            'tail128_loss_sum':tail_sum,'tail128_target_count':tail_count,
+            'lm_prefill_chunk_size':0}
+
+
+def chunked_lm_loss_rows(
+    model, token_ids, *, tail=128, logit_chunk_size=128, prefill_chunk_size,
+):
+    """Score every next token while retaining exact left context in a KV cache."""
+    import torch
+    import torch.nn.functional as F
+    from transformers import DynamicCache
+    from .runtime import register_blackwell_chunked_attention
+
+    count = token_ids.shape[1] - 1
+    if prefill_chunk_size <= 0 or logit_chunk_size <= 0:
+        raise ValueError('chunk sizes must be positive')
+    cache = DynamicCache()
+    whole_sum = 0.0
+    tail_sum = 0.0
+    tail_count = min(int(tail), count)
+    tail_start = count - tail_count
+    previous_attention = model.config._attn_implementation
+    register_blackwell_chunked_attention(model)
+    try:
+        for start in range(0, count, prefill_chunk_size):
+            stop = min(start + prefill_chunk_size, count)
+            piece = token_ids[:, start:stop]
+            output = model.model(
+                input_ids=piece,
+                attention_mask=token_ids.new_ones((1, stop)),
+                past_key_values=cache,
+                use_cache=True,
+                cache_position=torch.arange(start, stop, device=token_ids.device),
+                return_dict=True,
+            )
+            cache = output.past_key_values
+            hidden = output.last_hidden_state[0]
+            targets = token_ids[0, start + 1:stop + 1]
+            for local_start in range(0, stop - start, logit_chunk_size):
+                local_stop = min(local_start + logit_chunk_size, stop - start)
+                logits = F.linear(
+                    hidden[local_start:local_stop], model.lm_head.weight
+                ).float()
+                losses = F.cross_entropy(
+                    logits, targets[local_start:local_stop], reduction='none'
+                )
+                whole_sum += float(losses.sum())
+                global_start = start + local_start
+                global_stop = start + local_stop
+                overlap = max(global_start, tail_start)
+                if overlap < global_stop:
+                    tail_sum += float(losses[overlap - global_start:].sum())
+            del output, hidden
+    finally:
+        model.config._attn_implementation = previous_attention
+    return {
+        'whole_loss_sum': whole_sum,
+        'whole_target_count': count,
+        'tail128_loss_sum': tail_sum,
+        'tail128_target_count': tail_count,
+        'lm_prefill_chunk_size': int(prefill_chunk_size),
+    }
 
 
 def main():
@@ -186,6 +264,8 @@ def main():
     parser.add_argument('--limit-per-cell',type=int,default=0,help='0 keeps every row; a positive limit is explicitly reported as a subset')
     parser.add_argument('--prefill-chunk-size',type=int,default=0,
                         help='0 uses stock generate; positive values enable exact-context chunked KV prefill')
+    parser.add_argument('--lm-prefill-chunk-size',type=int,default=0,
+                        help='0 uses direct no-cache LM scoring; positive values use exact-context cached chunks')
     parser.add_argument('--batch-size',type=int,default=1,
                         help='contiguous exact-length generation batch using Flash SDPA')
     parser.add_argument('--left-pad-batches',action='store_true',
@@ -200,12 +280,14 @@ def main():
                           'split':args.split,'row_split':args.row_split,'lengths':LENGTHS,
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
                           'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
-    lm_lengths=tuple(args.lm_length_cap or LENGTHS)
-    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0 or args.batch_size<1
-            or len(set(lm_lengths))!=len(lm_lengths) or any(length not in LENGTHS for length in lm_lengths)):
+    lm_lengths=resolve_lm_lengths(args.lm_length_cap,manifest)
+    if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0
+            or args.lm_prefill_chunk_size<0 or args.batch_size<1
+            or len(set(lm_lengths))!=len(lm_lengths)):
         raise ValueError('limits and prefill chunk size must be nonnegative')
     import numpy as np
     import torch
+    import transformers
     from transformers import AutoTokenizer
     from .recovery_v2_runtime import load_model
     from .runtime import validate_cuda
@@ -244,8 +326,19 @@ def main():
               'lengths':list(LENGTHS),'generation_length_caps':sorted({r['length_cap'] for r in rows}),
               'lm_enabled':bool(lm_path),'lm_limit_documents':args.lm_limit_documents,
               'lm_lengths':list(lm_lengths),
-              'limit_per_cell':args.limit_per_cell,'prefill_chunk_size':args.prefill_chunk_size,
+              'limit_per_cell':args.limit_per_cell,
+              'prefill_chunk_size':args.prefill_chunk_size,
+              'generation_prefill_strategy':('direct_generate_v1' if args.prefill_chunk_size==0 else 'dynamic_cache_lower_right_v1'),
+              'lm_prefill_chunk_size':args.lm_prefill_chunk_size,
+              'lm_execution_strategy':('direct_no_cache_v1' if args.lm_prefill_chunk_size==0 else 'dynamic_cache_exact_nll_v1'),
               'batch_size':args.batch_size,
+              'runtime_versions':{
+                  'torch':torch.__version__,'transformers':transformers.__version__,
+                  'model_dtype':'bfloat16','loss_logits_dtype':'float32',
+                  'attention_backend':'torch_sdpa_flash_only',
+                  'cache_type':'DynamicCache' if (args.prefill_chunk_size or args.lm_prefill_chunk_size) else None,
+                  'allow_tf32':bool(torch.backends.cuda.matmul.allow_tf32),
+              },
               **({'left_pad_batches':True} if args.left_pad_batches else {}),
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
@@ -329,7 +422,8 @@ def main():
         with lm_file.open('a') as stream,torch.inference_mode():
             for document,length in expected[len(lm_saved):]:
                 tokens=torch.tensor(values[document,:length+1].copy(),device='cuda',dtype=torch.long).unsqueeze(0)
-                with torch.autocast('cuda',dtype=torch.bfloat16):record=lm_loss_rows(model,tokens)
+                with torch.autocast('cuda',dtype=torch.bfloat16):record=lm_loss_rows(
+                    model,tokens,prefill_chunk_size=args.lm_prefill_chunk_size)
                 record.update(document=document,length=length)
                 stream.write(json.dumps(record)+'\n');stream.flush();lm_saved.append(record)
     cells=defaultdict(list)

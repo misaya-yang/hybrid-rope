@@ -287,3 +287,10 @@ Native Cosh & 5.4645 & 5.4473 & 5.5434 & 5.6966 & 5.8457 & 6.0664 & 6.2935 \\
 \end{table}
 The recorded seed-level $95\%$ intervals for Cosh-minus-Std-RoPE NLL at $512/1$K/$2$K/$4$K/$8$K are $[-0.200,-0.026]$, $[-0.183,-0.115]$, $[-0.241,-0.174]$, $[-0.260,-0.121]$, and $[-0.141,-0.058]$. All three seeds favor Cosh at each of those lengths. This supports the conclusion that the historical extrapolation improvement is not confined to a midpoint geometric comparator. The same report also includes other useful nonuniform shapes. The source archive preserves the reported values and historical source identity in \path{figs/allocation_value_inputs.json}; the original training streams are separate.
 \FloatBarrier
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
+\caption{\textbf{Allocation gains depend on the support policy.} (a,b) Cosh-minus-Geo tail NLL for the same three paired $151.9$M models: retargeted support ($b=L_{\rm eval}$) versus retained training support ($b=256$). Thin lines show seeds; thick lines their means; $1\times=256$ tokens. Geo is the matched geometric control. (c) Frozen matched-support tasks: OLMo's nine held-out and Qwen's four development tasks, $20$ inputs/task, with shared endpoints, amplitude, weights and inputs within each model.}
+\label{fig:spectral-budget-overview}
+\end{figure}

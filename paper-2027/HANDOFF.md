@@ -1,5 +1,29 @@
 # Current manuscript handoff
 
+## Current: two independent PDF-review cycles completed
+
+See [review inputs, recommendations and dispositions](research/pdf-review-rounds/20260915_two_rounds/README.md).
+Final manuscript includes the now-complete Natural-QA631 comparison and all
+strata; +0.20pp [−1.53,+1.89]pp is an unresolved ranking, not a borrowed BM win.
+Figure 1c uses the fully specified 151.9M table crossing. Keep the user's no-number
+abstract, text-only first page, and positive but precise trade-off narrative.
+No new GPU run was launched by the review task. Earlier pending-QA notes below
+are historical.
+
+## Current revision: field-gap upgrade, 2026-09-15
+
+Follow [the current decision map](research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md).
+The abstract contains no numerical results. Allocation remains the primary
+research contribution; Cosh retains its learning evidence and TailSpline the
+main frozen construction. The clean source-order RULER-200 result is now the
+main deployment confirmation, with classic curves separated. Frame native task
+change as a 2.33% relative trade-off (below 3%), while preserving intervals in
+the appendix. E1 is qualified cross-runtime evidence. Natural-QA631 T/P is the
+next main experiment; optional A1 YaRN is prepared but not queued, and M1 is
+conditional. The source package includes score-only clean pairs and the new
+CPU checks. Earlier section/figure counts below are historical.
+
+
 Updated 2026-09-14. The manuscript leads with z as an effective variable for improving RoPE-based models, then controlled attribution, explicit constructions and learning/training-free gains. Extrapolation is an important demonstrated use; it does not delimit z. TailSpline Llama and the newly completed OLMo confirmation are included; BM owns separate natural-QA evidence.
 
 Current scope and revision record: [revision brief](REVISION_BRIEF.md). Scientific placement: [claim map](research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md). Build/package: [paper index](index.md). Experimental execution remains with the [research owner](../docs/research/next_stage_20260912/index.md).

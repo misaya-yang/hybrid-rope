@@ -1,18 +1,18 @@
-\section{The Positional Structure Changed by \texorpdfstring{$z$}{z}}
+\section{How Allocation Changes Positional Structure}
 \label{sec:theory}
 
-We next characterize what changing $z$ changes in the supplied positional basis. The objects are complete rotary-pair subspaces under a declared separation measure; their overlap describes positional directions before model-specific content coefficients enter.
+The controlled gains raise a structural question: what changes when the frequency range stays fixed? We examine the positional directions supplied by complete rotary pairs. Their overlap connects frequency spacing to redundancy within a finite window; the model learns how to combine these directions with content.
 
 \subsection{Complete rotary pairs and positional overlap}
 \label{sec:subspaces}
 \label{sec:budget}
 
-For a fixed content pair, one rotary channel contributes $C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where $\Delta$ is relative token separation. Both coefficients depend on content; its positional object is the full function space
+For a fixed content pair, one rotary channel contributes $C\cos(\omega\Delta)+D\sin(\omega\Delta)$ to an attention logit, where $\Delta$ is relative token separation. Both coefficients depend on content; the positional object is
 \begin{equation}
 V_\omega=\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}.
 \label{eq:subspace}
 \end{equation}
-Comparing only cosine curves would privilege one content phase. Instead, let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$ and define $S_\omega=\mathbb E[x_\omega^\top x_\omega]$, $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular self-Grams, the singular values of $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations, or cosines of principal angles, of the two spaces \citep{bjorck1973angles}. Their mean square,
+To avoid privileging a content phase, let $x_\omega(\Delta)=[\cos(\omega\Delta),\sin(\omega\Delta)]$ and define $S_\omega=\mathbb E[x_\omega^\top x_\omega]$, $H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]$ under a declared separation measure. For nonsingular self-Grams, the singular values of $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$ are the canonical correlations, or cosines of principal angles, of the two spaces \citep{bjorck1973angles}. Their mean square,
 \begin{equation}
 c_{\omega\nu}=\tfrac12\|Q_{\omega\nu}\|_F^2\in[0,1],
 \label{eq:collision}
@@ -33,16 +33,42 @@ Here $\operatorname{tr}(\Gamma^2)$ is the frame potential of the normalized posi
 Under uniform measure on $[0,L]$, with $t=\Delta/L$, as $x=\omega L\to0$, $\cos(xt)\to1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal O(\epsilon^4)$.
 \end{proposition}
 
-Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened effective rank $r_2=2.00013$. At $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have effective rank $r_2=2.11$ (Fig.~\ref{fig:allocation-basis}). Their overlap is substantial even though every frequency has $\omega L>1$.
+Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened effective rank $r_2=2.00013$. At $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have effective rank $r_2=2.11$ (Appendix~\ref{sec:finite-window-rank}). Their overlap is substantial even though every frequency has $\omega L>1$.
 
 
 
-\begin{figure}[!ht]
-\centering\includegraphics[width=.68\linewidth]{fig_allocation_geometry.pdf}
-\caption{\textbf{Slow rotary pairs share positional directions.} Full-pair canonical overlap on the identification grid ($b=256$, $K=32$, $L=256$), under uniform separation measure on $[0,L]$. The outlined eight-pair block has effective rank $r_2=2.11$ despite $\omega L\in[1.19,4]$.}
-\label{fig:allocation-basis}
-\end{figure}
+\paragraph{Why use complete rotary pairs?}
+A cosine-only overlap proxy can reverse the allocation ordering: explicit
+four-pair tables with identical endpoints give $C_{\cos}(A)=0<C_{\cos}(B)$,
+yet $r_2(A)=6.29<8.00\approx r_2(B)$ because sine--cosine cross terms also
+carry positional overlap (Appendix~\ref{sec:static-counterexamples}).
+The complete-pair measure captures this structure independently of phase.
 
 \paragraph{Design implication.}
-A fixed set of rotary pairs can supply strongly overlapping positional directions. Allocation controls this concentration, while learning determines how the model combines these directions with content. This motivates two uses of frequency-spacing design: distribute the basis during learning, or redistribute extension relative to a frozen model's native table. Appendix~\ref{sec:compatibility} examines the learned frequency--coordinate associations through crossed-table and slot interventions.
-\FloatBarrier
+The same number of rotary pairs can supply very different positional diversity.
+Reallocating frequencies changes this overlap, providing a concrete reason to
+consider their spacing during learning. Longer-range coverage also matters:
+a full-rank parity lattice can repeat outside its reference window
+(Appendix~\ref{sec:rank-coverage}). We therefore design allocations for a stated
+operating setting, balancing finite-window resolution with frequency coverage.
+
+\subsection{Changing frequencies changes the positional kernel}
+The learned-compatibility experiments raise a second question: can a fixed
+change of Q/K coordinates absorb a frequency change? For the exact bilinear
+rotary kernel, the rotation spectra give a simple criterion.
+
+\begin{corollary}[Integer-position equivalence]\label{cor:discrete-kernel}
+Let $\Omega,\Lambda$ contain $K$ frequencies in $(0,\pi)$ and
+$\mathcal R_\Omega(d)=\operatorname{diag}_k R(\omega_kd)$.
+Position-independent invertible $A,B$ satisfy
+$A^\top\mathcal R_\Omega(d)B=\mathcal R_\Lambda(d)$ for $d=0,1$
+if and only if the frequency multisets agree.
+\end{corollary}
+At $d=0$, $B=(A^\top)^{-1}$; at $d=1$, similarity preserves
+$\{e^{\pm i\omega_k}\}$. In $(0,\pi)$ this identifies the multiset.
+A block permutation proves the converse for every integer $d$.
+This spectral criterion separates changing the supplied frequencies from
+reassigning an unchanged spectrum, complementing STRING's structural
+characterization \citep{schenck2025string}. The assumptions concern exact
+kernels for all content vectors; the full proof and aliasing cases are in
+Appendix~\ref{sec:discrete-kernel-proof}.

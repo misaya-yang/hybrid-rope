@@ -87,6 +87,20 @@ class KnotAllocationTests(unittest.TestCase):
         self.assertIsNotNone(knot.gap_logits.grad)
         self.assertTrue(bool(np.isfinite(knot.gap_logits.grad.numpy()).all()))
 
+    def test_cuda_coordinates_follow_trainable_parameter_device(self):
+        import torch
+
+        if not torch.cuda.is_available():
+            self.skipTest("CUDA is unavailable")
+        native = torch.as_tensor(native_table(), dtype=torch.float32, device="cuda")
+        knot = Z5KnotRotaryEmbedding(native)
+        coordinates = knot.normalized_coordinates()
+        realized = knot.realized_inv_freq()
+        self.assertEqual(coordinates.device, knot.gap_logits.device)
+        self.assertEqual(realized.device, knot.gap_logits.device)
+        realized.sum().backward()
+        self.assertIsNotNone(knot.gap_logits.grad)
+
     def test_init_from_table_recovers_native(self):
         native = native_table()
         logits = init_gap_logits_from_table(native, native)

@@ -136,3 +136,19 @@ Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
 
 
 \FloatBarrier
+
+\subsection{Learning and natural-QA summaries}
+\label{sec:learning-summary}
+The $750$M continuation starts from a common $2$K Geo checkpoint and uses
+$500$M tokens at $4$K, including $3\%$ passkey and $10\%$ downstream mix.
+Its $8$K task endpoint is greedy answer-token exact, not complete-response exact.
+The OLMo adaptation pair trains on physical inputs at most $4$K with explicit
+target-range positions; evaluation uses real contiguous prompts. The Q/K-only
+RULER adaptation has Cosh--Native macro differences $-29.75/+29.61/+4.65$
+points at $4/8/16$K. These are learned protocols, not static-installation evidence.
+\input{tables/table_learning_main}
+\input{tables/table_bm_qa_main}
+Small frozen Qwen $128$K panels favor MrPro over BM ($78.13/70.83\%$ at $3$B
+and $84.44/71.11\%$ at $7$B). Frozen Qwen-$0.5$B improves $64$K RULER-13 over
+YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}). These older results
+retain their local protocols and do not substitute for the current clean comparison.

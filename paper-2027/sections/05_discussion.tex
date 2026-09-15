@@ -1,5 +1,14 @@
 \section{Discussion and Conclusion}
 \label{sec:discussion}
-Internal exponent allocation $z$ is a design freedom for improving RoPE-based models. Paired training identifies extrapolation gains from interior placement at fixed support; the ordering changes when support is retargeted. Equal-displacement controls further isolate shape, and full-pair geometry characterizes positional overlap. Cosh improves language modeling, TailSpline improves frozen retrieval, and BM improves natural QA under their respective protocols.
+A frequency range leaves a consequential choice open: where to place the
+frequencies within it. Our controlled interventions establish that this choice
+can improve learned extrapolation and frozen-model task performance.
+Full-pair geometry characterizes the resulting positional overlap, while
+learned-coordinate effects clarify how frequency changes interact with a
+pretrained model.
 
-The resulting design space extends from learned allocations to static, zero-training adjustments. Internal placement can be optimized jointly with support, boundaries and amplitude to serve different model and task requirements. The joint in-window/OOD gains in controlled configurations motivate systematic in-window enhancement of mature models as a further application.
+TailSpline provides an explicit native-relative allocation that retains
+standard rotary computation. Cosh offers a complementary transport for
+extrapolation and supports the broader value of changing $z$. The clean RULER comparisons show TailSpline gains over MrPro at both
+$2L$ and $4L$, with a small observed native-window trade-off. Natural-QA evaluation gives close observed F1 scores for TailSpline and MrPro. Together, these results establish frequency
+allocation as a practical design dimension for quality within a chosen context window.

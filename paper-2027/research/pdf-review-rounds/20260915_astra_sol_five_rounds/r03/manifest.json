@@ -1,0 +1,8 @@
+{
+  "input_sha256": "3fadc79de914e8121cbd8f253b9e3abba25c1daae595c0b3bedd8472019ec7ca",
+  "review_models": [
+    "gpt-6-astra",
+    "gpt-5.6-sol"
+  ],
+  "context": "fresh; PDF only; same prompt"
+}

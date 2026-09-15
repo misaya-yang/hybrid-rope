@@ -1,14 +1,14 @@
 # Hybrid-RoPE关键实验罗盘
 
-更新：2026-09-14。用途：只保留能够决定论文主张、方法去留和下一步投入的实验；不是
+更新：2026-09-15。用途：只保留能够决定论文主张、方法去留和下一步投入的实验；不是
 历史运行目录，也不把计划、CPU定理或开发proxy写成模型结果。
 
 ## 中心目标
 
-论文已经成立的核心不是“某条曲线永远最好”，而是：**在端点与支持固定时，RoPE内部
-指数分配是独立因果变量；模型会与频率槽形成共适应；这一自由度能够被解析构造用于
-学习与冻结部署。** 当前新增方法目标进一步收窄为：**零训练的exact TailSpline能否稳定
-胜过exact MrRoPE-Pro。** YaRN比较与机制归因后置。
+论文一级身份是**allocation研究**：在端点与支持固定时，RoPE内部指数分配仍是可识别、
+可设计并参与学习的变量。零训练是核心落地，exact TailSpline是唯一重点展开的冻结部署
+构造，而不是把Cosh、TailSpline与BM写成并列方法合集。Cosh仍承担学习期构造证据，不能
+全部删除后让论文实质退回纯TailSpline。YaRN比较与机制归因后置。
 
 ## 罗盘
 
@@ -29,8 +29,10 @@
 | A15 C2紧凑profile | Qwen 64K/128K保留了64维transport的主要行为，但Native 32K由`0.82`降至`0.7125`，注册双门失败 | 证明低维描述可能，但不是合格统一部署法 | 不再调C2；只作“可压缩但有代价”证据 |
 | A16 C42/C42V24 | 同总位移、同质心受控对在350行开发RULER为`+10.73pp`，16文档NLL同向`−0.1109` | 总剂量与质心不充分；高阶shape是真变量 | 尚无独立任务确认，不拿开发赢家作新主方法 |
 | A31 旧mix075 Llama S4 | Core-6开发AUC `80.95`，BM `74.68`、MrPro `73.15`；Native 8K有代价 | 为TailSpline提供强开发先验 | 0.75、band和gain有开发暴露；不能替代exact TailSpline |
-| A39 exact TailSpline Llama S4 | Full-13 `0.7880 vs 0.7560`，差`+3.20pp`、95%区间`[+0.65,+5.79]pp`；NIAH `+3.75pp`；PPL AUC `−0.00449`，3/3方向通过 | **当前第一次以完整经典合同确认TailSpline整体胜MrPro** | MrPro raw永久复用；正在做OLMo两臂跨模型确认 |
+| A39 exact TailSpline Llama S4 classic | Full-13 AUC `0.7880 vs 0.7560`，差`+3.20pp`；NIAH `+3.75pp`；PPL AUC `−0.00449` | 多长度曲线与PPL健康检查均支持TailSpline | 保留局部负格；不再作为hero |
+| A39 clean 32K Full-13×200 | `0.6827 vs 0.5654`，差**`+11.72pp`**、95%区间**`[+10.32,+13.11]pp`**；12/13任务及四family为正，任删一任务仍`+9.53...+13.07pp` | **当前唯一hero：大样本、source-order、unpadded、同prompt确认TailSpline胜MrPro** | Natural-QA631已完成并如实入稿；需要常用静态基线时再补同合同YaRN一臂 |
 | A40 OLMo exact TailSpline S4 | Full-13 `0.6660 vs 0.1736`，差`+49.23pp`、95%区间`[+45.34,+53.04]pp`；NIAH `+64.45pp`；PPL AUC `−3.853`；13任务差全部为正 | **第二checkpoint前瞻确认完成，方法方向与Llama一致** | 冻结TailSpline，不追加YaRN/BM/新曲线 |
+| E0 / Native 8K | 39行batch评分漂移为0；Native/TailSpline/MrPro在经典8K为`91.88/89.74/87.50%`，Native−TailSpline区间跨0 | 排除明显batch评分偏差；TailSpline保持Native任务能力未见确定差距 | 不把39行称全协议等价，不从130行声称TailSpline强于Native |
 
 ### 南：已经否决或必须停止扩张的路线
 
@@ -44,19 +46,20 @@
 
 ### 西：尚未关闭的四个问题
 
-1. **跨checkpoint方法性。** Llama与OLMo已经同向胜MrPro；这支持两个模型族上的方法性，
+1. **真实任务迁移。** clean RULER已经给出强synthetic hero；Natural-QA631现已完整：T/P=41.08/40.88% F1，差+0.20pp，区间[−1.53,+1.89]pp；自然输入排序未决，完整分层见Llama owner。
+2. **跨checkpoint方法性。** Llama与OLMo已经同向胜MrPro；这支持两个模型族上的方法性，
    但OLMo历史方向先验和不同tokenizer面板意味着它还不是完全独立盲测。
-2. **机制解混。** TailSpline与MrPro同时改变`sum(m)`与细形状。即使两模型都胜，也只能先说
+3. **机制解混。** TailSpline与MrPro同时改变`sum(m)`与细形状。即使两模型都胜，也只能先说
    方法结果；one-sided tail landing是否为原因仍需同剂量控制。
-3. **独立性。** 当前Full-13是完整任务覆盖、每格10条，但方法来自历史开发。跨模型确认和
-   后续独立prompt/checkpoint的职责不同，不能把更多同面板行自动称为独立泛化。
-4. **YaRN实用对照。** 作者已决定先赢MrPro，YaRN后做。它不阻塞TailSpline方法结论，也不能
+4. **YaRN实用对照。** 作者已决定先赢MrPro，YaRN后做。clean强正已满足“可考虑YaRN”的
+   科学条件，但当前不自动启动，也不能
    用历史非匹配配置拼入当前主表。
 
 ## 当前唯一决策树
 
-- **当前已经发生：Llama与OLMo都是3/3胜MrPro。** 冻结TailSpline，不再搜索曲线；下一步
-  只能在“真正独立确认”与“最小同剂量机制控制”中择一，先整理方法论文主表。
+- **当前已经发生：clean Llama 32K以`+11.72pp`强正胜MrPro，且不是单任务或输出健康驱动。**
+  冻结TailSpline，不再搜索曲线；Natural-QA631已完成并登记。Native-Z5属于独立问题，
+  YaRN是后置基线，二者都不改变hero身份。
 - **若以后独立确认反转：** 将方法主张缩为两项已测合同，不调系数、band或gain挽救。
 
 无论哪种结果，都不自动启动YaRN四格、OLMo调参、Qwen复测、训练或新的理论曲线。

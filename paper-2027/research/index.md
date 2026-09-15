@@ -11,3 +11,8 @@
 | 下一步研究 | [当前研究索引](../../docs/research/next_stage_20260912/index.md) |
 
 需要完整科学资产背景时再查[资产交接](PAPER_REVISION_HANDOFF_20260911.md)。理论基础、成熟模型分支、审查、外部意见与历史过程在[完整研究目录](CATALOG_20260913.md)，不是所有写作任务的前置阅读。
+
+- [Field-gap revision and decisions](COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md): current manuscript outline, completed clean/control evidence, and bounded follow-up arrangements.
+- [ICLR 2027 四审均分 7 的升级方案](ICLR2027_STABLE7_STRATEGY_20260915.md)：基于当前 PDF、既有证据及同领域录用论文的叙事、理论、图表和实验优先级建议；尚未改变稿件或执行队列。
+
+- [五轮 Astra/Sol 独立审稿与逐轮改稿](pdf-review-rounds/20260915_astra_sol_five_rounds/README.md)：冻结PDF、同轮相同提示词、逐项判断与AC综合。

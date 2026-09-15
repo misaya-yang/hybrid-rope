@@ -1,0 +1,51 @@
+{
+  "arms": {
+    "mrpro": {
+      "documents": 46,
+      "nll": 1.6651429505651796,
+      "ppl": 5.286428893747751,
+      "target_tokens": 376832
+    },
+    "native": {
+      "documents": 46,
+      "nll": 1.6631528833860774,
+      "ppl": 5.275919006271293,
+      "target_tokens": 376832
+    },
+    "tailspline": {
+      "documents": 46,
+      "nll": 1.6668164608848242,
+      "ppl": 5.295283193870347,
+      "target_tokens": 376832
+    }
+  },
+  "claim_boundary": "Matched Native-length language-model health; not a generated-task retention result.",
+  "contrasts_vs_native": {
+    "mrpro": {
+      "delta_ppl": 0.010509887476458424,
+      "draws": 20000,
+      "paired_document_bootstrap_ci95": [
+        -0.000722363357769784,
+        0.02459053800512813
+      ],
+      "probability_delta_lt_zero": 0.0348
+    },
+    "tailspline": {
+      "delta_ppl": 0.019364187599054006,
+      "draws": 20000,
+      "paired_document_bootstrap_ci95": [
+        0.006602428874706101,
+        0.03486079843237752
+      ],
+      "probability_delta_lt_zero": 0.0009
+    }
+  },
+  "length": 8192,
+  "metric": "exp(total whole-prefix loss / total scored tokens)",
+  "raw_sha256": {
+    "mrpro": "6ade51ef4f866857b5ef08571d08a6b4dda620641811dc55a6c9e294acc3e182",
+    "native": "13af76d6e7f0039c393a5344a5615477fecaa17868d862bf2d4339a56b1e41b3",
+    "tailspline": "ce93310af8f0e5723845d6c5ad4c344eaf58bce112d57c6a21e6250a2b808524"
+  },
+  "status": "LLAMA_NATIVE_8K_PPL_COMPARISON_COMPLETE_V1"
+}

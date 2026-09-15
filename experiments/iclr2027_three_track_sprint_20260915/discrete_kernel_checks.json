@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "evidence_role": "CPU mathematical examples, not model performance",
+  "checks": {
+    "permutation_with_repeated_frequencies_max_error": 0.0,
+    "same_trace_one_step_error": 0.0,
+    "different_trace_two_step_gap": 0.96,
+    "integer_alias_error": 1.3211653993039363e-14,
+    "fractional_alias_failure": 1.9957764873426023,
+    "nonaffine_gain_residual": 0.22931001192925912,
+    "zero_distance_assumption_necessary": true
+  },
+  "assumptions": [
+    "frequencies in (0, pi)",
+    "full bilinear kernel for all content vectors",
+    "invertible position-independent linear Q/K maps",
+    "distances include 0 and 1"
+  ]
+}
