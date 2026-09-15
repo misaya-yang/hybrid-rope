@@ -16,6 +16,21 @@ actual working runtime after masked left-padding failed in the installed
 Flash-SDPA stack; the sprint proposal's older batch-2 description is not used as
 present-state evidence.
 
+## E0--E5 coverage
+
+| Sprint item | Execution owner |
+|---|---|
+| E0 classic runtime identity | Frozen 39-cell TailSpline batch-2 replay on the clone; compare with completed batch-1 raw |
+| E1 matched-displacement shape | Completed raw plus `e1_experimental_audit.py`; E0 remains the runtime-sensitivity qualifier |
+| E2 clean RULER-200 | Existing TailSpline/MrPro pair on the original; clean YaRN on the clone |
+| E3 Natural-QA631 | Original GPU; enriched within/extended, task, source-cluster, health and sensitivity report |
+| E4 strong static baseline | YaRN only, on both clean and batch-1 classic contracts; BM is excluded |
+| E5 Native reference | Completed matched Native-8K PPL CPU summary plus one-arm Native-8K RULER run on the clone |
+
+Native-Z5 is an additional checkpoint-calibrated question requested after the
+sprint proposal; it follows Natural-QA on the original GPU and does not replace
+E5's unchanged-Native reference.
+
 ## CPU preparation
 
 ```bash
