@@ -4,6 +4,19 @@ This file is the execution handoff for the current experiment server. It routes
 operators to runnable work; it is not another experiment plan or result
 narrative.
 
+## Live queue override: 2026-09-15
+
+The currently authorized 32 GB sequence is X4 matched-dose control, then X5
+Llama clean 8K Native/TailSpline/MrPro, then the OLMo Native Contrastive
+Proximal (NCP) development run. NCP reuses the completed 780-row Native output
+and generates only 780 new NCP rows. Its tested entry point is
+`experiments/native_contrastive_proximal_20260915/run_ruler_gate.sh --execute`;
+its output root is
+`/root/autodl-tmp/today_rope_plan_20260914/olmo_native_contrastive_proximal`.
+After NCP has a complete paired report, save outputs, verify that no other jobs
+are active, and shut down this host. This live override supersedes older queue
+snapshots below but does not authorize the parked YaRN or 48 GB tasks.
+
 The implementation files remain at their stable paths because the active runner
 and existing receipts reference them. The A--E layers below are the control
 plane; physically moving live scripts or evidence directories would add breakage
