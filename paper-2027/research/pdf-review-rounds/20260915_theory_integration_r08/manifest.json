@@ -1,7 +1,7 @@
 {
   "pdf_sha256": "f74a874b3e7f1866bc7112e08264ee34219f3492f145f42d581d3d990b4063d8",
   "prompt_sha256": "6fca07618f5f11d43089911f956a731de2bca91ec1b0f48806c21d4fddb97695",
-  "status": "REVIEWS_COMPLETE",
+  "status": "COMPLETE",
   "main_pages": 9,
   "total_pages": 65,
   "models": [
@@ -38,5 +38,8 @@
   },
   "post_review_changes": [
     "Figure 1c column labels clarified as Geo-derived and Cosh-derived; no score or formula changes."
-  ]
+  ],
+  "final_pdf_sha256": "057734a53feab9022f2f697ca3b68b64c7a0c80c12517e7a21eed81422ff462a",
+  "final_pages": 65,
+  "prompt_file_sha256": "3dd07a11681a4a59e755fd83e42b6f97e26d58a1cc1fd87b5e13f7a1a1ae2bba"
 }

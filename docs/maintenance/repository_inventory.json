@@ -9104,6 +9104,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/THEORY_INTEGRATION_VALIDATION_20260915.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/THREE_DISCOVERIES_REVISION_20260914.md",
       "area": "paper-2027",
       "category": "document"
@@ -10560,6 +10565,11 @@
     },
     {
       "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/common_prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/final.pdf",
       "area": "paper-2027",
       "category": "manuscript"
     },
