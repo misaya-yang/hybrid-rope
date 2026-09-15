@@ -57,7 +57,7 @@ def fixture(tmp_path: Path, *, lengths=(8192, 16384), include_native=False):
         "status": "COMPLETE", "model_id": "tiny_olmo", "scale": 4.0,
         "lengths": list(lengths), "rows_per_task": 1, "selection_mode": "source-order",
         "content_padding": False, "panels": panels,
-        "model_identity": {"config_sha256": file_sha(model / "config.json")},
+        "model_identity": {"config_sha256": file_sha(model / "config.json"), "native_length": 4096},
     })
     lm = tmp_path / "lm_manifest.json"
     write_json(lm, {})
@@ -139,7 +139,7 @@ def test_default_is_read_only_plan_with_explicit_portable_contract(tmp_path, cap
     assert plan["status"] == runner.PLAN_STATUS and plan["execute"] is False
     assert plan["arms"] == ["tailspline", "mrpro"] and plan["rows"] == 26
     assert not args.out.exists()
-    assert plan["gpu_lock"] != str(args.out / ".gpu.lock")
+    assert plan["gpu_lock"] == "/tmp/hybrid-rope-gpu0.lock"
     assert all("--batch-size" in command and command[command.index("--batch-size") + 1] == "1"
                for command in plan["evaluations"].values())
 
@@ -165,13 +165,76 @@ def test_complete_arms_are_strictly_validated_and_not_repeated(tmp_path, monkeyp
                               for arm in ("tailspline", "mrpro", "native")},
                 "contrasts": {"mrpro": {}, "native": {}},
             })
+            report = runner.read_json(runner.report_path(args))
+            for arm in ("tailspline", "mrpro", "native"):
+                report["summaries"][arm]["by_length"] = {
+                    str(length): {
+                        "task_macro_official": {"tailspline": 0.8, "mrpro": 0.7, "native": 0.75}[arm],
+                        "tasks": {task: {"rows": 1} for task in runner.RULER_TASKS},
+                    }
+                    for length in (8192, 16384)
+                }
+            for baseline, delta in (("mrpro", 0.1), ("native", 0.05)):
+                report["contrasts"][baseline] = {
+                    "delta_by_length": {str(length): delta for length in (8192, 16384)},
+                    "bootstrap": {"delta_by_length_interval95": {
+                        str(length): [delta - 0.02, delta + 0.02] for length in (8192, 16384)
+                    }},
+                }
+            write_json(runner.report_path(args), report)
 
     monkeypatch.setattr(runner, "_run", fake_run)
     result = runner.execute(args, plan, panels, rows)
     assert result["arms"] == ["tailspline", "mrpro", "native"]
+    from experiments.iclr2027_strong_evidence_20260915.summarize_matrix import normalize_source
+    source = runner.read_json(Path(result["matrix_source"]))
+    normalized = normalize_source(source)
+    assert normalized["identity"]["model_id"] == "tiny_olmo"
+    assert normalized["identity"]["required_arms"] == ["tailspline", "mrpro", "native"]
+    assert [cell["length_key"] for cell in normalized["cells"]] == ["2L", "4L"]
+    assert normalized["cells"][1]["contrasts"]["tailspline_minus_native"]["ci95"] == pytest.approx([0.03, 0.07])
     assert len(calls) == 1 and any("matched_generation_report" in value for value in calls[0])
     runner.execute(args, plan, panels, rows)
     assert len(calls) == 1
+
+
+def test_existing_matrix_source_must_match_the_validated_report(tmp_path, monkeypatch):
+    args = fixture(tmp_path)
+    plan, panels, rows = runner.build_plan(args)
+    install_fake_expected_tables(monkeypatch)
+    for arm in plan["arms"]:
+        freeze_complete_arm(args, arm, panels, rows)
+    report = {
+        "status": "MATCHED_GENERATION_RANGE_REPORT_V1", "candidate": "tailspline",
+        "baselines": ["mrpro"], "tasks": sorted(runner.RULER_TASKS),
+        "lengths": [8192, 16384], "paired_prompts": 26,
+        "source_files": {arm: [str(args.out / "runs" / arm / "generations.jsonl")]
+                         for arm in ("tailspline", "mrpro")},
+        "summaries": {}, "contrasts": {"mrpro": {
+            "delta_by_length": {"8192": 0.1, "16384": 0.1},
+            "bootstrap": {"delta_by_length_interval95": {
+                "8192": [0.05, 0.15], "16384": [0.05, 0.15],
+            }},
+        }},
+    }
+    for arm, score in (("tailspline", 0.8), ("mrpro", 0.7)):
+        report["summaries"][arm] = {
+            "rows": 26, "rows_per_task_length": [1],
+            "by_length": {str(length): {
+                "task_macro_official": score,
+                "tasks": {task: {"rows": 1} for task in runner.RULER_TASKS},
+            } for length in (8192, 16384)},
+        }
+    write_json(runner.report_path(args), report)
+    valid = runner.matrix_source_payload(
+        args, runner.read_json(args.data_root / "manifest.json"), plan["arms"], report,
+    )
+    invalid = json.loads(json.dumps(valid))
+    invalid["experiment_id"] = "different_complete_experiment"
+    write_json(args.out / "reports" / "matrix_source.json", invalid)
+    monkeypatch.setattr(runner, "_run", lambda *a, **k: pytest.fail("all inputs are complete"))
+    with pytest.raises(ValueError, match="different complete report"):
+        runner.execute(args, plan, panels, rows)
 
 
 def test_resume_rejects_prompt_or_table_drift_before_any_command(tmp_path, monkeypatch):

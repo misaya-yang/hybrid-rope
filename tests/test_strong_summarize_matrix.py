@@ -168,8 +168,8 @@ def test_json_loading_and_markdown_are_portable(tmp_path):
 
 def test_rejects_personal_or_absolute_contract_labels():
     personal = source()
-    personal["identity"]["evaluation_contract"] = "/Users/misaya.example/report.json"
-    with pytest.raises(ValueError, match="personal path fragment"):
+    personal["identity"]["evaluation_contract"] = "/opt/private/report.json"
+    with pytest.raises(ValueError, match="absolute path"):
         normalize_source(personal)
 
     absolute = source()

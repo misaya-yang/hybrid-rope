@@ -2,6 +2,12 @@
 
 ## Current field-gap revision (2026-09-15; supersedes older section/figure locations)
 
+The authorized theory integration adds A48: distance-response allocation and a
+full-pair-rank / task-quality comparison. The rank observation supports Section
+4.3 and is not the abstract's organizing claim. Section 5.1 explains wavelength
+growth and formulates the discrete tail-connection problem. Appendix K contains
+the new proofs and numerical details; the full integer-kernel corollary is in A.6.
+
 The abstract contains no numerical results, per the author. The contribution is
 frequency allocation beyond the chosen range: controlled interventions establish
 its value, positional geometry explains the structural change, and TailSpline provides the main frozen extension, while Cosh is a supporting
@@ -16,6 +22,8 @@ curves remain in the TailSpline appendix.
 | Interior placement matters at fixed support | A01, A08; three paired training seeds and frozen controls | §3.1–3.2; Fig. 1; native cost retained |
 | Spectrum and coordinate assignment differ | A05, A06; two-seed 151.9M crossed weights/tables in Fig. 1c; same-spectrum slot intervention remains secondary | Main identification + discrete criterion; crossing details in Appendix B.2 and slot protocol in Appendix I.4 |
 | Integer kernel equivalence | CPU checker and proof, no-alias (0,pi), full Q/K bilinear kernel | Standard similarity corollary, not a task predictor |
+| Allocation changes distance response while preserving content coordinates | A48; slow-block proposition, fixed-grid scale response and T/P wavelength ordering | Section 4.3 / 5.1; Appendix K.1, K.3-K.4; conditional mathematics, no identified task mediation |
+| Task gains can accompany lower full-pair positional rank | A48 geometry combined with existing clean16K/32K reports | Section 4.3; Appendix K.2 / Table 46; rank is a structural measure, not a reversed task-ranking rule |
 | Cosh / TailSpline are explicit constructors | A07, A37; existing density and boundary objectives; T/C zero-sum exchange | §5.1–5.2; Fig. 3 shows TailSpline; distinct objectives and appendix proofs |
 | Cosh improves learning | Three-seed shared-cache MLA, unanchored midpoint endpoints | Supporting Cosh + Fig. 5; common evaluation chunks and aggregation in appendix. No finding of absent historical records or contamination is established |
 | Clean16K TailSpline > MrPro | A46;650 pairs: +3.39pp [1.53,5.34], QA +8pp [1,15] | Main Table2 / Fig4; at2L using the S4 table |

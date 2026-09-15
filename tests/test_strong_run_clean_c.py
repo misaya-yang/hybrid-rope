@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import fcntl
 
 import numpy as np
 import pytest
@@ -25,6 +26,8 @@ def test_default_is_plan_only_and_schedules_only_new_batch1_c(capsys):
     assert plan["reuse_arms"] == ["tailspline", "mrpro"]
     assert plan["new_arm_only"] == "dose_control_c"
     assert plan["batch_size"] == 1
+    assert plan["gpu_lock"] == "/tmp/hybrid-rope-gpu0.lock"
+    assert plan["gpu_lock_mode"] == "exclusive_nonblocking_execute_only"
     assert [(job["length"], job["shard"], job["expected_rows"]) for job in plan["jobs"]] == [
         (16384, "nonqa11", 550),
         (16384, "qa2", 100),
@@ -111,3 +114,20 @@ def test_report_contract_contains_all_three_arms_and_c_minus_p(tmp_path):
     assert secondary[secondary.index("--candidate") + 1] == "dose_control_c"
     assert secondary[secondary.index("--baseline") + 1] == "mrpro"
     assert "--length" in primary and "16384" in primary and "32768" in primary
+
+
+def test_execute_lock_conflict_fails_before_execution(monkeypatch, tmp_path):
+    lock = tmp_path / "gpu0.lock"
+    monkeypatch.setattr(runner, "GPU_LOCK_PATH", lock)
+    called = False
+
+    def forbidden(_args):
+        nonlocal called
+        called = True
+
+    monkeypatch.setattr(runner, "_execute_under_lock", forbidden)
+    with lock.open("a+") as owner:
+        fcntl.flock(owner.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(ValueError, match="already owned"):
+            runner.execute(runner.build_parser().parse_args([]))
+    assert called is False

@@ -90,7 +90,7 @@ def method_overview():
             ax.text(col,row,f'{matrix[row,col]:.3f}',ha='center',va='center',fontsize=9,
                     color='white' if matrix[row,col]>4.5 else INK,
                     fontweight='bold' if row==col else 'normal')
-    ax.set(xticks=[0,1],xticklabels=['Geo table','Cosh table'],yticks=[0,1],yticklabels=['Geo W','Cosh W'])
+    ax.set(xticks=[0,1],xticklabels=['Geo-derived','Cosh-derived'],yticks=[0,1],yticklabels=['Geo W','Cosh W'])
     ax.tick_params(length=0,labelsize=7.5)
     ax.set_title('(c) Learned compatibility',loc='left',fontsize=9)
     fig.subplots_adjust(left=.035,right=.99,bottom=.26,top=.86,wspace=.65)

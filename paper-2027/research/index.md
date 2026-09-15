@@ -2,7 +2,9 @@
 
 | 任务 | 入口 |
 |---|---|
+| 审核本轮理论整合与精确论文修改增量（未应用） | [作者审核包](theory_revision_proposal_20260915/README.md) |
 | 判断现稿是否还需要修改、查看本轮文档修正 | [现状与修改必要性审计](audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md) |
+| 查看Oral建议及作者纠正 | [Oral研究策略](ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md)：顶部已撤回TailSpline中心定位，具体构造实验建议保留 |
 | 当前主线与修订目标 | [修订目标](../REVISION_BRIEF.md) |
 | 重新理解完整研究贡献 | [仓库证据与贡献重建](RESEARCH_RECONSTRUCTION_20260914.md) |
 | 对照32篇同领域论文优化叙事、理论、实验与附录 | [顶会论文综合审读](ROPE_TOP_PAPER_WRITING_AND_RESEARCH_SYNTHESIS_20260914.md) |

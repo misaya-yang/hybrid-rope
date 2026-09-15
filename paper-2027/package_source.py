@@ -94,6 +94,8 @@ def source_files() -> set[Path]:
                  "figs/verify_interval_design.py", "figs/interval_development_inputs.json",
                  "figs/make_m4_tradeoff.py", "figs/m4_tradeoff_inputs.json", "figs/m4_tradeoff_points.csv",
                  "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
+                 "figs/verify_allocation_response.py", "figs/allocation_response_inputs.json",
+                 "figs/allocation_response_verification.json",
                  "figs/make_exponent_revision_figures.py", "figs/figure_inputs.json",
                  "figs/profile_diagnostic_inputs.json", "figs/verify_profile_diagnostics.py",
                  "figs/make_story_figures.py", "figs/story_figure_inputs.json",
@@ -143,6 +145,7 @@ def main() -> None:
             "Verify the two explicit finite-frequency examples:\n"
             "  python3 figs/verify_field_gap.py\n"
             "  python3 figs/verify_explicit_geometry.py\n"
+            "  python3 figs/verify_allocation_response.py\n"
             "  python3 figs/verify_interval_design.py\n"
             "  python3 figs/verify_profile_diagnostics.py\n"
             "  python3 figs/verify_recovered_assets.py\n"

@@ -1,4 +1,4 @@
-\section{How Allocation Changes Positional Structure}
+\section{Positional Structure and Content Use}
 \label{sec:theory}
 
 The controlled gains raise a structural question: what changes when the frequency range stays fixed? We examine the positional directions supplied by complete rotary pairs. Their overlap connects frequency spacing to redundancy within a finite window; the model learns how to combine these directions with content.
@@ -55,31 +55,28 @@ yet $r_2(A)=6.29<8.00\approx r_2(B)$ because sine--cosine cross terms also
 carry positional overlap (Appendix~\ref{sec:static-counterexamples}).
 The complete-pair measure captures this structure independently of phase.
 
-\paragraph{Design implication.}
-The same number of rotary pairs can supply very different positional diversity.
-Reallocating frequencies changes this overlap, providing a concrete reason to
-consider their spacing during learning. Longer-range coverage also matters:
-a full-rank parity lattice can repeat outside its reference window
-(Appendix~\ref{sec:rank-coverage}). We therefore design allocations for a stated
-operating setting, balancing finite-window resolution with frequency coverage.
+\subsection{Shared positional dependence and content use}
+Each rotary block remains invertible even when its positional functions
+overlap. Shared dependence on distance can therefore coexist with distinct
+content comparisons. A slow-block construction makes this distinction
+explicit (Appendix~\ref{sec:content-coordinate-retention}), complementing
+prior observations of positional and semantic frequency use
+\citep{barbero2025round}.
 
-\subsection{Changing frequencies changes the positional kernel}
-The learned-compatibility experiments raise a second question: can a fixed
-change of Q/K coordinates absorb a frequency change? For the exact bilinear
-rotary kernel, the rotation spectra give a simple criterion.
+The complete frozen Llama tables provide a concrete example. At $16/32$K,
+TailSpline has full-pair effective ranks $8.28/10.08$, compared with
+MrPro's $8.74/10.21$ under uniform separations, while improving clean
+RULER by $3.39/11.72$ points (Table~\ref{tab:clean-length-main}).
+The formulas, full precision and alternative separation measures are in
+Appendix~\ref{sec:allocation-rank-quality}.
+These gains establish the value of controlling distance dependence through
+allocation even when normalized positional diversity decreases. The model's
+use of the supplied frequencies determines their practical value.
 
-\begin{corollary}[Integer-position equivalence]\label{cor:discrete-kernel}
-Let $\Omega,\Lambda$ contain $K$ frequencies in $(0,\pi)$ and
-$\mathcal R_\Omega(d)=\operatorname{diag}_k R(\omega_kd)$.
-Position-independent invertible $A,B$ satisfy
-$A^\top\mathcal R_\Omega(d)B=\mathcal R_\Lambda(d)$ for $d=0,1$
-if and only if the frequency multisets agree.
-\end{corollary}
-At $d=0$, $B=(A^\top)^{-1}$; at $d=1$, similarity preserves
-$\{e^{\pm i\omega_k}\}$. In $(0,\pi)$ this identifies the multiset.
-A block permutation proves the converse for every integer $d$.
-This spectral criterion separates changing the supplied frequencies from
-reassigning an unchanged spectrum, complementing STRING's structural
-characterization \citep{schenck2025string}. The assumptions concern exact
-kernels for all content vectors; the full proof and aliasing cases are in
-Appendix~\ref{sec:discrete-kernel-proof}.
+\paragraph{Frequency changes and coordinate assignment.}
+Changing frequencies also differs from reassigning a fixed spectrum.
+In the no-alias interval $(0,\pi)$, position-independent invertible Q/K
+maps preserve the full integer-position rotary kernel exactly if and only
+if the frequency multisets agree (Appendix~\ref{sec:discrete-kernel-proof}).
+This criterion complements the coordinate interventions and STRING's
+structural characterization \citep{schenck2025string}.

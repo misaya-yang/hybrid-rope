@@ -1,0 +1,51 @@
+{
+  "status": "UNAPPLIED_AUTHOR_REVIEW",
+  "changed_paths": [
+    "sections/00_abstract.tex",
+    "title_abstract.txt",
+    "sections/01_intro.tex",
+    "sections/03_theory.tex",
+    "appendix/a1_proofs.tex",
+    "sections/04_mature.tex",
+    "sections/02_related.tex",
+    "appendix/a11_allocation_response.tex",
+    "main.tex",
+    "appendix/a0_guide.tex"
+  ],
+  "abstract_words_before": 151,
+  "abstract_words_after": 156,
+  "abstract_has_digits": false,
+  "new_unresolved_references": [],
+  "new_duplicate_labels": [],
+  "unresolved_citations": [],
+  "base_sha256": {
+    "sections/00_abstract.tex": "de5c7fc5ef9ab6d70ae032b8dcf27e25f41427d30911408d367b75a6f81a58a0",
+    "title_abstract.txt": "1b69b489de2e86ed67f81a7c48dd5ee2796bc38394f77638f30987850664eb50",
+    "sections/01_intro.tex": "66b06f8aa211bd277d30a018176ab417b3777550520e6ac56b0ee448cb8e7d5e",
+    "sections/03_theory.tex": "1eeca57635a1b960a0cdcff8061ac54c835d05fe1dde3483285f4a5eb09bb8f7",
+    "appendix/a1_proofs.tex": "e7bd2951c523389626131a235e9f759267beecfdd044283852d89f7929f14394",
+    "sections/04_mature.tex": "223c48970c6741a3398665c1eeb21f80dca503efebaa1e93c0bb8a7611796682",
+    "sections/02_related.tex": "7076c23f9ae0a65271fac824e3158825e2d36d144748298cb609e8d6b555312d",
+    "main.tex": "3b1dd9f19e7ae0919ee6eda92c4623730dca392af9ab342182f6c4b38b63ab9d",
+    "appendix/a0_guide.tex": "adc29a654169872a464e81d3f86642b2ee68ddc4d87616124e1af84d22225cbd"
+  },
+  "proposed_sha256": {
+    "sections/00_abstract.tex": "d92196fd2ae5aebd053fd39f1c7a66f0bb507ab6e3a77d01b4143e3eed348270",
+    "title_abstract.txt": "42ec5afdf75a2252c7b2a400afac232bdbcb3074e1f7ca49e611175882bd88d3",
+    "sections/01_intro.tex": "ada002a6a773dfd82e884035776faca15f9f640c9332277220ef1387ef7db54e",
+    "sections/03_theory.tex": "1b1e2e347064e1e6fa20679cd1aa39bdb856c3c8603a48da912858ee8acb4632",
+    "appendix/a1_proofs.tex": "0fe7685bc68b34ee1e5467c57c04e560d504715e5643d9dcf13439c161ee571b",
+    "sections/04_mature.tex": "a13de1e2476e22b92e4f198fc1791ea91250ade1807349893b9610b4b0f995a8",
+    "sections/02_related.tex": "1d75f57ab0e070cfa81d0e255276b08f609b1a6b7f7e2d79450b2bcb78a03db2",
+    "appendix/a11_allocation_response.tex": "42c32e27ebd8abef4a28c92fe98dd6d24647c4fc7cc0498b3342b0cdc091ff46",
+    "main.tex": "fb90c862af2801e91b6953f0a2691eb30ddfcef2d99312e8216dc3037ac711c9",
+    "appendix/a0_guide.tex": "d368e0660ee027c3bb6b055ff9acabb7bb5e085e2147edbc7e1b7c5fccebd46b"
+  },
+  "protected_artifacts": {
+    "main.pdf": "649fdb68e7b39d2bcbd986db5263c2fda4cc8c10326a3377d4600faf59a2058f",
+    "exponent-allocation-source.zip": "36950e229941e3a60b7d576104a94b0324b64d85c53da8389e9fa6f0e74816fd"
+  },
+  "compiled": false,
+  "page_count_verified": false,
+  "patch_applied": false
+}

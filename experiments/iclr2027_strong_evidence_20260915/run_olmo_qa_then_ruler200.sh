@@ -14,12 +14,11 @@ if [[ "${1:-}" != "--execute" ]]; then
   exit 0
 fi
 
-full20=${plan}/tailspline_llama_s4_mrrope_niah_heatmap_full20
-if [[ ! -f "${full20}/complete.txt" ]]; then
-  printf 'REFUSE: current NIAH Full20 has not produced complete.txt\n' >&2
-  exit 1
-fi
-if [[ ! -f "${ruler_root}/assets/manifest.json" ]]; then
+cd "${repo}"
+export PYTHONPATH=.
+
+ruler_manifest=${ruler_root}/assets/manifest.json
+if [[ ! -f "${ruler_manifest}" ]]; then
   "${python_bin}" -m experiments.iclr2027_strong_evidence_20260915.prepare_clean_transfer \
     --model "${model}" --model-id olmo2_1b \
     --data-root /root/autodl-tmp/rope_qwen_baseline_20260907/ruler_upstream/RULER-c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a \
@@ -27,8 +26,11 @@ if [[ ! -f "${ruler_root}/assets/manifest.json" ]]; then
     --seed 20261101 --qa-offset 5600
 fi
 
-cd "${repo}"
-export PYTHONPATH=.
+full20=${plan}/tailspline_llama_s4_mrrope_niah_heatmap_full20
+if [[ ! -f "${full20}/complete.txt" ]]; then
+  printf 'REFUSE: current NIAH Full20 has not produced complete.txt\n' >&2
+  exit 1
+fi
 
 bash experiments/iclr2027_strong_evidence_20260915/run_olmo_naturalqa631.sh --execute
 

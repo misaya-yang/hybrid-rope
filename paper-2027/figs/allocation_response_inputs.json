@@ -1,0 +1,116 @@
+{
+  "scope": "Public mathematical grid and existing clean task reports; no new model execution.",
+  "geometry": {
+    "base": 500000,
+    "pairs": 64,
+    "native_length": 8192,
+    "scale": 4,
+    "band": [
+      18,
+      35
+    ]
+  },
+  "ranks": {
+    "8192": {
+      "T": {
+        "continuous_uniform": 7.06816742167486,
+        "integer_uniform": 7.068167258735279,
+        "integer_direct": 7.068167258737542,
+        "integer_causal_pair": 6.828792888280949,
+        "fp32_continuous": 7.068167469196251
+      },
+      "P": {
+        "continuous_uniform": 7.716062773831096,
+        "integer_uniform": 7.716062573835908,
+        "integer_direct": 7.716062573838479,
+        "integer_causal_pair": 7.480235998774638,
+        "fp32_continuous": 7.716062816314336
+      },
+      "C": {
+        "continuous_uniform": 7.104380864924056,
+        "integer_uniform": 7.104380700356422,
+        "integer_direct": 7.104380700358704,
+        "integer_causal_pair": 6.856077180231929,
+        "fp32_continuous": 7.104380900088431
+      }
+    },
+    "16384": {
+      "T": {
+        "continuous_uniform": 8.283391018505306,
+        "integer_uniform": 8.283390961676702,
+        "integer_direct": 8.28339096167861,
+        "integer_causal_pair": 7.953699965470855,
+        "fp32_continuous": 8.283391033133018
+      },
+      "P": {
+        "continuous_uniform": 8.739886925952273,
+        "integer_uniform": 8.739886864829225,
+        "integer_direct": 8.739886864831279,
+        "integer_causal_pair": 8.482204274472805,
+        "fp32_continuous": 8.739886940728852
+      },
+      "C": {
+        "continuous_uniform": 8.3291393185028,
+        "integer_uniform": 8.329139263287194,
+        "integer_direct": 8.329139263289115,
+        "integer_causal_pair": 7.997456405798709,
+        "fp32_continuous": 8.32913935425825
+      }
+    },
+    "32768": {
+      "T": {
+        "continuous_uniform": 10.077270344023034,
+        "integer_uniform": 10.077270323039548,
+        "integer_direct": 10.077270323040446,
+        "integer_causal_pair": 9.567030020706902,
+        "fp32_continuous": 10.077270343801942
+      },
+      "P": {
+        "continuous_uniform": 10.214887633656446,
+        "integer_uniform": 10.214887612203928,
+        "integer_direct": 10.214887612204846,
+        "integer_causal_pair": 9.800188663628575,
+        "fp32_continuous": 10.21488765503267
+      },
+      "C": {
+        "continuous_uniform": 10.092552781308022,
+        "integer_uniform": 10.092552760821635,
+        "integer_direct": 10.092552760822535,
+        "integer_causal_pair": 9.59266764009162,
+        "fp32_continuous": 10.092552774825986
+      }
+    }
+  },
+  "largest_wavelength_ratios": {
+    "2": 1.3287632091930432,
+    "4": 1.7656116661049954,
+    "8": 2.34607982364235,
+    "16": 3.1173845554860575
+  },
+  "phase32k": {
+    "P": {
+      "max_unwrapped": 108.19781540738255,
+      "slot_rms": 0.6875425083757736
+    },
+    "C": {
+      "max_unwrapped": 10.67251432720684,
+      "slot_rms": 0.4483293207254365
+    }
+  },
+  "task_observations": {
+    "16384": {
+      "source": "experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json",
+      "source_sha256": "12e0ac6c7e5d5047268bcf15d033d43a8e09886b86694b22c5f0f0eb391b540b",
+      "rows_per_arm": 650,
+      "T": 0.8609487179487179,
+      "P": 0.8270512820512821
+    },
+    "32768": {
+      "source": "experiments/iclr2027_three_track_sprint_20260915/reports/clean_ruler200_tailspline_vs_mrpro.json",
+      "source_sha256": "5c7e2fe7275029c4aad98520a420a05e170bbe5dcea354f1e01f190e4ee1fe4b",
+      "rows_per_arm": 2600,
+      "T": 0.6826602564102563,
+      "P": 0.5654358974358974
+    }
+  }
+}
