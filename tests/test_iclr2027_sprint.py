@@ -14,6 +14,7 @@ from experiments.iclr2027_three_track_sprint_20260915.verify_sprint_math import 
     check_n,
     check_quadratic_identity,
 )
+from experiments.iclr2027_three_track_sprint_20260915.verify_theory_deepening import CHECKS
 
 
 def test_exact_sprint_relations_include_small_n_degeneracy():
@@ -62,3 +63,9 @@ def test_naturalqa_health_is_split_by_task_without_dropping_rows():
         "rows": 15, "ended_eos": 15, "hit_cap": 0, "empty": 0,
     }
     assert all(result["by_task"][task]["rows"] == 3 for task in TASKS)
+
+
+def test_theory_deepening_cpu_checks_cover_all_fifteen_classes():
+    checks = [function() for function in CHECKS]
+    assert len(checks) == 15
+    assert all(check["status"] == "PASS" for check in checks)

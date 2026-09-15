@@ -4994,6 +4994,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/index.md",
       "area": "experiments",
       "category": "navigation"

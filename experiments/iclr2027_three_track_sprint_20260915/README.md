@@ -38,8 +38,9 @@ experiments/iclr2027_three_track_sprint_20260915/run_cpu_reports.sh
 ```
 
 CPU preparation writes the 39-row fixed probe, a path/hash/status ledger, the
-exact sprint-math receipt, the completed E1 audit, and the matched Native-8K PPL
-summary. It does not load a checkpoint or touch CUDA.
+exact sprint-math receipt, the 15-part theory-deepening operator receipt, the
+completed E1 audit, and the matched Native-8K PPL summary. It does not load a
+checkpoint or touch CUDA.
 
 ## GPU entry points
 

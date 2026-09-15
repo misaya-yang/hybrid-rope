@@ -15,6 +15,8 @@ export CUDA_VISIBLE_DEVICES=""
 
 ${python_bin} -m experiments.iclr2027_three_track_sprint_20260915.verify_sprint_math \
   --out "${root}/reports/sprint_math_checks.json"
+${python_bin} -m experiments.iclr2027_three_track_sprint_20260915.verify_theory_deepening \
+  --out "${root}/reports/theory_deepening_checks.json"
 ${python_bin} -m experiments.iclr2027_three_track_sprint_20260915.prepare_sprint_cpu \
   --plan-root "${plan}" --out "${root}"
 ${python_bin} -m experiments.iclr2027_three_track_sprint_20260915.e1_experimental_audit \
