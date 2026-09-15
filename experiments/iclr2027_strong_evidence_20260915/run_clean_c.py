@@ -213,11 +213,16 @@ def validate_complete_run(
 
 
 def runtime_projection(contract: dict) -> dict:
-    return {key: contract.get(key) for key in RUNTIME_KEYS}
+    return {key: contract[key] for key in RUNTIME_KEYS if key in contract}
 
 
 def validate_runtime_match(reference: dict, other: dict, *, label: str) -> None:
-    if runtime_projection(reference) != runtime_projection(other):
+    # Older accepted T/P contracts predate the optional runtime provenance
+    # fields.  Absence is not evidence of a different backend; compare every
+    # execution field recorded by both contracts and retain strict checks for
+    # the shared scientific/runtime settings.
+    shared = set(runtime_projection(reference)) & set(runtime_projection(other))
+    if any(reference[key] != other[key] for key in shared):
         raise ValueError(f"runtime contract differs for {label}")
 
 
