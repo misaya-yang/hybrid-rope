@@ -9894,6 +9894,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/index.md",
       "area": "paper-2027",
       "category": "navigation"
