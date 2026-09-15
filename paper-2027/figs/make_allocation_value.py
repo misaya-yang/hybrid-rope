@@ -214,19 +214,13 @@ def tailspline_classic():
 
 
 def construction_contrast():
-    fig,axes=plt.subplots(1,2,figsize=(7.25,1.95),gridspec_kw={'width_ratios':[1.4,1]})
-    u=np.linspace(0,1,100);tau=2
-    axes[1].plot(u,1-np.arcsinh((1-u)*np.sinh(tau))/tau,color=ORANGE,label='Cosh')
-    axes[1].plot(u,u,color=BLUE,ls='--',label='Uniform')
-    axes[1].set(xlabel='Quantile u',ylabel='Exponent before anchoring');axes[1].set_title('(b) Cosh: extrapolation transport',loc='left',fontsize=9)
-    axes[1].legend(frameon=False,fontsize=7)
+    fig,ax=plt.subplots(figsize=(4.5,1.8))
     n=17;q=np.arange(1,n+1)
     for values,color,name in [(2*q/(n*(n+1)),BLUE,'MrPro'),(3*(n+q)*(n-q+1)/(n*(n+1)*(2*n+1)),ORANGE,'TailSpline')]:
-        axes[0].plot(np.arange(n+2),np.r_[0,values,0],color=color,label=name)
-    axes[0].set(xlabel='Gap index',ylabel='Extra gap / log s',xticks=[0,9,18]);axes[0].set_title('(a) TailSpline: frozen extension',loc='left',fontsize=9)
-    axes[0].legend(frameon=False,fontsize=7)
-    for ax in axes:axis_style(ax)
-    fig.subplots_adjust(left=.085,right=.985,bottom=.29,top=.86,wspace=.42)
+        ax.plot(np.arange(n+2),np.r_[0,values,0],color=color,label=name,lw=1.5)
+    ax.set(xlabel='Gap index',ylabel='Extra gap / log s',xticks=[0,9,18])
+    ax.legend(frameon=False,fontsize=8,loc='upper center',ncol=2);axis_style(ax)
+    fig.subplots_adjust(left=.15,right=.985,bottom=.29,top=.90)
     finish(fig,'fig_construction_contrast')
 
 

@@ -1,411 +1,390 @@
-# ICLR 2027：面向四位审稿人平均 7 分的论文升级方案
+# ICLR 2027 深度优化计划：RoPE 内部频率分布的结构性设计
 
-日期：2026-09-15。状态：**分析与建议，尚未实施改稿或新增模型实验**。
+更新：2026-09-15。交付内容：问题定义、论证结构、可替换文案、逐文件修改计划与实验优先级。**本次修订计划，尚未覆盖论文源码或改变模型实验队列。**
 
-**作者主张对齐更新：** 本方案按作者随后提供的截图调整了主张层级。论文的目标是提高模型在给定目标上下文窗口中的使用质量；内部频率设计是技术途径，固定频率端点是识别控制。第 4 节给出更新后的中心句、贡献、摘要和 Introduction 文案，并区分更一般的原生窗口研究与当前 TailSpline 构造。
+## 当前适用范围：已完成必要性复核
 
-审读对象为 [当前论文](../main.pdf) 的 62 页快照，逐页目视检查了前 9 页科学正文，并核对主文源码、相关证明、结果 owner 和已有审稿处置。快照 PDF SHA256 为 `87f79e89835816e8d34c85affade413be423d3d8e707ba8b5e9633e1e9f4fc89`；当时 HEAD 为 `a8e9cb177ecbafd46f54b323282a83fff1a23c1e`，工作树包含正在进行的论文与实验修改。另读取了作者指定任务「接管服务器实验进展」中的近期讨论，以及本地 MrRoPE、Round and Round、FoPE、STRING 稿件的相关部分。本方案评价这一快照；后续审稿和实验完成情况以各自 owner 为准。
+[现状与修改必要性审计](audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md)对同一R07最终稿
+重新区分了缺陷与可选优化。**本文的整套叙事重排、补图和新增实验建议不再作为现稿必改清单。**
+现稿已具备受控识别、位置几何、解析构造和任务验证的完整论证链；其中许多建议属于写法偏好，
+不足以判定原文有错。当前只保留引言问题陈述的局部增强供作者考虑，具体取舍以必要性审计为准。
 
-本轮直接重聚合了 BM 自然 QA 的已有逐题分数，确认 631 条长输入的五任务宏平均；其他模型结论按已核对的源码、表格和结果报告使用，未声称重新评分所有生成文本。当前执行安排仍由 [本轮决策映射](COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md) 与相应实验 owner 管理。
+新实验可增强未来结论，但不倒置为承认现有结果的前提；实际研究与执行安排沿用
+[当前研究索引](../../docs/research/next_stage_20260912/index.md)。本文件后文保留为方案推演，
+其中“先做/优先/必须”等措辞不构成新的执行指令。Native-Z5已有独立的初步结果与失败follow-up，
+“新z后续再做”指新的研究路线，不能解读为仓库从未测试过native z。
 
-## 1. 判断：已有资产足以支撑有竞争力的 7 分稿，主要任务是提高贡献的可识别性与比较的完整性
+## 1. 本轮重新确定的主线
 
-我支持把“四审均分 7”作为这轮的合理目标。现有工作同时有固定端点的三 seed 识别实验、完整旋转对子空间分析、解析构造、8B 冻结模型的大样本任务收益，以及学习期和自然 QA 的补充成果。论文已经有足够的正面科学内容。
+### 1.1 论文重点解决什么问题
 
-目前限制评分的主要因素是：
+**RoPE 的频率表如何形成有限窗口中的位置基，以及如何据此分析、构造内部频率分布。**
 
-1. **目标与技术变量的层级不清。** 作者要解决的是给定上下文范围内的质量问题。“Frequency allocation is useful” 把技术变量的存在性放成了目标。论文应先讲频率设计带来的上下文使用质量改善，再以固定范围识别、完整对几何和运行条件说明贡献来源。
-2. **理论到方法的关系没有被组织成最有力的论证。** 几何结论、Cosh 密度目标、TailSpline 边界目标各自成立，但它们之间存在动机联系，尚不存在完整的任务最优性推导。正文应解释每一部分解决的问题，而不是让读者自己补出一条并不存在的演绎链。
-3. **最强部署结果缺少同协议的第二个主要基线。** Llama clean 的两长度结果很强，但只直接比较 MrRoPE-Pro。补 YaRN 能显著减少“该设置下 MrPro 是否偏弱”的疑问。
-4. **部分好资产没有为当前主张发挥作用。** TailSpline 的自然 QA 持平不能代表整个 allocation 研究没有自然任务收益；BM 已有正面实例。另一方面，历史 OLMo 巨大收益也不能替代 TailSpline 的同协议跨模型确认。
-5. **主图与主结果没有完全对齐。** clean 主表和 classic 曲线同页并置，增加了理解成本；最有辨识度的完整对几何主要靠公式和附录展示。
+更具体地说：
 
-推荐路线：**以给定上下文窗口中的质量改进为中心，以 RoPE 内部频率分布为研究对象。TailSpline 承担主要部署结果，Cosh 承担学习期构造，BM 的对称边界实例补充自然任务证据。先重组现有成果，再补少量能改变审稿判断的比较。**
+> RoPE 用有限个旋转通道提供不同频率的位置函数。然而，频率不同并不保证它们在有限上下文中提供不同的位置方向；调整频率还会改变预训练权重已经学会使用的位置基。因此，确定频率覆盖范围之后，仍有一个实质性的设计问题：内部频率应该怎样配置，才能形成适合目标范围和运行条件的位置表示？
 
-“稳定 7”无法由几次内部评分保证。目标应落实为四类审稿人都能找到支持接收的具体理由，并让至少两类审稿人有理由积极支持。`8/8/6/6` 只是均分 7 的算术示例，不是分数预测，也不假定 2027 官方表单逐一提供这些内部评分档位。[ICLR 2027 审稿指南](https://iclr.cc/Conferences/2027/ReviewerGuidelines)强调新知识与社区价值，并不把 SOTA 作为接收前提。
+这个问题由稿件已有的结构发现、受控实验与明确构造共同回答。**提高给定上下文窗口内的使用质量，是解决这一设计问题所取得的核心实证贡献。**
 
-## 2. 现有成果应承担什么主张
+我此前两种表述各缺了一层：“allocation 有用”只陈述变量的作用；“提高窗口内质量”只陈述希望取得的效果。本轮用一个具体的表示设计问题组织全文。
 
-| 资产 | 当前可支持的正面结论 | 在升级稿中的职责 |
-|---|---|---|
-| 151.9M，固定实际端点，三配对 seed；512/1024/2048 的 Cosh−Geo NLL 为 −0.281/−0.176/−0.146 | 仅改变内部 30 个频率即可改善学习后的外推；收益不由频率范围变化解释 | **核心科学识别**，保留在正文与首张科学图 |
-| 完整 sin–cos 对、canonical overlap、有效秩恒等式；识别网格最慢 8 对的 16 坐标仅有约 2.11 的有效秩 | 频率数与有限窗内的有效位置方向数不同；单看 cosine 会遗漏交叉方向 | **核心结构解释**，用一个直观图展示 |
-| Llama-3-8B，clean 16K：650 对；86.09% vs 82.71%，+3.39pp，区间 [1.53,5.34] | 同一 S4 表在中间长度有明确任务收益 | **全窗口目标的关键已有证据** |
-| Llama-3-8B，clean 32K：2,600 对；68.27% vs 56.54%，+11.72pp，区间 [10.32,13.11]；12/13 任务均值正向 | 在目标长度有强且广于单一任务的配对收益 | **主要部署证据**；数字由未舍入分数计算 |
-| OLMo-2-1B classic Full-13 AUC：17.36%→66.60% | TailSpline 在另一模型族的既有协议也有效 | 有价值的跨模型支持；与 clean 分开标示 |
-| 432M MLA，三 seed；16K PPL 138.8→95.6；500M tokens | 学习期也能利用非均匀 allocation；实际配方包含 midpoint 支持变化 | **Cosh 学习价值**，不将它混称纯固定端点干预 |
-| BM，OLMo 五项长输入自然 QA，631 题；宏 F1 21.62%→25.44%，+3.82pp | 解析 allocation 已有自然生成任务的成功实例 | 正文恢复一个紧凑支持结果；明确是 BM 与 OLMo |
-| TailSpline，Llama Natural-QA631：41.08% vs 40.88%，+0.20pp，区间 [−1.53,1.89] | 该自然任务池尚未确认收益；实际输入约 3.7–16.3K | 与 RULER 分开报告；不包装成自然任务优势或等效性 |
-| Native 8K：T−Native −2.14pp，区间 [−6.14,1.92]；PPL 相对增加 0.37% | 原生窗口已测，点估计代价较小；任务损失上界仍不精确 | **部署取舍证据**，补 clean Native 比较最有针对性 |
+### 1.2 科学问题、方法和贡献的分工
 
-主要来源：[识别实验](../sections/02_identification.tex)、[几何证明](../appendix/a1_proofs.tex)、[Llama 结果 owner](../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)、[clean 16K 报告](../../experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json)、[完整实验主文](../sections/04_experiments.tex)、[BM 自然 QA 原始结果记录](../../docs/research/ROPE_OLMO_BM_FIVE_QA_RESULT_20260908.json)。
+| 层级 | 本稿应表达的内容 |
+|---|---|
+| 科学问题 | 内部频率分布怎样形成有限窗口的位置结构，怎样设计这一分布 |
+| 已有结构发现 | 不同频率可共享近似位置方向；完整 sin–cos 对与 cosine-only 指标可以给出不同几何排序 |
+| 已有识别证据 | 固定实际端点仍可通过内部配置改善模型表现；范围策略与学得使用方式影响结果 |
+| 主要方法 | TailSpline：在冻结扩展的外带条件下，以明确的尾部过渡目标构造频率表 |
+| 核心实证贡献 | 同一张静态表在已测中间长度与目标长度取得明确任务收益 |
+| 辅助实例 | Cosh 是为外推提出的频率搬运方式，正文占比最多约 20%；BM 只提供必要的对照和支持结果 |
+| 后续研究 | 新 z 与 s=1 原生质量改善留到下一阶段；稀疏/线性架构的位置机制不扩成当前论文的新主张 |
 
-BM 的既有区间 [1.32,6.29]pp 来自任务内配对行 bootstrap，表示所选池内的探索性不确定性；不要给它换成 TailSpline Natural-QA 的 source-context cluster 统计身份。本轮从已有逐题分数重算了 BM 点估计，结果一致。两项自然 QA 的模型、表、长度分层与统计单位均应各自保留。
+保留标题 **Beyond the Base: Frequency Allocation in RoPE**。当前最需要调整的是标题之下的问题定义及论证，暂不再推荐以“better context utilization”直接替换论文身份。
 
-## 3. 对标已录用论文：学习它们组织贡献的方式
+### 1.3 这条主线的论证范围
 
-### 3.1 MrRoPE 的启示
+频率重叠是结构事实，不能直接将低频称为“浪费的通道”：慢频也可能被模型用于内容处理。学得兼容性说明冻结安装需要尊重已有使用方式，但不单独承担一条机制论文主线。
 
-MrRoPE 是 **ICLR 2026 Oral**，可由 [官方 Oral 列表](https://iclr.cc/virtual/2026/events/oral)确认。对本次 ICLR 2027 投稿而言，它是上一届工作。
+完整对几何、TailSpline 的过渡目标与任务收益，各回答一个明确问题。它们构成分析、构造与验证的研究链；当前稿件不需要证明一个几何分数可以统一排序所有任务，也不应把不同构造写成同一全局最优原则的解。
 
-它的叙事非常集中：提出 mixed-radix 语言，将已有方法归入该语言，提出 uniform/progressive 两种策略，再用多长度、多个模型和实际应用评价这些策略。[论文](https://arxiv.org/abs/2601.22181)中的 Llama 是 S16、8K→128K；Qwen 是 S4、32K→128K。当前 TailSpline Llama 是 S4、8K→32K，不能直接把不同论文的绝对分数放在同一排行榜里比较。
+## 2. 本轮依据：已读的版本、任务与作者纠正
 
-我们的进一步贡献应明确写成：**通过 RoPE 内部频率设计，提高模型在给定目标窗口中的质量；以固定范围的受控识别和完整旋转对几何解释设计对象，以明确构造及多长度任务结果实现这一目标。**
+审读了指定任务 **「升级论文并安排后续试验」** 中的作者要求、R03–R07 的分析与处置，以及当前源码。重点核实了作者的三项纠正：
 
-MrRoPE 的 λ 已经逐维描述频率变换。`x=a+Rz` 很适合控制实验，但单独作为重参数化不足以建立创新性，也不能未经证明称它严格扩展了 MrRoPE 的表达空间。TailSpline 则是一个明确不同的构造：MrPro 的增量随过渡带递增，TailSpline 降低与完全插值低频尾部衔接时的额外 gap 跳变。
+- Cosh 的出发点是外推，是改变 z 的一种搬运方式，最多占正文约 20%。
+- 已完成的 Llama clean 16K/32K 结果应充分呈现；准确写出设置与结果，不添加泛泛的自我降格式总结。
+- 新 z 后续再做；给定窗口的质量改善应作为核心贡献，论文主线须回答更具体的科学问题。
 
-**我们应展示这个不同选择为什么值得研究、有什么精确性质、在哪些受控任务中有效。** 接收理由不应建立在“证明更多，因此应比 Oral 高分”上。
+最终依据更新为 **R07 完成修改后的稿件**：
+[论文 PDF](../main.pdf)，63 页，科学正文 9 页；SHA256 为 649fdb68e7b39d2bcbd986db5263c2fda4cc8c10326a3377d4600faf59a2058f。本轮先检查 R05/R06，再读取 R07 最终处置、相关源码，并渲染检查最终稿第 1、4、5、7、8 页。之前的 62 页输入不再作为本计划的最新稿件状态。
 
-### 3.2 其他参照各提供一种写法
+已结合 [R05 处置](pdf-review-rounds/20260915_astra_sol_five_rounds/r05/disposition.md)、[R06 处置](pdf-review-rounds/20260915_astra_sol_five_rounds/r06/disposition.md)、[R07 最终处置](pdf-review-rounds/20260915_astra_sol_five_rounds/r07/disposition.md) 和 [参照稿评价分析](pdf-review-rounds/20260915_astra_sol_five_rounds/reference_single/assessment.md)，没有把旧输入上的问题直接认定为当前稿件仍存在的问题。
 
-| 参照 | 可学习的组织方式 | 对本稿的具体启发 |
-|---|---|---|
-| [Round and Round](https://proceedings.iclr.cc/paper_files/paper/2025/hash/e6d58fc68c0f3c36ae6e0e64478a69c0-Abstract-Conference.html) | 围绕一个熟悉解释的不足，逐步给出机制观察、分析与改法 | 用“相同频率范围为何仍会产生不同质量”组织发现；具体反例要有明确的被反驳对象 |
-| [FoPE](https://proceedings.mlr.press/v267/hua25b.html) | 频域问题、方法部件与实验问题相对应 | 给完整对几何、Cosh 与 TailSpline 各一个明确职责，使读者能追踪每个部件的作用 |
-| [STRING](https://proceedings.mlr.press/v267/schenck25a.html) | 将理论假设、保证的性质与目标应用连在一起 | 把有限窗几何、精确核等价与冻结模型表现分层，突出真正新增的结论 |
+模型结论沿用已核对的论文、结果 owner 和便携记录；此前本任务已从 BM 的逐题分数重聚合自然 QA 点估计。本轮没有重跑模型或声称重新评分所有生成文本。
 
-以上是对这些稿件行文的分析，不是以它们的录用结果推断我们被接收的概率。用户提供的目录也包含本项目旧稿，不能把目录中的每个文件都当作外部已录用证据。
+## 3. 同领域论文怎样把“想要的效果”变成科学问题
 
-## 4. 核心 claim：为给定上下文窗口设计质量更好的 RoPE
+来源：作者提供的本地 RoPE 论文集。
 
-### 4.1 作者主张的准确层级
+本轮重点比较以下稿件的问题陈述、Introduction、理论到方法的衔接；没有将目录中的本项目旧稿视为独立外部证据，也没有声称逐篇完整审计所有数学证明。
 
-| 层级 | 应表达的内容 | 在论文中的位置 |
-|---|---|---|
-| 研究目标 | 提高模型在给定目标上下文窗口中的使用质量 | 标题意图、摘要开头、Introduction 第一段 |
-| 技术途径 | 重新设计内部频率分布，使位置表示服务于目标区间与模型使用条件 | 方法与理论主体 |
-| 科学识别 | 固定实际频率端点，确认内部设计本身能带来质量改善 | 受控实验与核心发现 |
-| 当前实现 | 一张静态 TailSpline 表，在已测中间长度与目标长度取得任务收益；Cosh 提供学习期实例 | 正文贡献与主要结果 |
-| 后续方向 | 在原生长度内直接设计 z，研究 s=1 的质量改善 | 简洁的研究展望；完成前不列为实验贡献 |
-
-前版中心句仍先讲“同频率范围下表的表现不同”，把识别手段摆在了作者目标之前。当前应以质量目标起笔，再用这些控制解释改进从哪里来。
-
-### 4.2 推荐中心表述
-
-**中文：**
-
-> 我们通过重新设计 RoPE 的内部频率分布，提高模型在给定目标上下文窗口中的任务表现。面向冻结部署，所提出的构造使用一张静态频率表，在中间长度与目标扩展长度均取得收益，无需更新权重或校准。
-
-**英文：**
-
-> We develop RoPE frequency designs that improve model performance within a prescribed context window. For frozen deployment, our construction uses a single static frequency table to improve task performance at both intermediate and target extension lengths, without weight updates or calibration.
-
-这是一段总括；紧接的结果句应点明 clean RULER 和实际比较对象。当前成果可直接说在两个已测扩展长度取得收益；“对窗口内质量进行设计”是目标，不将它写成窗口内每个长度、每种任务都严格占优。
-
-### 4.3 统一记号，明确评测对象
-
-令原生训练长度为 `L_train`，目标服务上限为 `T = s L_train`。对这一目标设计一张固定表 `Ω_T`，观察其在预先声明长度集上的质量：
-
-\[
-\left\{Q(\ell;\Omega_T):\ell\in\mathcal L_T\right\},
-\qquad \mathcal L_T\subseteq(0,T].
-\]
-
-这里的上下文窗口 `(0,T]` 与频率支持区间 `(a,R)` 是不同对象。正文先定义目标窗口，再介绍频率分解。上式用于说明一张表服务多个长度；沿用已有主终点和统计合同，不由此增加一个事后加权综合分数。
-
-这种表述自然连接原生窗口质量与扩展窗口质量。窗口上限 T 描述任务范围，频率设计的价值由该范围内实际任务表现体现。背景用“原生窗口持续增长”即可；若要写具体模型已达到 200K 或百万长度，应在正式改稿时补对应来源，也不把训练长度、宣称窗口和评测长度混称。
-
-### 4.4 三项贡献的可替换英文
-
-1. **RoPE frequency design for context quality.** We develop explicit frequency allocations for learning and frozen deployment. TailSpline uses a single static table to improve RULER performance at both intermediate and target extension lengths, while Cosh provides complementary gains in learned extrapolation.
-2. **Controlled identification of the source of improvement.** Paired training and frozen-model interventions show that interior frequency placement improves performance even when the sampled frequency endpoints are fixed. Additional controls distinguish changes in total displacement from residual shape and learned coordinate assignment.
-3. **Finite-window structure and explicit constructions.** Full sine–cosine geometry characterizes the positional overlap of frequency pairs and reveals distinctions missed by cosine-only proxies. We use this structural perspective and the constraints of each operating setting to motivate explicit allocation objectives, with closed-form constructions and stated mathematical guarantees.
-
-三项依次回答：带来什么能力收益、怎样识别改进来源、怎样理解并构造频率表。第三项中的“motivate”描述设计动机，不把完整对子空间指标与 TailSpline/Cosh 的目标函数写成未经建立的等价推导。BM 的自然结果作为有明确身份的补充实例。
-
-### 4.5 建议摘要：保持无数字结果
-
-> The value of a context window depends on how effectively a model uses the information it contains. We develop RoPE frequency designs to improve model quality within a prescribed context window. Controlled interventions show that redistributing interior frequencies improves learned extrapolation and frozen-model performance even when the frequency range is unchanged. Full sine–cosine geometry characterizes finite-window positional overlap, while learned-coordinate effects inform the distinction between learning a new allocation and modifying a pretrained model. For frozen deployment, we introduce TailSpline, a closed-form allocation that smooths the transition into the extended low-frequency tail. It uses a single static table and requires neither weight updates nor calibration. TailSpline substantially outperforms MrRoPE-Pro on RULER at both intermediate and target extension lengths, with a small observed native-window trade-off. Complementary Cosh experiments demonstrate gains when models learn with a redesigned frequency distribution. Together, these results connect RoPE frequency design to improved model quality within the intended context window.
-
-该摘要是建议文案，未覆盖正在进行的论文源文件。它保留当前正面结果与简短的观测代价描述；未完成的 native 改进不出现在摘要。
-
-### 4.6 Introduction 开头的建议文案
-
-> Extending a pretrained model from a native length L to a target length T = sL specifies a range of inputs that the model is expected to serve. The resulting system must perform well at the shorter lengths within that range as well as near its upper limit. We study RoPE frequency design with this objective: improving the quality of context use within a prescribed window under a single static frequency table.
->
-> YaRN and MrRoPE demonstrate how frequency rescaling can extend pretrained models beyond their original context lengths. Their rescaling policies also determine how rotary frequencies are distributed within the resulting range. We investigate this internal distribution as a means of improving model quality within the target window. Paired interventions hold the sampled frequency endpoints fixed and establish improvements from changing interior placement, while full sine–cosine analysis characterizes the positional structure of these changes.
-
-第三段直接给出 TailSpline 的明确构造与 clean 2L/4L 收益，再以 Cosh 连接学习期设计。无需把领域描绘成“前人只追求最大长度”；MrRoPE 本身也测了多长度质量。本文进一步研究固定目标窗口中的频率设计、受控归因及解析构造。
-
-准确的模型、数据与长度范围放在实验设置、结果句和表注中。摘要与 Introduction 围绕研究问题、贡献和已完成成果组织，不添加“only one model”之类脱离具体设置的自我降格式结论。实际支持范围仍如实交代。
-
-### 4.7 s=1 的位置：研究空间与具体构造分别表达
-
-作者关于 native 质量的方向成立：目标窗口可以取 `T=L_train`，在相同原生长度研究新的内部频率设计。**按作者最新决定，新 z 留到下一阶段，本次集中优化已完成论文的主张与行文。** 后续可以保持端点和频率跨度，直接重新设计内部坐标，再评价模型如何利用新表。
-
-当前 [TailSpline 安装式](../sections/04_mature.tex) 为 `ω'_k=ω_k^N s^(−m_k)`、`g=1+0.1 ln s`。因此 `s=1` 时频率表和 gain 均退回 Native。原生质量改进须通过更一般的 z 构造研究，不能只把现有 TailSpline 的 s 设为 1。
-
-当前 S4 表对原始 Native 的 8K 比较衡量的是**扩展部署的原生代价**；未来 s=1 新表对 Native 的比较衡量的是**不扩窗口时的能力改进**。两者回答不同问题。
-
-展望中一句即可：
-
-> The frequency-design formulation also accommodates redesign at the native context length, motivating future work on native-window quality.
-
-### 4.8 当前稿件的具体替换点
-
-| 当前位置 | 当前重心 | 建议重心 |
-|---|---|---|
-| 摘要首句 | RoPE typically ties placement to a single base | 目标窗口中的使用质量，再引出频率设计 |
-| Introduction 第一项贡献 | Identify the value of allocation | RoPE frequency design for context quality |
-| 理论节与方法节之间 | 重叠量之后直接出现构造 | 分清学习新基与冻结扩展，说明各目标的设计偏好 |
-| 实验组织 | 先罗列不同协议 | 同一表在原生、中间、目标长度的任务表现，再展示识别与其他实例 |
-| 结论末句 | Allocation is a practical design dimension | 总结明确构造带来的目标窗口质量改进 |
-
-现有标题可以保留。若同步强调目标，推荐候选为 **Beyond the Base: RoPE Frequency Design for Better Context Utilization**；这只是标题候选，优先完成正文的主张对齐。
-
-### 4.9 时代背景：更长上下文的计算可行性与实际使用质量
-
-作者希望研究更符合当前长上下文发展的质量问题。这个动机可以成立，而不依赖“许多稀疏注意力已经不用 RoPE”的概括：
-
-- **稀疏 softmax 的例子：** DeepSeek-V3.2-Exp 的官方 DSA 实现同时在 indexer 与主注意力中使用 RoPE。稀疏 token 选择和旋转位置表示能够共同存在。[官方实现](https://github.com/deepseek-ai/DeepSeek-V3.2-Exp/blob/main/inference/model.py)
-- **混合线性架构的例子：** Kimi Linear 明确在全部全局 MLA 层使用 NoPE，将位置与 recency 信息的建模交给 KDA 层。这说明部分模型改变了位置建模的承担方式；NoPE 不等于系统没有位置机制。[技术报告 §4、§6.1](https://arxiv.org/html/2510.26692v1)
-
-因此，背景应提出一个跨架构都有意义的问题：随着更长输入在计算上变得可行，如何提高给定窗口中信息被有效使用的质量？本文选择 RoPE 频率设计这一具体对象，以已完成的结果回答它。稀疏、线性和混合架构提供背景，不成为未经验证的新应用主张。
-
-**可用于 Introduction 的动机句：**
-
-> As longer contexts become computationally accessible, improving how reliably models use information within a target window becomes an increasingly important objective. We address this objective through RoPE frequency design, developing explicit constructions that improve task performance at multiple lengths under a single static frequency table.
-
-这是基于上述架构发展的研究定位判断，不是对所有现代模型瓶颈的统一归因。关于稀疏注意力的后续位置编码研究可以独立开展；当前论文继续用已有的 RoPE 构造、理论和任务证据完成这条质量主线。
-
-## 5. 理论升级：强化已有贡献的解释力，准确连接构造
-
-### 5.1 用完整对几何回答一个可记住的问题
-
-核心问题应是：**两个不同频率，在模型实际服务的窗口里，是否提供不同的位置方向？**
-
-先展示完整 sin–cos 对的图，再引入 canonical overlap 与
-
-\[
-r_2(\Gamma)=\frac{2K}{1+(K-1)\bar c}.
-\]
-
-读者应先理解“很多频率可能挤在近似同一位置子空间”，再看定义。保留识别网格的数值例子：8 个慢频 pair、16 个坐标、有效秩约 2.11；它没有使用不成立的 `ωL≪1` 近似。
-
-正文写明这是 **block-whitened positional geometry**，刻画方向重叠；它不测量模型已经学到的各方向幅值或内容价值。把它直接叫模型容量或信息量会越出证据。
-
-### 5.2 让两个反例承担积极的科学职责
-
-[现有附录](../appendix/a1_proofs.tex)已经有：
-
-- 相同端点的两张表，cosine-only collision 的优先次序与完整对有效秩相反。
-- 完整对 overlap 的排序可以随 L、2L、4L 改变；单窗口最大秩的 parity lattice 还可能在窗口之外重复。
-
-它们分别说明 **为什么必须看完整对**、**为什么必须声明服务区间**。这两点直接服务核心研究问题，不应只作为防御性限制散落在附录。
-
-现有 `C_cos` 反例针对特定 cosine-only overlap 指标，不能直接宣称推翻 MrRoPE 使用的 `B_theta(d)=Σcos(dω)` bound。两者不是同一个量；若将来要批评该 bound，须另行对齐其假设与结论。
-
-### 5.3 把 TailSpline 与 BM 写成同一边界构造的两个已知选择
-
-已有证明可以组织为：相邻频率的额外 log gap 由 `ε_q log s` 决定，尾部完全插值区的额外 gap 为零。考虑
-
-\[
-J_{\alpha,\beta}(\epsilon)
-=\sum_{q=1}^{n-1}(\epsilon_{q+1}-\epsilon_q)^2
-+\alpha\epsilon_1^2+\beta\epsilon_n^2,
-\qquad \sum_q\epsilon_q=1.
-\]
-
-这里仅用于并列解释已有的两个选择：TailSpline 为 `(α,β)=(0,1)`，BM 为 `(1,1)`。不新增参数搜索，也不声称已找到任务最优 α、β。
-
-这可以同时做到：
-
-1. 保留 TailSpline 的有限网格唯一解、正性、单调累计表和 O(K) 构造。
-2. 解释它为何承担更大的高频入口跳变，以获得更小的尾部接缝跳变。
-3. 将 BM 的自然任务结果接回同一数学构造，而不另开一条同等规模的方法主线。
-
-对 Llama 的 n=17，直接由现有公式计算：TailSpline 的入口增量约 0.0857，MrPro 约 0.00654；尾端增量约 0.00952 与 0.11111。中间 `Σm_q` 分别约 9.943 与 5.333。**这些数字直观展示收益比较同时改变了位移总量与分配形状。** 它们是构造性质，不是胜因证明。
-
-### 5.4 明确两种理论价值
-
-- 完整对几何说明 allocation 改变的位置结构。
-- Cosh/TailSpline 的变分或离散优化说明怎样从明确设计偏好得到可安装的解析表。
-
-当前 Cosh 泛函不是完整 canonical-overlap 目标的精确推导，TailSpline 边界目标也不是它的离散化。将二者写成“几何与运行条件启发的明确构造，再由任务实验评价”，足以形成严肃贡献。
-
-整数谱等价 corollary 保留一段简明结论即可；它解决精确位置核能否被固定坐标变换吸收的问题，经典谱相似性工具本身不宜承担主要新颖性。
-
-### 5.5 有价值但不应升级成主证据的旧资产
-
-[FullLagP2](../appendix/a9_recovered_design_evidence.tex)确有从完整对残差构造频率表的正面小面板例子，因此“几何从未进入实际构造”过于绝对。但其跨模型/任务结果混合、面板小，适合在讨论中用一句话指向完整附录。它目前不能解决 TailSpline 专属胜因问题。
-
-**为了当前目标，不建议新开一个 checkpoint 校准器、拟合任务排名公式或普适最优表理论。** 构造继续只用公开 RoPE 参数；现有权重干预用于理解，不转作选表过程。
-
-## 6. 九页正文和图表应怎样重排
-
-### 6.1 先解决三处具体阅读摩擦
-
-**第 7 页 Table 2 与 Figure 3(b)。** 主表给出 clean 16K/32K 的 +3.39/+11.72pp，图 3(b) 展示的是 classic Llama 曲线，其中 32K 仅约 +2.63pp。两者都有正确协议标记，但读者仍需自行解释差异。优先把主曲线换成 clean 两长度的绝对分数与配对差；classic 全曲线保留在单独支持面板或附录。未测的 clean 8K 位置不以 classic 点补齐。
-
-**第 3 页 Figure 1(c)。** 该 crossing 使用另行派生的 factor-four runtime tables；两个匹配对角值是 3.426 与 3.479。它说明每套权重偏好对应表，不是 Figure 1(b) 的固定训练 support 优势复现。主图直接标注 `derived runtime tables; compare within each row`，用行内箭头表达结论。也可移到紧随首图的紧凑表，避免首个视觉同时承担两个容易混淆的排名任务。
-
-**第 2 页控制表与第 6 页 Table 1。** 两处都在分类协议。合并成一个紧凑的控制表，省出几何示意与 BM 自然结果的位置。正文以科学问题和结果为段落主语，详细 runtime 身份集中在实验设置与附录。
-
-### 6.2 建议的篇幅预算
-
-| 部分 | 约页数 | 应让读者记住什么 |
-|---|---:|---|
-| 摘要、Introduction、贡献 | 1.0 | 同范围仍有可利用的内部设计问题；本文已给出实证方案 |
-| 分解、控制识别、训练/冻结连接 | 1.6 | 改变的究竟是什么，哪些实验已排除了范围解释 |
-| 完整对几何与必要反例 | 1.2 | 频率分开不代表有限窗位置方向分开 |
-| TailSpline、BM 边界特例、Cosh | 1.3 | 方法公式、设计偏好、安装方式和明确性质 |
-| 主要部署结果、成本、学习与自然任务支持 | 2.8 | 同一表的中间/目标长度收益；完整取舍 |
-| 相关工作与结论 | 1.1 | 相对已有工作的知识增量与适用范围 |
-
-合计约九页，是改稿预算，不是已经编译完成的排版。保持作者“第一页无图”的选择；参考文献和补充材料按 [ICLR 2027 作者指南](https://iclr.cc/Conferences/2027/AuthorGuidelines)放在正文之外。
-
-### 6.3 图表按贡献组织
-
-- **首张科学图：固定范围识别。** 频率位置示意、三 seed 效果；兼容性面板只表达行内比较。完整几何图可以作为紧邻的小面板或第二张图，优先复用已有 `fig_allocation_geometry`。
-- **构造图：让读者看见边界选择。** 同一横轴显示 MrPro/TailSpline 的累计位移与增量；用少量标注显示两个接缝。BM 用明确的对称边界说明，避免突然出现第三套无解释的方法名。
-- **主要部署图：clean 结果优先。** 16K/32K 的绝对性能与配对差；13 任务按 retrieval/tracking/aggregation/QA 分组，保留 multivalue 负格。第二模型若仍是 classic，显著标示，不与 clean 拼成同一种确认。
-- **学习证据：保留三 seed 的可见性。** MLA 曲线或足够清楚的主表承担这一职责，完整训练进度留附录。不能只剩一句“更多实验见附录”。
-- **结果汇总表：每行写明方法与模型。** TailSpline clean 16K/32K、原生代价、TailSpline 自然 QA、BM–OLMo 自然 QA、Cosh–MLA 各有独立行；不同指标不做跨行总平均。表太长时拆为“主要部署”和“学习/自然任务支持”两组。
-
-BM 的正文恢复只需一个简短段落或表格行。Qwen 上的对应不利结果继续在同一证据指针下可见；不能只取 OLMo 胜格宣称 BM 普遍优越。
-
-附录按证明、复现协议、完整结果、支持性实验导航即可。每个主结论在正文中应已有足以形成判断的信息；62 页材料的价值在于可追踪，不能要求审稿人通读才能发现最强理由。
-
-## 7. 实验优先级：每项只解决一个足以影响接收判断的问题
-
-下表是新增工作的建议，不改变当前 GPU 队列。样本量是可审阅的工作包；最终执行前沿用已有实验 owner 的预算和输入身份。
-
-### P0：立即利用现有结果，无需 GPU
-
-1. 重画 clean 主图；把 classic 与 clean 的数字对应关系讲清楚。
-2. 正文恢复 BM 自然 QA 结果，保留独立统计身份；完善 allocation 总主张与 TailSpline 子主张的关系。
-3. 把几何反例、Cosh/TailSpline 的理论职责、BM 的边界关系写清楚。
-4. 复用现有 ProofPile-only 报告：其三长度 AUC 几乎持平，不能写成 PPL 全面领先。
-5. 复用已经安排的 NIAH 热图。它增加长度/深度可读性，但与 RULER 检索覆盖重叠，新增样本的边际价值低于下面的直接比较。
-
-### P1-A：在当前 clean Llama 输入上补 YaRN
-
-**消除的疑问：** TailSpline 的优势是否仅因为 MrPro 在当前 S4 设置下不是强选择？
-
-推荐完整方案：只增加 YaRN 一臂，32K 2,600 条，16K 650 条，共 **3,250 次新生成**；复用已完成的 T/P。使用已核对的公开 YaRN 公式、共同 decoder 与约定 gain；明确报告其实际频率端点是否与其他两臂相同。不能为形式上的“同端点”而静默改造 YaRN；受控变体须另起标签。
-
-预算较紧时：预先固定使用当前每任务前 50 条，形成 16K/32K 各 650 条的 **三臂共同面板**，只新增 1,300 次 YaRN 生成；T/P 在完全相同的 row IDs 上重新聚合。原 T/P 32K 的 2,600 条确认结果仍保留，不把 YaRN 650 条分数混装成同样样本量的比较。
-
-采用哪一个工作包应在查看 YaRN 输出前决定。若使用两项主比较 T>P 与 T>Y，保留既有 T/P 主估计，并为新增的联合优越性陈述计算同时区间。
-
-结果解释：T 同时优于两者，部署价值更清楚；T 仅胜 P，就据实写出相对位置并考虑 S16 同场测试的解释价值。不能由 `T>P` 和 MrRoPE 论文中的 `P>Y` 推出当前 `T>Y`。
-
-### P1-B：用 clean 原生窗口对照收紧代价判断
-
-**消除的疑问：** 同一静态表的长端收益，会不会伴随不可接受的常用长度损失？
-
-建议一个固定的 8K、13×50 source-order 面板，运行 **TailSpline + 原始 Native**，共 1,300 次新生成。Native 使用原始频率与原始 gain；TailSpline 仍安装同一 S4 表。现有 padded 130 条是有效历史证据，但不混入这个 clean 估计。
-
-报告绝对分数、任务等权差和配对区间，并复用已完成的 Native PPL。若另有预算，可加 MrPro 8K 以形成统一 clean 方法曲线；它不是 T–Native 代价比较的必要条件。
-
-50/task 不是保证非劣性的样本量。如果确实需要“损失不超过 δ”的声明，先给出应用上有意义的 δ 并据已有配对方差确定固定样本量；不能按结果反推界限。若仅报告代价，不额外创造非劣门槛。
-
-### P1-C：第二模型的 clean 确认
-
-**消除的疑问：** 最大样本的结果能否离开单个 checkpoint 和单一协议？
-
-优先使用已有 OLMo-2-1B 权重，S4、16K、13×50 source-order 输入，原封不动使用公开参数算出的 canonical 表。T/P 两臂共 1,300 次生成；加 YaRN 为 1,950 次。它成本低于另开一个 8B 长窗口全套，又能把当前 classic OLMo 结果转为同协议支持。
-
-这是对已有模型的协议确认，不称全新盲测模型，因为历史 OLMo 结果已参与方法发展。如果目标进一步提高跨架构广度，现有 Qwen 模型也可作为后续检验，但应事先固定模型、尺度与表，不以小样本结果挑选“能赢”的 checkpoint。
-
-**P1 内的建议顺序：** 同场 YaRN → clean Native → 第二模型 clean。可按机器实际吞吐并行准备；不打断已经接近完成的授权任务。
-
-### P2-A：S16、128K 用来回答与 MrRoPE 同尺度的竞争力
-
-作者指定任务中已有 S16 TailSpline/MrPro 表、128K Full-13 的 130 条/臂和 ProofPile10 的准备回执；应复用。这些是准备状态，不是已完成性能结果。
-
-128K 很有价值：它检验方法能否在 MrRoPE 公开 Llama 尺度下仍有竞争力。对“四审均分 7”的当前计划，它属于提升说服力的补充，不替代 S4 的基线与原生代价比较。
-
-- 先完成已准备的固定工作包：两臂共 260 次 RULER 生成，另有两臂 PPL10。
-- 13×10 是尺度可行性与粗效应测试，不能冒称与当前 clean 32K 的证据强度相同。
-- 若希望用它支撑完整 S16 窗口结论，需要同一 S16 表的中间长度结果。先看极限点以决定资源投入是合理的；后续确认仍须使用事先固定的任务和样本，报告完整结果。
-- S4 与 S16 是两张不同的静态表。S4 的 Native/16K 表现不能直接替代 S16 的对应点。
-- 即使 128K 失利，S4 两长度收益仍成立；失败界定更大倍率的适用边界，不据此抹掉现有研究结果。
-
-### P2-B：如果要强化 TailSpline 的应用收益，选一个真正覆盖扩展区间的自然任务
-
-现有 Natural-QA631 的最长输入约 16.3K，不能检验 32K 的自然任务效果。给同一批短上下文再加基线有比较价值，但不能填上目标区间的应用证据。
-
-建议后续只选一个清楚的应用类别，例如 [HELMET](https://princeton-nlp.github.io/HELMET/) 的 RAG 类别，采用官方任务、提示与评分，并在 Llama tokenizer 下确认实际长度。该基准提供受控长输入与多种应用类别，且明确指出简单 NIAH 不足以预测下游表现。
-
-具体数据量、来源、生成上限和评估成本应在使用之前固定；这需要单独的数据/执行安排。若只是一个类别或其中一个数据集，报告相应名称，不能称 HELMET 总分。不要填充短文冒充天然 32K 长文，也不要在观察模型结果后挑选能产生正差的任务。
-
-这一项若取得收益，会提高应用审稿人的支持力度；若持平，仍保留完整结果，主张集中在已测的检索/跟踪/聚合能力。现有 BM 自然成功实例已经使“allocation 从未改善自然任务”不成立。
-
-### P2-C：E1 同位移对照有信息量，但不应成为论文停工条件
-
-当前 T–C Full-13 AUC 为 −0.41pp，区间 [−2.63,1.82]，且 batch 1/2 不同。优先级低于补主比较基线。
-
-若确需加强 TailSpline 专属边界解释，按既有方案只补 C 的 batch-1 390 次生成，复用匹配条件下的 T；LM 的 138 行仅在该诊断需要时补。使用原来的 Full-13 主终点，不根据 NIAH 子集正差更换终点。
-
-- T>C：支持这组固定对照中的残余形状价值；仍不自动建立 tail-only 中介机制。
-- 仍跨零：保留 TailSpline 是一个有效闭式完整构造的结论，也承认另一种同位移形状同样有竞争力。
-- C>T：把它作为特定平滑偏好未获支持的结果；整个 allocation 命题与 T/P 方法收益不因此失效。
-
-不建议当前启动大规模 head patching、边界搜索、额外 gain 网格或新预训练。它们服务的是更强机制/普适方法研究，尚非当前稳定接收路线中收益最高的缺口。
-
-## 8. 针对四类审稿人的接收理由
-
-| 审稿视角 | 应给他的主要正面理由 | 最容易压分的疑问 | 对应动作 |
+| 参照 | 它真正抓住的问题 | 理论/方法如何回应 | 对本稿的启发 |
 |---|---|---|---|
-| 理论与表示 | 一个定义精确的有限窗位置对象、非平凡反例、解析可安装构造 | 经典恒等式是否被包装成新理论？几何是否被误写成任务代理？ | 区分经典工具与 RoPE 新结论，展示完整对例子与边界构造 |
-| RoPE/长上下文领域 | 沿着 YaRN/MrRoPE 的问题继续推进，提出不同的分配选择并取得强同场收益 | λ 已可逐维调整，z 到底新增什么？MrPro 是否偏弱？ | 强调控制识别；clean YaRN；有余力完成 S16 |
-| 实验与复现 | 三 seed 识别、大样本 paired clean 结果、公开公式、完整负格 | 单模型、协议差异、原生损失估计宽 | clean Native 和第二模型；统一主表，保留结果身份 |
-| 一般 ML/应用 | 读完前两页能解释新知识和实际收益，能看懂一张表的取舍 | 论文似乎只是多个小实验；自然任务是否完全没有收益？ | 单一中心句；TailSpline 主结果；Cosh/BM 有名有姓的支持结果 |
+| MrRoPE，§1、§3.1–3.2 | 既有扩展策略缺少统一描述，中间频段的转换策略需要比较 | mixed-radix 参数化，再提出 uniform/progressive 转换 | 需要明确“描述频率变化”之外，我们新回答了什么 |
+| FoPE，摘要、§1及方法动机 | 线性层、非线性和有限训练窗口造成的频谱破坏 | 频域分析对应 Fourier 组合与频率处理 | 先给具体的表示问题，再让方法部件回应它 |
+| Round and Round，§1及贡献 | 距离衰减解释不足；不同频率实际上被如何使用 | 理论、模型内部观察与频率修改 | 不能把低频重叠自动等同于模型没有利用价值 |
+| Selective RoPE，§1及贡献 | 仅衰减或仅旋转各缺少一类记忆管理能力 | 旋转与衰减的互补分析，引出输入相关旋转 | “更好 recall”是结果，缺失的具体能力才是问题 |
+| Wavelet-based PE，§1、§3 | 作者从尺度使用与感受野约束切入分析既有编码 | 引入不同尺度的位置表示 | 多尺度应对应明确的表示结构，而不是只列更多长度 |
+| STRING / GRAPE，§1及主要构造 | 怎样推广位置算子，同时保留相对性等结构性质 | 群与算子表征、可计算构造 | 我们保持标准 rotary 算子；频率内部配置是本稿对象 |
+| Deconstructing Positional Information，§1 | 内容与位置如何在 attention logits 中耦合，如何影响学习 | 计算分解、针对性任务和训练偏置分析 | “模型如何使用位置”须有自己的证据，不能由位置几何自动推出 |
+| PPE，摘要、§1 | token 合并丢失原有时空位置关系 | 保存多个原位置的编码方式 | 强主线应准确说出哪个对象、哪种结构出了问题 |
 
-四种视角是本方案的组织工具，不是本轮新生成的四份独立审稿，也不是对真实审稿人构成的预测。
+所用本地文件分别为 5551_MrRoPE_Mixed_radix_Rotary.md、11_ICML2025_Fourier_Position_Embedding.md、01_ICLR2025_Round_and_Round_We_Go.md、21436_Selective_Rotary_Positio.md、02_ICLR2025_Wavelet_Positional_Representation.md、12_ICML2025_Learning_RoPEs_STRING.md、20573_Group_Representational_P.md、3159_Deconstructing_Positional.md、10300_PPE_Positional_Preservat.md。
 
-## 9. 如何使用已有审稿，避免越改越保守
+主要公开来源：[MrRoPE](https://arxiv.org/abs/2601.22181)、[FoPE](https://proceedings.mlr.press/v267/hua25b.html)、[Round and Round](https://proceedings.iclr.cc/paper_files/paper/2025/hash/e6d58fc68c0f3c36ae6e0e64478a69c0-Abstract-Conference.html)、[Selective RoPE](https://arxiv.org/abs/2511.17388)、[Wavelet-based PE](https://proceedings.iclr.cc/paper_files/paper/2025/hash/c131c8875c7b1133ffdad2b53cb10e91-Abstract-Conference.html)、[STRING](https://proceedings.mlr.press/v267/schenck25a.html)。
 
-已有 R03/R04 的独立模型审稿为 6 与 7，针对的是各自冻结输入。R05 开始一个模型内的四视角模拟，不等于四个独立审稿人；[审稿记录](pdf-review-rounds/20260915_astra_sol_five_rounds/README.md)已经说明这一点。
+这些论文并不共同证明某一个科学立场。值得学习的是它们把“要改进的效果”落实成可分析的结构问题，并用对应实验评价自己的回答。
 
-每条意见按三种情况处理：
+## 4. 我们相对已有工作的新知识，应怎样说清楚
 
-1. **真实事实/表述问题：** 如读者混淆 clean/classic，或者方法效果与具体机制被连写。修复准确对应的句子和图表。
-2. **值得投入的增量证据：** 同协议 YaRN、原生精度、第二模型确认。写入有边界的工作包。
-3. **不属于当前 claim 的更强要求：** 普适任务最优表、纯几何必然预测 F1、所有模型全面胜出。明确科学层次，不把它们升级成接收前提。
+### 4.1 对 MrRoPE 的定位
 
-重复出现的错误不自动成为事实。此前历史 MLA 记录缺失的判断已被 [正式撤回](pdf-review-rounds/20260915_two_rounds/README.md)；R04 中 OLMo EOS/non-EOS 被倒读的意见也已有 [处置](pdf-review-rounds/20260915_astra_sol_five_rounds/r04/disposition.md)。本方案不把两者作为补实验理由。
+MrRoPE 的 λ 已逐维描述频率变化。我们的 x=a+Rz 分解适合分离控制变量，不能单靠这个分解宣称提出了更大的表达空间。
 
-下一次重要复评宜在核心改稿和关键比较完成后，使用同一最终 PDF、独立上下文和中性的正式审稿维度，不输入目标分数，不让审稿人先看作者预期或其他评价。比较的是剩余决策性问题及其证据，而不是继续累计模型打出的 7。
+R07 已明确承认 radix products 与 cumulative displacement 的坐标等价，应保留。本稿的推进具体落在以下三点：
 
-## 10. 建议交付顺序与停止条件
+1. **从频率覆盖到有限窗位置结构。** 频率范围相同，完整 rotary pairs 的函数空间重叠仍可不同。给出精确对象、实际网格数值与显式反例。
+2. **从整体表比较到内部变化的识别。** 固定实际端点的训练和冻结干预，明确内部配置的独立作用；其他控制回答位移与坐标使用的不同问题。
+3. **从指定转换曲线到明确的过渡构造。** TailSpline 用一个可解释的离散目标处理进入低频尾部的过渡，给出有限网格闭式解，并在同场任务上评价完整构造。
 
-### 第一批：完成现有资产即可做到的稿件升级
+这足以构成有辨识度的研究增量，不需要声称首次发现频率可以修改，也不需要把 MrRoPE 叙述为只研究最大长度。它本身已有多长度、多个模型与实际任务评价。
 
-- 冻结三项核心贡献与主张层级。
-- 修改 Introduction 和理论过渡；保留无数字摘要、第一页无图。
-- 主图与 clean 结果对齐；恢复 BM 自然 QA 支持；合并重复协议表。
-- 用正文回答“新知道了什么、怎样用、在哪些条件有效”。
+### 4.2 一个必须纠正的归因层级
 
-这批工作不依赖新的 GPU 结果。完成后论文应已经比当前快照更容易被正确评价。
+固定 native 表、外带、端点与 gain 后，总 log 位移
 
-### 第二批：完成最能减少审稿分歧的比较
+\[
+D=\sum_k\log(\omega_k^N/\omega_k')
+\]
 
-按 P1 固定选中的工作包执行。新结果不理想时修改结论，不反复换任务、扩样本或调方法直至出现正结果。
+是内部频率配置的统计量。TailSpline–MrPro 改变 D 与形状，仍是在比较两种完整的内部频率设计。
 
-理想交付是：clean 两长度上有明确的三臂定位，原生任务代价有清楚的区间，第二模型有同协议支持。它们能直接支撑“质量改进且可部署”的价值判断。
+**因此，这不构成对“内部配置带来方法收益”这一主张的外部混杂。** 若进一步声称“收益由尾部平滑这一个因素导致”，才需要匹配 D 的 C 对照。C 对照有信息量，但不能成为所有 allocation 结论和完整方法结果的先决条件。R07 已把这一点写入变量定义和方法说明，本计划将其列为保留项。
 
-### 第三批：依据已有资源加入尺度或自然应用补充
+同理，固定 band 和总 increment mass 后，位移与 increment 质心并非两项独立控制。主文保留清楚的区分即可，不必在第一页让读者先理解一套控制术语。
 
-完成已准备的 S16 测试；若资源还允许，选择一个目标区间的自然应用评价。128K、自然应用、E1 三项各回答不同问题，不以数量多作为完成标准。
+### 4.3 时代背景的合适位置
 
-官方摘要截止为 **2026-09-18 23:59 AoE**，全文截止为 **2026-09-25 23:59 AoE**。[官方日期与格式](https://iclr.cc/Conferences/2027/AuthorGuidelines)支持这一时间安排。作者此前采用 9 月 17 日的内部目标，可用于先冻结标题、摘要与中心贡献；新结果只影响已明确分工的实验段落。建议 9 月 23 日冻结数字与主图，最后两天完成独立源码构建与最终 PDF 阅读。
+技术进步使更长上下文更可行，为研究频率表的质量问题提供动机。这可以用 Introduction 中一两句话说明。
 
-### 稿件完成的实质标准
+全文的新知识来自位置结构、构造和实验；“原生窗口越来越长”本身不是创新。也不需要用产品宣称的窗口推断实际训练长度。稀疏与线性架构仅作背景，不引入未经验证的迁移主张。
 
-1. **一个中心命题。** 四类读者都能复述：为给定目标窗口设计频率表，以提高实际使用质量；频率分解、理论与受控实验服务于这一目标。
-2. **每项贡献都有正文证据。** 识别、几何、构造和任务价值不靠泛泛的附录指针成立。
-3. **主方法比较有相对位置。** 同协议常用基线、不同长度与原生代价清楚可查。
-4. **正面结论足够明确。** 不把整篇研究弱化成“参数会影响结果”；也不合并不同构造的胜利。
-5. **边界已被准确表达。** TailSpline 的自然 QA、E1、不同协议和跨模型反例保留，各自只影响对应主张。
+## 5. 全文按这一条研究链展开
 
-## 11. 最终建议
+| 步骤 | 读者的问题 | 用哪个现有结果回答 | 读者应带走什么 |
+|---|---|---|---|
+| 1. 提出设计对象 | RoPE 频率范围确定后，还剩下什么实质问题？ | 频率分解和固定端点结果 | 内部频率分布对应不同的位置基与模型表现 |
+| 2. 分析位置结构 | 不同频率为何可能没有提供不同的位置方向？ | 完整对 overlap、慢频子空间、实际网格与反例 | 频率间隔与有限窗位置结构之间有具体可计算的关系 |
+| 3. 明确运行条件 | 一个看起来更分散的位置基，能否直接装进模型？ | 范围策略与 weights-by-table crossing | 学习新表与冻结安装具有不同的使用条件 |
+| 4. 给出主要构造 | 怎样设计冻结扩展的内部过渡？ | TailSpline 目标、正增量与有限网格闭式解 | 一个由明确设计偏好产生、可以直接安装的频率表 |
+| 5. 展示核心贡献 | 这个构造实际带来什么？ | clean 16K/32K、Native 代价、classic 迁移 | 同一张静态表在已测中间与目标长度提高任务质量 |
+| 6. 展示辅助广度 | 研究是否只依赖 TailSpline 这一种形式？ | Cosh 外推搬运及配对学习结果；必要的 BM 支持 | 这条频率设计研究已有其他有用实例 |
 
-**以给定上下文窗口中的质量改进作为中心贡献，组织成“目标窗口的质量问题 → 内部频率设计 → 受控识别与完整对结构 → 明确构造及多长度任务收益”的论文。** TailSpline 是最强的当前部署实例；Cosh 与 BM 分别提供学习价值和另一自然任务成功实例。更一般的频率设计也允许研究 s=1 的原生质量，完成前保留为后续方向。
+兼容性在第 3 步服务方法理解，正文不扩展成新的 head-level 机制主线。Cosh 的构造、学习结果和历史细节合计控制在约 20% 以内，不将它改写成 native 改进或覆盖所有运行设置的统一解。
 
-优先重写新知识与结果之间的关系、用 clean 证据重排主图，再补 YaRN、clean Native 和第二模型 clean。128K 与目标区间自然任务用于提高覆盖与说服力。现有理论不必承担普适任务排序器的职责；每一个新增比较都应直接消除一个会影响接收判断的疑问。
+## 6. 理论与构造的具体优化
 
-这是我认为最有希望把当前“6–7 分波动”推进到“四审平均 7 分目标”的路线。依据是已有贡献的组合及明确可补的缺口，不是把内部模拟评分当作接受概率。
+### 6.1 把“频率不同”和“位置方向不同”讲给读者看
 
-首次交付复核：当时本方案的 13 个仓库内文件链接均可达，最近一级研究索引已加入入口。按维护规则刷新了文件清单并运行文档检查；检查前后均有相同的 10 条来源快照不一致提示（涉及 8 个既有来源），没有新增链接或来源错误。作者主张对齐更新仅修订本方案，增加了一个已存在的 TailSpline 安装式链接；未修改论文源文件、实验结果或执行队列。
+从一对位置函数开始：
+
+\[
+V_\omega=\operatorname{span}\{\cos(\omega\Delta),\sin(\omega\Delta)\}.
+\]
+
+直觉是：频率表上的两个数不同，并不意味着它们在实际观察的 Δ 区间里形成容易区分的函数方向。
+
+然后再给 canonical overlap 与有效秩恒等式。正文使用识别网格的已完成数值：b=256、K=32、L=256，最慢 8 对提供 16 个坐标，其 block-whitened 有效秩约 2.11。读者因此能把数学对象与真实实验设置联系起来。
+
+R06 已把 normalized directions 的含义放在公式附近，R07 又将实际网格的完整对几何图移入正文。二者均应保留，不再要求重复增加图或限制段落；下一步是在 Introduction 中让这个结构发现承担明确的问题定义。
+
+### 6.2 两个已有反例各完成一个论证任务
+
+- **cosine-only 与完整对几何排序相反：**说明为什么理论要使用完整 rotary pair。
+- **同一组表的几何排序随窗口改变：**说明分析必须声明上下文区间，不能把一个窗口的指标直接移用于全部长度。
+
+这些是位置函数几何的结果。当前摘要中的 “allocation rankings” 建议具体化为 “geometric distinctions missed by cosine-only overlap”，避免被读成已预测任务排名。
+
+现有 C_cos 反例针对特定 overlap 定义，不能直接称它推翻了 MrRoPE 使用的 B_theta 求和界；两者需按各自假设评价。
+
+### 6.3 TailSpline 的理由应落在实际过渡对象上
+
+采用以下顺序：
+
+1. 冻结扩展保留高频外带，低频尾部按 s 缩放。
+2. 中间相邻频率的额外 log gap 为 ε_q log s，单位总量分配给整个过渡带。
+3. 完全插值尾部的额外 gap 为零，因此尾端接缝是一个明确边界。
+4. 对带内 gap 变化与尾端接缝建立离散平方目标。
+5. 给出 TailSpline 的唯一正解和静态安装方式。
+
+R06 已正确分开“高频外带固定”与“第一处额外 gap 未受惩罚”，保持这一解释。TailSpline 允许更大的入口变化，换取更平滑的尾部衔接；n=17 时，尾端增量相对 MrPro 为 3/(2n+1)。
+
+这个目标是有明确对象的设计选择。现有完整对几何提供分析视角，native 外带给出安装条件；不将其写成完整对 rank 最大化的必然解。
+
+### 6.4 Cosh 与其他理论的篇幅
+
+Cosh 保留为外推搬运：一句动机、逆 CDF 公式或简洁公式指针、三 seed 的代表结果。完整变分推导和强度分析继续保留附录。
+
+离散核等价 corollary 用来说明不同频谱与固定坐标变换的区别，可缩为主文短段加附录证明。它不承担全稿的主要原创性。
+
+BM 的对称边界与 TailSpline 属于可比较的构造选择。正文按需要用一句话说明；其自然 QA 正结果用于证明研究已有另一实际实例，不另立第三条方法主线。
+
+## 7. 可直接用于下一次改稿的英文文案
+
+这些是建议替换文本，尚未写入 .tex。
+
+### 7.1 研究问题
+
+> How should RoPE's internal frequency distribution be designed when distinct frequencies can provide overlapping positional directions within a finite context, and pretrained models have already learned to use a particular positional basis?
+
+### 7.2 摘要草案，无数字结果
+
+> RoPE represents relative position with a finite set of rotary frequencies, yet different frequencies can supply strongly overlapping positional directions within a finite context. Changing their placement also changes the positional basis used by pretrained weights. We study internal frequency allocation through full sine–cosine geometry, controlled interventions, and explicit constructions. Our analysis characterizes positional overlap, while paired experiments isolate improvements from interior placement at fixed frequency endpoints. For frozen extension, we formulate an objective for connecting native frequencies to an extended low-frequency tail. Its closed-form solution, TailSpline, retains the standard rotary operator and requires neither weight updates nor calibration. A single static table substantially outperforms MrRoPE-Pro on RULER at both intermediate and target extension lengths, with a small observed native-window trade-off. Cosh supplies a complementary extrapolation transport supported by paired learning experiments. Together, these results connect the structure of RoPE's frequency distribution to constructive design and improved quality within a chosen context window.
+
+正式编辑时按第一页版面压缩，保留作者无数字摘要、第一页无图的要求。
+
+### 7.3 Introduction 的前两段
+
+> RoPE encodes relative position through a finite collection of sine–cosine pairs. Its frequencies determine the positional functions available to attention, but frequencies that are distinct on a logarithmic grid can provide nearly overlapping directions over a finite context. The structure of this positional basis depends on the internal frequency distribution as well as its range. Understanding this relationship is important for designing frequency tables that models can use effectively.
+>
+> Existing scaling methods prescribe how frequencies change when extending a context window. YaRN and MrRoPE provide concrete policies for the intermediate band, with MrRoPE organizing rescaling through mixed-radix conversion. We study the internal distribution as a positional-basis design problem while retaining the standard rotary operator. This requires distinguishing the structure supplied by a frequency table from the way a model has learned to use it. We combine controlled frequency interventions with full sine–cosine analysis, then develop an explicit construction for frozen extension.
+
+这里应配上已在文中使用的 RoPE、YaRN、MrRoPE、Round and Round 等对应引用。不要把前人概括成“只看最大长度”或“只改一个 base”。
+
+第三段：给出固定端点识别与完整对结构的关键发现。第四段：介绍 TailSpline 及 +3.39/+11.72pp 的 clean 结果，用一句话连接 Cosh 外推支持。时代背景最多一两句，不能压过设计问题。
+
+### 7.4 三项贡献
+
+R07 已把贡献改成 range/allocation interaction、positional structure versus learned use、analytic-allocation utility 三项发现，这比之前的 “identify the value” 更明确。可以保留这三项事实，并用同一问题统领。以下是需要进一步统一研究主线时的候选文案，不要求仅为换词再重做一次贡献列表：
+
+1. **Structure and controlled identification of frequency allocation.** We characterize finite-window positional overlap using complete rotary pairs and establish the effect of interior placement through paired interventions at fixed frequency endpoints.
+2. **An explicit construction for frozen extension.** We formulate a discrete transition objective for the extended low-frequency tail and derive TailSpline, a positive, closed-form allocation that retains standard rotary computation without weight updates or calibration.
+3. **Improved task quality with a single static table.** TailSpline improves clean RULER over MrRoPE-Pro at both intermediate and target extension lengths. Supporting Cosh experiments demonstrate complementary extrapolation gains from another frequency transport.
+
+第一项说明新知道了什么，第二项说明怎样构造，第三项呈现作者强调的核心质量贡献。它们不是三条互相独立的论文方向。
+
+### 7.5 结论应回到问题的回答
+
+> RoPE's frequency range does not determine the finite-window structure of its positional basis. Our analysis and controlled experiments show why internal frequency placement deserves explicit design, while the TailSpline construction demonstrates a practical benefit of doing so: improved task performance at both intermediate and target extension lengths under a single static table.
+
+随后简要总结 Cosh 的辅助外推证据与已测任务取舍。新 z 和 native 改善暂留后续研究，不用它们补足当前贡献列表。
+
+## 8. 已经改好的内容应保留
+
+| 内容 | 核实状态 | 本计划的处置 |
+|---|---|---|
+| clean 16K/32K 同时进入主文 | R03 后已经完成 | 保留，不再列为待补结果 |
+| 主图统一为 clean 两长度 | R05 已完成，已目视检查 | 保留；classic 曲线继续在附录，正文保留迁移结果 |
+| TailSpline 在方法和实验中居主要位置 | 已完成 | 继续巩固；不恢复 Cosh/TailSpline 双主线 |
+| M4 写明 short-training 与 8.39M tokens | R05 已完成 | 保留，不重跑或继续堆限定 |
+| 自然 QA 的接近观测分数进入结论 | 已完成 | 保留对应证据，不加摘要负面清单 |
+| coordinate interventions 不再被写成构表算法 | R06 已完成 | 保留 |
+| effective rank 的 normalized-basis 含义 | R06 已完成 | 保留 |
+| 高频外带与入口 gap 的区别 | R06 已完成 | 保留 |
+| 完整对几何可视化进入正文 | R07 已完成，已目视检查 | 保留独立几何图，不再搬进首图重画 |
+| 总位移属于 z 的统计量 | R07 已写入定义与方法 | 保留，不再把等位移视为所有配置比较的前提 |
+| 详细控制分类移入附录 | R07 已完成 | 保留简洁主文定义与后面的协议表 |
+| 三项贡献改成具体发现 | R07 已完成 | 保留事实，补足统领它们的科学问题 |
+| 750M continuation 的具体收益恢复正文 | R07 已完成 | 保留预算/监督身份和原生代价，仍属辅助学习证据 |
+| 构造图移除同等篇幅的 Cosh 面板 | R07 最终稿已完成 | 保留 TailSpline 主位 |
+| 历史 MLA 记录缺失的无依据判断 | 已撤回 | 不恢复，不作为新增实验理由 |
+
+当前仍需改变的是**问题定义及论证顺序**：R07 已有清楚的事实、几何图和正面成果，但引言仍从窗口质量起笔，然后并列介绍这些发现。下一步应将它们组织成对内部频率分布设计问题的回答。
+
+## 9. 逐文件修改方案与九页安排
+
+### 9.1 文件级动作
+
+| 文件 | 下一步具体修改 | 完成标准 |
+|---|---|---|
+| [摘要](../sections/00_abstract.tex) | 从位置基的结构问题起笔；保留 TailSpline 主要结果；具体化 geometric ranking；Cosh 一句 | 读者能指出研究问题、构造和收益，而不只读到 allocation 有用 |
+| [Introduction](../sections/01_intro.tex) | 按第 7 节重写问题与发现之间的逻辑；保留 R07 已准确写出的贡献事实 | 前两段建立具体科学问题，末段呈现实际成果 |
+| [变量定义](../sections/02_exponents.tex) | 保留 R07 的简洁定义、D 属于 z 的说明与附录指针；明确上下文窗口和频率支持是不同对象 | 不大范围改记号，不再重复移动已压缩的推导 |
+| [受控发现](../sections/03_findings.tex) | 固定端点识别保留；范围策略与兼容性用简洁段落说明使用条件 | 识别与方法动机连起来，兼容性不抢占主要篇幅 |
+| [理论](../sections/03_theory.tex) | 保留 R07 新增主文几何图；明确实际网格与两个反例各自回答的设计问题；按需要压缩核等价 | 理论回答“表提供怎样的位置结构”，而不是再增加一轮公式 |
+| [构造总节](../sections/04_construction.tex) | TailSpline 的过渡问题是主体；Cosh 压缩为辅助外推搬运 | 主文 Cosh 总体占比不超过约 20% |
+| [TailSpline 方法](../sections/04_mature.tex) | 按 gap 对象、尾端边界、目标、解、安装五步展开 | 边界偏好说得清楚，完整方法效果与细形状归因分清 |
+| [实验](../sections/04_experiments.tex) | 按研究问题组织；保留 clean 主图与 R07 已恢复的 750M 数据；必要时加入 BM 的简短支持 | 主要结果、取舍与辅助实例有清楚层级 |
+| [相关工作](../sections/02_related.tex) | 增加一个简洁的对象级比较段，说明本稿保持什么、设计什么、新回答什么 | 无需靠“更全面”“理论更多”表达创新性 |
+| [结论](../sections/05_discussion.tex) | 回答内部频率设计问题，再总结窗口内质量收益 | 与摘要和贡献一致，不重复 practical dimension 作为全部结论 |
+
+正式实施上述改稿时，同步当前 [主张映射](EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) 与必要导航；本次计划修订不提前改写这些来源。
+
+### 9.2 九页预算
+
+| 部分 | 目标篇幅 |
+|---|---:|
+| 摘要、Introduction、贡献 | 1.0 页 |
+| 频率分解与受控识别 | 1.5 页 |
+| 完整对有限窗口几何 | 1.2 页 |
+| TailSpline 主要构造 | 1.3 页 |
+| 主要部署结果、原生取舍、任务范围 | 2.3 页 |
+| Cosh 辅助构造与外推结果 | 0.8 页 |
+| 相关工作与结论 | 0.9 页 |
+
+合计约 9 页。Cosh 在受控识别中的具体说明也计入它的整体篇幅考量；不是只统计独立小节，再把大量 Cosh 历史分散到正文。
+
+### 9.3 最终稿五张主图的职责与最小修改
+
+1. **Figure 1：固定范围识别与学得使用。** 保留现有三个面板。crossing 的横轴可将 Geo/Cosh table 明确写成 Geo/Cosh-derived runtime table，让读者做行内比较；不将其误读成左侧固定训练 support 优势的重复实验。
+2. **Figure 2：完整对几何。** R07 已新增，保留。它让“频率不同不等于位置方向分开”有了直观的实际网格证据。新增问题定义应在此前引导读者看这张图。
+3. **Figure 3：TailSpline 过渡构造。** R07 已只展示 TailSpline/MrPro 的额外 gap 与尾部连接，保留。必要时微调边界标注，无需为版式再恢复 Cosh 同等面板。
+4. **Figure 4：clean 2L/4L 任务收益。** 保留 R05 之后的设计；最多做任务族分组与标签微调。不混入 classic 点，完整负格保留。
+5. **Figure 5：Cosh 三 seed 外推支持。** 保持紧凑，完整轨迹和配方继续在附录；不将它升级为另一条同等方法主线。
+
+R07 已把前部详细控制分类移入附录，主文仍有一个协议表，不再重复做“合并两张控制表”的旧任务。当前 clean 表给绝对分数和区间，任务主图展示整体增益与分布，两者职责不同，可以同时保留。
+
+## 10. 实验按它能增强哪一条贡献排序
+
+### 10.1 现有证据已经可以支撑的完整稿
+
+| 科学或方法结论 | 已有证据 |
+|---|---|
+| 内部配置有可识别的模型作用 | 151.9M 三配对 seed、相同实际端点；对应冻结干预 |
+| 有限窗口位置结构不能由频率端点概括 | 完整对几何、实际网格与显式反例 |
+| TailSpline 是明确且可安装的构造 | 有限网格证明、现有 CPU 核验与静态实现 |
+| 同一表在中间与目标长度改善任务质量 | clean 16K +3.39pp、32K +11.72pp |
+| 还有其他实际有效的外推搬运 | Cosh 配对学习结果；BM 等独立实例 |
+
+因此，第一批深度改稿不等待新增 GPU 工作。
+
+### 10.2 最值得新增的直接比较：clean YaRN
+
+它增强主要方法的相对位置，回答 TailSpline 对常用静态策略的竞争力。
+
+建议复用当前 clean 16K 的 50/task 规格，预先选定现有 32K 每任务前 50 条，形成两个长度的三臂共同面板。只新增 YaRN，共 1,300 次生成；T/P 使用完全相同 row IDs 重聚合。原 T/P 32K 的 2,600 对确认结果继续保留。
+
+若预算已经覆盖完整确认，则只新增 YaRN 的 16K 650 条与 32K 2,600 条。两种工作包在观察 YaRN 结果前选定，不按显著性临时扩样本。
+
+复核公开 YaRN 公式和实际安装约定；不能为了同端点而静默改变基线。若联合宣称 TailSpline 优于 MrPro 与 YaRN，使用两个比较对应的同时推断，保留原 T/P 主估计的身份。
+
+### 10.3 clean Native：增强核心质量贡献的取舍说明
+
+如果要收紧同一 S4 表的原生窗口代价，可做 clean 8K、13×50 的 T–原始 Native 比较，共 1,300 次生成。Native 保留原始频率与 gain；T 保留同一 S4 表。
+
+这是扩展部署的原生代价评价，不是新 z 或 s=1 的能力改进实验。样本量本身不保证某个非劣界限；当前没有必要额外制造一个损失阈值作为论文门槛。
+
+### 10.4 第二模型与 128K：分别检验迁移和尺度
+
+- 第二模型 clean 确认：优先复用已有 OLMo 权重，S4、16K、13×50；T/P 共 1,300 次生成，加 YaRN 为 1,950 次。这是已有模型上的协议确认，不称完全盲测新模型。
+- S16、128K：复用已准备的两臂 RULER-13×10 和 ProofPile10。它回答与 MrRoPE 公开 Llama 尺度对标的问题；130 条/臂仅是粗效应与可行性证据。
+- S16 若进入完整区间评价，必须测同一 S16 表的中间长度，不能借用 S4 的对应点。
+- 当前正在进行的任务和资源安排保持其 owner；本计划不因新的排序推断自动打断它们。
+
+### 10.5 自然任务与 E1：按要增强的主张选择
+
+**自然任务：**当前 TailSpline Natural-QA631 主差为 +0.20pp，区间跨零，实际输入约 3.7–16.3K。若要增强目标端的应用贡献，选择一个实际覆盖接近 32K 的自然 QA/RAG 类别；不能把同一短上下文池扩基线误认为补上了该长度。数据、任务与评分须在输出前固定。
+
+**BM 的已有自然结果：**OLMo 长输入 631 题的五任务宏 F1 为 21.62%→25.44%，+3.82pp。正文可用一两句作为另一构造的成功实例，保留它的模型、输入和原统计身份；不借给 TailSpline，也不以此恢复 BM 主线。
+
+**E1：**若加强 TailSpline 专属形状解释，按现有方案补 C 的 batch-1 390 次生成，复用符合原合同的 T。当前 −0.41pp、跨零区间及 runtime 资格如实保留。它决定细形状归因的强度，不决定完整 T/P 方法结果是否存在。
+
+无需同时把所有增强项列为“到 7 分必须完成”的清单。推荐先完成科学叙事改稿和一个直接基线比较，再按当前资源选择 Native 或迁移/尺度证据。新 z、新的大规模训练、边界搜索和机制平台本轮不展开。
+
+## 11. 审稿意见怎样影响这份计划
+
+### 11.1 当前评分能够说明什么
+
+R05 两个模型的四视角均为 7/7/6/7、AC=7；R06 Astra 为 7/6/6/7、Sol 为 7/7/6/7，两个 AC 均为 7。
+
+R07 已完成：Astra 为 7/7/6/7、AC=7；Sol 为 8/8/7/8、AC=8。分数针对 R07 输入，不是最终整合后的新一轮评价。
+
+这些视角分别在同一模型上下文中生成，且 AC 综合分不等于四审算术均分；不能据此说已经证实“四位真实审稿人均分稳定 7”。它们有用之处是定位仍影响判断的理由。
+
+参照 MrRoPE 的单次 Markdown 评价为 4 分，与实际 Oral 结果不一致，且与我们的 PDF 输入格式不同。它反对把模拟分数当作会议等级预测，不证明所有具体意见都错，也不应被拿来设置强制高分提示词。
+
+### 11.2 具体裁决
+
+| 意见 | 本轮判断 | 动作 |
+|---|---|---|
+| 创新性仍像“频率可修改” | R07 已强化发现和坐标等价说明，科学问题仍可更集中 | 用第 1、3、4 节把新增事实组织成对设计问题的回答 |
+| 主图 clean/classic 混用 | R05 已解决 | 保留完成状态 |
+| 几何与 TailSpline 目标关系不够清楚 | 有价值，但不是发现数学错误 | 明确结构分析、设计条件、声明目标及任务验证的职责 |
+| normalized rank 被理解为信号强度 | R06 已就地说明 | 不重复追加限制 |
+| 要求摘要列自然 QA、Native 和 E1 的全部不足 | 主摘要已明确 RULER，结果处已有数据 | 不采纳重复负面清单 |
+| 只因未匹配 D 就否定内部配置收益 | 混淆完整配置与单因素机制主张；R07 已纠正 | 保留第 4.2 节的归因层级 |
+| 历史 MLA 记录缺失、OLMo EOS 数量倒读 | 已撤回或已判为误读 | 不作为重跑理由 |
+| R05 Sol 把 Cosh 强度写作 sqrt(d_head/L_train) | 与当前正文和附录不一致；实际参考是 d_head/sqrt(L_train) | 标明公式误读；其“参考点不等于任务最优”的一般提醒已在稿中说明 |
+
+最后一项已核对 [Cosh 强度说明](../appendix/a1_proofs.tex) 与 [构造主文](../sections/04_construction.tex)。不因评审写成“不支持的主张”就把错误公式或更强假设反写进论文。
+
+后续独立审稿继续使用中性标准；不追加无意义的轮数。论文新颖性需要作者侧结合实际文献核对，PDF-only 审稿主要检验稿件能否独立传达并支撑自己的论证。
+
+## 12. 实施顺序与完成标准
+
+### 第一批：研究问题与文案
+
+同时对齐摘要、Introduction、贡献与结论，确保它们共享一个科学问题。保留 R07 已准确写出的发现，重点重写连接它们的问题陈述。保持 TailSpline 主位、Cosh 辅助外推身份以及新 z 暂缓。
+
+### 第二批：结构与图表
+
+保留 R07 已压缩的控制说明及五张主图，重组理论到方法的衔接，做必要的标注微调。逐段检查每个理论结果是否服务于当前问题；不为“深度优化”重做已经合理的图表。
+
+### 第三批：结果与支持材料
+
+主要实验按识别、构造效果、长度响应与实际取舍呈现。保留有利和不利结果的实际身份，用少量 BM/Cosh 支持说明研究广度。追加结果只有在实际完成、核实后才写入正文。
+
+### 第四批：完成现有构建与核验
+
+沿用现有编译、作图、源码打包与文档检查流程。对改动后的主文逐页检查；数学对象、图注与方法公式对齐，正文不超过九页，作者要求的首页与摘要形式保持。既有来源快照差异不能靠重写 hash 掩盖。
+
+### 完成后的稿件应能清楚回答
+
+1. **问题是什么？** RoPE 内部频率分布如何形成并改进有限窗口的位置表示。
+2. **新知道了什么？** 完整对位置结构、固定范围的内部效应，以及模型使用条件的区别。
+3. **提出了什么？** 一个目标明确、公式可解、可直接安装的主要频率构造。
+4. **带来什么贡献？** 同一静态表在已测中间与目标长度的任务质量收益，并有其他外推搬运实例支持。
+5. **哪些仍是下一阶段？** 新 z、原生能力改进与其他注意力架构的位置机制。
+
+**最终取向：用“RoPE 内部频率分布的结构性设计”统领论文，用“目标窗口内的质量提升”呈现它的主要价值。** 这样既能承接作者的研究思想，也能让现有理论、构造和实验分别发挥作用。

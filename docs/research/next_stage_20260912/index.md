@@ -1,8 +1,9 @@
 # 当前研究入口
 
-论文一级问题是：在频率支持与端点固定后，RoPE内部allocation是否仍是可识别、可设计并
-参与学习的变量。零训练是核心落地；exact TailSpline是当前重点展开的冻结部署构造，Cosh
-保留学习期构造证据。BM、YaRN、旧mix075和Native-Z探索不与TailSpline并列成方法合集。
+现稿研究频率覆盖范围确定之后，内部配置怎样改变有限窗口的位置结构及模型对频率的使用。
+受控干预、完整旋转对几何、解析构造和模型验证构成论证链。exact TailSpline是主要冻结部署
+构造，Cosh保留辅助外推及配对学习证据；同一静态表在2L/4L的质量提升是核心实证贡献。
+BM、YaRN、旧mix075和Native-Z探索各保留其证据角色。
 
 模型前向只用于验证已经冻结的规则，不用于从权重、激活、Q/K/V、梯度或校准分数中拟合
 通用TailSpline构造。Native-Z5是单独标记的checkpoint-calibrated反事实，不改变这一边界。
@@ -20,6 +21,12 @@
 | CPU理论核验支持到哪一层？ | [理论深化CPU结果](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md) |
 | 论文已登记证据及来源在哪里？ | [论文证据索引](../../../paper-2027/research/evidence/index.md) |
 | 服务器上哪些任务在跑、能跑或需要48GB以上？ | [服务器任务分层](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md) |
+
+## 下一轮强实验计划（尚未执行）
+
+[面向强接收与突出研究评价的实验计划](STRONG_EXPERIMENT_PLAN_20260915.md)：
+统一clean跨模型矩阵、自然长文、等位移配置对照与部署取舍；列明已有入口和待实现包装器。
+这是后续执行规格，不自动改变当前队列或YaRN停放状态。
 
 ## 当前执行边界
 

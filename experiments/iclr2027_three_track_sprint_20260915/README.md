@@ -1,7 +1,7 @@
 # ICLR 2027 three-track sprint execution
 
-This directory turns the 2026-09-15 sprint plan into two non-overlapping GPU
-queues and CPU-only frozen assets. It does not add a curve search or a model.
+This directory contains the completed sprint evidence, CPU-prepared assets,
+and the active or parked follow-up launchers.
 
 Current operations no longer follow the original two-queue order. Use
 [SERVER_TASK_LAYERS.md](SERVER_TASK_LAYERS.md) for the live/parked/high-memory
@@ -9,13 +9,17 @@ handoff and [reports/README.md](reports/README.md) for completed portable report
 The old queue scripts are retained for provenance and must not be launched as the
 current queue.
 
-## Queue ownership
+## Current operations
 
-- Original GPU: finish clean TailSpline/MrPro, then Natural-QA631 and Native-Z5.
-- Cloned GPU: 39-row classic TailSpline batch sensitivity, a one-arm Native 8K
-  task reference, clean 32K YaRN on the exact 2,600 prompts, then classic YaRN
-  at batch 1.
-- BM is excluded by the author's 2026-09-15 decision.
+- Running: Llama NIAH Full20, TailSpline then MrPro, with no automatic successor.
+- Prepared for a GPU with at least 45,000 MiB: Llama S16 128K gate.
+- Parked: YaRN follow-ups. BM is excluded from this sprint by the author's decision.
+- Completed: clean TailSpline/MrPro, Natural-QA631, Native references, Native-Z5
+  follow-ups and the 39-row classic runtime probe; use their result owners.
+
+These are the dated handoff states; [SERVER_TASK_LAYERS.md](SERVER_TASK_LAYERS.md)
+defines the completion checks and authoritative execution routes. New experiment
+specifications are linked from the [current research index](../../docs/research/next_stage_20260912/index.md).
 
 The clean RULER runtime is batch 1 with exact unpadded prompt IDs. This is the
 actual working runtime after masked left-padding failed in the installed
@@ -30,12 +34,13 @@ present-state evidence.
 | E1 matched-displacement shape | Completed raw plus `e1_experimental_audit.py`; E0 remains the runtime-sensitivity qualifier |
 | E2 clean RULER-200 | TailSpline/MrPro complete: `0.682660/0.565436`, delta `+0.117224`, CI95 `[+0.103231,+0.131148]`; clean YaRN remains optional and unscheduled |
 | E3 Natural-QA631 | Complete: T/P 41.0791/40.8834% F1; +0.1957pp, cluster CI [−1.5311,+1.8864]pp; all 631 questions and both native strata reported |
-| E4 strong static baseline | YaRN only, on both clean and batch-1 classic contracts; BM is excluded |
+| E4 strong static baseline | Parked: YaRN follow-ups are not scheduled; BM is excluded from this sprint |
 | E5 Native reference | Native PPL summary and Native-8K RULER complete; task macro `0.918846`, Native-minus-TailSpline CI95 `[-0.019231,+0.061410]` |
 
-Native-Z5 is an additional checkpoint-calibrated question requested after the
-sprint proposal; it follows Natural-QA on the original GPU and does not replace
-E5's unchanged-Native reference.
+Native-Z5 is a completed, separately identified checkpoint-calibrated exploration.
+Its V1, consensus and all-50 refit outcomes are in the
+[Native-Z5 result owner](../../docs/research/next_stage_20260912/NATIVE_Z5_EXPLORATION_RESULT_20260915.md).
+It does not replace E5's unchanged-Native reference.
 
 ## CPU preparation
 
@@ -55,18 +60,15 @@ Compact completed reports are indexed in [reports/README.md](reports/README.md).
 streams remain on the experiment server and are identified by SHA256 in the
 Llama result owner; score-only changes reuse those streams.
 
-## GPU entry points
+## GPU entry points and historical wrappers
 
-After the data disk has been cloned and each server endpoint is known, launch
-exactly one script on each server:
+- Full20: [run_mrrope_niah_heatmap_full20.sh](run_mrrope_niah_heatmap_full20.sh).
+- S16 128K: [run_llama_s16_128k_gate_48gb.sh](run_llama_s16_128k_gate_48gb.sh).
+- Parked YaRN: [run_naturalqa_yarn.sh](run_naturalqa_yarn.sh), dry-run by default.
 
-```bash
-experiments/iclr2027_three_track_sprint_20260915/run_original_gpu_queue.sh
-experiments/iclr2027_three_track_sprint_20260915/run_clone_gpu_queue.sh
-```
-
-Both scripts are restartable at completed-arm boundaries and preserve existing
-raw generations. Do not run both scripts on the same GPU.
+Use the matching A--C layer in [SERVER_TASK_LAYERS.md](SERVER_TASK_LAYERS.md)
+before any launch. `run_original_gpu_queue.sh` and `run_clone_gpu_queue.sh`
+encode the retired two-GPU order and are retained solely for provenance.
 
 ## Field-gap follow-ups
 

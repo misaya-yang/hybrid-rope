@@ -5,8 +5,11 @@ range. Our main frozen construction, TailSpline, designs this change around
 the model's native table. Cosh supplies a complementary transport used to
 study extrapolation through paired training.
 \begin{figure}[ht]
-\centering\includegraphics[width=\linewidth]{fig_construction_contrast.pdf}
-\caption{\textbf{Explicit ways to change allocation.} (a) TailSpline allocates extra log-frequency span around a native table, smoothing the connection to the extended low-frequency tail ($n=17$). (b) Cosh supplies a complementary extrapolation transport, shown as quantiles before endpoint anchoring ($\tau=2$).}
+\centering\includegraphics[width=.60\linewidth]{fig_construction_contrast.pdf}
+\caption{\textbf{TailSpline connects the transition to the extended tail.}
+Extra log-frequency gaps for $n=17$. Both profiles retain the same outer bands;
+TailSpline allocates a larger entry gap and smoothly approaches the zero extra
+gap of the fully interpolated tail.}
 \label{fig:construction-contrast}
 \end{figure}
 \input{sections/04_mature}

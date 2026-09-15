@@ -2274,6 +2274,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/STRONG_EXPERIMENT_PLAN_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
       "area": "docs",
       "category": "document"
@@ -4960,6 +4965,66 @@
     },
     {
       "path": "experiments/fixed_support_joint_151m_20260912/shutdown_after_seed42.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/matched_olmo_naturalqa_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_clean_transfer.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_natural_long.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_olmo_naturalqa631.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_clean_c.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_clean_matrix.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_natural_long.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_olmo_naturalqa631.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_olmo_qa_then_ruler200.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/summarize_matrix.py",
       "area": "experiments",
       "category": "code"
     },
@@ -9739,6 +9804,11 @@
       "category": "navigation"
     },
     {
+      "path": "paper-2027/research/audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/audits/SUNDAY_CAUSAL_AUDIT_AND_MANUSCRIPT_PLAN_20260823.md",
       "area": "paper-2027",
       "category": "document"
@@ -10319,6 +10389,16 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/input.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -10332,6 +10412,11 @@
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/optimized.pdf",
       "area": "paper-2027",
       "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/r07/sol.md",
+      "area": "paper-2027",
+      "category": "document"
     },
     {
       "path": "paper-2027/research/pdf-review-rounds/20260915_astra_sol_five_rounds/reference_single/assessment.md",
@@ -13914,6 +13999,36 @@
       "category": "code"
     },
     {
+      "path": "tests/test_strong_prepare_clean_transfer.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_strong_prepare_natural_long.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_strong_run_clean_c.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_strong_run_clean_matrix.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_strong_run_natural_long.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_strong_summarize_matrix.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_success_first_portfolio.py",
       "area": "tests",
       "category": "code"
@@ -14362,6 +14477,7 @@
     "paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md",
     "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
     "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r01/disposition.md",
-    "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/disposition.md"
+    "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/disposition.md",
+    "paper-2027/research/audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md"
   ]
 }

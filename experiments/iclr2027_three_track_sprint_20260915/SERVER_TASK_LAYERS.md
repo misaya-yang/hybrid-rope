@@ -18,8 +18,9 @@ risk without improving the scientific separation.
 | Experiment data root | `/root/autodl-tmp/today_rope_plan_20260914` |
 | Sprint receipts root | `/root/autodl-tmp/iclr2027_three_track_sprint_20260915` |
 | Llama checkpoint | `/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct` |
+| Runner Python | `/root/miniconda3/bin/python` (explicit path for non-login SSH commands) |
 
-Live state was inspected at `2026-09-15T07:42:04Z`. The durable state tests
+Live state was inspected read-only at `2026-09-15T08:17:36Z`. The durable state tests
 below take precedence over that snapshot.
 
 The server repository is a copied code snapshot without `.git`. Do not use
@@ -31,16 +32,17 @@ data disk should preserve the fixed `/root/autodl-tmp` paths above.
 
 ### Llama S4 TailSpline versus MrPro, NIAH Full20
 
-- Purpose: replace the underpowered 3-repeat NIAH heatmap with 20 fresh
-  examples per length/depth cell.
+- Purpose: confirm the 3-repeat NIAH pilot with 20 fresh examples per
+  length/depth cell, retaining the pilot as separate completed evidence.
 - Contract: `4 lengths x 9 depths x 20 = 720` prompts per arm; lengths are
   8K/16K/24K/32K; batch size 1; TailSpline runs before MrPro.
 - Runner:
   `experiments/iclr2027_three_track_sprint_20260915/run_mrrope_niah_heatmap_full20.sh`
 - Remote owner:
   `/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_mrrope_niah_heatmap_full20`
-- Snapshot: TailSpline was at `288/720`; the evaluator and queue wrapper were
-  alive; GPU utilization was 100% with 19,737 MiB used on the 32,760 MiB GPU.
+- Snapshot: TailSpline was at `665/720`, MrPro at `0/720`; the evaluator for
+  this exact root was alive. GPU utilization was 100% with 23,839 MiB used on
+  the 32,760 MiB GPU. The completion marker and final report were absent.
 
 Determine state in this order:
 
@@ -56,6 +58,11 @@ Determine state in this order:
 
 There is deliberately no automatic follow-on GPU job after Full20. Do not use
 an old supervisor to fill the gap.
+
+The read-only [status helper](server_task_status.sh) reports file presence, row
+counts and PID liveness. Its `PRESENT`, `completion_marker_present` and
+`pid_alive_unverified` labels are observations; final completion and running
+state require the checks above.
 
 ## B. Ready on a 32 GB GPU, but parked
 
@@ -124,7 +131,7 @@ them to reconstruct a number.
 | Llama clean Full-13 16K, 50/task | `tailspline_llama_s4_16k_ruler50_clean/reports/tailspline_vs_mrpro_full13_16k_50_per_task_clean.json` |
 | Llama classic 8K/16K/32K plus PPL | `tailspline_llama_s4_classic/reports/tailspline_vs_mrpro_classic.json` |
 | Llama Natural-QA631 | `tailspline_llama_s4_naturalqa631/reports/tailspline_vs_mrpro_naturalqa631.json` |
-| Original 3-repeat NIAH heatmap and ProofPile32 reanalysis | `tailspline_llama_s4_mrrope_niah_heatmap/reports/` (superseded for NIAH inference by Full20) |
+| Original 3-repeat NIAH heatmap and ProofPile32 reanalysis | `tailspline_llama_s4_mrrope_niah_heatmap/reports/` (completed pilot; separate Full20 confirmation pending, retain both) |
 | OLMo classic transfer | `tailspline_olmo_s4_classic/reports/tailspline_vs_mrpro_classic.json` |
 | Qwen 32K/64K report | `tailspline_qwen25_s2_32k64k/reports/tailspline_vs_mrpro_32k64k.json` |
 | Native-Z5 existence test and follow-ups | `olmo_native_z5_enhancement/reports/`; all three completion markers exist, but the all-50 refit stopped before fresh task confirmation |

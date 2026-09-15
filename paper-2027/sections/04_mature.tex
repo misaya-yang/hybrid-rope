@@ -24,11 +24,12 @@ m_q^{\rm TS}=\frac{q(3n^2+3n+1-q^2)}{n(n+1)(2n+1)}.
 \label{eq:tailspline}
 \end{equation}
 \end{theorem}
-Strict convexity and the tridiagonal stationarity system give Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the entry penalty $\epsilon_1^2$ yields the symmetric construction BM, with increments proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). Relative to MrPro, TailSpline accepts a larger entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$ (Fig.~\ref{fig:construction-contrast}a). These guarantees solve the declared objectives; task value is tested below.
+Strict convexity and the tridiagonal stationarity system give Eq.~\eqref{eq:tailspline} (Appendix~\ref{sec:tailspline-details}). Adding the entry penalty $\epsilon_1^2$ yields the symmetric construction BM, with increments proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}). Relative to MrPro, TailSpline accepts a larger entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$: $0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$ (Fig.~\ref{fig:construction-contrast}). These guarantees solve the declared objectives; task value is tested below.
 
 \paragraph{What the comparison isolates.}
-TailSpline and MrPro retain the same outer bands and endpoints while changing
-both total displacement and transition shape. An additional control $C$ matches
+TailSpline and MrPro retain the same outer bands and endpoints, so their
+comparison tests complete internal allocations. Total displacement is one
+statistic of that allocation. An additional control $C$ matches
 TailSpline's total displacement to test the remaining shape difference
 (Appendix~\ref{sec:tailspline-dose-control}). The completed classic diagnostic
 gives T--C $-0.41$ points in Full-13 AUC, with interval $[-2.63,1.82]$;

@@ -33,9 +33,20 @@ Here $\operatorname{tr}(\Gamma^2)$ is the frame potential of the normalized posi
 Under uniform measure on $[0,L]$, with $t=\Delta/L$, as $x=\omega L\to0$, $\cos(xt)\to1$ and $\sin(xt)/x\to t$, so $V_\omega$ converges to $\operatorname{span}\{1,\Delta\}$. For $\epsilon=\max\{|\omega L|,|\nu L|\}\to0$, squared chordal separation satisfies $2-\|Q_{\omega\nu}\|_F^2=\mathcal O(\epsilon^4)$.
 \end{proposition}
 
-Distinct slow frequencies therefore approach a shared two-dimensional positional space. On the standard grid $b=500{,}000$, $K=64$, $L=4096$, the $23$ pairs with $\omega L\le1$ occupy $46$ coordinates but have block-whitened effective rank $r_2=2.00013$. At $b=256$, $K=32$, $L=256$, the eight slowest pairs span $\omega L\in[1.19,4]$ and have effective rank $r_2=2.11$ (Appendix~\ref{sec:finite-window-rank}). Their overlap is substantial even though every frequency has $\omega L>1$.
+Distinct slow frequencies therefore approach a shared two-dimensional
+positional space. On the identification grid $b=256$, $K=32$, $L=256$,
+the eight slowest pairs span $\omega L\in[1.19,4]$ and have effective rank
+$r_2=2.11$. Their overlap is substantial even beyond the small-phase limit
+(Fig.~\ref{fig:geometry-main}; Appendix~\ref{sec:finite-window-rank}).
 
-
+\begin{figure}[ht]
+\centering\includegraphics[width=.72\linewidth]{fig_allocation_geometry.pdf}
+\caption{\textbf{Allocation determines the supplied positional directions.}
+Complete-pair overlap on the identification grid. The eight slowest pairs
+occupy $16$ coordinates but have normalized positional effective rank $2.11$
+under uniform separations; the outlined block marks these pairs.}
+\label{fig:geometry-main}
+\end{figure}
 
 \paragraph{Why use complete rotary pairs?}
 A cosine-only overlap proxy can reverse the allocation ordering: explicit

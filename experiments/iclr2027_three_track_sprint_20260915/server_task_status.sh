@@ -7,7 +7,7 @@ repo_root=${REPO_ROOT:-/root/autodl-tmp/hybrid-rope}
 file_state() {
   local label=$1 path=$2
   if [[ -f "${path}" ]]; then
-    printf '  COMPLETE  %-24s %s\n' "${label}" "${path}"
+    printf '  PRESENT   %-24s %s\n' "${label}" "${path}"
   else
     printf '  MISSING   %-24s %s\n' "${label}" "${path}"
   fi
@@ -24,26 +24,26 @@ row_count() {
 
 full20=${plan_root}/tailspline_llama_s4_mrrope_niah_heatmap_full20
 queue_pid_file=${full20}/queue.pid
-queue_state=not_started
+queue_state=no_marker_or_pid_file
 queue_pid=none
 if [[ -f "${full20}/complete.txt" ]]; then
-  queue_state=complete
+  queue_state=completion_marker_present
 elif [[ -f "${queue_pid_file}" ]]; then
   queue_pid=$(tr -d '[:space:]' <"${queue_pid_file}")
   if [[ -n "${queue_pid}" ]] && kill -0 "${queue_pid}" 2>/dev/null; then
-    queue_state=running
+    queue_state=pid_alive_unverified
   else
-    queue_state=stopped_without_completion
+    queue_state=pid_not_alive_no_completion_marker
   fi
 fi
 
-printf 'ACTIVE OR RECENT\n'
+printf 'OBSERVED MARKERS, PID LIVENESS AND ROW COUNTS\n'
 printf '  NIAH Full20: state=%s pid=%s TailSpline=%s/720 MrPro=%s/720\n' \
   "${queue_state}" "${queue_pid}" \
   "$(row_count "${full20}/runs/tailspline/generations.jsonl")" \
   "$(row_count "${full20}/runs/mrpro/generations.jsonl")"
 
-printf '\nCOMPLETED REPORTS\n'
+printf '\nREPORT FILE PRESENCE (content/completion not validated here)\n'
 file_state 'Llama classic S4' "${plan_root}/tailspline_llama_s4_classic/reports/tailspline_vs_mrpro_classic.json"
 file_state 'OLMo classic S4' "${plan_root}/tailspline_olmo_s4_classic/reports/tailspline_vs_mrpro_classic.json"
 file_state 'Qwen 32K/64K' "${plan_root}/tailspline_qwen25_s2_32k64k/reports/tailspline_vs_mrpro_32k64k.json"
@@ -60,7 +60,7 @@ file_state 'NIAH Full20' "${full20}/reports/tailspline_vs_mrpro_niah_heatmap_ful
 printf '\nREQUIRES 48GB OR MORE\n'
 highmem=${plan_root}/tailspline_llama_s16_128k_gate
 if [[ -f "${highmem}/assets/ready.json" ]]; then
-  printf '  READY     Llama S16 128K assets   %s\n' "${highmem}/assets/ready.json"
+  printf '  PRESENT   Llama S16 ready marker %s\n' "${highmem}/assets/ready.json"
 else
   printf '  MISSING   Llama S16 128K assets   run prepare_llama_s16_128k_assets.sh\n'
 fi
