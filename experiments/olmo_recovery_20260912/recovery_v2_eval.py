@@ -13,6 +13,17 @@ CHECKPOINT_ARMS=ARMS+('Cosh_tau_sqrt2_gradual_install',)
 LENGTHS=(4096,8192,16384,32768)
 
 
+def resolve_lm_lengths(requested, manifest):
+    """Keep legacy defaults while allowing explicit longer prepared LM grids."""
+    values = tuple(int(value) for value in requested) if requested else LENGTHS
+    if len(set(values)) != len(values) or any(value <= 0 for value in values):
+        raise ValueError('LM lengths must be unique positive integers')
+    prepared = manifest.get('lengths') or []
+    if requested and prepared and not set(values).issubset({int(value) for value in prepared}):
+        raise ValueError('requested LM length is absent from the prepared manifest')
+    return values
+
+
 def read_rows(path):
     with Path(path).open() as stream:
         return [json.loads(line) for line in stream if line.strip()]
@@ -200,9 +211,9 @@ def main():
                           'split':args.split,'row_split':args.row_split,'lengths':LENGTHS,
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
                           'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
-    lm_lengths=tuple(args.lm_length_cap or LENGTHS)
+    lm_lengths=resolve_lm_lengths(args.lm_length_cap,manifest)
     if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0 or args.batch_size<1
-            or len(set(lm_lengths))!=len(lm_lengths) or any(length not in LENGTHS for length in lm_lengths)):
+            or len(set(lm_lengths))!=len(lm_lengths)):
         raise ValueError('limits and prefill chunk size must be nonnegative')
     import numpy as np
     import torch
