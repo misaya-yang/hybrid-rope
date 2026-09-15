@@ -2,6 +2,11 @@
 
 import pytest
 
+from experiments.iclr2027_three_track_sprint_20260915.llama_s16_128k_report import (
+    TASKS,
+    ppl_summary,
+    task_summary,
+)
 from experiments.iclr2027_three_track_sprint_20260915.prepare_llama_s16_ppl10 import (
     select_eligible,
 )
@@ -22,3 +27,16 @@ def test_proofpile_selection_is_deterministic_and_requires_ten():
     assert len(select_eligible(list(range(12)))) == 10
     with pytest.raises(ValueError, match="need 10"):
         select_eligible(list(range(9)))
+
+
+def test_s16_report_uses_task_equal_macro_and_token_weighted_nll():
+    mapping = {
+        f"{task}-{index}": {"task": task, "ruler_official_score": 1.0}
+        for task in TASKS for index in range(10)
+    }
+    assert task_summary(mapping)["macro"] == 1.0
+    ppl = ppl_summary([
+        {"whole_loss_sum": 20.0, "whole_target_count": 10},
+        {"whole_loss_sum": 10.0, "whole_target_count": 10},
+    ])
+    assert ppl["whole_nll"] == 1.5
