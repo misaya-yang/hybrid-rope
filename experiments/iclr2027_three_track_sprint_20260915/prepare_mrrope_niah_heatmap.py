@@ -152,6 +152,8 @@ def main() -> None:
             print(json.dumps({"status": "SKIP_COMPLETE", "rows": value["rows"]}))
             return
         raise FileExistsError("NIAH output contains a different or incomplete manifest")
+    if output.is_dir() and any(output.iterdir()):
+        raise FileExistsError("NIAH output directory is nonempty without a complete manifest")
 
     from transformers import AutoTokenizer
 
@@ -191,7 +193,7 @@ def main() -> None:
             if len(cell) != args.repeats_per_cell:
                 raise ValueError(f"NIAH cell coverage drift: {length}/{depth}")
 
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=True)
     rows_path = output / "inputs.jsonl"
     with rows_path.open("w") as stream:
         for row in rows:

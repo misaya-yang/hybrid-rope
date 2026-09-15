@@ -133,8 +133,8 @@
         {
           "path": "paper-2027/sections/03_compatibility.tex",
           "availability": "tracked",
-          "sha256": "e1fe9730d8ebff2e5164170baf5dc5fc578562312d386ef9f082a3d52eb269b1",
-          "revision_note": "2026-09-15 two PDF-review cycles: existing evidence clarified and complete Natural-QA631 integrated; historical source observations retained."
+          "sha256": "5208c37258aecae8bbdd3098f0677e6e3e53d8c00d80096728e08516c8c94fc1",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         }
       ]
     },
@@ -150,14 +150,14 @@
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "b1058d3b437f628caf5f4354806c65e858f1495dcf7615ea4f9e9f64cebbbb20",
-          "revision_note": "2026-09-15 field-gap integration; explicit proofs and completed clean/control evidence. Historical observations preserved."
+          "sha256": "e7bd2951c523389626131a235e9f759267beecfdd044283852d89f7929f14394",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         },
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "tracked",
-          "sha256": "8d899d7721d2cc9603f4eb65afc00b19578d53834559ed304a20e85423c97320",
-          "revision_note": "2026-09-15 two PDF-review cycles: existing evidence clarified and complete Natural-QA631 integrated; historical source observations retained."
+          "sha256": "6580b9d98ad1c8a9fcd3e2c25daf3c3dfbc384552d1c228f906b8fb8a00ec1fd",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         }
       ]
     },
@@ -853,9 +853,9 @@
         {
           "path": "paper-2027/appendix/a10_tailspline.tex",
           "availability": "tracked",
-          "sha256": "0f06e4dfa74591d3da73d7c14ed54899aac4335622199fd19c0c059529adb8d6",
+          "sha256": "46b039757b735c1b708ff84902a396fb47ad4518abf64d141559b9a1edc5ca39",
           "role": "Exact matched-displacement T-C identity and centroid equivalence; mathematical verification only, no E1 task scores.",
-          "revision_note": "2026-09-15 two PDF-review cycles: existing evidence clarified and complete Natural-QA631 integrated; historical source observations retained."
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
         },
         {
           "path": "paper-2027/figs/allocation_design.py",
