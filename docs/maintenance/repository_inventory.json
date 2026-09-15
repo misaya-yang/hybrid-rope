@@ -4939,6 +4939,41 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/prepare_sprint_cpu.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_clone_gpu_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/run_original_gpu_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/runtime_probe_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/verify_sprint_math.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/index.md",
       "area": "experiments",
       "category": "navigation"
@@ -9859,6 +9894,11 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260914_range_shape/r01/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/index.md",
       "area": "paper-2027",
       "category": "navigation"
@@ -12825,6 +12865,11 @@
     },
     {
       "path": "tests/test_historical_ruler_replay.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_iclr2027_sprint.py",
       "area": "tests",
       "category": "code"
     },

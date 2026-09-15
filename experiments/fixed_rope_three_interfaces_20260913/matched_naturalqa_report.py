@@ -61,6 +61,86 @@ def bootstrap(panel, candidate, baseline, ids, *, draws=20_000, seed=20260914):
     }
 
 
+def pooled_cluster_bootstrap(panel, candidate, baseline, ids, *, draws=20_000, seed=20260917):
+    """Question-equal sensitivity while preserving source-document clusters."""
+    rng = np.random.default_rng(seed)
+    clusters = defaultdict(list)
+    for row_id in ids:
+        clusters[panel[row_id]["document_cluster_id"]].append(row_id)
+    cluster_sums = np.asarray([
+        sum(candidate[row_id]["whole_response_f1"] - baseline[row_id]["whole_response_f1"] for row_id in group)
+        for group in clusters.values()
+    ])
+    cluster_counts = np.asarray([len(group) for group in clusters.values()])
+    sampled = rng.integers(len(cluster_sums), size=(draws, len(cluster_sums)))
+    values = cluster_sums[sampled].sum(axis=1) / cluster_counts[sampled].sum(axis=1)
+    return {
+        "estimate": float(sum(cluster_sums) / sum(cluster_counts)),
+        "bootstrap_mean": float(values.mean()),
+        "ci95": np.quantile(values, [0.025, 0.975]).tolist(),
+        "probability_delta_gt_zero": float(np.mean(values > 0)),
+        "draws": draws,
+    }
+
+
+def health(values: dict[str, dict], ids: list[str]) -> dict:
+    def one(selected: list[str]) -> dict:
+        return {
+            "rows": len(selected),
+            "ended_eos": sum(bool(values[row_id]["ended_eos"]) for row_id in selected),
+            "hit_cap": sum(bool(values[row_id]["hit_cap"]) for row_id in selected),
+            "empty": sum(bool(values[row_id]["empty"]) for row_id in selected),
+        }
+
+    return {
+        **one(ids),
+        "by_task": {
+            task: one([row_id for row_id in ids if values[row_id]["task"] == task])
+            for task in TASKS
+        },
+    }
+
+
+def subset_result(panel, outputs, candidate_name, baseline_name, ids, *, seed):
+    counts = Counter(panel[row_id]["task"] for row_id in ids)
+    documents = {
+        task: len({
+            panel[row_id]["document_cluster_id"]
+            for row_id in ids if panel[row_id]["task"] == task
+        })
+        for task in TASKS
+    }
+    result = {
+        "rows": len(ids),
+        "rows_by_task": dict(counts),
+        "source_documents_by_task": documents,
+        "output_health": {
+            name: health(values, ids) for name, values in outputs.items()
+        },
+    }
+    if set(counts) != set(TASKS):
+        result["task_equal_macro"] = None
+        result["note"] = "At least one task has no rows; only present-task reporting is valid."
+        return result
+    candidate_macro, candidate_tasks = task_macro(outputs[candidate_name], ids)
+    baseline_macro, baseline_tasks = task_macro(outputs[baseline_name], ids)
+    result.update({
+        "candidate_macro_f1": candidate_macro,
+        "baseline_macro_f1": baseline_macro,
+        "candidate_minus_baseline": {
+            "estimate": candidate_macro - baseline_macro,
+            "by_task": {
+                task: candidate_tasks[task] - baseline_tasks[task] for task in TASKS
+            },
+            **bootstrap(panel, outputs[candidate_name], outputs[baseline_name], ids, seed=seed),
+        },
+        "question_equal_sensitivity": pooled_cluster_bootstrap(
+            panel, outputs[candidate_name], outputs[baseline_name], ids, seed=seed + 100,
+        ),
+    })
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panel", type=Path, required=True)
@@ -95,33 +175,19 @@ def main() -> None:
     candidate_macro, candidate_tasks = task_macro(outputs[args.candidate_name], ids)
     baseline_macro, baseline_tasks = task_macro(outputs[args.baseline_name], ids)
     llama_extended = [row_id for row_id in ids if panel[row_id]["llama_native_stratum"] == "extended"]
-    extended_counts = Counter(panel[row_id]["task"] for row_id in llama_extended)
-    extended_result = {"rows": len(llama_extended), "rows_by_task": dict(extended_counts)}
-    if set(extended_counts) == set(TASKS):
-        extended_candidate, extended_candidate_tasks = task_macro(
-            outputs[args.candidate_name], llama_extended,
-        )
-        extended_baseline, extended_baseline_tasks = task_macro(
-            outputs[args.baseline_name], llama_extended,
-        )
-        extended_result.update({
-            "candidate_macro_f1": extended_candidate,
-            "baseline_macro_f1": extended_baseline,
-            "candidate_minus_baseline": {
-                "estimate": extended_candidate - extended_baseline,
-                "by_task": {
-                    task: extended_candidate_tasks[task] - extended_baseline_tasks[task]
-                    for task in TASKS
-                },
-                **bootstrap(
-                    panel, outputs[args.candidate_name], outputs[args.baseline_name],
-                    llama_extended, seed=20260915,
-                ),
-            },
-        })
-    else:
-        extended_result["task_equal_macro"] = None
-        extended_result["note"] = "At least one task has no >8K Llama row; only per-task reporting is valid."
+    llama_within = [row_id for row_id in ids if panel[row_id]["llama_native_stratum"] == "within_native"]
+    extended_result = subset_result(
+        panel, outputs, args.candidate_name, args.baseline_name, llama_extended, seed=20260915,
+    )
+    within_result = subset_result(
+        panel, outputs, args.candidate_name, args.baseline_name, llama_within, seed=20260916,
+    )
+    cluster_tasks = defaultdict(set)
+    for row_id in ids:
+        cluster_tasks[panel[row_id]["document_cluster_id"]].add(panel[row_id]["task"])
+    shared_cross_task_clusters = {
+        cluster: sorted(tasks) for cluster, tasks in cluster_tasks.items() if len(tasks) > 1
+    }
     result = {
         "status": "COMPLETE",
         "contract": "TAILSPLINE_LLAMA_NATURAL_QA_FROZEN631_PAIRED_V2",
@@ -138,22 +204,29 @@ def main() -> None:
             "by_task": {task: candidate_tasks[task] - baseline_tasks[task] for task in TASKS},
             **bootstrap(panel, outputs[args.candidate_name], outputs[args.baseline_name], ids),
         },
+        "question_equal_sensitivity": pooled_cluster_bootstrap(
+            panel, outputs[args.candidate_name], outputs[args.baseline_name], ids,
+        ),
         "llama_length_audit": {
             "native_length": 8192,
-            "within_native_rows": len(ids) - len(llama_extended),
+            "within_native_rows": len(llama_within),
             "extended_rows": len(llama_extended),
             "input_token_min": min(row["input_tokens"] for row in panel_rows),
             "input_token_max": max(row["input_tokens"] for row in panel_rows),
             "rows_by_task": dict(Counter(row["task"] for row in panel_rows)),
+            "within_native_effect": within_result,
             "extended_effect": extended_result,
         },
-        "output_health": {
-            name: {
-                "ended_eos": sum(bool(row["ended_eos"]) for row in values.values()),
-                "hit_cap": sum(bool(row["hit_cap"]) for row in values.values()),
-                "empty": sum(bool(row["empty"]) for row in values.values()),
-            }
-            for name, values in outputs.items()
+        "output_health": {name: health(values, ids) for name, values in outputs.items()},
+        "source_cluster_audit": {
+            "unique_source_documents": len(cluster_tasks),
+            "clusters_shared_across_tasks": len(shared_cross_task_clusters),
+            "shared_cluster_tasks": shared_cross_task_clusters,
+            "interpretation": (
+                "No cross-task cluster correction is needed."
+                if not shared_cross_task_clusters else
+                "Cross-task shared sources exist; use the question-equal clustered sensitivity and do not call task bootstraps independent."
+            ),
         },
         "raw_sha256": {args.candidate_name: sha256(args.candidate), args.baseline_name: sha256(args.baseline)},
         "panel_sha256": sha256(args.panel),
