@@ -1,7 +1,7 @@
 {
   "pdf_sha256": "f74a874b3e7f1866bc7112e08264ee34219f3492f145f42d581d3d990b4063d8",
   "prompt_sha256": "6fca07618f5f11d43089911f956a731de2bca91ec1b0f48806c21d4fddb97695",
-  "status": "FROZEN_FOR_REVIEW",
+  "status": "REVIEWS_COMPLETE",
   "main_pages": 9,
   "total_pages": 65,
   "models": [
@@ -11,5 +11,32 @@
   "independent_contexts": true,
   "same_prompt": true,
   "pdf_only": true,
-  "score_scale": "internal 1-10, not official"
+  "score_scale": "internal 1-10, not official",
+  "reviews": {
+    "astra": {
+      "perspective_scores": [
+        7,
+        7,
+        6,
+        7
+      ],
+      "ac_score": 7,
+      "confidence": 4,
+      "recommendation": "accept leaning"
+    },
+    "sol": {
+      "perspective_scores": [
+        7,
+        7,
+        7,
+        6
+      ],
+      "ac_score": 7,
+      "confidence": 4,
+      "recommendation": "weak accept leaning accept"
+    }
+  },
+  "post_review_changes": [
+    "Figure 1c column labels clarified as Geo-derived and Cosh-derived; no score or formula changes."
+  ]
 }

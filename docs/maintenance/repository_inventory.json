@@ -10549,6 +10549,16 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/DISPOSITION.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
       "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/common_prompt.txt",
       "area": "paper-2027",
       "category": "manuscript"
@@ -10562,6 +10572,16 @@
       "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/manifest.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/r08_astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/r08_sol.md",
+      "area": "paper-2027",
+      "category": "document"
     },
     {
       "path": "paper-2027/research/pdf-review-rounds/20260915_two_rounds/README.md",
