@@ -150,8 +150,8 @@
         {
           "path": "paper-2027/appendix/a1_proofs.tex",
           "availability": "tracked",
-          "sha256": "e7bd2951c523389626131a235e9f759267beecfdd044283852d89f7929f14394",
-          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
+          "sha256": "0fe7685bc68b34ee1e5467c57c04e560d504715e5643d9dcf13439c161ee571b",
+          "revision_note": "2026-09-15: moved the unchanged integer-kernel corollary next to its existing proof."
         },
         {
           "path": "paper-2027/sections/04_construction.tex",

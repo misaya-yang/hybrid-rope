@@ -4,6 +4,11 @@
 
 [投稿标题与摘要纯文本](title_abstract.txt)。
 
+最新已完成[理论整合与R08独立PDF审稿](research/pdf-review-rounds/20260915_theory_integration_r08/README.md)：
+主文9页、总计65页，摘要156词且无数字。新增Appendix K与可独立运行的CPU复算；
+Astra/Sol AC均7/10、接收倾向。当前交付回执见
+[理论整合验证](research/THEORY_INTEGRATION_VALIDATION_20260915.json)。
+
 现稿围绕三个发现展开：范围与内部配置具有不同且相互作用的效果；位置结构与学得使用可区分；
 解析配置带来任务收益。z为研究对象，TailSpline为主要冻结构造，clean16K/32K共同展示
 同一静态表在2L/4L的任务收益；Cosh作为辅助外推搬运实例。**摘要不放数字**。

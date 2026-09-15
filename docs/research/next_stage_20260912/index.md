@@ -35,7 +35,7 @@ TailSpline主线优先级。
 | Web Pro的有限窗口、换基与边界理论是否值得采用？ | [独立CPU核查与采用判断](WEB_PRO_FINITE_WINDOW_AUDIT_20260915.md) |
 | 三段式改进做过什么，怎样向Pro追问下一步？ | [详细研究总结](THREE_BAND_RESEARCH_SYNTHESIS_FOR_PRO_20260915.md) · [可直接发送的提示词](WEB_PRO_THREE_BAND_FOLLOWUP_PROMPT_20260915.md) |
 | YaRN→MrPro→TailSpline的中频变化有什么可验证的解释？ | [独立理论分析、CPU图表与Pro对比](INDEPENDENT_MIDBAND_THEORY_ANALYSIS_20260915.md) |
-| 本轮理论如何形成待审核的论文修改？ | [理论整合与精确增量（补丁未应用）](../../../paper-2027/research/theory_revision_proposal_20260915/README.md) |
+| 本轮理论如何形成论文修改？ | [已应用的理论整合与精确增量](../../../paper-2027/research/theory_revision_proposal_20260915/README.md) · [R08审稿](../../../paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/README.md) |
 | 服务器上哪些任务在跑、能跑或需要48GB以上？ | [服务器任务分层](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md) |
 | 论文已登记证据及来源在哪里？ | [论文证据索引](../../../paper-2027/research/evidence/index.md) |
 | YaRN–MrPro理论对照的决定是什么？ | [等剂量单交叉审计](MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md) |

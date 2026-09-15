@@ -1,0 +1,71 @@
+{
+  "status": "COMPLETE",
+  "scope": "Authorized theory integration followed by one two-model PDF-only review round",
+  "main_pdf": {
+    "path": "paper-2027/main.pdf",
+    "sha256": "057734a53feab9022f2f697ca3b68b64c7a0c80c12517e7a21eed81422ff462a",
+    "main_pages": 9,
+    "total_pages": 65,
+    "references_start_page": 11
+  },
+  "abstract": {
+    "words": 156,
+    "digits": false,
+    "submission_text_matches": true
+  },
+  "format": {
+    "undefined_references_or_citations": 0,
+    "overfull_hboxes": 0,
+    "type3_fonts": 0,
+    "unembedded_fonts": 0,
+    "first_page_has_figure": false
+  },
+  "visual_inspection": {
+    "main_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "new_appendix_pages": [
+      63,
+      64,
+      65
+    ],
+    "post_review_rechecked_pages": [
+      2
+    ]
+  },
+  "source_archive": {
+    "path": "paper-2027/exponent-allocation-source.zip",
+    "sha256": "923e0028c6514815f26a2361c67db9c01eade1c1f31d4964f0175d88335ce5b1",
+    "manifest_files": 146,
+    "all_payload_hashes_match": true,
+    "independent_compile": "PASS",
+    "independent_pdf_text_matches": true,
+    "standalone_math_check": "PASS"
+  },
+  "review": {
+    "manifest": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/manifest.json",
+    "rounds": 1,
+    "models": [
+      "gpt-6-astra",
+      "gpt-5.6-sol"
+    ],
+    "ac_scores": [
+      7,
+      7
+    ],
+    "no_core_math_error_reported": true,
+    "post_review_change": "Figure 1c derived-table labels clarified"
+  },
+  "new_evidence_asset": "A48",
+  "new_gpu_runs": false,
+  "committed": true,
+  "pushed": true
+}

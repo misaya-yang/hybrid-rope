@@ -1,5 +1,5 @@
 {
-  "status": "UNAPPLIED_AUTHOR_REVIEW",
+  "status": "APPLIED_AND_REVIEWED",
   "changed_paths": [
     "sections/00_abstract.tex",
     "title_abstract.txt",
@@ -45,7 +45,11 @@
     "main.pdf": "649fdb68e7b39d2bcbd986db5263c2fda4cc8c10326a3377d4600faf59a2058f",
     "exponent-allocation-source.zip": "36950e229941e3a60b7d576104a94b0324b64d85c53da8389e9fa6f0e74816fd"
   },
-  "compiled": false,
-  "page_count_verified": false,
-  "patch_applied": false
+  "compiled": true,
+  "page_count_verified": true,
+  "patch_applied": true,
+  "main_pages": 9,
+  "total_pages": 65,
+  "review": "paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/manifest.json",
+  "final_pdf_sha256": "057734a53feab9022f2f697ca3b68b64c7a0c80c12517e7a21eed81422ff462a"
 }
