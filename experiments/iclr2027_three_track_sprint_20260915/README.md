@@ -31,21 +31,6 @@ Native-Z5 is an additional checkpoint-calibrated question requested after the
 sprint proposal; it follows Natural-QA on the original GPU and does not replace
 E5's unchanged-Native reference.
 
-## Tail-junction theory decision
-
-The [tail-junction review](../../docs/research/next_stage_20260912/TAILSPLINE_TAIL_JUNCTION_THEORY_AND_GPU_DECISION_20260915.md)
-proves a second-order TailSpline versus first-order MrPro residual relative to
-the fully scaled tail. This is a structural guarantee, not a task mediator, and
-does not change either GPU queue.
-
-E0 is read before any clean matched-displacement rerun is considered. A clean C
-arm is not scheduled automatically. It is considered only if E0 makes the
-current cross-batch E1 uninterpretable, or if the author explicitly promotes the
-tail-junction mechanism to a core paper claim. If approved later, it reuses the
-existing 2,600 clean 32K TailSpline rows and freezes batch 1, checkpoint, band,
-gain, decoder and scorer. No curve, band, gain or scale search follows any
-outcome.
-
 ## CPU preparation
 
 ```bash

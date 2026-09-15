@@ -21,7 +21,6 @@ AUC差全部为正；两模型均3/3方向通过。YaRN/BM与机制实验后置�
 | Llama TailSpline–MrPro主结果 | [经典两臂结果](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，局部反转与证据边界完整保留 |
 | OLMo TailSpline–MrPro跨模型确认 | [经典两臂结果](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)：Full-13/NIAH/PPL 3/3方向通过，13任务AUC差全部为正 |
 | 理论深化CPU判决 | [15类算子核验](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)：`z→相位→竞争→value`、gain仿射条件、T−C边际配对及架构边界全部通过；不构成性能或中介证据 |
-| TailSpline尾部接入理论 | [二阶接入与GPU判决](TAILSPLINE_TAIL_JUNCTION_THEORY_AND_GPU_DECISION_20260915.md)：相对共同`/S`参考，TailSpline在tail邻域为二阶残差、MrPro为一阶；只强化结构差异，clean T−C条件性后置 |
 | YaRN–MrPro理论对照 | [等剂量单交叉后移审计](MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md)：CPU闭式已核验，YaRN按作者要求后置 |
 | 核实论文已有证据 | [证据索引](../../../paper-2027/research/evidence/index.md) |
 | Web Pro理论与论文组织讨论 | [十个研究问题与自包含背景](WEB_PRO_TEN_RESEARCH_QUESTIONS_20260914.md) |
