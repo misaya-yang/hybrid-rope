@@ -42,7 +42,11 @@ def main() -> None:
     manifest_path = output / "manifest.json"
     if manifest_path.is_file():
         manifest = json.loads(manifest_path.read_text())
-        if manifest.get("status") == "COMPLETE" and manifest.get("rows") == 2600:
+        if (
+            manifest.get("status") == "COMPLETE"
+            and manifest.get("rows") == 2600
+            and manifest.get("batching_scope") == "batch=1 with exact unpadded prompt_ids; no runtime padding"
+        ):
             print(json.dumps({"status": "SKIP_COMPLETE", "rows": 2600}))
             return
 
@@ -117,7 +121,7 @@ def main() -> None:
         "depth_balancing": False,
         "multi_evidence_profile_selection": False,
         "content_padding": False,
-        "batch_padding_scope": "masked left pad at runtime only; absent from prompt_ids and scorer inputs",
+        "batching_scope": "batch=1 with exact unpadded prompt_ids; no runtime padding",
         "minimum_input_tokens": min(row["input_tokens"] for row in rows),
         "maximum_input_tokens": max(row["input_tokens"] for row in rows),
         "inputs_sha256": sha256(rows_path),
