@@ -2279,6 +2279,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/THREE_INTERFACE_REPLAY_THEORY_AUDIT_20260913.md",
       "area": "docs",
       "category": "document"
@@ -4987,6 +4992,11 @@
       "path": "experiments/iclr2027_three_track_sprint_20260915/runtime_probe_report.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/verify_sprint_math.py",

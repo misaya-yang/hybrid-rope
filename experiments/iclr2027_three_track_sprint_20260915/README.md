@@ -42,6 +42,9 @@ exact sprint-math receipt, the 15-part theory-deepening operator receipt, the
 completed E1 audit, and the matched Native-8K PPL summary. It does not load a
 checkpoint or touch CUDA.
 
+The interpretation owner for the theory receipt is
+[THEORY_DEEPENING_CPU_VERIFICATION_20260915.md](../../docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md).
+
 ## GPU entry points
 
 After the data disk has been cloned and each server endpoint is known, launch
