@@ -1,0 +1,603 @@
+{
+  "comparisons": {
+    "mrpro_minus_yarn": {
+      "document_bootstrap_ci95": [
+        -0.007964534498751164,
+        0.0005569186294451356
+      ],
+      "mean_document_nll_delta": -0.004119033133611083,
+      "niah_macro_delta": 0.06875000000000003,
+      "niah_task_stratified_bootstrap_ci95": [
+        -0.012499999999999999,
+        0.1625
+      ]
+    },
+    "tailspline_minus_mrpro": {
+      "document_bootstrap_ci95": [
+        -0.1380880331620574,
+        -0.021024431078694762
+      ],
+      "mean_document_nll_delta": -0.09266306462232024,
+      "niah_macro_delta": 0.16875,
+      "niah_task_stratified_bootstrap_ci95": [
+        0.0875,
+        0.25625
+      ]
+    },
+    "tailspline_minus_yarn": {
+      "document_bootstrap_ci95": [
+        -0.14875545985996724,
+        -0.020917751570232214
+      ],
+      "mean_document_nll_delta": -0.09678209775593132,
+      "niah_macro_delta": 0.23750000000000004,
+      "niah_task_stratified_bootstrap_ci95": [
+        0.1625,
+        0.325
+      ]
+    }
+  },
+  "contract": "official-static-yarn-zero-training-quick-three-method-v1",
+  "identity": {
+    "condition": "glm4_9b_s4_128k",
+    "methods": [
+      "TailSpline",
+      "MrRoPE-Pro",
+      "official static YaRN, zero-training installation"
+    ],
+    "paired_generation_rows": 40,
+    "panel_sha256": "1eaa8b723b1b6102b6b5329d33e37fbd28f4798eb1afcbf01eb96f23b4a25e75",
+    "ppl_documents": 5,
+    "ppl_manifest_sha256": "4d8088f8a948254a278d15fdd7c54579339974ab8cda63e9c17255bfb8596a84",
+    "rows_per_task": 5,
+    "target_length": 131072,
+    "tasks": [
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery"
+    ]
+  },
+  "niah": {
+    "by_task": {
+      "niah_multikey_1": {
+        "mrpro": 0.6,
+        "tailspline": 0.8,
+        "yarn": 0.6
+      },
+      "niah_multikey_2": {
+        "mrpro": 0.0,
+        "tailspline": 0.0,
+        "yarn": 0.0
+      },
+      "niah_multikey_3": {
+        "mrpro": 0.0,
+        "tailspline": 0.0,
+        "yarn": 0.0
+      },
+      "niah_multiquery": {
+        "mrpro": 0.35,
+        "tailspline": 0.55,
+        "yarn": 0.45
+      },
+      "niah_multivalue": {
+        "mrpro": 0.4,
+        "tailspline": 0.55,
+        "yarn": 0.35
+      },
+      "niah_single_1": {
+        "mrpro": 0.2,
+        "tailspline": 1.0,
+        "yarn": 0.0
+      },
+      "niah_single_2": {
+        "mrpro": 0.8,
+        "tailspline": 0.8,
+        "yarn": 0.6
+      },
+      "niah_single_3": {
+        "mrpro": 1.0,
+        "tailspline": 1.0,
+        "yarn": 0.8
+      }
+    },
+    "paired_rows": [
+      {
+        "prompt_sha256": "67092b7652fcf7989b984974d0e24a0894cffb3b4d5968c8248568a03658a88f",
+        "row_id": "clean_niah_single_1_131072_0000",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_1"
+      },
+      {
+        "prompt_sha256": "539afe0578a0a0da07b6c2dc78fbffe56a7de38e48ccc92a9f5dae9d374f76cf",
+        "row_id": "clean_niah_single_1_131072_0001",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_1"
+      },
+      {
+        "prompt_sha256": "6f3b60e000a1855e1bbc829ed9ea19f9abb9d74f8799dd307bd4eb4198a5c477",
+        "row_id": "clean_niah_single_1_131072_0002",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_1"
+      },
+      {
+        "prompt_sha256": "c5f31d110a6806d1b538660fe43a86680dc6109121b9d96486d52482986f467b",
+        "row_id": "clean_niah_single_1_131072_0003",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_1"
+      },
+      {
+        "prompt_sha256": "b45f8fb30039131024ea4545b5fecbad73667dda27bc6b65b4d00c562cbeb06d",
+        "row_id": "clean_niah_single_1_131072_0004",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_1"
+      },
+      {
+        "prompt_sha256": "ae0dd5a4ce54d7afa3e6bb0d6651a6d0208a920969f7b55fea77f627fb27dc0d",
+        "row_id": "clean_niah_single_2_131072_0000",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_2"
+      },
+      {
+        "prompt_sha256": "8c1601e3a68b2c21b51a880814fd19a893645d8f8a66995c7a50ca8b9ac3dd89",
+        "row_id": "clean_niah_single_2_131072_0001",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_2"
+      },
+      {
+        "prompt_sha256": "30847656c090e1e9f1718bb0af3bfeb2b33baebca6a3f2e750943752252c4b10",
+        "row_id": "clean_niah_single_2_131072_0002",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_2"
+      },
+      {
+        "prompt_sha256": "ae0f06daab08e8dbfbf9c8651d6edcb69595ba5fc321af16dc50a491d5ef81d4",
+        "row_id": "clean_niah_single_2_131072_0003",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_2"
+      },
+      {
+        "prompt_sha256": "00e94946ce0fac412974c4b695dd991d89aaaad1059dbfff53bf48abad9f42ea",
+        "row_id": "clean_niah_single_2_131072_0004",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_2"
+      },
+      {
+        "prompt_sha256": "ba1991ff0b99093d3e9415214890a1d1356bac9015735427fe1153ab58b0ca7d",
+        "row_id": "clean_niah_single_3_131072_0000",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_3"
+      },
+      {
+        "prompt_sha256": "b78eb2779c71cd1ec08ba6c87d7dfb86a8f95164062bb4aa1f062ba011c75d02",
+        "row_id": "clean_niah_single_3_131072_0001",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_3"
+      },
+      {
+        "prompt_sha256": "2ebde79d136d27c851f9f0b2ea7f4fed0e5cea0ea8a0f7c8d8f6d09da885acca",
+        "row_id": "clean_niah_single_3_131072_0002",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_3"
+      },
+      {
+        "prompt_sha256": "afa1d6a2ebe2117e94a242d87d1c9ee0fb15d8b16c3479dd64136cffb4343690",
+        "row_id": "clean_niah_single_3_131072_0003",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_single_3"
+      },
+      {
+        "prompt_sha256": "a35b9e5174c0be029dd174c5522cb54497e4eb299169e7c1d046f9d5df07bf8c",
+        "row_id": "clean_niah_single_3_131072_0004",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_single_3"
+      },
+      {
+        "prompt_sha256": "c52cb10cc7a7643bba218c3715ed9016f49b064e002ef231cb9c089d2ba52fe2",
+        "row_id": "clean_niah_multikey_1_131072_0000",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 1.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_1"
+      },
+      {
+        "prompt_sha256": "959a9ef1a4bae5706c7ac5dff4a8f209756e52d6d86b1abb995c458f10e811ac",
+        "row_id": "clean_niah_multikey_1_131072_0001",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_multikey_1"
+      },
+      {
+        "prompt_sha256": "c725ae58aa563137023a6c9ae09230a32e0323add265e5a5e7195136c2d8850f",
+        "row_id": "clean_niah_multikey_1_131072_0002",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_multikey_1"
+      },
+      {
+        "prompt_sha256": "8c6a263718dfe82c095a9b2363e34d3b17128848d56e23e85c71948786c837be",
+        "row_id": "clean_niah_multikey_1_131072_0003",
+        "scores": {
+          "mrpro": 1.0,
+          "tailspline": 1.0,
+          "yarn": 1.0
+        },
+        "task": "niah_multikey_1"
+      },
+      {
+        "prompt_sha256": "eea3500ec80d760fdadafbd0456dca125d0dd81542c1086068f910437b9d7075",
+        "row_id": "clean_niah_multikey_1_131072_0004",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_1"
+      },
+      {
+        "prompt_sha256": "c7abc1f57713333dc8b54a32c151d073f75e0eaf6eeab9ff5eea29e49e6a5bc9",
+        "row_id": "clean_niah_multikey_2_131072_0000",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_2"
+      },
+      {
+        "prompt_sha256": "611867d4b104c5cf3572a634ccfa683843542b451e8bba97f459b9b0d8c7bd90",
+        "row_id": "clean_niah_multikey_2_131072_0001",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_2"
+      },
+      {
+        "prompt_sha256": "76a097933e17df3eb5b006041972d9365af1d0ffebababbfe4aff8c3b7c6437f",
+        "row_id": "clean_niah_multikey_2_131072_0002",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_2"
+      },
+      {
+        "prompt_sha256": "5da8d17317de7a8195e6bc4805fe4da66354d05fa6f49e5b700dc94953f33262",
+        "row_id": "clean_niah_multikey_2_131072_0003",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_2"
+      },
+      {
+        "prompt_sha256": "91606a63ff3783d49553036c3e7230e54e8562818e0d5c67d7764c84bc093a23",
+        "row_id": "clean_niah_multikey_2_131072_0004",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_2"
+      },
+      {
+        "prompt_sha256": "f2025d4d848c8beffaffd9e07f0fd001510f3a40c0d7db834ce3b7144d332c41",
+        "row_id": "clean_niah_multikey_3_131072_0000",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_3"
+      },
+      {
+        "prompt_sha256": "80b9745c34d44e8415f18b1c986dd592bbf96619dcfd07bdc28d12e1f77812ac",
+        "row_id": "clean_niah_multikey_3_131072_0001",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_3"
+      },
+      {
+        "prompt_sha256": "193493652c6e8a02c55c2d0954b031768a44fbcedb8612d668164b58117030a4",
+        "row_id": "clean_niah_multikey_3_131072_0002",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_3"
+      },
+      {
+        "prompt_sha256": "bdf938b70d8eb5a559d7c24d5df72f556c40f61aa3281f554c32e926e79dead9",
+        "row_id": "clean_niah_multikey_3_131072_0003",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_3"
+      },
+      {
+        "prompt_sha256": "fd830ab5e25843acbdfc95d533d9955f973a9b9cfc29cc7fcc482815a47af994",
+        "row_id": "clean_niah_multikey_3_131072_0004",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multikey_3"
+      },
+      {
+        "prompt_sha256": "617768ecd22db5c53f820479f70d8fbd9ed1d7de5144f7cd084418edad48e80a",
+        "row_id": "clean_niah_multivalue_131072_0000",
+        "scores": {
+          "mrpro": 0.5,
+          "tailspline": 0.5,
+          "yarn": 0.5
+        },
+        "task": "niah_multivalue"
+      },
+      {
+        "prompt_sha256": "583e4ed9564a15e833e47f4b557e8e2d7a52f088ff14b0d3e5c6bf415c8a1ddf",
+        "row_id": "clean_niah_multivalue_131072_0001",
+        "scores": {
+          "mrpro": 0.75,
+          "tailspline": 0.5,
+          "yarn": 0.75
+        },
+        "task": "niah_multivalue"
+      },
+      {
+        "prompt_sha256": "ba7d48e4fa2e1797aad3d7bf454bd45c00da3b0518f7101252a250f925f7cdd8",
+        "row_id": "clean_niah_multivalue_131072_0002",
+        "scores": {
+          "mrpro": 0.25,
+          "tailspline": 0.5,
+          "yarn": 0.25
+        },
+        "task": "niah_multivalue"
+      },
+      {
+        "prompt_sha256": "9aabfe6e4f4baab8ab852b55775cecefd3f570ec089065f0af0a2d8dbe2d6942",
+        "row_id": "clean_niah_multivalue_131072_0003",
+        "scores": {
+          "mrpro": 0.25,
+          "tailspline": 0.5,
+          "yarn": 0.0
+        },
+        "task": "niah_multivalue"
+      },
+      {
+        "prompt_sha256": "f3b97992137b3dc66f512be4dcc3266d11c6b4e9fb08e57c762c1a46f2eaaddc",
+        "row_id": "clean_niah_multivalue_131072_0004",
+        "scores": {
+          "mrpro": 0.25,
+          "tailspline": 0.75,
+          "yarn": 0.25
+        },
+        "task": "niah_multivalue"
+      },
+      {
+        "prompt_sha256": "6055961f37ee1ae2745f2c5993eb6746059464f0590572cf7bbe3bc229ebb2aa",
+        "row_id": "clean_niah_multiquery_131072_0000",
+        "scores": {
+          "mrpro": 0.25,
+          "tailspline": 0.5,
+          "yarn": 0.25
+        },
+        "task": "niah_multiquery"
+      },
+      {
+        "prompt_sha256": "99e58663d0f771cd1ea342117f6a346d7fe323e20b3d65dccf14d22ce0e66893",
+        "row_id": "clean_niah_multiquery_131072_0001",
+        "scores": {
+          "mrpro": 0.75,
+          "tailspline": 0.5,
+          "yarn": 0.75
+        },
+        "task": "niah_multiquery"
+      },
+      {
+        "prompt_sha256": "2a140afbee7f1c571fc0c4fddf3c12d7661810a6a8f659b88807e19252ca5e31",
+        "row_id": "clean_niah_multiquery_131072_0002",
+        "scores": {
+          "mrpro": 0.25,
+          "tailspline": 0.0,
+          "yarn": 0.0
+        },
+        "task": "niah_multiquery"
+      },
+      {
+        "prompt_sha256": "1394f92fc80cabc4f87489b92e96c06f53961a0fb34ade2a2c4e81407a163755",
+        "row_id": "clean_niah_multiquery_131072_0003",
+        "scores": {
+          "mrpro": 0.5,
+          "tailspline": 0.75,
+          "yarn": 0.5
+        },
+        "task": "niah_multiquery"
+      },
+      {
+        "prompt_sha256": "a30cdc743194a9677da613f8690fb6c5426f566b6bf321b62dee39a21ea82ed5",
+        "row_id": "clean_niah_multiquery_131072_0004",
+        "scores": {
+          "mrpro": 0.0,
+          "tailspline": 1.0,
+          "yarn": 0.75
+        },
+        "task": "niah_multiquery"
+      }
+    ],
+    "task_equal_macro": {
+      "mrpro": 0.41875,
+      "tailspline": 0.5875,
+      "yarn": 0.35
+    }
+  },
+  "owners": {
+    "mrpro": {
+      "generation_contract_sha256": "e01cc854fa713b86bc1d0ce9270c350cf17549428769503c64a8e387bfc98876",
+      "generation_sha256": "5d2d3ffc02eff7d5bb79c366ca69fd9d1e9b73cea569607dad72992973524178",
+      "lm_contract_sha256": "e01cc854fa713b86bc1d0ce9270c350cf17549428769503c64a8e387bfc98876",
+      "lm_rows_sha256": "5ee754a1c7232456b5f1e327482c0905f29c16679398603cbb94a2edf28aa969"
+    },
+    "tailspline": {
+      "generation_contract_sha256": "8d3a8f1bd30f027586f749add6a8958e1c6e0a1cd7af1b7ce6b1dc6c3243c26f",
+      "generation_sha256": "a0f573361081e4d8be588a2400cc5a5b7dedfc69f77fa60b995cd3d1abe18928",
+      "lm_contract_sha256": "8d3a8f1bd30f027586f749add6a8958e1c6e0a1cd7af1b7ce6b1dc6c3243c26f",
+      "lm_rows_sha256": "b40652760cfc9d2abe90bd0325ac70ff1b35d74d15441ffe46cc4584ead48fc8"
+    },
+    "yarn": {
+      "generation_contract_sha256": "4581229771752e944bd2b254ead79abfea90b6dc647b6fecb02e8050d2d67cc0",
+      "generation_sha256": "afe76855259fc991222f79e3f524af5cf3b1f5224bc4ff0aeb0ca7474d1ef6cd",
+      "lm_contract_sha256": "4581229771752e944bd2b254ead79abfea90b6dc647b6fecb02e8050d2d67cc0",
+      "lm_rows_sha256": "336903cae2b0cee6d7a530bae209efcc618ae1845ad545a5fafa9749c1f91d3f"
+    }
+  },
+  "ppl": {
+    "paired_documents": [
+      {
+        "document": 0,
+        "length": 131072,
+        "mean_nll": {
+          "mrpro": 3.3072969121858478,
+          "tailspline": 3.3544457154348493,
+          "yarn": 3.302820499171503
+        }
+      },
+      {
+        "document": 1,
+        "length": 131072,
+        "mean_nll": {
+          "mrpro": 3.507401888840832,
+          "tailspline": 3.370985936606303,
+          "yarn": 3.5173477670177817
+        }
+      },
+      {
+        "document": 2,
+        "length": 131072,
+        "mean_nll": {
+          "mrpro": 3.274589127395302,
+          "tailspline": 3.1208764272741973,
+          "yarn": 3.2823140581604093
+        }
+      },
+      {
+        "document": 3,
+        "length": 131072,
+        "mean_nll": {
+          "mrpro": 3.4373796165455133,
+          "tailspline": 3.327227003639564,
+          "yarn": 3.4418606711551547
+        }
+      },
+      {
+        "document": 4,
+        "length": 131072,
+        "mean_nll": {
+          "mrpro": 3.471102326642722,
+          "tailspline": 3.3609194655437022,
+          "yarn": 3.4740220417734236
+        }
+      }
+    ],
+    "pooled": {
+      "mrpro": {
+        "nll": 3.3995539743220435,
+        "ppl": 29.95073826942857,
+        "target_tokens": 655360
+      },
+      "tailspline": {
+        "nll": 3.306890909699723,
+        "ppl": 27.30011486523214,
+        "target_tokens": 655360
+      },
+      "yarn": {
+        "nll": 3.4036730074556543,
+        "ppl": 30.074360780560106,
+        "target_tokens": 655360
+      }
+    }
+  },
+  "status": "COMPLETE"
+}

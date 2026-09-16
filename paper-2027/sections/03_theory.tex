@@ -72,6 +72,11 @@ Appendix~\ref{sec:allocation-rank-quality}.
 These gains establish the value of controlling distance dependence through
 allocation even when normalized positional diversity decreases. The model's
 use of the supplied frequencies determines their practical value.
+Concretely, changing a frequency changes the distance response multiplying
+its content coefficients. A useful response improves target evidence relative
+to competing keys: a larger target logit alone does not determine its attention
+share. Appendix~\ref{sec:content-competition} makes this comparison exact for
+fixed pre-RoPE states, linking positional structure to content competition.
 
 \paragraph{Frequency changes and coordinate assignment.}
 Changing frequencies also differs from reassigning a fixed spectrum.

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "paired_score_rows_reaggregated": 120,
+  "document_nll_rows_reaggregated": 15,
+  "other_results": "report-backed; aggregate arithmetic checked",
+  "model_execution": false,
+  "raw_text_rescoring": false
+}

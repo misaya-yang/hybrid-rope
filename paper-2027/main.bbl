@@ -1,4 +1,4 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{35}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -268,6 +268,15 @@ Mingyu Xu, Xin Men, Bingning Wang, Qingyu Zhang, Hongyu Lin, Yaojie Lu, Xianpei
 \newblock URL
   \url{https://proceedings.neurips.cc/paper_files/paper/2024/hash/9f12dd32d552f3ad9eaa0e9dfec291be-Abstract-Conference.html}.
 
+\bibitem[Yang et~al.(2024)Yang, Yang, Zhang, Hui, Zheng, Yu, Li, Liu, Huang,
+  et~al.]{qwen2024qwen25}
+An~Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo~Zheng, Bowen Yu,
+  Chengyuan Li, Dayiheng Liu, Fei Huang, et~al.
+\newblock {Qwen2.5} technical report.
+\newblock \emph{arXiv preprint arXiv:2412.15115}, 2024.
+\newblock \doi{10.48550/arXiv.2412.15115}.
+\newblock URL \url{https://arxiv.org/abs/2412.15115}.
+
 \bibitem[Yen et~al.(2024)Yen, Gao, Hou, Ding, Fleischer, Izsak, Wasserblat, and
   Chen]{yen2024helmet}
 Howard Yen, Tianyu Gao, Minmin Hou, Ke~Ding, Daniel Fleischer, Peter Izsak,
@@ -276,6 +285,17 @@ Howard Yen, Tianyu Gao, Minmin Hou, Ke~Ding, Daniel Fleischer, Peter Izsak,
   thoroughly.
 \newblock \emph{arXiv preprint arXiv:2410.02694}, 2024.
 \newblock URL \url{https://arxiv.org/abs/2410.02694}.
+
+\bibitem[Zhang et~al.(2024)Zhang, Chen, Hu, Xu, Chen, Hao, Han, Thai, Wang,
+  Liu, and Sun]{zhang2024infinitebench}
+Xinrong Zhang, Yingfa Chen, Shengding Hu, Zihang Xu, Junhao Chen, Moo Hao,
+  Xu~Han, Zhen Thai, Shuo Wang, Zhiyuan Liu, and Maosong Sun.
+\newblock {$\infty$Bench}: Extending long context evaluation beyond 100k
+  tokens.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association
+  for Computational Linguistics}, pp.\  15262--15277, 2024.
+\newblock \doi{10.18653/v1/2024.acl-long.814}.
+\newblock URL \url{https://aclanthology.org/2024.acl-long.814/}.
 
 \bibitem[Zhang et~al.(2026)Zhang, Chen, Liu, Qin, Yuan, Xu, Yuan, Gu, and
   Yao]{zhang2026grape}

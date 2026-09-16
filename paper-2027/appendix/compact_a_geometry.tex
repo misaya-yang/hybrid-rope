@@ -287,3 +287,25 @@ $32$K & $10.077270$ & $10.214888$ & $68.2660$ & $56.5436$\\
 Continuous and integer-position Grams, FP32 rounding and causal-separation
 weights retain this rank ordering at $8/16/32$K. The table separates positional
 structure from task quality; a lower rank is not used as a selection rule.
+
+\subsection{From distance response to content competition}
+\label{sec:content-competition}
+Fix the pre-RoPE query and keys for one attention read. With content coefficients
+$C_{jk}$ and separations $d_j$, its logits can be written
+$\ell_j(\nu)=\operatorname{Re}\sum_k C_{jk}e^{i d_j\nu_k}$, absorbing the
+attention normalization into $C_{jk}$. Changing the table gives the finite shift
+$\eta_j=\operatorname{Re}\sum_k C_{jk}(e^{i d_j\nu'_k}-e^{i d_j\nu_k})$.
+For nonempty target and competing groups $G,B$ partitioning the valid keys,
+let $p_G,p_B$ be their separately normalized original softmax weights. The
+log-odds $\mathcal O=\log\sum_Ge^{\ell_j}-\log\sum_Be^{\ell_j}$ obey
+\begin{equation}
+\mathcal O'-\mathcal O
+=\log\mathbb E_{p_G}e^{\eta_j}-\log\mathbb E_{p_B}e^{\eta_j}.
+\label{eq:content-competition}
+\end{equation}
+Indeed, factor each original group partition function from its updated sum.
+If $\min_G\eta_j>\max_B\eta_j$, the target share strictly increases.
+This sufficient condition compares target evidence with its competitors,
+rather than using positional rank alone. The identity concerns one fixed-state
+read; a full forward pass also changes states in subsequent layers.
+It is an explanatory softmax identity, not a task-optimality criterion.

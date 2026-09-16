@@ -1,0 +1,16 @@
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Direct training-free comparison.} Static $s=4$ tables; NIAH is the eight-task macro score (\%, $5$/task), and PPL uses $5$ matched documents per model. T/P/Y: TailSpline/MrPro/official static YaRN. PPL corpora differ across models; compare methods within each row. Intervals and task scores are in Appendix~\ref{sec:three-method-complete}.}
+\label{tab:three-method-main}
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+Model & Length & \multicolumn{3}{c}{NIAH $\uparrow$} & \multicolumn{3}{c}{PPL $\downarrow$} \\
+ & & T & P & Y & T & P & Y \\
+\midrule
+Llama & $32$K & \textbf{85.00} & 75.00 & 75.00 & \textbf{2.7698} & 2.7958 & 2.7889 \\
+OLMo & $16$K & \textbf{61.88} & 8.12 & 7.50 & \textbf{5.6616} & 8.3218 & 7.9126 \\
+Qwen & $128$K & 72.50 & 73.12 & \textbf{76.25} & \textbf{2.3272} & 2.3293 & 2.3278 \\
+GLM & $128$K & \textbf{58.75} & 41.88 & 35.00 & \textbf{27.3001} & 29.9507 & 30.0744 \\
+\bottomrule
+\end{tabular}
+\end{table}

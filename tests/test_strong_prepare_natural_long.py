@@ -9,6 +9,7 @@ from experiments.iclr2027_strong_evidence_20260915.prepare_natural_long import (
     LONGBENCH_V2,
     PrepareConfig,
     encode_chat_prompt,
+    infinitebench_prompt,
     locate_sources,
     longbench_v2_prompt,
     main,
@@ -171,6 +172,28 @@ def test_infinitebench_can_freeze_one_task_and_enforce_minimum_length(tmp_path):
     assert manifest["tasks"] == ["longdialogue_qa_eng"]
     assert manifest["minimum_input_tokens"] == 130
     assert manifest["summary"]["by_reason"]["below_minimum_input_tokens"] == 1
+
+
+def test_infinitebench_can_freeze_a_bounded_disjoint_length_band(tmp_path):
+    task = "longbook_qa_eng"
+    source = tmp_path / "InfiniteBench" / "data" / f"{task}.jsonl"
+    rows = [infinite_row(0, 80), infinite_row(1, 100), infinite_row(2, 120)]
+    write_jsonl(source, rows)
+    tokenizer = WordTokenizer()
+    middle_length = len(encode_chat_prompt(tokenizer, infinitebench_prompt(task, rows[1])))
+    config = PrepareConfig(
+        benchmark=INFINITEBENCH, model_id="llama", data_root=tmp_path,
+        out=tmp_path / "bounded", scale=8, lengths=(256,), native_length=32,
+        rows_per_task=10, tasks=(task,),
+        minimum_input_tokens=middle_length, maximum_input_tokens=middle_length,
+    )
+    manifest = prepare_dataset(config, tokenizer, {task: source})
+    inputs = read_jsonl(config.out / "inputs.jsonl")
+    assert [row["source_index"] for row in inputs] == [1]
+    assert manifest["minimum_input_tokens"] == middle_length
+    assert manifest["maximum_input_tokens"] == middle_length
+    assert manifest["summary"]["by_reason"]["below_minimum_input_tokens"] == 1
+    assert manifest["summary"]["by_reason"]["above_maximum_input_tokens"] == 1
 
 
 def test_missing_or_ambiguous_official_data_is_explicit(tmp_path):
