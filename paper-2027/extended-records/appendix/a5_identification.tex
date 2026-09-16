@@ -1,0 +1,325 @@
+\section{Controlled Allocation Experiments}
+\label{sec:identification-details}
+
+\paragraph{What each control fixes.}
+With fast endpoint unchanged and slow endpoint divided by $s$,
+$z'_k=(Rz_k+\log s\,m_k)/(R+\log s)$.
+For a transition with $n$ gaps, let $\epsilon_q=m_q-m_{q-1}$, $m_0=0$, $m_n=1$. The controls fix different quantities:
+\begin{center}\small
+\begin{tabular}{@{}p{.26\linewidth}p{.32\linewidth}p{.34\linewidth}@{}}
+\toprule
+Held fixed & Meaning & Remaining intervention \\
+\midrule
+Actual endpoints & Sampled support $(a,R)$ & Interior allocation \\
+$\sum_q\epsilon_q=1$ & Added log span $\log s$ & Total displacement and shape \\
+$D=\log s\sum_k m_k$ & Total log displacement (dose) & Residual shape \\
+Frequency multiset & Same supplied spectrum & Coordinate assignment \\
+Gain $g$ & Rotary score amplitude & Frequency effects \\
+\bottomrule
+\end{tabular}
+\end{center}
+At fixed band and $s>1$, $\sum_{q=1}^n q\epsilon_q=n-\sum_{q=1}^{n-1}m_q$:
+fixing dose already fixes the increment centroid. It is not a second independent control.
+
+For fixed target endpoints $(a',R')$ and native log-frequencies $x_k^N$,
+\[
+D=\sum_k(x'_k-x_k^N)=Ka'+R'\sum_k z'_k-\sum_k x_k^N.
+\]
+Thus total displacement is determined by the allocation once the native table
+and target range are fixed. Matching it selects a subset of allocations for
+a finer comparison; the fixed-range intervention already identifies the effect
+of changing the complete internal configuration.
+
+\FloatBarrier
+\subsection{Exact-range control at \texorpdfstring{$151.9$M}{151.9M}}
+\label{sec:exact-range-control}
+
+\paragraph{Paired controls.} The two trained tables have identical frequency
+endpoints. Within each seed pair the arms share: model architecture ($151{,}898{,}880$
+parameters); trainable initialisation; training length $256$; token order;
+optimiser, LR schedule, global batch; within-pair micro batch and accumulation;
+training budget
+($499{,}974{,}144$ tokens, $7{,}629$ optimiser steps); the $32$ frozen
+evaluation anchors; the sampled highest frequency; the sampled lowest
+frequency; and the log-frequency span. The single free variable is the location
+of the $K{-}2 = 30$ interior frequencies.
+
+The optimiser is fused AdamW with $\beta_1{=}0.9$, $\beta_2{=}0.95$, weight
+decay $0.01$, and gradient clipping at $1.0$. Peak/minimum learning rates are
+$6\times10^{-4}/6\times10^{-5}$ with $762$ warmup steps and cosine decay.
+The global batch is $256$ sequences of length $256$ for every arm. Seed $42$
+uses micro batch $64$ with four accumulation steps; seeds $137$ and $256$ use
+micro batch $128$ with two accumulation steps. Each paired comparison therefore
+has identical execution geometry, optimiser steps, and counted-token budget;
+the aggregate uses training seed as its statistical unit under this shared
+scientific protocol.
+
+\paragraph{Model and data.} The model has $12$ layers, hidden size $768$,
+$12$ heads of dimension $64$, MLP width $3{,}072$, and vocabulary size
+$50{,}304$. Training uses the unshuffled FineWeb-Edu
+\citep{penedo2024fineweb}
+\texttt{sample/10BT/000\_00000.parquet} shard at pinned revision
+\texttt{87f09149ef4734204d70ed1d046ddc9ca3f2b8f9}; validation uses the disjoint
+\texttt{sample/10BT/004\_00000.parquet} shard. Both are tokenised with the
+GPT-NeoX-20B tokenizer \citep{black2022gptneox} at revision
+\texttt{c292233c833e336628618a88a648727eb3dff0a7}.
+
+\paragraph{Arms.} \emph{Matched geometric control (Geo):} fixed training support,
+implementing the uniform-in-log exponent grid specified in \S6.1 of
+\citet{oka2026fmrope} at training base $256$.
+\emph{Intervention:} anchored \evq{} at $\tau{=}4$. The anchored and
+deployed midpoint \evq{} tables are different support
+embeddings of the \emph{same normalised shape}: both use midpoint Cosh
+quantiles $q_k$, and the diagnostic removes only their affine endpoint degrees
+of freedom. This normalisation is what makes the exact-range control possible.
+
+Writing $\Phi_\tau$ for the inverse CDF in \eqref{eq:warp}, let
+$q_k{=}\Phi_\tau((k+\tfrac12)/K)$,
+$s_k{=}(q_k-q_0)/(q_{K-1}-q_0)$, and
+$R{=}((K-1)/K)\log B$.  The intervention uses
+\begin{equation}
+\omega_k^{\mathrm{anchor}}=\exp(-R s_k),
+\qquad
+\omega_k^{\mathrm{Geo}}=\exp\!\left(-R\frac{k}{K-1}\right).
+\label{eq:exact-range-grid}
+\end{equation}
+Hence $k{=}0,K{-}1$ match exactly and only the $K{-}2$ interior entries differ.
+
+\paragraph{Evaluation.} Two conditions. \texttt{fixed}: each checkpoint retains
+its training range. \texttt{target-matched}: the range is set to the declared
+evaluation length while preserving each arm's normalised interior spacing.
+Metric is paired final-$128$-token teacher-forced NLL over the $32$ frozen
+anchors; reported PPL is $\exp(\mathrm{mean\ NLL})$.
+The anchors are common end positions selected with Python's
+\texttt{random.Random(20260723)}: the eligible validation stream is divided
+into $32$ equal-width bins, with one end position drawn per bin and a
+$2{,}048$-token guard before the next bin. At anchor $e$, length $L$ uses
+validation tokens $[e-L,e)$ and scores the final $128$ targets $[e-128,e)$.
+Longer contexts therefore add earlier text around the same target tokens;
+the longest windows at distinct anchors are disjoint.
+
+\paragraph{Exact range transformation.}
+\[
+R(L)=\frac{K-1}{K}\log L,\qquad
+\omega_k^{\rm target}(L)=\exp[-R(L)z_k].
+\]
+Here $z_k=k/(K-1)$ for Geo and the anchored Cosh shape for its paired
+arm. The fixed condition uses $L=256$ at every evaluation length;
+the target-matched condition substitutes the declared evaluation length.
+Both conditions use amplitude one.
+
+\paragraph{Three-seed contrasts.}
+Negative values favour anchored \evq{}. The aggregation unit is the training seed;
+evaluation anchors remain paired observations within a seed.
+
+\begin{table}[ht]
+\caption{Exact-range anchored \evq{} minus the matched geometric control tail-NLL contrasts.
+Mean$\pm$SD is across three independent training seeds.}
+\label{tab:exact-range-3seed}
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}r rrr c rrr c@{}}
+\toprule
+& \multicolumn{4}{c}{Fixed training range}
+& \multicolumn{4}{c}{Target-matched range} \\
+Length & Seed 42 & Seed 137 & Seed 256 & Mean$\pm$SD
+       & Seed 42 & Seed 137 & Seed 256 & Mean$\pm$SD \\
+\midrule
+$256$  & $+0.033$ & $+0.029$ & $+0.017$ & $+0.026\pm0.008$
+       & $+0.033$ & $+0.029$ & $+0.017$ & $+0.026\pm0.008$ \\
+$512$  & $-0.478$ & $-0.271$ & $-0.094$ & $-0.281\pm0.192$
+       & $+0.061$ & $+0.053$ & $+0.067$ & $+0.060\pm0.007$ \\
+$1{,}024$ & $-0.205$ & $-0.191$ & $-0.132$ & $-0.176\pm0.039$
+       & $+0.182$ & $+0.156$ & $+0.344$ & $+0.227\pm0.102$ \\
+$2{,}048$ & $-0.113$ & $-0.181$ & $-0.143$ & $-0.146\pm0.034$
+       & $+0.279$ & $+0.399$ & $+0.701$ & $+0.460\pm0.218$ \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.96\linewidth]{fig_exact_range_control.pdf}
+  \caption{\textbf{Support and interior allocation are distinct design
+  coordinates.} Each thin line is one training seed and the heavy line is the
+  mean. At pinned training support, all three seeds favour anchored \evq{} at
+  every OOD length (a). Retargeting each arm's support reverses all three OOD
+  comparisons (b). The fixed-support panel isolates the allocation effect; the
+  tested target-matched policy reverses the ordering of the two tested policies.}
+  \label{fig:exact-range-control}
+\end{figure}
+
+Across all three seeds, fixed training range favors Cosh at every extended
+length, whereas target-matched range favors the geometric control. The paired design thus
+shows both an interior-allocation effect and a change in preferred allocation
+when the same trained weights are evaluated under a retargeted range.
+
+\FloatBarrier
+\subsection{Weights-by-table co-adaptation at \texorpdfstring{$151.9$M}{151.9M}}
+\label{sec:crossing-151m}
+
+The three-seed experiment above identifies the training-time effect of $z$.
+A separate frozen crossing asks whether the learned weights remain compatible
+with the coordinate system on which they were trained. Seeds $137$ and $256$
+provide paired Geo and anchored-\evq{} checkpoints whose training tables
+share exact endpoints. For each frozen checkpoint, we install the factor-four
+runtime table derived from either training coordinate, keep the checkpoint,
+amplitude, $32$ FineWeb-Edu validation anchors, and final-$128$-token NLL
+endpoint fixed, and evaluate at $512$ and $1{,}024$ tokens.
+
+For each training table $\Omega$, the derived table uses the following
+label-free residual construction. Set $L_0=256$, $\Delta_j=2j$ for
+$j=0,\ldots,127$, and
+$p_j=(2L_0-4j-1)/(L_0(L_0+1)/2)$, the grouped causal-separation weights.
+Let $X_k$ have columns $\sqrt{p_j}\cos(\omega_k\Delta_j)$ and
+$\sqrt{p_j}\sin(\omega_k\Delta_j)$, and let $X_{-k}$ collect all other pairs.
+Define
+\[
+U_k=\frac{\|X_k-X_{-k}X_{-k}^{\dagger}X_k\|_F^2}{\|X_k\|_F^2},
+\qquad
+\bar U_k=\frac{U_k-\min_i U_i}{\max_i U_i-\min_i U_i},
+\qquad w_k=(1-\bar U_k)^2.
+\]
+The pseudoinverse uses relative singular-value cutoff $10^{-10}$; the
+zero-span convention is $\bar U_k=0$. The frequency blend is
+$\omega'_k=\omega_k(1-3w_k/4)$, cast to FP32 with its endpoints set exactly
+to $\omega'_0=\omega_0$ and $\omega'_{K-1}=\omega_{K-1}/4$.
+Both derived tables use $g=1+0.1\log4$ and remain unchanged across the
+$512$- and $1{,}024$-token evaluations.
+
+\begin{table}[ht]
+\caption{Two-training-seed mean tail NLL at $1{,}024$ tokens for the
+$151.9$M weights-by-table crossing (lower is better). Each row freezes one
+trained weight set; each column installs one separately derived runtime table.}
+\label{tab:crossing-151m}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Frozen weights & Geo-derived table & Anchored-\evq{}-derived table \\
+\midrule
+Geo-trained & \textbf{3.426} & 5.776 \\
+Anchored-\evq{}-trained & 4.455 & \textbf{3.479} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With
+$I=[L(W_F,T_C)-L(W_F,T_F)]-[L(W_C,T_C)-L(W_C,T_F)]$,
+the interaction is $3.400/3.251$ NLL for seeds $137/256$ at $1{,}024$
+tokens and $2.663/2.564$ at $512$. Training seed is the replication unit;
+the $32$ anchors are paired observations within a seed. Both seeds exhibit
+the same preference for the runtime table derived from their training allocation.
+
+\FloatBarrier
+\subsection{Exact-range factorial at \texorpdfstring{$50.9$M}{50.9M}}
+\label{sec:exact-range-factorial}
+
+\paragraph{Design.} The $50.9$M decoder has six layers, width $512$, MLP width
+$2{,}048$, and vocabulary size $50{,}304$. The structural grid is RoPE base
+$500$K/$1$M $\times$ training length $256/1{,}024$ $\times$ $4/8/16$ heads
+($d_{\rm head}{=}128/64/32$), giving $12$ configurations. Seeds are
+$42/137/256$. Every arm trains for $8{,}388{,}608$ tokens in $128$ optimizer
+steps ($65{,}536$ tokens per step) on the same deterministically repeated
+WikiText-2 raw stream with the same $1\%$ supervised passkey mix; execution is
+float32 on Apple M4 Max MPS. The schedule arms, including the $1.25\times$
+multiplier, were specified before any result was inspected: Geo, anchored
+\evq{} at $0.75\times$, $1.00\times$ (the formula point), $1.25\times$, and a
+deformation-matched exponential. Main factorial $180/180$ completed and the
+boundary-$\tau$ follow-up $12/12$ completed, covering the pre-specified matrix.
+
+The exponential control uses
+$z_\gamma(t)=(e^{\gamma t}-1)/(e^\gamma-1)$ on $t\in[0,1]$. Its $\gamma$ is
+chosen without task results so that the RMS node displacement from the uniform
+grid matches the formula-Cosh displacement, while the sampled endpoints and
+log-span remain identical across arms.
+
+\paragraph{Evaluation data and windows.}
+Training and evaluation use the separate \texttt{train} and \texttt{validation} splits of cached \texttt{wikitext-2-raw-v1}, tokenized by GPT-NeoX-20B. Empty text rows are removed, remaining rows are stripped and concatenated without extra special tokens, and each split is repeated/truncated independently: $8{,}388{,}608$ training tokens and $1{,}048{,}576$ evaluation tokens. The data revision of that legacy Arrow cache is not recorded. For each arm, NumPy RandomState($9999$) samples four distinct starts at each of $L,2L,4L,8L$ in that order. Full next-token cross-entropy scores $4(rL-1)$ targets at length $rL$, averaging the four chunk losses before exponentiation. All arms share these offsets. The split is distinct from training, but repeated validation text and potentially overlapping windows are not independent documents; uncertainty is computed over the structural configurations as specified below.
+
+\paragraph{Metric.} Weighted OOD NLL over $2L/4L/8L$,
+\[
+\bar N_{\mathrm{OOD}}
+= \frac{\sum_{r\in\{2,4,8\}}\log_2(r+1)\,N_{rL}}
+       {\sum_{r\in\{2,4,8\}}\log_2(r+1)},
+\]
+paired within structural configuration and seed, averaged within seed, then
+equally weighted over the $12$ configurations. The statistical unit is the
+configuration. Equivalent-PPL figures quoted anywhere are
+$\exp(\mathrm{mean\ NLL})$.
+
+\input{tables/table_m4}
+
+\paragraph{Absolute values.} Mean weighted OOD NLL (equivalent PPL): Geo
+$6.211973$ ($498.68$); \evq{} $0.75\times$ $6.202858$ ($494.16$); \evq{}
+$1.00\times$ $6.202094$ ($493.78$); \evq{} $1.25\times$ $6.199873$ ($492.69$);
+matched exponential $6.201354$ ($493.42$).
+
+\paragraph{Boundary-$\tau$ arms.} At formula $\tau{=}1$ the $1.5\times$ arm is
+better; at formula $\tau{=}8$ the $0.75\times$ arm is. The improving direction
+points toward the intermediate strengths at both tested extremes.
+
+The factorial varies architecture, base, and training length on a repeated
+WikiText-2 stream \citep{merity2017wikitext}. Its configuration-level contrasts
+complement the longer FineWeb-Edu training comparison in
+\S\ref{sec:exact-range-control}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_m4_tradeoffs.pdf}
+\caption{\textbf{Allocation changes training-window and extended-length loss jointly.} Each point is one of the twelve prespecified M4 configurations, averaging three paired seeds; all four nonuniform main arms are shown. Both axes are differences from the matching geometric arm, so negative values improve loss. OOD weights are proportional to $\log_2(r+1)$ for $r\in\{2,4,8\}$, as in the original protocol. The horizontal coordinate is reconstructed from recorded four-decimal PPL; the vertical coordinate uses the recorded full-precision weighted NLL. The configurations form a prespecified design grid.}
+\label{fig:m4-operating-points}
+\end{figure}
+
+The joint view shows simultaneous training-window and OOD improvements at multiple operating points. The measured trade-offs vary across allocation shapes, strengths and model configurations.
+
+\FloatBarrier
+\subsection{Finite deployment interventions}
+\label{sec:four-facts-mechanisms}
+\label{sec:binary-elimination}
+\label{sec:mrrope-pro-satisficing}
+
+The permutation and finite-$C2$ results in Appendix~\ref{sec:non-identifiability-proof} concern fixed-weight interventions. The $C2$ approximation has its largest coordinate residual at slot $19$. With zero-based indexing and native $K=64$ geometric frequencies, that slot makes $13.25$ turns in OLMo's $4096$-token window ($b=500{,}000$) and $86.30$ turns in Qwen's $32768$-token window ($b=1{,}000{,}000$). Neither is the native one-turn boundary. A transition in an installed profile and the one-turn boundary of a native table are distinct quantities.
+
+Three-band profiles retain a fast band, fully scale a slow band, and distribute the shift across an intermediate band. The cutoffs specify a construction; performance is measured with the checkpoint and gain held explicit. On the OLMo six-task confirmation panel, BM improves $16$K macro from $2.78\%$ to $51.32\%$ relative to MrRoPE-Pro. On the separate $631$-prompt natural-QA long-input stratum it improves task-equal F1 from $21.62\%$ to $25.44\%$. Detailed model contrasts and scoring protocols are in Appendix~\ref{sec:adjustment-details}; the exploratory twelve-profile panel is documented in Appendix~\ref{sec:profile-diagnostic-audit}.
+
+\FloatBarrier
+\section{Learned-frequency comparator}
+\label{sec:pe-dominant}
+
+\input{tables/table_pe_dominant}
+
+The $32$-parameter arm learns one inverse frequency per rotary pair, shared
+across layers and heads. This is the learned-table parameterization also
+studied by \citet{karypis2026lerope}. Its positional-parameter learning-rate
+sweep uses $10\times$ and $100\times$ the base rate; the stronger $100\times$
+setting gives $455.3$ PPL. The learned table and the fixed Cosh allocation
+both improve on Geo in this protocol.
+
+These inverse frequencies are learned without fixing the sampled endpoints, so this comparison varies realized support as well as interior placement. This parameterization comparison uses $15$M training tokens.
+
+\subsection{Historical native-grid shape control}
+\label{sec:native-grid-control}
+A separate three-seed study compares the native standard-grid RoPE reference with a span-matched native-grid Cosh table. It uses $151{,}898{,}880$ parameters, base $500{,}000$, head dimension $64$, training length $128$ and $14{,}974{,}976$ tokens. The same study compares additional analytic and kernel-derived shapes at matched span and RMS deformation. Selection uses $16$ anchors and evaluation $32$ disjoint test anchors. This is a short-training shape study, separate from the $500$M-token fixed-support replication.
+\begin{table}[ht]
+\centering\small
+\caption{Historical native-grid three-seed mean tail NLL. The complete length response retains the training window.}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Table & $128$ & $256$ & $512$ & $1$K & $2$K & $4$K & $8$K \\
+\midrule
+Native Std-RoPE & 5.5046 & 5.5026 & 5.6563 & 5.8456 & 6.0530 & 6.2566 & 6.3928 \\
+Native Cosh & 5.4645 & 5.4473 & 5.5434 & 5.6966 & 5.8457 & 6.0664 & 6.2935 \\
+\bottomrule
+\end{tabular}
+\end{table}
+The recorded seed-level $95\%$ intervals for Cosh-minus-Std-RoPE NLL at $512/1$K/$2$K/$4$K/$8$K are $[-0.200,-0.026]$, $[-0.183,-0.115]$, $[-0.241,-0.174]$, $[-0.260,-0.121]$, and $[-0.141,-0.058]$. All three seeds favor Cosh at each of those lengths. This supports the conclusion that the historical extrapolation improvement is not confined to a midpoint geometric comparator. The same report also includes other useful nonuniform shapes. The source archive preserves the reported values and historical source identity in \path{figs/allocation_value_inputs.json}; the original training streams are separate.
+\FloatBarrier
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_evidence_overview.pdf}
+\caption{\textbf{Allocation gains depend on the support policy.} (a,b) Cosh-minus-Geo tail NLL for the same three paired $151.9$M models: retargeted support ($b=L_{\rm eval}$) versus retained training support ($b=256$). Thin lines show seeds; thick lines their means; $1\times=256$ tokens. Geo is the matched geometric control. (c) Frozen matched-support tasks: OLMo's nine held-out and Qwen's four development tasks, $20$ inputs/task, with shared endpoints, amplitude, weights and inputs within each model.}
+\label{fig:spectral-budget-overview}
+\end{figure}

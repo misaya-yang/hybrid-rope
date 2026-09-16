@@ -1,0 +1,129 @@
+\section{Fixed-Table Quality over a Deployment Interval}
+\label{sec:interval-design}
+
+\subsection{The deployment objective and its design variables}
+
+Let $L$ be a checkpoint's native window and $H=SL$, $S>1$, its declared deployment horizon. For a task-valid minimum length $\ell_{\min}>0$, the objective concerns $[\ell_{\min},H]$. The same table and amplitude are used at every length; neither changes with the current prompt length or during decoding. For a fixed checkpoint, write
+\begin{equation}
+\omega'_k=\omega^N_k S^{-m_k},\qquad m_k=c b_k,\qquad
+0\le b_0\le\cdots\le b_{K-1}=1,\quad 0\le c\le1.
+\label{eq:interval-variables}
+\end{equation}
+Within this monotone family, active increments of $b$ locate the transition, their normalized distribution specifies its shape, and $c$ controls the terminal compression. This is a search parameterization; it does not assert that an optimal unrestricted table must have one contiguous band. Changing $c$ scales both the transition and the slow plateau. Comparisons of depth therefore measure whole-profile depth effects, rather than an isolated low-frequency intervention. Allowing the terminal depth to vary also changes sampled support, unlike the identification intervention in \S\ref{sec:exp-identify}.
+
+For higher-is-better task quality $Q_\theta(r)$ at length $rL$, one useful interval summary is
+\begin{equation}
+A_{[1,S]}(\theta)=\frac1{\log S}\int_1^S Q_\theta(r)\,d\log r.
+\label{eq:interval-auc}
+\end{equation}
+This extended-window summary accompanies evaluations below $L$, native and endpoint values, the worst measured length, and task-family changes. Different tasks can have different valid short-input ranges. NLL and task accuracy retain their own units and aggregates. On a finite length grid, we use trapezoidal integration in log length. The measured minimum is not a certificate of the continuous interval minimum.
+
+Baseline curves use a fixed table under the same evaluation contract. A pointwise envelope of several baselines is an oracle reference for regret, not a deployable method that may switch tables. For RULER we score the complete generated response with the official task scorer; normalized full-answer exactness, EOS, cap exhaustion, and natural-QA response F1 are separate measurements. This distinction matters when a model produces the requested answer and then continues generating.
+
+\subsection{A conditional alternative to full terminal compression}
+
+A slow plateau with frequency multiplier $a=S^{-c}$ maps separation $rL$ to native effective separation $arL$. Full compression $a=1/S$ exactly matches native phase exposure at the endpoint. It need not minimize distortion over the intervening lengths.
+
+\begin{samepage}
+\begin{proposition}[Endpoint and interval optima for a scalar slow-block objective]
+\label{prop:interval-depth}
+Let $S>1$, $a\in[1/S,1]$, and let $F$ be continuously differentiable on $[1/S-1,S-1]$. Define
+\begin{equation}
+J(a)=\frac1{\log S}\int_1^S F(ar-1)\,\frac{dr}{r}.
+\end{equation}
+Then
+\begin{equation}
+J'(a)=\frac{F(aS-1)-F(a-1)}{a\log S}.
+\label{eq:interval-derivative}
+\end{equation}
+If $F(z)=f(|z|)$ with $f$ strictly increasing, the unique minimizer is
+\begin{equation}
+a_* = \frac{2}{S+1},\qquad c_* = \log_S\frac{S+1}{2}.
+\label{eq:interval-depth-optimum}
+\end{equation}
+The endpoint objective $F(aS-1)$ is instead uniquely minimized at $a=1/S$.
+\end{proposition}
+\end{samepage}
+
+\begin{proof}
+Differentiating under the integral and substituting $z=ar-1$ gives
+$J'(a)=(\log S)^{-1}\int_1^S F'(ar-1)\,dr$, hence \eqref{eq:interval-derivative}.
+On the feasible interval, $a-1\le0\le aS-1$. Strict increase of $f$ makes the derivative negative when $aS-1<1-a$ and positive when the inequality reverses. Equality gives $a_*$ and establishes uniqueness. At the endpoint, zero error is attained uniquely at $a=1/S$.
+\end{proof}
+
+This balances pull-in at the native length against overshoot at the horizon in a declared scalar objective. It does not identify the true task loss of a checkpoint. For $S=2,4,8$, the conditional depths are $0.584963$, $0.660964$, and $0.723308$, respectively. These values define concrete experimental controls against $c=1$; they are not tuned task results.
+
+\paragraph{Native and endpoint emphasis change the answer.}
+For any probability measure over $r\in[1,S]$, a quadratic objective with native and endpoint weights $\lambda,\eta\ge0$ has
+\begin{align}
+J_{\lambda,\eta}(a)&=\mathbb E[(ar-1)^2]+\lambda(a-1)^2+\eta(aS-1)^2,\\
+a_*&=\frac{\mathbb E[r]+\lambda+\eta S}{\mathbb E[r^2]+\lambda+\eta S^2}.
+\label{eq:weighted-depth}
+\end{align}
+The second derivative is strictly positive, and $a_*\in[1/S,1]$. Under log-uniform measure and $\lambda=\eta=0$, this reduces to \eqref{eq:interval-depth-optimum}. Native emphasis moves the optimum toward $1$; endpoint emphasis moves it toward $1/S$. Thus the chosen operating distribution and preservation priorities belong in the objective, rather than being determined by $S$ alone. This scalar analysis concerns exposure relative to $L$; real short-input task quality still requires direct measurement.
+
+An asymmetric example is $F_\kappa(z)=\kappa z^2$ for $z\ge0$ and $z^2$ otherwise, with $\kappa>0$. Equation~\eqref{eq:interval-derivative} yields
+\[
+a_* = \frac{1+\sqrt\kappa}{1+S\sqrt\kappa}.
+\]
+A larger overshoot penalty moves the optimum toward full compression. The formula does not specify a checkpoint's $\kappa$; that quantity requires an independently justified measurement or loss model.
+
+\paragraph{A circular counterexample.}
+Even symmetry alone is insufficient. Set $F(z)=1-\cos(2\pi z)$ and $S=4$. At $a=2/5$, the two endpoint errors are $\pm3/5$, so $J'(a)=0$, but
+\[
+J''(2/5)=\frac{25\pi\sin(6\pi/5)}{\log4}<0.
+\]
+The balanced point is a strict local maximum. Consequently, neither periodicity nor successful endpoint phase matching implies the monotone distortion assumed by Proposition~\ref{prop:interval-depth}. The proposition supplies an interpretable comparison, while finite-phase and task measurements decide whether it helps a real model.
+
+\subsection{Recorded development evidence for interval evaluation}
+\label{sec:interval-observations}
+
+Table~\ref{tab:interval-development} records two separate development panels. The Llama-$3$-$8$B-Instruct $S=8$ comparison holds the C42V24 transition shape and gain fixed while remapping its band. The tasks are single-key (single-1), multi-key (multikey-1), and multi-value retrieval, with four prompts per task and length. Inference uses BF16 and greedy decoding, with chunked prefill and a full KV cache for long inputs. Both profiles reach $81.25\%$ at $64$K, but their $32$K scores differ by $12.5$ points. Endpoint evaluation alone misses this difference. Moving the band also changes total displacement; this is a band-remapped profile comparison, not a fixed-displacement intervention.
+
+The OLMo-$2$-$1.485$B-Instruct $S=4$ mini panel comprises six tasks, three lengths, and $18$ prompts per cell: $324$ responses per table. The tasks are single-key retrieval (single-2), multi-key retrieval (multikey-2), multi-query retrieval, variable tracking, frequent words, and QA-1. Cell means are averaged equally across tasks before computing AUC. The remapped C42V24 profile improves endpoint quality relative to BM, with a native cost. The AUC difference is $+0.92$ points, with task-stratified paired-row bootstrap interval $[-2.48,4.36]$ ($20{,}000$ resamples). Task-AUC differences include $-8.61$ points on variable tracking and $-1.39$ on QA. This is a measured trade-off, not a confirmed improvement over BM across the interval.
+
+\begin{table}[t]
+\centering\small
+\caption{\textbf{A fixed table's endpoint and interval quality can differ.} Official task scores in percent; each row uses one table at every listed length. Llama is a small development screen ($12$ prompts/length); OLMo is a development mini panel ($108$ prompts/length). Within each panel the inputs, scorer, and decoder are shared. All remapped profiles use the registered C42V24 transition shape. AUC is integrated over the listed log-length grid, using unrounded cell means in the original summaries. These panels are distinct from the earlier $350$-row and natural-QA studies.}
+\label{tab:interval-development}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Llama, fixed $S=8$ & $8$K & $16$K & $32$K & $48$K & $64$K & AUC\\
+\midrule
+C42V24 $[14,32]$ &95.83&97.92&100.00&95.83&81.25&96.62\\
+C42V24 $[16,34]$ &97.92&97.92&87.50&95.83&81.25&93.67\\
+\midrule
+OLMo, fixed $S=4$ & $4$K & $8$K & $16$K & & & AUC\\
+\midrule
+BM &81.67&71.31&48.50&&&68.20\\
+MrRoPE-Pro &42.28&25.63&8.18&&&25.43\\
+C42V24 $[14,31]$ &79.65&71.84&53.15&&&69.12\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These comparisons show that intermediate lengths and task families reveal effects hidden by endpoint scores. They motivate evaluating each installed profile over its intended deployment interval.
+
+\subsection{Frequency interactions in attention}
+\label{sec:interval-replay}
+
+For fixed pre-rotation Q/K coefficients, a rotary score can be written
+\[
+\ell(\Delta;m)=\operatorname{Re}\sum_k C_k e^{i\Delta\omega_k^N S^{-m_k}},\qquad
+\frac{\partial \ell}{\partial m_k}=\log S\,\Delta\omega'_k\operatorname{Im}(C_k e^{i\Delta\omega'_k}).
+\]
+The sign depends on content and separation. For a full row of visible keys, let $J$ be the logit Jacobian with respect to $m$, including the actual attention scale and rotary amplitude. At the reference distribution $p$, the local attention-KL curvature is
+\[
+H=J^\top\bigl(\operatorname{diag}(p)-pp^\top\bigr)J.
+\]
+It couples frequencies through key competition even though each score is a sum over pairs. If $m=T\epsilon$ is the cumulative-increment parameterization, the corresponding curvature is $T^\top H T$. Diagonal per-slot scores do not retain these interactions.
+
+This calculation identifies a structural source of interaction: softmax normalization couples frequency changes through all competing keys. It explains why per-frequency geometric changes can combine differently in attention. Here the content coefficients remain symbolic; the Cosh and BM constructions use declared geometry and design parameters to form their tables. The fixed-support and crossing experiments test the resulting model behavior under their respective protocols.
+
+\subsection{Earlier phase geometry and profile diagnostics}
+\label{sec:three-band-chain}
+
+For $s>1$, $\omega'_j=\omega_j s^{-m_j}$ maps separation $\Delta$ to native effective separation $\Delta s^{-m_j}$. At $\Delta=s\Ltr$, containment within the unwrapped training interval requires $m_j\ge1$. This is a per-pair geometric condition: distinct $m_j$ generally map to distinct native separations. The phase derivative at $m_j=0$ is $-\Delta\omega_j\ln s$, while the finite drift at the native table is zero.
+
+For twelve OLMo-$1$B profiles on $350$ shared $16$K RULER inputs, a count of slots whose test-distance turns lie in $[0.25,16]$ separates three response groups. Appendix~\ref{sec:profile-diagnostic-audit} defines this exploratory count and its reconstruction provenance. It leaves within-group rankings unresolved; it is not used to certify interval quality.
+\FloatBarrier

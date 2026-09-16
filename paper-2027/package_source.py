@@ -107,6 +107,9 @@ def source_files() -> set[Path]:
                  "figs/recovered_asset_inputs.json", "figs/verify_routing_schedule.py",
                  "figs/routing_protocol_receipts.json", "figs/exponent_revision_source_receipt.json", "figs/llama_temporal_summary.json", "figs/recorded_runtime_identities.json"]:
         add(PAPER / name)
+    for path in (PAPER / "extended-records").rglob("*"):
+        if path.is_file():
+            files.add(path.resolve())
     for pattern in ["*.sty", "*.bst"]:
         for path in PAPER.glob(pattern):
             add(path)

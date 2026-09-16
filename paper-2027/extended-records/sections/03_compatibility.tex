@@ -1,0 +1,45 @@
+\section{Frequency Spectra and Learned Assignments Are Distinct}
+\label{sec:compatibility}
+
+A positional basis enters attention through learned Q/K projections. We test three separate changes: retargeting its range, swapping tables across trained weights, and reassigning the same frequencies to different slots. Each intervention addresses a different explanation of model behavior.
+
+\subsection{Changing the evaluation range changes the preference}
+\label{sec:range-interaction}
+
+Return to the paired models of \S\ref{sec:exp-identify}, without further training. The retained-range condition uses base $b=256$ at every evaluation length. The retargeted condition replaces it with $b=L_{\rm eval}$ for both allocations, keeping each trained weight set and normalized shape $z$ fixed (the exact rule is in Appendix~\ref{sec:exact-range-control}). Cosh-minus-geometric NLL becomes $+0.060/+0.227/+0.460$ at $512/1024/2048$ tokens: all three seeds now favor the geometric allocation (Fig.~\ref{fig:allocation-compatibility}a). The same trained pair produces opposite orderings under the two range policies. Allocation and range are separately controllable, but their effects interact in the learned model.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_allocation_compatibility.pdf}
+\caption{\textbf{Three interventions distinguish the supplied spectrum from learned compatibility.} (a) Range retargeting reverses the ordering of the same trained allocations; thin lines are three seeds and thick lines their means. (b) Crossed factor-four tables at $1$K: rows are trained weights, columns runtime tables, and cells are mean tail NLL over two seeds and $32$ anchors/seed. (c,d) Permuting interior frequency assignments preserves the final frequency multiset, endpoints and gain, but changes OLMo PG-19 tail NLL and Qwen $64$K task macro ($4$ tasks, $20$ rows/task). Each metric has its own axis. Joint Q/K compensation is the algebraic identity in~\eqref{eq:slot-permutation}, not a plotted recovery experiment.}
+\label{fig:allocation-compatibility}\label{fig:weight-table-crossing}
+\end{figure}
+
+\subsection{Crossing weights with their frequency tables}
+\label{sec:coadaptation-finding}
+
+To isolate learned compatibility, hold each weight set fixed and cross the runtime tables. In a $50$M pair, Geo and Cosh achieve matched PPLs of $7.14$ and $7.16$. Installing the Cosh table into Geo-trained weights raises PPL to $76.20$; the reverse swap gives $23.05$. A $151.9$M crossing repeats the preference across two training seeds using factor-four tables derived from each training allocation (Fig.~\ref{fig:allocation-compatibility}b). The two seed-specific interaction contrasts are $3.400$ and $3.251$ tail NLL. These crossed comparisons expose the learned association: both allocations support competent models, and each model learns to use its own basis (full crossings in Fig.~\ref{fig:weight-table-crossing}).
+
+\subsection{Frequency identity and slot identity}
+\label{sec:non-identifiability}
+
+The distinction becomes sharper when the frequency multiset itself is preserved. For a block permutation $P$ corresponding to a frequency permutation $\pi$,
+\begin{equation}
+\mathcal R_{\pi\Omega}(\Delta)=P\mathcal R_\Omega(\Delta)P^\top,
+\qquad (Pq)^\top\mathcal R_{\pi\Omega}(\Delta)(Pk)=q^\top\mathcal R_\Omega(\Delta)k.
+\label{eq:slot-permutation}
+\end{equation}
+Thus permuting Q/K blocks together with frequencies exactly preserves the attention kernel. With weights fixed, however, permuting only internal frequency assignments raises OLMo tail NLL from $3.10423$ to $6.86493$ and lowers Qwen $64$K task macro from $0.7000$ to $0.0000$. The model uses a specific association between coordinate subspaces and frequencies (Fig.~\ref{fig:allocation-compatibility}c,d).
+
+For genuinely different frequency multisets, position-independent invertible Q/K maps cannot equate the rotation kernels over an interval containing zero (Theorem~\ref{thm:obstruction}), or at integer distances $0,1$ when frequencies lie in $(0,\pi)$ (Corollary~\ref{cor:discrete-kernel}). Allocation changes the supplied basis; assignment changes its association with learned coordinates. The crossed-table controls show that an allocation learned during training need not be a drop-in replacement for a frozen checkpoint. These controls complement the constructive learning and deployment results in the main text.
+\FloatBarrier
+
+\subsection{Archived slot-intervention protocol}
+\label{sec:slot-protocol}
+These historical comparisons permute the final frequencies of a static log-interpolated table, leaving slots $0$ and $63$ fixed. The OLMo reference uses $L_0=4096$, $b=500{,}000$, $K=64$, $s=4$ and gain $1+0.074\ln4$; its table is the frozen log-law profile, not TailSpline. Its reported $1\times$ PG-19 reference contains $20$ documents and scores tail NLL. Qwen-$2.5$-$1.5$B recomputes that profile for $L_0=32768$, $b=10^6$, retains $K=64$, $s=4$ and the same gain, and evaluates $20$ rows per task at $64$K for single-key retrieval, multikey-2, multikey-3 and variable tracking. The source report identifies the reference tables by SHA-256 prefixes \texttt{56ddfae2800d} (OLMo) and \texttt{ed8abbb27a1a} (Qwen).
+
+These interventions change the frequency-to-coordinate assignment while
+preserving the supplied spectrum. The trained weights are fixed. The
+complementary crossed-table experiment in Appendix~\ref{sec:crossing-151m}
+changes the supplied spectrum and measures its compatibility with each
+trained checkpoint.

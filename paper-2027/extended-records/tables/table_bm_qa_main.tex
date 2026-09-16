@@ -1,0 +1,18 @@
+\begin{table}[!ht]
+\centering\small
+\caption{\textbf{A concrete redistribution improves natural QA.} Frozen OLMo, static $s=4$, whole-response token F1 (\%). Both methods share the declared band, gain and inputs. The $631$ inputs exceed the $4$K native window; task means are equally weighted. Differences use unrounded scores. The paired, task-stratified $95\%$ interval for the macro difference is $[1.32,6.29]$ points.}
+\label{tab:bm-qa-main}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Task & $n$ & MrRoPE-Pro & BM & Difference\\
+\midrule
+HotpotQA & 166 & 28.63 & 33.54 & +4.91 \\
+2WikiMQA & 173 & 21.55 & 25.43 & +3.88 \\
+Qasper & 119 & 13.94 & 19.06 & +5.11 \\
+NarrativeQA & 61 & 9.51 & 11.48 & +1.96 \\
+MultiFieldQA & 112 & 34.49 & 37.72 & +3.23 \\
+\midrule
+Task-equal mean & 631 & 21.62 & 25.44 & +3.82 \\
+\bottomrule
+\end{tabular}
+\end{table}

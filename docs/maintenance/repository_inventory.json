@@ -8574,6 +8574,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/appendix/compact_guide.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/build.mk",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8925,6 +8930,291 @@
     },
     {
       "path": "paper-2027/exponent-allocation-source.zip",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a0_guide.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a10_tailspline.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a11_allocation_response.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a12_completed_evidence.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a1_proofs.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a2_experiment_details.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a3_supporting_results.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a5_identification.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a6_mature_scale.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a7_exponent_adjustments.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a8_profile_diagnostics.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/appendix/a9_recovered_design_evidence.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_8b_length_curve.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_allocation_compatibility.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_allocation_geometry.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_allocation_learning.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_bm_exponent_profiles.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_construction_contrast.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_evidence_overview.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_exact_range_control.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_frequency_geometry.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_m4_tradeoffs.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_method_overview.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_method_overview.svg",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_olmo_scale_crossover.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_spectral_budget_scaling.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_tailspline_classic.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_tailspline_details.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/figs/fig_tailspline_main.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/sections/03_compatibility.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/sections/05_threeband.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table6_750m_continue_supporting.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_allocation_protocols.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_bm_qa_all.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_bm_qa_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_bm_tasks.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_clean16k_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_clean_c_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_clean_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_clean_length_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_coadapt.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_coordinate_confirmation.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_evq_ramp.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_index_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_learning_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_longbench_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_m4.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_native_clean_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_natural_transfer_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_ncp_tasks_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_olmo_clean_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_olmo_qa_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_pe_dominant.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_ruler.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_tailspline_natural_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/extended-records/tables/table_tailspline_natural_tasks.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -9597,6 +9887,11 @@
       "path": "paper-2027/research/UNUSED_ASSET_INVENTORY_20260914.md",
       "area": "paper-2027",
       "category": "document"
+    },
+    {
+      "path": "paper-2027/research/appendix_restructure_20260916/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
     },
     {
       "path": "paper-2027/research/appendix_restructure_20260916/previous_69page_source.zip",
