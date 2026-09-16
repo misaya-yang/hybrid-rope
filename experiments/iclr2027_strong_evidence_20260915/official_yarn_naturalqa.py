@@ -292,7 +292,7 @@ def validate_panel(condition: Condition) -> tuple[list[dict], dict]:
         })
         if task_counts != expected:
             raise ValueError(f"Natural-QA task-count drift: {task_counts}")
-    elif task_counts != Counter({"longbook_qa_eng": 35}):
+    elif task_counts != Counter({"longbook_qa_eng": condition.expected_rows}):
         raise ValueError(f"InfiniteBench En.QA task-count drift: {task_counts}")
     return rows, manifest
 

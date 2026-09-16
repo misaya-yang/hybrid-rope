@@ -10,9 +10,9 @@ TailSpline、NCP、Cosh分别承担冻结扩展、原生增强和学习/外推�
 [十篇审稿经验](../reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)是编辑依据，不是自动执行指令。
 
 已入稿的Llama/OLMo、等位移、NCP和学习证据见[论文索引](../../../paper-2027/index.md)。
-新完成的Qwen S4自然QA、S8单针及Llama S16结果见
+新完成的Qwen/GLM S4三臂Full-13、自然QA、Qwen S8单针及Llama S16结果见
 [本批结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)，尚待统一入稿。
-GLM和YaRN的易变状态见[带时间戳执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
+执行完成状态见[带时间戳执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
 
 ## 唯一读取顺序
 
@@ -67,8 +67,7 @@ GLM和直接基线报告，准备NCP独立确认及必要的YaRN单臂，机制�
 
 - Llama NIAH Full20正式报告已完成，见[720条每臂配对报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)；后续执行以服务器任务分层为准。
 - Llama S16 128K gate、自然长文压力测试、Qwen 256K健康检查与Qwen S4/128K En.QA均已完成，见[结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)。
-- Qwen官方静态YaRN生成已完成（40条/5篇LM），配对结论另读报告；Llama clean32K YaRN仍是单独准备项。
-- GLM下载已完成、S4队列已启动；本轮快照无完成报告。详情及时间戳见执行owner。
+- Qwen与GLM的128K三臂Full-13和长书QA已完成；Llama/OLMo大样本YaRN仍是单独的32GB任务。
 - Native-Z5的V1、consensus和all-50 refit均已结束；现有结果不支持继续复用同一确认集调表。
 - fixed-u、proxy选表、曲线系数/band/gain追调及旧队列均已退出当前路线。
 
