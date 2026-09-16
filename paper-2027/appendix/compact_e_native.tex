@@ -1,0 +1,75 @@
+\section{Native-Window Allocation: Construction and Complete Results}
+\label{sec:compact-native}
+\subsection{Reference objective and numerical construction}
+\label{sec:ncp-construction-new}
+NCP improves task performance within the native context by reallocating the
+interior frequencies while fixing both sampled endpoints. Let
+$\phi_k=(L-1)\omega_k$ and $\omega'_k=\omega_ke^{-u_k}$.
+The reference problem is a binary target--distractor comparison with unit
+amplitudes, aligned target phase and uniformly random distractor phase:
+\begin{align}
+r(\theta)&=\frac{1}{2\pi}\int_0^{2\pi}
+ \log\!\left(1+\exp(\cos\psi-\cos\theta)\right)d\psi,\\
+\mathcal R(\phi)&=2\int_0^1(1-t)r(\phi t)dt.
+\label{eq:ncp-reference-risk}
+\end{align}
+The triangular distance weight is the distribution of absolute separation
+between two uniform positions on a continuous unit interval. The aligned
+reference comparison supplies a public design objective. The Transformer task
+scores below evaluate the resulting fixed construction.
+
+We minimize the objective in Eq.~\eqref{eq:ncp-main}, with fixed
+$\lambda=9/4$ (quadratic coefficient $\lambda/2=9/8$), subject to
+\begin{equation}
+u_0=u_{K-1}=0,\quad 0\le u_k\le 2/9,\qquad
+\log\frac{\omega'_k}{\omega'_{k+1}}
+ \ge\frac12\log\frac{\omega_k}{\omega_{k+1}}.
+\label{eq:ncp-constraints}
+\end{equation}
+The endpoint constraints keep support fixed; the gap condition preserves
+ordering and at least half each original adjacent log gap.
+Writing $r(\theta)=a_0+\sum_{j\ge1}a_j\cos(j\theta)$ gives
+\begin{equation}
+\mathcal R(\phi)=a_0+\sum_{j\ge1}a_j
+ \operatorname{sinc}^2(j\phi/2),\qquad
+\operatorname{sinc}(x)=\frac{\sin x}{x},\quad\operatorname{sinc}(0)=1.
+\label{eq:ncp-fourier}
+\end{equation}
+This follows by integrating each cosine against $2(1-t)$.
+With $q(\phi)=d\mathcal R/d\log\phi$, an interior scalar solution satisfies
+$\lambda u=q(\phi e^{-u})$. We compute $r$ on a $1024$-point angular grid,
+retain $32$ Fourier modes and solve the scalar stationary equations by
+bisection, using zero shift when the native gradient is nonpositive. The two
+endpoint shifts are reset to zero. On the deployed OLMo grid all resulting
+log-gap constraints are inactive, so the scalar solutions are feasible jointly.
+
+The deployed grid has $64$ pairs, base $500000$ and native length $4096$.
+It changes $46$ FP32 entries, reaches maximum relative slowdown $16.7164\%$
+and retains a minimum log-gap ratio of $0.7681$. The maximum scalar stationarity
+residual is below $10^{-11}$. The mean reference risk decreases from
+$0.614082$ to $0.609641$; the penalized objective is $0.611853$.
+These are reference-model quantities, separate from model task scores.
+The table and unit gain are fixed across layers and inputs; construction reads
+no checkpoint weights, activations or evaluation outputs. The source archive
+includes the original constructor and an exact FP32 table reproduction check.
+
+\subsection{Native-context task results and companion controls}
+\label{sec:ncp-results-new}
+The OLMo native $4$K development panel contains $60$ source-order inputs per
+RULER task, $780$ total, without content padding. It is the same frozen panel
+used for the companion allocation studies. NCP and original RoPE share the
+checkpoint, unit gain, inputs, BF16 precision, greedy decoder, batch $1$ and
+$4096$-token prefill chunks. Their scores are $70.7821/69.3739\%$;
+the paired task-equal difference is $+1.4081$ points, interval
+$[0.2009,2.5833]$. NCP has higher per-input scores on $62$ inputs,
+original RoPE on $31$, with $687$ ties. Every task remains in the aggregate.
+\input{tables/table_ncp_tasks_new}
+Companion half-turn contraction and its reverse score $69.5085/67.8974\%$.
+Their exact mean contrast is $+1.6111$ points with paired interval
+$[0.2713,2.9722]$; contraction relative to original RoPE is $+0.1346$
+points with interval $[-0.6603,0.9445]$. A separate historical
+checkpoint-calibrated V1 table scores $72.3846\%$, a $+3.0107$-point
+contrast with interval $[1.2949,4.7052]$. V1's calibration distinguishes it
+from NCP's public-parameter construction. Point differences here are computed
+from arm means; the companion report's bootstrap intervals are retained.
+\FloatBarrier

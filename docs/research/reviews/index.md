@@ -24,3 +24,7 @@
 - [Pro仓库审计处理](PRO_AUDIT_DISPOSITION_20260914.md) — 当前适用性、同总log位移对照及step42归因纠正；不替代执行合同。
 
 - [Pro十问回答评议](TEN_QUESTIONS_ASSESSMENT_20260914.md) — 数学复核、各题论文价值及修改优先级；候选机制不自动进入队列。
+
+- [Qwen allocation response: task decomposition and matched-scale geometry](QWEN_ALLOCATION_RESPONSE_ANALYSIS_20260916.md). Read-only result analysis, with bounded follow-up comparisons.
+
+- [非Llama原生长窗口模型选择：GLM-4-9B-0414](NATIVE_LONG_CONTEXT_MODEL_SELECTION_20260916.md) — 官方原生32K/base10000、partial RoPE接入点及256K显存估计。

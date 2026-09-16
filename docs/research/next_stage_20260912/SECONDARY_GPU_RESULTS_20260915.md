@@ -123,3 +123,15 @@ PPL越低越好：TailSpline在8K/16K略差，在32K略好；AUC差仅`+0.000060
 远端报告：
 `/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_mrrope_niah_heatmap/reports/proofpile32_ppl_curve.json`
 （SHA256 `243f95827abbd7341ac1f7a7266f218779b7529a624797e9ab71a8bc3907bbff`）。
+
+## 4. Qwen极限面板与解释：2026-09-16
+
+最新Qwen-3B S2/64K NIAH-8为T/P86.25/80.625%，S4/128K为72.50/73.125%；
+Qwen-1.5B S4/128K为81.25/76.875%。每任务5条、每臂40条；三项配对区间均跨零。
+这与本页旧Core-6面板属于不同协议。
+
+[逐任务与同倍率几何分析](../reviews/QWEN_ALLOCATION_RESPONSE_ANALYSIS_20260916.md)
+核对最新报告、实际表、配对行和输出：3B128K当前小面板的宏平均接近来自样本内满分/零分与局部抵消；
+每任务5条尚不足以定性Qwen总体，优先完整clean扩样再研究机制；
+同S4下与Llama的几何改动幅度相同量级。固定模型对中频配置的使用差异是待辨别机制，
+不能仅由base、head数或两个不同seed的小面板推出因果解释。

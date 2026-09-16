@@ -1,0 +1,289 @@
+\section{Positional Geometry and Learned Use}
+\label{sec:compact-geometry}\label{sec:geometry-proofs}
+\subsection{Cross-Gram formula, invariance and effective rank}
+\paragraph{Closed-form cross-Gram.} For $\Delta\sim\mathrm{Unif}[0,L]$ and
+$x_\omega(\Delta)=[\cos(\omega\Delta)\ \ \sin(\omega\Delta)]$, write
+$d=(\omega{-}\nu)L$, $s=(\omega{+}\nu)L$, $a(t)=\sin t/t$ and
+$b_\star(t)=(1{-}\cos t)/t$. Expanding the products of sinusoids and integrating
+termwise gives
+\begin{equation}
+H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]=\frac12
+\begin{bmatrix}
+a(d)+a(s) & b_\star(s)-b_\star(d)\\
+b_\star(s)+b_\star(d) & a(d)-a(s)
+\end{bmatrix},
+\label{eq:cross-gram}
+\end{equation}
+and $S_\omega=H_{\omega\omega}$. Since $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$
+is the whitened cross-Gram of two two-dimensional subspaces, its singular values
+are the canonical correlations, and $c_{\omega\nu}=\frac12\|Q_{\omega\nu}\|_F^2$
+is invariant under $x_\omega\mapsto x_\omega O$ for any invertible $O$ (in
+particular under rotation of the phase inside a pair), because $S_\omega$
+transforms congruently and the whitening cancels $O$.
+
+\paragraph{Basis invariance.}
+The cancellation can be stated exactly. Under independent invertible basis
+changes $x_\omega\mapsto x_\omega A_\omega$ and
+$x_\nu\mapsto x_\nu A_\nu$, let
+$U_j=S_j^{1/2}A_j(A_j^\top S_j A_j)^{-1/2}$ for $j\in\{\omega,\nu\}$. Then
+$U_j^\top U_j=I$, and the transformed whitened cross-Gram is
+$\widetilde Q_{\omega\nu}=U_\omega^\top Q_{\omega\nu}U_\nu$. Left and right
+orthogonal factors preserve the two canonical correlations and therefore
+$c_{\omega\nu}$. Thus $c_{\omega\nu}$ is an intrinsic measure of overlap
+between the two positional subspaces.
+
+\begin{theorem}[Spectral budget identity]
+\label{thm:budget}
+For the block-whitened Gram matrix $\Gamma$ with diagonal blocks $I_2$,
+$\operatorname{tr}\Gamma=2K$ and
+$\operatorname{tr}(\Gamma^2)=2K[1+(K-1)\bar c]$. Hence its
+R\'enyi-$2$ effective rank is given by \eqref{eq:budget-identity}.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:budget}]
+$\Gamma$ is the block matrix with blocks $\Gamma_{ij}=Q_{\omega_i\omega_j}$ and
+$\Gamma_{ii}=I_2$. Hence $\operatorname{tr}\Gamma=\sum_{i=1}^K\operatorname{tr}I_2=2K$.
+For the second moment,
+$\operatorname{tr}(\Gamma^2)=\sum_{i,j}\operatorname{tr}(\Gamma_{ij}\Gamma_{ji})
+=\sum_i\operatorname{tr}(I_2)+\sum_{i\neq j}\|Q_{\omega_i\omega_j}\|_F^2
+=2K+2K(K-1)\bar c$, using $\Gamma_{ji}=\Gamma_{ij}^\top$ and the definition
+$\bar c=\frac{1}{K(K-1)}\sum_{i\neq j}c_{\omega_i\omega_j}$ with
+$\|Q_{ij}\|_F^2=2c_{ij}$. Dividing gives \eqref{eq:budget-identity}.
+\end{proof}
+
+The identity determines R\'enyi-$2$ effective rank exactly from the mean pairwise
+redundancy. Shannon effective rank and log-determinant retain higher-order
+multi-subspace dependence on the full spectrum.
+
+\begin{proof}[Proof of Proposition~\ref{prop:collapse}]
+Put $t=\Delta/L$, $x=\omega L$, and use $\theta=x^2$ as the local parameter.
+The rescaled pair has the analytic basis
+\begin{align}
+u_1(\theta,t)&=\cos(\sqrt\theta\,t)
+ =1-\tfrac12\theta t^2+O(\theta^2),\\
+u_2(\theta,t)&=\frac{\sin(\sqrt\theta\,t)}{\sqrt\theta}
+ =t-\tfrac16\theta t^3+O(\theta^2).
+\label{eq:slow-basis-expansion}
+\end{align}
+Thus $V_\omega\to V_0=\operatorname{span}\{1,\Delta\}$.  The fourth-order
+coefficient follows by retaining the part of the first perturbation transverse
+to $V_0$. Under the
+uniform measure on $t\in[0,1]$,
+\begin{align}
+\Pi_0^\perp t^2&=p_2(t):=t^2-t+\tfrac16,\\
+\Pi_0^\perp t^3&=p_3(t):=t^3-\tfrac9{10}t+\tfrac15,
+\label{eq:slow-residual-polynomials}
+\end{align}
+where $\Pi_0^\perp$ is the $L_2[0,1]$ projection off
+$\operatorname{span}\{1,t\}$.  In the base $[1,t]$, its Gram and the residual
+perturbation Gram are
+\begin{equation}
+G_0=
+\begin{bmatrix}1&1/2\\[1pt]1/2&1/3\end{bmatrix},\qquad
+M=
+\begin{bmatrix}
+\langle-p_2/2,-p_2/2\rangle&\langle-p_2/2,-p_3/6\rangle\\
+\langle-p_3/6,-p_2/2\rangle&\langle-p_3/6,-p_3/6\rangle
+\end{bmatrix}
+=\begin{bmatrix}1/720&1/1440\\[1pt]1/1440&1/2800\end{bmatrix}.
+\label{eq:slow-residual-gram}
+\end{equation}
+The squared chordal distance between the two nearby planes is therefore
+\begin{equation}
+2-\lVert Q_{x,y}\rVert_F^2
+=(x^2-y^2)^2\operatorname{tr}(G_0^{-1}M)+O(\epsilon^6)
+=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6),
+\label{eq:slow-collapse-expanded}
+\end{equation}
+with $\epsilon=\max\{|x|,|y|\}\to0$.  The exact coefficient is reproduced
+with rational polynomial inner products by
+\texttt{scripts/analysis/full\_rope\_collision\_audit.py}; at
+$x{=}0.05,y{=}0.10$ its analytic Gram gives exact/leading ratio $1.00058$.
+
+For the softmax metric with fixed $p$,
+$F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$, so the constant
+direction is annihilated before whitening.  Writing
+$\overline h=h-\mathbb E_p h$, the same expansion gives
+\begin{equation}
+\frac{\overline{\sin(\omega\Delta)}}{\omega}
+ \longrightarrow \Delta-\mathbb E_p\Delta,
+\qquad
+-\frac{2\overline{\cos(\omega\Delta)}}{\omega^2}
+ \longrightarrow \Delta^2-\mathbb E_p\Delta^2.
+\end{equation}
+These functions span the centred limit whenever $p$ has nondegenerate support
+on at least three distances. The separation weights $p$ therefore determine
+which polynomial directions survive centering.
+\end{proof}
+
+\subsection{Finite-window overlap in the identification experiment}
+\label{sec:finite-window-rank}
+
+The slow-limit proposition has a finite-window counterpart that can be calculated directly on the identification grid. Set $b=256$, $K=32$, $L=256$, and retain the $n$ slowest frequencies of $\omega_j=b^{-j/K}$. Their dimensionless frequencies are $\omega_jL=1.1892,1.4142,1.6818,2,\ldots$ in slow-to-fast order. The smallest is already greater than one, so we evaluate the full cross-Gram in~\eqref{eq:cross-gram} without a small-phase approximation.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Finite-window positional concentration on the paired-training grid.} The separation measure is uniform on $[0,L]$. The nominal coordinate count is $2n$; $r_2$ is the effective rank of the block-whitened Gram.}
+\label{tab:finite-window-rank}
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+Slowest pairs $n$ & Largest $\omega L$ & Coordinates & $r_2$ \\
+\midrule
+2 & 1.41 & 4 & 2.00030 \\
+4 & 2.00 & 8 & 2.00361 \\
+6 & 2.83 & 12 & 2.02263 \\
+8 & 4.00 & 16 & 2.11474 \\
+12 & 8.00 & 24 & 2.89256 \\
+16 & 16.00 & 32 & 4.43339 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For $n=8$, the largest two eigenvalues are $7.9681$ and $7.5752$, accounting
+for $97.1\%$ of the trace. This is the finite-window geometry in
+Fig.~\ref{fig:geometry-main}; the full-pair calculation uses no small-phase approximation.
+\subsection{Two static ordering counterexamples}
+\label{sec:static-counterexamples}
+
+Two explicit examples show how phase coupling and interval length change
+the ordering of frequency tables.
+
+\paragraph{Cosine-only collision can choose the lower-rank table.}
+Take $K=4$, $L=8\pi$, and the two descending frequency tables
+\[
+\Omega_A=(1,5/8,3/8,1/4),\qquad
+\Omega_B=(1,6.01/8,4.01/8,1/4).
+\]
+They share both endpoints. Define $C_{\cos}$ as the mean squared normalized
+cosine--cosine overlap over distinct pairs. For $\Omega_A$, every cosine is
+an integer harmonic on $[0,L]$, so $C_{\cos}(A)=0$ exactly. Mixed harmonic
+parities nevertheless produce nonzero sine--cosine cross terms. For
+$\Omega_B$, the small perturbation of an even-harmonic table gives
+\begin{align}
+C_{\cos}(A)&=0 < 1.38725\times10^{-5}=C_{\cos}(B),\\
+r_2(A)&=6.29478 < 7.99971=r_2(B).
+\label{eq:cosine-order-counterexample}
+\end{align}
+Thus a strict cosine-only preference can have the opposite full-subspace
+rank ordering. Both values follow directly from Eq.~\eqref{eq:cross-gram}.
+
+\paragraph{Full-subspace collision can reverse across lengths.}
+Now use $K=4$, $L=2\pi$, and the fixed tables
+\[
+\Omega_A=(1,0.99,0.02,0.01),\qquad
+\Omega_B=(1,2/3,1/3,0.01).
+\]
+Again the endpoints agree. Writing $C_M$ for mean phase-invariant collision
+under the uniform measure on $[0,M]$, Eq.~\eqref{eq:cross-gram} gives
+\begin{align}
+C_L(A)&=0.538996 < 0.631721=C_L(B),\\
+C_{2L}(A)&=0.384445 > 0.204995=C_{2L}(B),\\
+C_{4L}(A)&=0.345188 > 0.033506=C_{4L}(B).
+\label{eq:length-order-counterexample}
+\end{align}
+The close pairs in $A$ retain high overlap as the interval grows, while the
+more evenly spread frequencies in $B$ become easier to distinguish. The
+example makes the interval dependence of the geometry explicit.
+
+All frequency entries and measures are specified above. The accompanying
+\path{figs/verify_explicit_geometry.py} evaluates the closed-form Gram and
+checks it against independent $128$-point Gauss--Legendre quadrature;
+the largest discrepancy in the displayed metrics is below $4\times10^{-14}$.
+These finite basis examples complement the trained allocation comparisons and
+the weight--table crossings.
+
+\FloatBarrier
+\subsection{Integer-position kernel equivalence and its boundaries}
+\label{sec:discrete-kernel-proof}
+\begin{corollary}[Integer-position equivalence]\label{cor:discrete-kernel}
+Let $\Omega,\Lambda$ contain $K$ frequencies in $(0,\pi)$ and
+$\mathcal R_\Omega(d)=\operatorname{diag}_k R(\omega_kd)$.
+Position-independent invertible $A,B$ satisfy
+$A^\top\mathcal R_\Omega(d)B=\mathcal R_\Lambda(d)$ for $d=0,1$
+if and only if the frequency multisets agree.
+\end{corollary}
+
+Corollary~\ref{cor:discrete-kernel} applies to the full bilinear kernel on the
+$2K$-dimensional rotary space. Equality for all $q,k$ is matrix equality.
+At $d=0$, $A^\top B=I$; at $d=1$ the two rotation matrices are similar.
+Their complex eigenvalues are $e^{i\omega_k},e^{-i\omega_k}$ including
+multiplicities. On $(0,\pi)$ the positive-angle eigenvalue identifies each
+frequency uniquely, proving necessity even with repeated frequencies.
+For sufficiency choose a block permutation $P$ with
+$\mathcal R_\Lambda(d)=P\mathcal R_\Omega(d)P^\top$, and set
+$A=B=P^\top$. This holds for every integer $d$, including negative distances.
+
+
+The interval $(0,\pi)$ selects unique positive rotation angles: outside it,
+$\omega$ and $\omega+2\pi$ are indistinguishable at integer positions.
+The statement concerns equality of the full bilinear kernel for every content
+pair. These conditions are verified by the bundled discrete-kernel checker.
+\subsection{Positional overlap preserves content coordinates}
+\label{sec:content-coordinate-retention}
+For a block $\mathcal B$ of $r$ rotary pairs, write
+$\mathcal R_{\mathcal B}(d)=\operatorname{diag}_{k\in\mathcal B}R(\omega_kd)$.
+Each block is orthogonal, so $\mathcal R_{\mathcal B}(d)$ has rank $2r$ at
+every distance. This is the rank of an operator on content coordinates;
+the positional Gram instead measures shared dependence on distance.
+
+\begin{proposition}[Content matching in a slow block]
+\label{prop:slow-content-matching}
+Let $H>0$ and $\eta=H\max_{k\in\mathcal B}|\omega_k|$. For $|d|\le H$,
+\begin{equation}
+\left|q_{\mathcal B}^{\top}\mathcal R_{\mathcal B}(d)k_{\mathcal B}
+-q_{\mathcal B}^{\top}k_{\mathcal B}\right|
+\le\eta\|q_{\mathcal B}\|_2\|k_{\mathcal B}\|_2.
+\label{eq:slow-content-bound}
+\end{equation}
+For $2r$ content symbols represented by distinct coordinate unit vectors,
+let the query and correct key share a vector and all incorrect keys use
+other vectors. Their unscaled score margin is at least $1-2\eta$ across
+arbitrary key distances in $[-H,H]$.
+\end{proposition}
+
+\begin{proof}
+For each pair,
+$\|R(\omega d)-I\|_2=2|\sin(\omega d/2)|\le|\omega d|$.
+The block-diagonal norm is the maximum pair norm. The bilinear norm bound
+gives Eq.~\eqref{eq:slow-content-bound}. Unrotated matching scores are one
+for the correct symbol and zero for an incorrect symbol. Each score
+changes by at most $\eta$, giving the margin bound. In particular,
+$\eta<1/2$ preserves the correct ranking.
+\end{proof}
+
+As distinct frequencies approach zero, their positional subspaces approach
+$\operatorname{span}\{1,d\}$ while the content construction remains
+distinct in all $2r$ coordinates. This provides a concrete distinction
+between repeated positional dependence and repeated content information,
+consistent with prior analyses of frequency use \citep{barbero2025round}.
+The construction concerns specified content vectors and the small-phase
+regime; the next subsection evaluates the complete finite frequency tables.
+
+\subsection{Task gains with lower full-pair effective rank}
+\label{sec:allocation-rank-quality}
+We use the Llama mathematical native grid
+$\omega_k^N=500000^{-k/64}$, native length $8192$, $s=4$ and band $[18,35]$.
+The TailSpline and MrPro formulas determine all frequencies without model
+observations. Effective rank uses the full-pair Gram from
+Eq.~\eqref{eq:cross-gram}, with uniform separations on $[0,H]$.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{A successful allocation can have lower positional effective rank.}
+Ranks describe the full mathematical frequency tables; task scores reuse
+the clean paired evaluations in Table~\ref{tab:clean-length-main}.
+The $16$K and $32$K task panels contain $650$ and $2600$ paired prompts.}
+\label{tab:allocation-rank-quality}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Window & $r_2$ TailSpline & $r_2$ MrPro & RULER TailSpline (\%) & RULER MrPro (\%)\\
+\midrule
+$16$K & $8.283391$ & $8.739887$ & $86.0949$ & $82.7051$\\
+$32$K & $10.077270$ & $10.214888$ & $68.2660$ & $56.5436$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Continuous and integer-position Grams, FP32 rounding and causal-separation
+weights retain this rank ordering at $8/16/32$K. The table separates positional
+structure from task quality; a lower rank is not used as a selection rule.

@@ -1,0 +1,106 @@
+\section{Learning and Extrapolation with Cosh}
+\label{sec:compact-learning}
+\subsection{Multi-head Latent Attention}
+\label{sec:mla-results}
+
+We report allocation at one fixed rotary budget in a 432M-parameter transformer following
+the MLA architectural pattern \citep{deepseekv2}, with 24 layers, width 1024,
+16 heads, and per-head width 64.
+Its decoupled rotary
+subspace has $d_{\mathrm{rope}}{=}32$ ($K{=}16$ frequencies); the remaining
+$d_{\mathrm{nope}}{=}32$ dimensions are non-rotary, and the shared KV latent
+rank is 256. The model trains from scratch on 500M FineWeb-Edu tokens
+\citep{penedo2024fineweb} at
+$L_{\mathrm{train}}{=}8192$ and base $500\mathrm{K}$ over seeds 42, 43, and
+88. \evq{} uses the pre-specified $\tau=1.414$ setting.
+At $16$K, Geo PPL is
+$141.1/132.5/142.8$ for seeds $42/43/88$, whereas \evq{} is
+$93.7/92.7/100.3$; all three paired directions agree.
+
+\paragraph{Evaluation corpus and aggregation.}
+The evaluator reads the shared cached FineWeb-Edu stream \texttt{val\_fineweb-edu\_5000000.pt}, nominally five million GPT-2 tokens. For each method and seed it resets NumPy RandomState to $9999$, iterates through lengths $8192$, $16384$, $20480$, $24576$, $28672$, and $32768$, and draws eight distinct start offsets per length. Every chunk scores all $L-1$ next-token targets, with full-sequence cross-entropy and no tail restriction. Its per-model PPL is the exponential of the mean chunk NLL; the table then takes the arithmetic mean and sample standard deviation of the three per-seed PPLs. Thus the requested targets per model are $8(L-1)$ at each length; starts are sampled without replacement, but overlapping windows are possible. The same offsets are reused across methods.
+
+All methods use the same fixed FineWeb-Edu evaluation cache and paired chunk offsets. The archived result JSON retains every seed and length, allowing the reported means, seed variation and scaling comparisons to be recomputed.
+
+For the supporting overlay, let $\lambda_k=2\pi/\omega_k$ and
+$t_k=\operatorname{clip}((\lambda_k-L_{\mathrm{train}})/(31L_{\mathrm{train}}),0,1)$.
+The MLA wavelength-blend operator sets
+$\omega'_k=\omega_k/[1+t_k(s-1)]$: it preserves wavelengths below the training
+length, applies the full factor $s$ above $32L_{\mathrm{train}}$, and interpolates
+between them.
+
+\begin{table}[ht]
+\caption{MLA validation (432M, $d_{\mathrm{rope}}{=}32$, 3-seed mean
+$\pm$ std). Rows marked ``MLA wavelength-blend'' use this run's wavelength-blend
+operator defined above.}
+\label{tab:mla}
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+Method & PPL@8K & PPL@16K & PPL@24K & PPL@32K \\
+\midrule
+Geo & $35.4{\pm}0.9$ & $138.8{\pm}5.5$ & $241.5{\pm}2.6$ & $323.7{\pm}5.2$ \\
+Geo + MLA wavelength-blend ($s=4$) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\pm}6.9$ & $278.5{\pm}6.3$ \\
+\textbf{\evq{}} & $35.8{\pm}0.8$ & $\mathbf{95.6{\pm}4.1}$ & $204.9{\pm}14.7$ & $291.6{\pm}20.5$ \\
+\textbf{\evq{} + MLA wavelength-blend ($s=4$)} & $35.8{\pm}0.8$ & $\mathbf{71.1{\pm}4.1}$ & $\mathbf{153.2{\pm}12.5}$ & $\mathbf{236.6{\pm}15.9}$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\evq{} reduces 16K PPL by $31.1\%$ ($138.8\to95.6$), while 8K PPL changes by
+$+0.9\%$. All three training seeds favour \evq{} at 16K. The \evq{} plus MLA wavelength-blend
+row has the lowest mean PPL at 16K and beyond, showing that the allocation
+also composes with this wavelength-dependent extension.
+
+\FloatBarrier
+
+
+
+\subsection{Shared-start continuation and matched adaptation}
+\label{sec:learning-summary}\label{sec:larger-scale-supporting}\label{sec:experiment-details}
+The $750$M pair continues a common $2$K geometric checkpoint for $500$M
+tokens at $4$K, with $3\%$ passkey and $10\%$ downstream mix (seed $42$).
+Cosh uses $\tau=1.5$, $K=32$, inclusive nodes $u_k=k/(K-1)$ and
+$\omega_k=\exp[-(K-1)\log(500000)Q_{1.5}(u_k)/K]$, retaining Geo endpoints.
+Both arms update all weights. Greedy answer-token exact match generates the
+expected passkey tokens and closing marker; it does not require a following EOS.
+\input{tables/table6_750m_continue_supporting}
+
+For MLA and $750$M continuation, AdamW uses $(0.9,0.95)$, $\epsilon=10^{-8}$,
+weight decay $0.1$, clipping $1$, no dropout, peak LR $2\times10^{-4}$,
+$2\%$ linear warmup and cosine decay to $0.1$ of peak. Batch sizes are $6$
+(MLA) and $14$ (continuation: microbatch $7$, accumulation $2$). Text packing
+is contiguous without cross-document masking. MLA uses unanchored midpoint
+Cosh; the continuation fixes sampled endpoints.
+
+\paragraph{Matched OLMo routing continuation.}\label{sec:olmo2-1b}
+OLMo-2-0425-1B-Instruct uses fixed standard-grid Cosh with $\tau=2$,
+$b=500000$ and rank-$64$, alpha-$128$ Q/K/V/O LoRA. Native/Cosh share
+checkpoint, training rows, budgets and evaluation inputs. Starting from each
+arm's $300$-step routing parent, a matched $100$-step query-gap continuation
+uses peak LR $5\times10^{-5}$ and $20$ warmup steps; a $32$-step
+answer-plus-EOS stage uses $10^{-5}$ and $4$ warmup steps. Both use seed
+$20260728$, AdamW $(0.9,0.95)$, zero weight decay, clipping $1$, BF16,
+batch $8$ (micro $4$, accumulation $2$), and cosine LR decay.
+
+Each cycle has two counterfactual-routing updates and one natural-text update.
+The $1024$ training pairs and $128$ calibration pairs use different seeds and
+query templates. Examples contain eight key--value blocks; changing the
+queried value changes the target answer. Loss combines answer CE and a
+counterfactual margin, adding immediate EOS CE of weight one in the final
+stage. Physical training inputs stay at most $4096$ tokens; explicit position
+IDs expose target-range phases. Query offsets follow
+$16\lfloor(211i\bmod12300)/16\rfloor$; final source-to-answer gaps are
+$4608+(211i\bmod10753)$. The bundled schedule verifier reproduces these
+policies and the complete source receipts.
+
+Evaluation uses real contiguous numeric-NIAH prompts, $100$ per length,
+and requires the complete expected answer followed by terminal EOS.
+Native/Cosh scores are $95/100$ versus $100/100$ at $4$K,
+$18/100$ versus $98/100$ at $8$K, and $0/100$ versus $60/100$ at $16$K.
+All outputs terminate with EOS. The Cosh long-gap subsets score $48/50$
+at $8$K and $31/66$ at $16$K. This is matched learned adaptation, with
+explicit long-phase exposure, distinct from the frozen allocations.

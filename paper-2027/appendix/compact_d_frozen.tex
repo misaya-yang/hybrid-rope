@@ -1,0 +1,152 @@
+\section{Frozen Evaluation: Protocols and Complete Results}
+\label{sec:compact-frozen}\label{sec:completed-evidence}
+\subsection{Shared models, tables, scoring and uncertainty}
+Llama-$3$-$8$B-Instruct uses native length $8192$, $K=64$, base $500000$
+and band $[18,35]$; OLMo-2-0425-1B-Instruct uses $4096$, $K=64$,
+base $500000$ and band $[14,32]$. T/P share frozen weights, sampled endpoints,
+outer bands and gain $1+0.1\ln4$, while using their respective static $s=4$
+interior tables. Tables are installed in FP32 after loading BF16 weights and
+are fixed across layers and input lengths. Evaluation uses Flash-SDPA and
+greedy decoding. No table is fitted using model outputs.
+
+Clean RULER pins revision \texttt{c3f5e3b4f87f}, selects source records in
+order, and uses neither content padding nor depth selection. Both arms use
+identical prompt tokens, references and generation caps: $128$ for NIAH,
+$30$ for tracking, $120$ for common words, $50$ for frequent words and $32$
+for QA. The endpoint is the official within-task score averaged equally
+across the $13$ tasks. All outputs, including empty and capped answers,
+remain in the score. Intervals use $20{,}000$ paired resamples within task
+and length, with tasks fixed; source-record intervals for RULER and
+source-context clustered intervals for natural QA are separate estimands.
+
+\subsection{Clean results across length and model}
+\label{sec:clean-confirmation}\label{sec:clean16k-confirmation}
+\label{sec:clean-native-new}\label{sec:olmo-clean-new}
+Llama uses $650/650/2600$ pairs at $8/16/32$K; OLMo uses $2600$ at $16$K.
+All clean runs use batch $1$ and $8192$-token prefill chunks. Llama $32$K
+inputs span $28270$--$32606$ tokens; the fixed QA-1 supplement completes
+$200$ source-order records without output-based selection. OLMo's clean
+panel uses generation seed $20261101$ and QA source offset $5600$.
+\input{tables/table_compact_clean}
+
+Llama $32$K T--P is $+11.72$ points, interval $[10.32,13.11]$.
+Family differences (retrieval/tracking/aggregation/QA) are
+$+10.86/+24.00/+11.76/+9.00$ points, with intervals
+$[9.11,12.61]/[20.60,27.40]/[8.80,14.77]/[4.25,13.75]$.
+Leaving out any one task keeps the macro difference between $9.53$ and
+$13.07$ points. At $16$K, the Full-13 difference is $+3.39$
+$[1.53,5.34]$; family differences are $+4.50/-2.40/-2.77/+8.00$.
+The latter QA interval is $[1,15]$ and retrieval interval $[2.50,6.69]$.
+
+OLMo clean $16$K T--P is $+41.42$ points, interval $[39.99,42.81]$.
+Its family differences are $+60.19/+9.70/+16.13/+7.50$ points, with
+intervals $[58.30,62.03]/[7.00,12.60]/[13.86,18.42]/[2.75,12.25]$.
+All thirteen task means increase. T/P end with EOS on $1251/1392$
+inputs and hit the cap on $1349/1208$, with no empty outputs.
+
+At native $8$K, original RoPE uses the native table and unit gain.
+T/P/original RoPE score $85.1564/82.3923/90.0256\%$.
+T--P is $+2.7641$ $[1.2923,4.2538]$ points; T--original RoPE is
+$-4.8692$ $[-6.5718,-3.1462]$, a $5.41\%$ relative reduction.
+The difference concentrates in FWE: T/P have $45/48$ empty responses,
+all on that task, while original RoPE has none. Across all $650$ inputs,
+T/P/original RoPE EOS counts are $648/644/645$ and cap counts $2/6/5$.
+The other twelve tasks have a descriptive T--original RoPE mean of $+1.225$
+points; the primary Full-13 endpoint retains FWE.
+
+\subsection{Clean equal-displacement comparison}
+\label{sec:clean-shape-new}
+C is the analytic profile in Appendix~\ref{sec:tailspline-dose-control}.
+T/C share outer bands, endpoints, gain and total log-frequency displacement;
+the deployed FP32 $\sum m_k$ discrepancy is below $10^{-8}$. Completed
+clean T/P generations are reused; C adds the same $650/2600$ inputs at
+$16/32$K with batch $1$ and $8192$-token prefill chunks.
+T/C score $86.0949/86.3462\%$ at $16$K, difference $-0.2513$
+$[-1.4051,0.8949]$ points; at $32$K they score $68.2660/66.1699\%$,
+difference $+2.0962$ $[1.1134,3.0769]$ points.
+\input{tables/table_clean_c_new}
+At $32$K, T and C both have EOS/cap rates $98.96/1.04\%$.
+Their full-pair ranks are $10.0773/10.0926$, compared with P's $10.2149$;
+the task contrast therefore also distinguishes positional rank from learned use.
+
+\subsection{Natural QA and LongBench v2}
+\label{sec:tailspline-natural-qa}\label{sec:natural-transfer-new}
+The frozen Natural-QA pool has $631$ questions from $524$ source-context
+clusters across HotpotQA, 2WikiMQA, Qasper, NarrativeQA and MultiFieldQA-en
+\citep{bai2024longbench}. Membership was defined using the OLMo $>4096$-token
+threshold and retained under Llama retokenization. Actual inputs are
+$4110$--$16319$ for OLMo and $3694$--$16304$ for Llama. Llama has $316$
+questions within its native window and $315$ above it. Generation caps are
+$32$ for HotpotQA/2Wiki, $128$ for Qasper/NarrativeQA and $64$ for MultiFieldQA.
+Batch is $1$; Llama uses $8192$-token chunked prefill and OLMo direct prefill.
+
+The primary score averages whole-response normalized token F1 within each
+task, then equally across tasks. The paired bootstrap resamples source-context
+clusters within task, dividing sampled score sums by sampled question counts;
+$20{,}000$ draws use seed $20260914$ for Llama and $20260930$ for OLMo.
+There are no shared clusters across tasks. Both arms retain every answer.
+\input{tables/table_tailspline_natural_tasks}
+\input{tables/table_olmo_qa_new}
+
+Llama's overall difference is $+0.1957$ $[-1.5311,1.8864]$ points;
+its within/above-native contrasts are $+0.6998$ $[-1.2478,2.8073]$
+and $-0.9383$ $[-4.1494,1.9539]$. Document-equal sensitivity gives
+T/P $40.8141/40.8375\%$. OLMo's overall difference is $+3.2994$
+$[0.3359,6.4028]$ points, with every task mean positive; question-equal
+sensitivity gives $+3.9194$ $[1.1977,6.6794]$. Its $4$K--$8$K and
+$8$K--$16$K strata contain $316/315$ questions and give $+6.3989$
+$[1.8747,10.8706]$ and $+1.5095$ $[-4.9432,7.6943]$ points.
+OLMo T/P EOS/cap/empty counts are $567/581$, $64/50$, $0/0$.
+
+LongBench v2 uses $117$ complete Llama inputs between $8$K and $32$K,
+with its direct-answer multiple-choice adapter, batch $1$, matched caps,
+static $s=4$ tables and $8192$-token prefill chunks. Correct parsed options
+score one; incorrect/unparseable answers score zero. T/P answer $41/36$
+correctly, giving $35.0427/30.7692\%$ and difference $+4.2735$
+$[-3.3906,11.9658]$ points under source-context cluster resampling.
+T alone succeeds on $13$ inputs, P on $8$, with $96$ ties.
+\input{tables/table_longbench_new}
+The $28$ inputs at $8$K--$16$K give T/P $39.29/35.71\%$; the $89$
+above $16$K give $33.71/29.21\%$. Overall EOS/cap/empty counts are
+$88/91$, $29/26$, $0/0$. Accuracy and token F1 remain separate metrics.
+
+\subsection{Classic length curves and supplementary controls}
+\label{sec:current-controls}
+Classic Llama and OLMo use $10$ RULER inputs/task at $L,2L,4L$
+($390$/arm), with output-independent depth selection and prefix padding.
+Single-evidence prompts have two examples at each $10/30/50/70/90\%$ depth;
+multi-evidence prompts alternate dispersed and middle-cluster targets.
+A repeated irrelevant-record prefix fills the input to cap minus $128$ tokens.
+The shared task-specific decoding budgets above are retained. Preparation
+seeds are $20260924/20260925$ (Llama/OLMo), with fixed length/task offsets;
+the bundled entrypoints specify the deterministic construction.
+
+PPL uses $32$ Proof-Pile arXiv test documents and $14$ PG-19 test-book prefixes
+\citep{azerbayev2022proofpile,rae2019compressive}. At each length it is the
+exponential of summed whole-prefix loss divided by scored tokens.
+Normalized trapezoidal log-length AUC has weights $(1/4,1/2,1/4)$;
+PPL AUC integrates PPL itself. The document bootstrap resamples document IDs
+jointly across lengths; task bootstrap resamples within task--length cells.
+\begin{figure}[ht]
+\centering\includegraphics[width=.85\linewidth]{fig_tailspline_classic.pdf}
+\caption{\textbf{Classic task and PPL curves.} Each model retains its own
+recorded depth-selected, prefix-padded protocol.}
+\label{fig:tailspline-classic}
+\end{figure}
+
+Llama Full-13 AUC T/P is $78.8013/75.6026\%$, difference $+3.1987$
+$[0.6538,5.7853]$ points; OLMo is $66.5951/17.3631\%$, difference
+$+49.2321$ $[45.34,53.04]$. Llama PPL at $8/16/32$K is
+T $5.295283/4.530318/4.110622$, P $5.286429/4.518111/4.161831$.
+Its NIAH AUC improves by $3.75$ points; QA AUC changes by $-1.25$.
+Llama EOS/cap/empty counts are T/P $388/384$, $2/6$, $30/37$.
+
+The original classic T--C diagnostic gives AUC $78.8013/79.2115\%$,
+difference $-0.4103$ $[-2.6282,1.8205]$ points, with batch $1/2$.
+A $39$-input batch check has identical scores but six different generated
+sequences. This recorded diagnostic is separate from the clean comparison.
+The classic $130$-input native reference scores $91.8846\%$, versus
+T $89.7436\%$, difference $-2.1410$ $[-6.1410,1.9231]$ points.
+Whole-prefix $8$K PPL on $46$ documents is original RoPE/T/P
+$5.275919/5.295283/5.286429$; T--original RoPE is $+0.019364$
+with paired document interval $[0.006602,0.034861]$.

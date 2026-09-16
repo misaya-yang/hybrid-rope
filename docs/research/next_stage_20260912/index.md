@@ -26,6 +26,7 @@ BM、YaRN、旧mix075和Native-Z探索各保留其证据角色。
 | Native-Z5究竟成立了什么？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md) |
 | 如何重新研究native增强？ | [给Web Pro的自包含分析提示词](WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md) |
 | 原生四臂完成后，如何设计零训练增强方法？ | [完整Web Pro提示词：证据与方法交付](WEB_PRO_NATIVE_ZERO_TRAIN_NEXT_STEP_20260915.md) · [接续迁移回复的纠偏提示词](WEB_PRO_NATIVE_METHOD_DELIVERY_CORRECTION_20260915.md) |
+| base如何改变z的作用，怎样向Pro追问？ | [自包含分析提示词](WEB_PRO_BASE_ALLOCATION_PROMPT_20260916.md) |
 | CPU理论核验支持到哪一层？ | [理论深化CPU结果](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md) |
 | Web Pro的有限窗口、换基与边界理论是否值得采用？ | [独立CPU核查与采用判断](WEB_PRO_FINITE_WINDOW_AUDIT_20260915.md) |
 | 三段式改进做过什么，怎样向Pro追问下一步？ | [详细研究总结](THREE_BAND_RESEARCH_SYNTHESIS_FOR_PRO_20260915.md) · [可直接发送的提示词](WEB_PRO_THREE_BAND_FOLLOWUP_PROMPT_20260915.md) |

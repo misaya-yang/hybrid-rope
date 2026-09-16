@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze a small model-tokenized ProofPile panel for exact 128K NLL/PPL."""
+"""Freeze a small model-tokenized long-document panel for exact NLL/PPL."""
 
 from __future__ import annotations
 
@@ -31,14 +31,20 @@ def main() -> None:
     parser.add_argument("--length", type=int, default=131072)
     parser.add_argument("--documents", type=int, default=5)
     parser.add_argument("--seed", type=int, default=20261001)
+    parser.add_argument("--dataset", action="append",
+                        help="source-manifest dataset label to include; default proofpile")
     args = parser.parse_args()
     if args.length <= 0 or args.documents <= 0 or args.seed < 0:
         raise ValueError("length/documents must be positive and seed nonnegative")
 
     output = args.out.resolve()
     manifest_path = output / "manifest.json"
+    selected_datasets = tuple(args.dataset or ("proofpile",))
     request = {
-        "contract": "MODEL_TOKENIZED_PROOFPILE_128K_PPL_V1",
+        "contract": (
+            "MODEL_TOKENIZED_LONG_CONTEXT_PPL_V1"
+            if args.dataset else "MODEL_TOKENIZED_PROOFPILE_128K_PPL_V1"
+        ),
         "model_id": args.model_id,
         "model_config_sha256": sha256(args.model / "config.json"),
         "source_manifest_sha256": sha256(args.source_manifest),
@@ -46,6 +52,8 @@ def main() -> None:
         "documents": args.documents,
         "lengths": [args.length],
     }
+    if args.dataset:
+        request["datasets"] = list(selected_datasets)
     if manifest_path.is_file():
         value = json.loads(manifest_path.read_text())
         if value.get("status") == "COMPLETE" and all(value.get(k) == v for k, v in request.items()):
@@ -59,18 +67,19 @@ def main() -> None:
 
     source_payload = json.loads(args.source_manifest.read_text())
     records = source_payload.get("docs")
-    if not isinstance(records, list) or Counter(row.get("dataset") for row in records)["proofpile"] != 32:
-        raise ValueError("source manifest must preserve the frozen ProofPile32 pool")
+    counts = Counter(row.get("dataset") for row in records) if isinstance(records, list) else Counter()
+    if not isinstance(records, list) or sum(counts[label] for label in selected_datasets) < args.documents:
+        raise ValueError("source manifest lacks enough documents for the requested datasets")
     tokenizer = AutoTokenizer.from_pretrained(args.model.resolve(), local_files_only=True)
     required = args.length + 1
     tokenized: dict[int, list[int]] = {}
     eligible = []
     for index, record in enumerate(records):
-        if record.get("dataset") != "proofpile":
+        if record.get("dataset") not in selected_datasets:
             continue
         path = args.source_root / str(record["file"])
         if not path.is_file() or sha256(path) != record.get("sha256"):
-            raise ValueError(f"ProofPile source identity drift: {path}")
+            raise ValueError(f"long-document source identity drift: {path}")
         values = tokenizer.encode(
             path.read_text(encoding="utf-8", errors="ignore"), add_special_tokens=False,
         )
@@ -78,7 +87,7 @@ def main() -> None:
             eligible.append(index)
             tokenized[index] = values
     if len(eligible) < args.documents:
-        raise ValueError(f"only {len(eligible)} ProofPile documents reach {args.length}")
+        raise ValueError(f"only {len(eligible)} source documents reach {args.length}")
     shuffled = list(eligible)
     random.Random(args.seed).shuffle(shuffled)
     selected = sorted(shuffled[:args.documents])
@@ -94,7 +103,7 @@ def main() -> None:
         selected_records.append({
             "document": document,
             "source_manifest_index": index,
-            "dataset": "proofpile",
+            "dataset": record.get("dataset"),
             "file": record["file"],
             "source_sha256": record["sha256"],
             "available_tokens": len(tokenized[index]),
@@ -107,7 +116,8 @@ def main() -> None:
         "model_artifact_name": args.model.name,
         "tokenizer_sha256": sha256(tokenizer_path) if tokenizer_path.is_file() else None,
         "source_manifest_artifact": args.source_manifest.name,
-        "eligible_proofpile_documents": len(eligible),
+        "eligible_source_documents": len(eligible),
+        "source_corpus": ",".join(selected_datasets),
         "selection_uses_model_outputs": False,
         "array_shape": list(array.shape),
         "array_dtype": str(array.dtype),
