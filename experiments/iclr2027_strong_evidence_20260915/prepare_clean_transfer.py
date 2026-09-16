@@ -89,6 +89,9 @@ def _checkpoint_identity(model: Path) -> dict:
         path = model / name
         if path.is_file():
             tokenizer_files[name] = _sha256(path)
+    rope_parameters = config.get("rope_parameters") or {}
+    attention_head_dim = int(config.get("head_dim") or config.get("hidden_size") // config.get("num_attention_heads"))
+    partial_rotary_factor = float(config.get("partial_rotary_factor") or rope_parameters.get("partial_rotary_factor") or 1.0)
     return {
         "artifact_name": model.name,
         "config_sha256": _sha256(config_path),
@@ -98,7 +101,10 @@ def _checkpoint_identity(model: Path) -> dict:
         "num_hidden_layers": config.get("num_hidden_layers"),
         "num_attention_heads": config.get("num_attention_heads"),
         "num_key_value_heads": config.get("num_key_value_heads"),
-        "rope_theta": config.get("rope_theta"),
+        "rope_theta": config.get("rope_theta") or rope_parameters.get("rope_theta"),
+        "attention_head_dim": attention_head_dim,
+        "partial_rotary_factor": partial_rotary_factor,
+        "rotary_pairs": int(attention_head_dim * partial_rotary_factor) // 2,
         "native_length": int(config["max_position_embeddings"]),
         "rope_scaling": config.get("rope_scaling"),
         "tokenizer_files_sha256": tokenizer_files,

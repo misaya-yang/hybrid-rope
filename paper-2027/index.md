@@ -1,5 +1,14 @@
 # Beyond the Base：当前论文索引
 
+## 下一版准备，暂不改稿
+
+当前等待GLM及本批后续实验结果后统一整合。已更新
+[准备清单](../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)、
+[Pro取舍](../docs/research/reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md)及
+[十篇审稿经验](../docs/research/reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)。
+Qwen等新完成结果尚未自动写入当前PDF；下方是已交付稿件状态。
+
+
 当前标题：**Beyond the Base: Frequency Allocation in RoPE**。
 
 [投稿标题与摘要纯文本](title_abstract.txt)。

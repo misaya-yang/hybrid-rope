@@ -2254,7 +2254,17 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/PLAN_HISTORY_20260913.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md",
       "area": "docs",
       "category": "document"
     },
@@ -2459,12 +2469,22 @@
       "category": "document"
     },
     {
+      "path": "docs/research/reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/reviews/QWEN_ALLOCATION_RESPONSE_ANALYSIS_20260916.md",
       "area": "docs",
       "category": "document"
     },
     {
       "path": "docs/research/reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md",
       "area": "docs",
       "category": "document"
     },
@@ -2487,6 +2507,41 @@
       "path": "docs/research/reviews/model_selection_20260916/glm4_geometry_memory.json",
       "area": "docs",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/ALL_REVIEWS.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/PRO_REASSESSMENT.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/README.md",
+      "area": "docs",
+      "category": "navigation"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/cpu_checks.json",
+      "area": "docs",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/document_update_receipt.json",
+      "area": "docs",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/sources.json",
+      "area": "docs",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "docs/research/reviews/reassessment_20260916/verify_reference_math.py",
+      "area": "docs",
+      "category": "code"
     },
     {
       "path": "docs/research/rope_allocation_20260910/agents/astra01.md",
@@ -5254,6 +5309,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_yarn.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s8_256k_health.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -5275,6 +5335,26 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_four_model_extreme_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_four_model_yarn_full13.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_four_model_yarn_quick.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_glm4_9b_s4_128k_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_glm4_after_qwen_yarn.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -5320,6 +5400,16 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_qwen25_3b_256k_ppl_niah.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_yarn_full_after_quick.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_yarn_quick_after_glm.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -14665,6 +14755,11 @@
     },
     {
       "path": "tests/test_gemma_k128_coordinate_confirmation.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_glm_partial_rope_support.py",
       "area": "tests",
       "category": "code"
     },

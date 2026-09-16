@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import fcntl
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -8,6 +10,19 @@ import sys
 import pytest
 
 from experiments.iclr2027_strong_evidence_20260915 import run_natural_long as runner
+
+
+def test_gpu_lock_reuses_an_inherited_outer_queue_descriptor(tmp_path):
+    lock_path = tmp_path / "gpu.lock"
+    outer = os.open(lock_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o666)
+    inherited = os.dup(outer)
+    try:
+        fcntl.flock(outer, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with runner.acquire_gpu_lock(lock_path, inherited_fd=inherited):
+            pass
+    finally:
+        os.close(inherited)
+        os.close(outer)
 
 
 def test_longbench_v2_direct_answer_parser_rejects_unknown_empty_and_truncated():

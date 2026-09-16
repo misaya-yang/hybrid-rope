@@ -135,3 +135,14 @@ Qwen-1.5B S4/128K为81.25/76.875%。每任务5条、每臂40条；三项配对�
 每任务5条尚不足以定性Qwen总体，优先完整clean扩样再研究机制；
 同S4下与Llama的几何改动幅度相同量级。固定模型对中频配置的使用差异是待辨别机制，
 不能仅由base、head数或两个不同seed的小面板推出因果解释。
+
+## 5. Qwen256K检索与S4自然QA完成更新（2026-09-16）
+
+新完成报告已同步至实验目录：
+
+- [S8/256K单针三任务](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s8_256k_health.json)：每任务5条，T/P93.33/40.00%，差+53.33pp，配对区间[+33.33,+66.67]pp。
+- [S4/128K预算InfiniteBench En.QA](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_en_qa.json)：35题/7个来源上下文簇；F1为19.14/15.90%，差+3.24pp，overall簇区间[+0.20,+7.41]pp；逐题13/6/16。
+
+前述“Qwen尚未确认优势”只描述旧面板，不再代表当前全部证据。
+同S4下单针饱和与自然QA收益并存，说明应按任务和运行条件解释配置价值。
+[base与尺度综合分析](../reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md)已更新；未据此修改论文或新增GPU任务。

@@ -1,5 +1,12 @@
 # 非Llama、原生长窗口、小RoPE base模型选择
 
+## 后续状态更新
+
+GLM下载回执已确认完成，相关partial RoPE支持正在当前实验分支接入，GLM S4队列已启动。
+见[带时间戳执行记录](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
+下文“未下载/需接入”描述选型时状态；几何与架构差异仍有效，不将队列启动称为结果完成。
+
+
 ## 结论
 
 **首选 `zai-org/GLM-4-9B-0414`，使用普通Chat版本。** 它是独立GLM家族、约9.4B参数，

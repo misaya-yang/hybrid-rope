@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "model_execution": false,
+  "softmax_log_odds_identity": {
+    "cases": 1000,
+    "max_error": 2.6645352591003757e-15,
+    "scope": "Fixed local logits and finite shifts; not an end-to-end mediation result"
+  },
+  "cosh_reference_objective": [
+    {
+      "tau": 0.05,
+      "objective": 0.5004165972387524,
+      "closed_form": 0.5004165972387525
+    },
+    {
+      "tau": 0.5,
+      "objective": 0.5409883534346636,
+      "closed_form": 0.5409883534346632
+    },
+    {
+      "tau": 1.414,
+      "objective": 0.7958659635024765,
+      "closed_form": 0.7958659635024717
+    },
+    {
+      "tau": 4.0,
+      "objective": 2.001342300803427,
+      "closed_form": 2.001342300803365
+    },
+    {
+      "tau": 10.0,
+      "objective": 5.000000020611994,
+      "closed_form": 5.0000000206115365
+    }
+  ],
+  "fixed_budget_not_task_zero_sum": [
+    {
+      "distance": 1,
+      "original_loss": 0.318661791131043,
+      "reallocated_loss": 0.3146077298526574
+    },
+    {
+      "distance": 3,
+      "original_loss": 0.3633144110768858,
+      "reallocated_loss": 0.32547100236673127
+    }
+  ],
+  "ncp_existing_score_reaggregation": {
+    "rows_per_arm": 780,
+    "macro_delta_pp": 1.4081196581196562,
+    "vt_delta_pp": 23.0,
+    "qa_family_delta_pp": -5.833333333333332,
+    "leave_one_task_out_delta_pp": {
+      "niah_single_1": 1.525462962962961,
+      "niah_single_2": 1.525462962962961,
+      "niah_single_3": 1.525462962962961,
+      "niah_multikey_1": 1.8032407407407387,
+      "niah_multikey_2": 1.2476851851851831,
+      "niah_multikey_3": 1.2476851851851831,
+      "niah_multivalue": 1.2824074074074063,
+      "niah_multiquery": 1.3865740740740726,
+      "vt": -0.39120370370370566,
+      "cwe": 1.7893518518518499,
+      "fwe": 1.3402777777777763,
+      "qa_1": 2.0810185185185164,
+      "qa_2": 1.9421296296296273
+    },
+    "primary_endpoint_unchanged": "Full-13 task-equal; LOTO is descriptive only"
+  }
+}

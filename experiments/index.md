@@ -5,6 +5,7 @@
 
 | 用途 | 入口 |
 |---|---|
+| 当前实验缺口与下一版整合准备（非执行命令） | [统一准备清单](../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
 | 当前结果、负结果与运行中任务总览 | [关键实验罗盘](../docs/research/next_stage_20260912/KEY_EXPERIMENT_COMPASS_20260914.md) |
 | 精确TailSpline与Llama统一评测 | [方法与评测合同](../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
 | 实现、运行脚本与报告工具 | [固定表流水线](fixed_rope_three_interfaces_20260913/index.md) |

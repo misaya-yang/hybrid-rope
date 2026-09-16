@@ -28,9 +28,9 @@ real models measurable. Task performance remains the final empirical endpoint.
 Relevant sources are
 [main theory](../../../paper-2027/sections/03_theory.tex),
 [TailSpline construction](../../../paper-2027/sections/04_mature.tex),
-[TailSpline proofs and controls](../../../paper-2027/appendix/a10_tailspline.tex),
-[allocation responses](../../../paper-2027/appendix/a11_allocation_response.tex),
-and [learned compatibility](../../../paper-2027/sections/03_compatibility.tex).
+[TailSpline proofs and controls](../../../paper-2027/appendix/compact_b_constructions.tex),
+[allocation responses](../../../paper-2027/appendix/compact_a_geometry.tex),
+and [learned compatibility](../../../paper-2027/appendix/compact_c_identification.tex).
 
 The existing foundation includes complete-pair rank, retained content coordinates,
 the Q/K compensation obstruction, exact TailSpline minimization and T/C exchange,

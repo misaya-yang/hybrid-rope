@@ -1,5 +1,14 @@
 # 复盘与审查
 
+## 本轮优先阅读（2026-09-16）
+
+- [Pro重评采用判断与概念纠正](PRO_REASSESSMENT_DISPOSITION_20260916.md)。
+- [十篇审稿经验及当前适用性](TEN_PAPER_REVIEW_LESSONS_20260916.md)。
+- [下一版准备与实验取舍](../next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)。
+
+以下按各文档日期解释历史结论。
+
+
 - [Native正收益与方法谱系审查](NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md) — 先复核YaRN/MrPro及既有原生正负结果，再定义LeRoPE启发与新PE研究；含当前服务器raw复算。
 
 上级：[research/index.md](../index.md)。受代码/回执/历史hash引用的来源保持原路径；本目录index完成主题分类。普通独立叙述文档已移入对应目录。文件中的“当前”以原记录日期解释。

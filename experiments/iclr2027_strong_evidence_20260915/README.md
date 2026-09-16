@@ -5,6 +5,21 @@ This directory implements the thin execution layer specified by
 It reuses the existing table, RULER, generation and report kernels. Code or data
 being ready is not a completed model experiment.
 
+## Current status routing (2026-09-16)
+
+Current completed extreme/natural results are in the
+[Pro6000 result owner](../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md).
+GLM is downloaded and its S4 queue has started; Qwen official static YaRN has a
+complete generation receipt. These do not yet supply an uninspected paired conclusion.
+See the [timestamped execution snapshot](../iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md).
+
+The older implementation table and128K package below preserve their original
+specification and dated states, not today's queue. In particular, Llama S16 is
+completed, NCP is completed, and "YaRN parked" does not describe Qwen's new arm.
+Llama clean32K X8 remains a separate unexecuted comparison.
+[Next revision preparation](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)
+contains research priorities without adding GPU jobs.
+
 ## Completed report snapshot
 
 [Portable reports](reports/README.md) preserve the completed OLMo clean and natural-QA,
@@ -12,7 +27,7 @@ Llama matched-dose/native/LongBench-v2, and Native exploration results.
 [Paper-value analysis](../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)
 records the applied manuscript changes, including the main-text NCP subsection.
 
-## Entry points
+## Original entry points and implementation snapshot
 
 | Entry | Plan items | State | GPU behavior |
 |---|---|---|---|
@@ -33,7 +48,7 @@ The existing 48GB+ X6 entry remains
 [`run_llama_s16_128k_gate_48gb.sh`](../iclr2027_three_track_sprint_20260915/run_llama_s16_128k_gate_48gb.sh).
 YaRN/X8 remains parked and has no entry in this directory.
 
-## Pro 6000 128K package
+## Historical Pro6000 128K package specification
 
 The expensive-machine queue contains only two unconditional experiments:
 

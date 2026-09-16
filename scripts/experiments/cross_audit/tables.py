@@ -62,7 +62,7 @@ def install_static(model, values, gain):
     rotary = model.model.rotary_emb
     if getattr(rotary, 'rope_type', 'default') != 'default':
         raise ValueError('dynamic/scaled checkpoint unsupported; cannot silently stack transforms')
-    dim = model.config.hidden_size // model.config.num_attention_heads
+    dim = int(rotary.inv_freq.numel()) * 2
     check_table(values, dim)
     if not math.isfinite(gain) or gain <= 0:
         raise ValueError('invalid rotary amplitude')

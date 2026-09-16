@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "date": "2026-09-16",
+  "scope": "Research documentation and next-revision preparation only",
+  "manuscript_files_checked_unchanged": 188,
+  "manuscript_changed": false,
+  "model_execution": false,
+  "remote_mutation": false,
+  "source_archives_match_user_files": true,
+  "selected_papers": 10,
+  "new_document_local_links_checked": 25,
+  "review_note_ids_checked_against_archive": true,
+  "cpu_checks": "cpu_checks.json",
+  "execution_snapshot_utc": "2026-09-16T08:02:47Z",
+  "official_review_scores": "Not pooled across ICLR/ICML and not used as acceptance probabilities",
+  "remaining_work": "Wait for experiment owners; manuscript integration remains unperformed by user instruction."
+}
