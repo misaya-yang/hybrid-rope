@@ -55,6 +55,7 @@ class PrepareConfig:
     rows_per_task: int = 0
     tasks: tuple[str, ...] = ()
     minimum_input_tokens: int = 0
+    maximum_input_tokens: int = 0
 
     def validate(self) -> None:
         if self.benchmark not in {LONGBENCH_V2, INFINITEBENCH}:
@@ -83,6 +84,10 @@ class PrepareConfig:
             raise ValueError("largest requested length exceeds native_length * scale")
         if self.minimum_input_tokens < 0 or self.minimum_input_tokens > self.lengths[-1]:
             raise ValueError("minimum input tokens must be between zero and the largest cap")
+        if self.maximum_input_tokens < 0 or self.maximum_input_tokens > self.lengths[-1]:
+            raise ValueError("maximum input tokens must be between zero and the largest cap")
+        if self.maximum_input_tokens and self.maximum_input_tokens < self.minimum_input_tokens:
+            raise ValueError("maximum input tokens cannot be below the minimum")
 
 
 def sha256_text(value: str) -> str:
@@ -385,6 +390,9 @@ def _adapt_row(
     if config.minimum_input_tokens and input_tokens < config.minimum_input_tokens:
         candidate["reason"] = "below_minimum_input_tokens"
         return candidate, None
+    if config.maximum_input_tokens and input_tokens > config.maximum_input_tokens:
+        candidate["reason"] = "above_maximum_input_tokens"
+        return candidate, None
     cap = _execution_cap(input_tokens, budget, config.lengths)
     if cap is None:
         candidate["reason"] = "exceeds_max_complete_budget"
@@ -533,10 +541,11 @@ def prepare_dataset(
         "rows_per_task": config.rows_per_task,
         "tasks": list(selected_tasks),
         "minimum_input_tokens": config.minimum_input_tokens,
+        "maximum_input_tokens": config.maximum_input_tokens,
         "selection": (
             "all complete LongBench-v2 rows with native_length < actual full prompt tokens and prompt+128 within a requested cap, sorted by _id"
             if config.benchmark == LONGBENCH_V2 else
-            "source-order first rows-per-task among complete eligible official rows at or above minimum_input_tokens; no truncation or replacement"
+            "source-order first rows-per-task among complete eligible official rows within the declared input-token bounds; no truncation or replacement"
         ),
         "prompt_contract": (
             "official LongBench-v2 prompts/0shot.txt wrapped once in the target model chat template"
@@ -567,6 +576,7 @@ def _missing_manifest(args: argparse.Namespace, message: str) -> dict[str, Any]:
         "lengths": list(args.lengths),
         "tasks": list(args.task or []),
         "minimum_input_tokens": args.minimum_input_tokens,
+        "maximum_input_tokens": args.maximum_input_tokens,
         "downloads_attempted": False,
         "error": message,
         "resolution": "place the official dataset files under --data-root, then run again with a new empty --out",
@@ -599,6 +609,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
                         help="prepare only this InfiniteBench task; repeat to include more")
     parser.add_argument("--minimum-input-tokens", type=int, default=0,
                         help="exclude otherwise eligible prompts shorter than this")
+    parser.add_argument("--maximum-input-tokens", type=int, default=0,
+                        help="exclude otherwise eligible prompts longer than this; 0 disables")
     return parser.parse_args(argv)
 
 
@@ -631,6 +643,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         rows_per_task=args.rows_per_task,
         tasks=tuple(args.task or ()),
         minimum_input_tokens=args.minimum_input_tokens,
+        maximum_input_tokens=args.maximum_input_tokens,
     )
     manifest = prepare_dataset(config, tokenizer, sources)
     print(json.dumps(manifest, ensure_ascii=False, sort_keys=True), flush=True)

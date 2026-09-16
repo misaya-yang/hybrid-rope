@@ -5134,6 +5134,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/download_glm4_9b_0414.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/extreme_condition_report.py",
       "area": "experiments",
       "category": "code"
@@ -5309,6 +5314,21 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_yarn_quick.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_128k_gate.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -5320,6 +5340,16 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_infinite_en_qa.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s4_32k_yarn_quick.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_olmo_s4_16k_yarn_quick.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
@@ -5339,9 +5369,24 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_naturalqa_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json",
       "area": "experiments",
       "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_4080_light_yarn_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_4080_when_gpu_ready.sh",
+      "area": "experiments",
+      "category": "code"
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_clean_c.py",
@@ -5384,7 +5429,17 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_glm_second_books_after_heavy.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_infinitebench_100k128k.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_llama_yarn_niah200_ppl46.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -5410,6 +5465,11 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_pro6000_followup_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_pro6000_heavy_yarn_queue.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -9794,6 +9854,11 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/make_revision_evidence.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/make_story_figures.py",
       "area": "paper-2027",
       "category": "code"
@@ -9810,6 +9875,16 @@
     },
     {
       "path": "paper-2027/figs/recovered_asset_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/revision_evidence_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/revision_evidence_verification.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
     },
@@ -9862,6 +9937,11 @@
       "path": "paper-2027/figs/verify_routing_schedule.py",
       "area": "paper-2027",
       "category": "code"
+    },
+    {
+      "path": "paper-2027/history/2026-09-16_before_evidence_update.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
     },
     {
       "path": "paper-2027/iclr2027_conference.bst",
@@ -11624,6 +11704,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/revision_20260916_evidence_update/sources.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/theory_revision_proposal_20260915/MANUSCRIPT_DELTA.md",
       "area": "paper-2027",
       "category": "document"
@@ -11914,7 +11999,17 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_glm_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_index_full13.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_infinite_qa_intervals.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -11985,6 +12080,26 @@
     },
     {
       "path": "paper-2027/tables/table_tailspline_natural_tasks.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_three_method_intervals.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_three_method_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_three_method_tasks_lo.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_three_method_tasks_qg.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },

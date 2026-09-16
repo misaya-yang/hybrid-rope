@@ -1,0 +1,42 @@
+{
+  "retrieved_utc": "2026-09-16T11:33:58.303304+00:00",
+  "host": "connect.westd.seetacloud.com:51638",
+  "reports": [
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s4_32k_yarn_quick.json",
+      "remote_source": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_quick/llama3_8b_s4_32k/report.json",
+      "sha256": "513d796c46bbd7fce5161c8fcdefae8793e2127435dfd5bea524bcaf913e9a86",
+      "status": "COMPLETE"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_olmo_s4_16k_yarn_quick.json",
+      "remote_source": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_quick/olmo2_1b_s4_16k/report.json",
+      "sha256": "b0c169d0bf517265acba997580ecbf1f146351e5e826060b89ee6b96a4357183",
+      "status": "COMPLETE"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_yarn_quick.json",
+      "remote_source": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_quick/glm4_9b_s4_128k/report.json",
+      "sha256": "348cc028f1b20a4cf01c04df08c2af8b34e3d3e11588cee28de75db737312cf9",
+      "status": "COMPLETE"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13.json",
+      "remote_source": "/root/autodl-tmp/today_rope_plan_20260914/glm4_9b_s4_128k/reports/tailspline_vs_mrpro_full13.json",
+      "sha256": "3933fee82d60283212adf5d3efd20c872c2f4dc0194159d0932b877e39217a2e",
+      "status": "MATCHED_GENERATION_RANGE_REPORT_V1"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_triarm.json",
+      "remote_source": "/root/autodl-tmp/today_rope_plan_20260914/glm4_9b_s4_128k/en_qa_yarn_a1/reports/official_static_yarn_naturalqa_triarm.json",
+      "sha256": "5c627574312cbb82f3b160ea2de49558856822f5a2f2f47fc1f9c2ff08935108",
+      "status": "COMPLETE"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_naturalqa_triarm.json",
+      "remote_source": "/root/autodl-tmp/today_rope_plan_20260914/four_model_128k_extreme/qwen25_3b_128k/infinitebench_en_qa_yarn_a1/reports/official_static_yarn_naturalqa_triarm.json",
+      "sha256": "268452a2b6ff283d25bb6092d2b062920fc5d60264fdd0c2dbdf663eff8c6a8b",
+      "status": "COMPLETE"
+    }
+  ]
+}

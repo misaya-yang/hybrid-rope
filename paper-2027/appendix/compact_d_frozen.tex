@@ -154,3 +154,112 @@ T $89.7436\%$, difference $-2.1410$ $[-6.1410,1.9231]$ points.
 Whole-prefix $8$K PPL on $46$ documents is original RoPE/T/P
 $5.275919/5.295283/5.286429$; T--original RoPE is $+0.019364$
 with paired document interval $[0.006602,0.034861]$.
+
+\subsection{Direct three-method evaluation across four model families}
+\label{sec:three-method-complete}
+The additional models are Qwen-2.5-3B-Instruct \citep{qwen2024qwen25} and
+GLM-4-9B-0414. Their native reference is $32768$ tokens; bases are
+$10^6$ and $10^4$, respectively. Qwen uses $64$ rotary pairs. GLM uses
+GQA with $32$ query and $2$ key/value heads; each $128$-dimensional head
+rotates $64$ coordinates, giving $32$ rotary pairs. Tables are installed only
+in this rotary subspace, retaining its adjacent-pair convention and the
+nonrotary coordinates. Its TailSpline/MrPro band is $[17,30]$, versus
+Qwen's $[23,40]$. Both use the public $s=4$ rule and shared gain.
+
+The YaRN baseline is the official static frequency map, installed without
+fine-tuning, with its public $32/1$ correction and amplitude rule. Its native
+reference, rotary dimension and base are read from each model configuration.
+Unlike the matched T/P allocation control, YaRN retains its own boundary
+rounding and blend. Every method uses the same prompts, official task scorer,
+greedy decoding and BF16 weights. NIAH uses five source-order inputs for each
+of eight tasks, selected before execution-order sorting. Llama/OLMo reuse
+these exact inputs from their clean large-panel T/P outputs; GLM reuses the
+NIAH subset of its Full-13 panel. These overlapping subsets provide direct
+baseline comparisons, not additional independent replications.
+
+PPL uses the same first five documents at the same token length for every
+method in a row. Llama/OLMo select from their classic Proof-Pile/PG-19 manifest;
+Qwen/GLM use InfiniteBench LongBook. PPL is the exponential of token-pooled
+NLL, and uncertainty concerns the mean paired document NLL difference.
+PPL values are not pooled across model-specific corpora and tokenizations.
+Batch is one with Flash-SDPA. NIAH prefill chunks are $8192$ for Llama/OLMo,
+$65536$ for GLM, and direct prefill for Qwen; the five-document LM runs use
+direct prefill. Llama/OLMo/GLM intervals use $10{,}000$ paired resamples;
+NIAH resampling is within task, with eight task weights fixed, and LM
+resampling is by document. Qwen retains its recorded paired intervals.
+\input{tables/table_three_method_intervals}
+\input{tables/table_three_method_tasks_lo}
+\input{tables/table_three_method_tasks_qg}
+
+The GLM Full-13 comparison uses five source-order inputs per task, $65$ paired
+prompts in total, with the same T/P tables as above. The task-equal scores are
+$44.3590/31.5641\%$, difference $+12.7949$ points, interval $[6.6410,19.3333]$.
+Its interval uses $20{,}000$ paired within-task resamples, seed $20260923$.
+T/P EOS rates are $89.23/80.00\%$ and cap rates $10.77/20.00\%$.
+\input{tables/table_glm_full13}
+\FloatBarrier
+
+\subsection{Complete-book natural QA at 128K}
+\label{sec:infinite-qa-new}
+Qwen and GLM use InfiniteBench English book QA \citep{zhang2024infinitebench},
+with complete prompts between $100$K and $128$K tokens, no input truncation,
+and a $40$-token answer cap. Each panel contains $35$ questions from seven
+source-book contexts, five questions per context. Actual input ranges are
+$100907$--$127946$ for Qwen and $100844$--$127811$ for GLM.
+All three arms retain their static $s=4$ table, batch one, BF16,
+Flash-SDPA and $65536$-token chunked prefill.
+
+The official English-QA adapter computes normalized token F1 against the
+accepted references; it is not RULER's answer-containment score. All generated
+answers remain in the mean. The paired bootstrap keeps questions from a
+sampled source context together, using $20{,}000$ draws and seeds
+$20261401/20261402$ for T--P/T--Y. Table~\ref{tab:infinite-qa-intervals}
+reports both marginal intervals and simultaneous coverage for the two
+comparisons within each model. Earlier two-arm reports use another bootstrap
+seed; the means agree exactly and this table consistently uses the three-arm
+report. No cross-model pooled F1 is defined.
+\input{tables/table_infinite_qa_intervals}
+
+Qwen T/P/Y EOS counts are $29/28/30$, with cap counts $6/7/5$;
+GLM has EOS counts $31/29/26$ and cap counts $4/6/9$. Neither panel has
+empty outputs. Relative to P, Qwen T has higher per-question F1 on $13$
+questions, lower on $6$, and equal on $16$. The full generated answers and
+source-context identities determine the declared scoring and resampling units.
+\FloatBarrier
+
+\subsection{Higher extension factors: complete task profiles}
+\label{sec:extreme-new}
+Llama uses $s=16$ at $128$K and Qwen uses $s=8$ at $256$K. T/P share each
+condition's frozen weights, public band, amplitude and prompts. All use BF16,
+batch one and Flash-SDPA. Llama uses $8192$-token chunked prefill; Qwen uses
+direct prefill. These are separate length/scale conditions, not extra samples
+from the $s=4$ comparisons.
+\begin{table}[ht]
+\centering\small
+\caption{Complete higher-factor results. Generation scores are percentages;
+PPL uses its own document set. Intervals are paired $95\%$ intervals.}
+\label{tab:extreme-new}
+\begin{tabular}{@{}llrrrl@{}}
+\toprule
+Model & Endpoint & $N$ & T & P & T--P interval \\
+\midrule
+Llama $128$K & Full-13 & 130 & 22.05 & 1.28 & [15.96, 25.64] pp \\
+ & Proof-Pile PPL & 10 & 2.5870 & 2.6714 & [$-0.03505$, $-0.02918$] NLL \\
+ & En.QA F1 & 41 & 13.21 & 20.17 & [$-11.87$, $-2.07$] pp \\
+ & En.Dia accuracy & 100 & 12.00 & 8.00 & [$-1.00$, 10.00] pp \\
+Qwen $256$K & Single-NIAH & 15 & 93.33 & 40.00 & [33.33, 66.67] pp \\
+ & LongBook PPL & 5 & 30.3437 & 23.9283 & [$-1.0561$, 1.7769] NLL \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Llama Full-13 uses ten inputs per task. Qwen uses five inputs for each of
+single-1/2/3, whose T/P scores are $100/100$, $100/20$ and $80/0\%$;
+this three-task endpoint is distinct from NIAH-8.
+Llama's natural panels retain complete $100$K--$131$K contexts and the official
+InfiniteBench metrics; En.QA contains eight book contexts. Generation scores
+use paired task or source-context resampling; PPL uses paired documents.
+Llama's Full-13 and PPL improve while its book-QA F1 decreases; Qwen's single-needle
+retrieval improves while its five-book PPL is higher. The results distinguish
+retrieval, language modeling and natural-task behavior at these extension factors.
+\FloatBarrier

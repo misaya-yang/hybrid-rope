@@ -184,7 +184,7 @@ def tailspline():
         lo,hi=np.array(interval)*100;point*=100
         ax.errorbar(point,y,xerr=[[point-lo],[hi-point]],fmt='o',color=color,capsize=3,ms=5)
         ax.text(point,y+.19,f'{point:+.2f} pp',ha='center',va='top',fontsize=9,color=color)
-    ax.axvline(0,color=INK,lw=.7);ax.set(yticks=[0,1,2],yticklabels=['8K (L)','16K (2L)','32K (4L)'],ylim=(-.45,2.5),xlim=(-.5,14.5),xticks=[0,5,10],xlabel='Full-13 gain (pp)')
+    ax.axvline(0,color=INK,lw=.7);ax.set(yticks=[0,1,2],yticklabels=['8K (L)','16K (2L)','32K (4L)'],ylim=(-.45,2.5),xlim=(-.5,14.5),xticks=[0,5,10],xlabel='Full-13 gain over MrPro (pp)')
     ax.invert_yaxis();ax.set_title('(a) Quality across lengths',loc='left',fontsize=9);axis_style(ax)
     ax=axes[1];keys=list(clean['task_deltas']);ys=np.arange(len(keys))
     v32=np.array([clean['task_deltas'][t]for t in keys])*100

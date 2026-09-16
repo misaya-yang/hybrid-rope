@@ -43,7 +43,10 @@ from scripts.eval.longbench_metrics import qa_f1_score
 METHOD_IDENTITY = "official static YaRN, zero-training installation"
 REPORT_CONTRACT = "FOUR_MODEL_OFFICIAL_STATIC_YARN_NATURAL_QA_TRIARM_V1"
 RUN_CONTRACT = "OFFICIAL_STATIC_YARN_NATURAL_QA_SINGLE_ARM_V1"
-ALLOWED_CONDITIONS = ("llama3_8b", "qwen25_3b", "olmo2_1b", "glm4_9b")
+ALLOWED_CONDITIONS = (
+    "llama3_8b", "qwen25_3b", "olmo2_1b", "glm4_9b",
+    "glm4_9b_second_books",
+)
 EXCLUDED_MODELS = ("Qwen2.5-1.5B-Instruct",)
 ARMS = ("tailspline", "mrpro", "yarn")
 PRIMARY_CONTRASTS = ("tailspline_minus_mrpro", "tailspline_minus_yarn")
@@ -201,6 +204,29 @@ def condition_from_name(
             rows_per_task=50,
         )
     root = plan / "glm4_9b_s4_128k"
+    if name == "glm4_9b_second_books":
+        assets = root / "en_qa_second_books_assets"
+        evaluation = root / "en_qa_second_books_evaluation"
+        return Condition(
+            name=name,
+            public_model_name="GLM-4-9B-0414",
+            model_id="glm4_9b_0414",
+            table_model_id="glm4_9b_0414",
+            model=model_override or Path("/root/models/GLM-4-9B-0414"),
+            scale=4.0,
+            family="infinitebench_en_qa",
+            panel=assets / "inputs.jsonl",
+            asset_manifest=assets / "manifest.json",
+            baseline_runs=evaluation / "runs",
+            baseline_tables=evaluation / "tables",
+            yarn_root=root / "en_qa_second_books_yarn_a1",
+            yarn_table=plan / "official_yarn_quick/glm4_9b_s4_128k/tables/yarn.json",
+            data_manifest=assets / "manifest.json",
+            length_cap=131072,
+            expected_rows=77,
+            expected_clusters=15,
+            rows_per_task=100,
+        )
     output = root / "en_qa_yarn_a1"
     return Condition(
         name=name,

@@ -195,3 +195,24 @@ For $H|\delta|\ll1$,
 $\rho_H(\delta)=((H-1)(2H-1)/6)\delta^2+O(H^4\delta^4)$.
 The small parameter is therefore distance times frequency difference;
 matching total displacement alone does not supply it.
+
+\subsection{Turn boundaries across native bases}
+\label{sec:turn-normalization}
+The $32/1$-turn rule places the transition in a comparable native phase range.
+For a geometric grid with $c=\log b/K$, assume both boundaries lie inside the
+sampled table without clipping. Let $l$ be the last slot above $32$ turns,
+$h$ the first below one, $n=h-l$ and $u=q/n$. Define
+$\eta_+=\log(L\omega_l/(64\pi))$ and
+$\eta_-=\log(2\pi/(L\omega_h))$. Both belong to $(0,c]$, and
+\begin{equation}
+nc=\log32+\eta_++\eta_-,\qquad
+L\omega_{l+q}=64\pi\,32^{-u}
+ \exp\!\big((1-u)\eta_+-u\eta_-\big).
+\label{eq:turn-normalization}
+\end{equation}
+These identities follow from $\omega_{l+q}=\omega_l e^{-cq}$.
+Together with $d\nu=(d/L)(L\omega)s^{-m}$, they explain why a larger base
+alone does not remove a turn-selected allocation change. The remaining
+geometric differences include finite sampling, rounding and transition width;
+model task behavior additionally depends on learned content use.
+The fine-grid limit is $c\to0$, not increasing the base at fixed $K$.
