@@ -1,4 +1,78 @@
 {
+  "cosh_mature": {
+    "llama_lora": {
+      "alpha": 128,
+      "cosh_ppl": [
+        10.068,
+        24.068,
+        127.911
+      ],
+      "lengths": [
+        8192,
+        16384,
+        32768
+      ],
+      "native_ppl": [
+        6.817,
+        108.958,
+        991.475
+      ],
+      "rank": 64,
+      "source": "llama_temporal_summary.json",
+      "steps": 300
+    },
+    "olmo_selective_qk": {
+      "cosh_f1": [
+        24.84,
+        21.48,
+        8.57
+      ],
+      "lengths": [
+        4096,
+        8192,
+        16384
+      ],
+      "native_f1": [
+        25.99,
+        0.07,
+        0.0
+      ],
+      "rows_per_length": 200,
+      "source_commit": "bc59ff2",
+      "source_name": "OLMO2_1B_SELECTIVE_QK_PHASE_ADAPTATION_20260729.md"
+    },
+    "olmo_training": {
+      "affine_endpoint_anchoring": false,
+      "comparison": "same initialization, scientific recipe and data prefix; separate trainer implementations",
+      "constructor_source": "bc59ff2:rebuttal/rebuttal_0723/experiments/olmo2_1b_evq/contract.py:172-192",
+      "cosh_ppl": [
+        191.36,
+        167.45,
+        156.87,
+        159.64
+      ],
+      "counted_tokens": 2097152000,
+      "frequency": "base**(-Q_2(k/K))",
+      "geo_ppl": [
+        177.99,
+        161.19,
+        163.88,
+        182.73
+      ],
+      "lengths": [
+        2048,
+        4096,
+        8192,
+        16384
+      ],
+      "pairs": 64,
+      "parameters": 1484916736,
+      "source_sha256": "b6fe645332683cc30e96d9143484c3f2f93ae427502b240c389f35cc9d67b4bc",
+      "steps": 1000,
+      "tau": 2,
+      "u_grid": "k/K"
+    }
+  },
   "reports": {
     "glm_full13": {
       "baselines": [

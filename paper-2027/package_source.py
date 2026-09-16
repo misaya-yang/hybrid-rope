@@ -16,6 +16,10 @@ def runtime_sources() -> dict[str, bytes]:
     """Bundle existing frozen-evaluation entrypoints and their local imports."""
     repo = PAPER / 'runtime' if (PAPER / 'runtime/experiments').is_dir() else PAPER.parent
     roots = [
+        "experiments/iclr2027_strong_evidence_20260915/matched_three_method_quick_report.py",
+        "experiments/iclr2027_strong_evidence_20260915/official_yarn_naturalqa.py",
+        "experiments/iclr2027_strong_evidence_20260915/run_natural_long.py",
+        "experiments/iclr2027_strong_evidence_20260915/prepare_natural_long.py",
         "experiments/native_contrastive_proximal_20260915/tables.py",
         "experiments/native_contrastive_proximal_20260915/report_ruler.py",
         "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
@@ -90,6 +94,8 @@ def source_files() -> set[Path]:
     add(PAPER / "main.tex")
     for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py", "SUPPLEMENT_README.md", "title_abstract.txt",
                  "runtime/README.md", "figs/fig_method_overview.svg",
+                 "figs/revision_evidence_inputs.json", "figs/make_revision_evidence.py",
+                 "figs/revision_evidence_verification.json",
                  "figs/field_gap_inputs.json", "figs/verify_field_gap.py",
                  "figs/allocation_design.py", "figs/make_allocation_value.py", "figs/allocation_value_inputs.json",
                  "figs/make_fig_exact_range_control.py",
@@ -143,6 +149,7 @@ def main() -> None:
             "  python3 figs/make_story_figures.py\n"
             "  python3 figs/make_m4_tradeoff.py\n"
             "  python3 figs/make_allocation_value.py\n"
+            "  python3 figs/make_revision_evidence.py\n"
             "  python3 figs/make_fig_exact_range_control.py\n"
             "  python3 figs/allocation_design.py\n"
             "This uses the bundled figs/figure_inputs.json, with original-source\n"

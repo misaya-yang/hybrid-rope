@@ -41,6 +41,8 @@ ensure_yarn_table olmo2_1b_s4_16k \
 # Synthetic retrieval and PPL use the complete existing evidence pool.
 bash experiments/iclr2027_strong_evidence_20260915/run_llama_yarn_niah200_ppl46.sh \
   >"${root}/logs/llama_niah200_ppl46.log" 2>&1
+bash experiments/iclr2027_strong_evidence_20260915/run_olmo_yarn_niah200_ppl46.sh \
+  >"${root}/logs/olmo_niah200_ppl46.log" 2>&1
 
 # The legacy Llama launcher has no lock of its own; hold the shared lock in a
 # subshell so it cannot overlap another GPU owner.
@@ -70,6 +72,7 @@ plan,root=map(Path,sys.argv[1:])
 owners=[]
 for path in (
  plan/'official_yarn_llama_niah200_ppl46/complete.json',
+ plan/'official_yarn_olmo_niah200_ppl46/complete.json',
  plan/'tailspline_llama_s4_naturalqa631_yarn_a1/complete.json',
  plan/'tailspline_olmo_s4_naturalqa631_yarn_a1/complete.json',
  plan/'official_yarn_full13/complete__llama3_8b_s4_32k__olmo2_1b_s4_16k.json',

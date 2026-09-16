@@ -4,5 +4,8 @@
   "document_nll_rows_reaggregated": 15,
   "other_results": "report-backed; aggregate arithmetic checked",
   "model_execution": false,
-  "raw_text_rescoring": false
+  "raw_text_rescoring": false,
+  "fixed_state_log_odds_max_error": 2.6645352591003757e-15,
+  "turn_identity_public_grids": 4,
+  "llama_lora_ppl": "recomputed from domain NLL; 24/24 long-prefix packs favor Cosh"
 }

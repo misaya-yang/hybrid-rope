@@ -2,20 +2,18 @@
 \centering\small
 \caption{\textbf{Natural-task evaluation.} Scores are percentages: five-task macro
 F1 for Natural-QA, accuracy for LongBench v2, and official English-QA F1 for
-InfiniteBench. T/P/Y denote TailSpline/MrPro/static YaRN; YaRN is evaluated
-in the InfiniteBench panels. Source-context intervals are in
-Appendices~\ref{sec:natural-transfer-new} and~\ref{sec:infinite-qa-new}.}
+InfiniteBench. Intervals are marginal source-context paired $95\%$ intervals;
+Appendix~\ref{sec:infinite-qa-new} also reports simultaneous T--P/T--YaRN intervals.}
 \label{tab:natural-transfer-main}
-\begin{tabular}{@{}llrrrrr@{}}
+\begin{tabular}{@{}llrrrrl@{}}
 \toprule
-Model & Benchmark & $N$ & T & P & Y & T--P (pp) \\
+Model & Benchmark & $N$ & T & P & T--P (pp) & $95\%$ interval \\
 \midrule
-Llama & Natural-QA & 631 & 41.08 & 40.88 & --- & +0.20 \\
-OLMo & Natural-QA & 631 & 24.92 & 21.62 & --- & +3.30 \\
-Llama & LongBench v2 & 117 & 35.04 & 30.77 & --- & +4.27 \\
-\midrule
-Qwen & InfiniteBench & 35 & 19.14 & 15.90 & 18.45 & +3.24 \\
-GLM & InfiniteBench & 35 & 28.61 & 25.28 & 27.32 & +3.33 \\
+Llama & Natural-QA & 631 & 41.08 & 40.88 & +0.20 & [$-1.53$, 1.89] \\
+OLMo & Natural-QA & 631 & 24.92 & 21.62 & +3.30 & [0.34, 6.40] \\
+Llama & LongBench v2 & 117 & 35.04 & 30.77 & +4.27 & [$-3.39$, 11.97] \\
+Qwen & InfiniteBench & 35 & 19.14 & 15.90 & +3.24 & [0.26, 7.51] \\
+GLM & InfiniteBench & 35 & 28.61 & 25.28 & +3.33 & [$-3.28$, 8.98] \\
 \bottomrule
 \end{tabular}
 \end{table}

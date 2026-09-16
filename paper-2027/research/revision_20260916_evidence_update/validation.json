@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "main_pages": 9,
+  "total_pages": 33,
+  "baseline_sha256": "4fe12297f45ec2646286122162883b938faff1c4523154c576daea92c9a4acac",
+  "final_pdf_sha256": "f5534a4091ae298dc6a659e3de2f91d4fd498bf57963c27b739d0c19555e40fb",
+  "source_zip_sha256": "e005e76500267f5ef97abac1ba1bb6431649289a3f7ab494f416bac659ad2297",
+  "source_manifest_files_verified": 200,
+  "isolated_source_compile": "final archive recompiles to identical PDF text",
+  "isolated_table_regeneration": "6 tables identical",
+  "abstract_words": 163,
+  "gpu_execution": false,
+  "baseline": "history/v1.pdf",
+  "reviewed_candidate_sha256": "f5534a4091ae298dc6a659e3de2f91d4fd498bf57963c27b739d0c19555e40fb",
+  "post_review_changes": "none after final introduction confirmation; artifact/document verification only",
+  "visual_qa": "main pages and new appendix pages inspected; final introduction inspected",
+  "introduction_word_count_latex_whitespace": 246,
+  "final_comparative_review": "Astra and Sol prefer revised paper; final introduction both report no material issue"
+}

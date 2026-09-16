@@ -7,6 +7,8 @@ from pathlib import Path
 import json
 import math
 from statistics import mean
+from decimal import Decimal, ROUND_HALF_UP
+import numpy as np
 
 HERE = Path(__file__).resolve().parent
 D = json.loads((HERE / 'revision_evidence_inputs.json').read_text())['reports']
@@ -95,6 +97,38 @@ def interval(v, scale=100, digits=2):
     return f'[{scale*v[0]:.{digits}f}, {scale*v[1]:.{digits}f}]'
 
 
+def verify_connections():
+    def lse(x):
+        m = np.max(x)
+        return m + np.log(np.exp(x-m).sum())
+    rng = np.random.default_rng(20260916)
+    error = 0.
+    for _ in range(1000):
+        logits = rng.normal(size=12)*3
+        eta = rng.normal(size=12)*2
+        direct = lse(logits[:4]+eta[:4])-lse(logits[4:]+eta[4:])-lse(logits[:4])+lse(logits[4:])
+        rhs = lse(logits[:4]-lse(logits[:4])+eta[:4])-lse(logits[4:]-lse(logits[4:])+eta[4:])
+        error = max(error, abs(direct-rhs))
+    assert error < 1e-12
+    for base, pairs, length in [(500000,64,8192),(500000,64,4096),(1000000,64,32768),(10000,32,32768)]:
+        omega=base**(-np.arange(pairs,dtype=float)/pairs)
+        turns=length*omega/(2*np.pi)
+        l=np.where(turns>32)[0][-1];h=np.where(turns<1)[0][0]
+        c=np.log(base)/pairs;n=h-l;u=np.arange(n+1)/n
+        ep=np.log(length*omega[l]/(64*np.pi));em=np.log(2*np.pi/(length*omega[h]))
+        close(n*c,np.log(32)+ep+em)
+        assert np.allclose(length*omega[l:h+1],64*np.pi*32**(-u)*np.exp((1-u)*ep-u*em),rtol=1e-12)
+    mature=json.loads((HERE/'revision_evidence_inputs.json').read_text())['cosh_mature']['llama_lora']
+    temporal=json.loads((HERE/'llama_temporal_summary.json').read_text())['lengths']
+    for i,length in enumerate(('8K','16K','32K')):
+        for arm,values in [('geo_lora',mature['native_ppl']),('evq_lora',mature['cosh_ppl'])]:
+            assert abs(math.exp(temporal[length]['domain_macro_nll'][arm])-values[i])<.00051
+        if length!='8K':
+            assert len(temporal[length]['paired_pack_deltas'])==24
+            assert all(v<0 for v in temporal[length]['paired_pack_deltas'])
+    return float(error)
+
+
 def generate():
     rows = []
     for key, label, length in MODELS:
@@ -103,15 +137,15 @@ def generate():
         for vals, factor, digits, best in [(macro, 100, 2, max(macro.values())),
                                             (ppl, 1, 4, min(ppl.values()))]:
             for a in ARMS:
-                s = f'{factor*vals[a]:.{digits}f}'
+                s = format(Decimal(str(factor*vals[a])).quantize(Decimal(10) ** -digits, rounding=ROUND_HALF_UP), 'f')
                 values.append('\\textbf{' + s + '}' if vals[a] == best else s)
         rows.append(label + ' & $' + length + r'$K & ' + ' & '.join(values) + r' \\')
     table('table_three_method_main.tex',
           r'\textbf{Direct training-free comparison.} Static $s=4$ tables; '
           r'NIAH is the eight-task macro score (\%, $5$/task), and PPL uses '
           r'$5$ matched documents per model. T/P/Y: TailSpline/MrPro/official static YaRN. '
-          r'PPL corpora differ across models; compare methods within each row. '
-          r'Intervals and task scores are in Appendix~\ref{sec:three-method-complete}.',
+          r'Each public method retains its correction-band convention. PPL corpora differ '
+          r'across models. Paired intervals and task scores follow below.',
           'tab:three-method-main', 'llrrrrrr',
           r'Model & Length & \multicolumn{3}{c}{NIAH $\uparrow$} & \multicolumn{3}{c}{PPL $\downarrow$} \\'
           '\n' + r' & & T & P & Y & T & P & Y', rows)
@@ -142,9 +176,13 @@ def generate():
               r'Task & \multicolumn{3}{c}{'+keys[0].capitalize()+r'} & \multicolumn{3}{c}{'+keys[1].capitalize()+r'} \\'+'\n'+r' & T & P & Y & T & P & Y', rows)
     g=D['glm_full13']['summaries'];rows=[]
     for t in D['glm_full13']['tasks']:
+        if t.startswith('niah_'):
+            for a in ('tailspline','mrpro'):
+                close(g[a]['by_length']['131072']['tasks'][t]['official'], normalized('glm')[2][t][a])
+            continue
         vals=[g[a]['by_length']['131072']['tasks'][t]['official']*100 for a in ('tailspline','mrpro')]
         rows.append(t.replace('_',r'\_')+' & '+f'{vals[0]:.2f} & {vals[1]:.2f} & {vals[0]-vals[1]:+.2f}'+r' \\')
-    table('table_glm_full13.tex','GLM Full-13 at $128$K, $5$ inputs/task. Scores are percentages.',
+    table('table_glm_full13.tex',r'GLM Full-13 non-retrieval tasks at $128$K ($5$/task, \%). The eight retrieval tasks are in Table~\ref{tab:three-method-tasks-qg}; together they form the complete Full-13 panel.',
           'tab:glm-full13','lrrr',r'Task & T & P & Difference (pp)', rows)
     rows=[]
     for key,label in [('qwen_qa','Qwen'),('glm_qa','GLM')]:
@@ -162,10 +200,13 @@ def generate():
 
 if __name__ == '__main__':
     verify()
+    error = verify_connections()
     generate()
     result={'status':'PASS','paired_score_rows_reaggregated':120,
             'document_nll_rows_reaggregated':15,
             'other_results':'report-backed; aggregate arithmetic checked',
-            'model_execution':False,'raw_text_rescoring':False}
+            'model_execution':False,'raw_text_rescoring':False,
+            'fixed_state_log_odds_max_error':error,'turn_identity_public_grids':4,
+            'llama_lora_ppl':'recomputed from domain NLL; 24/24 long-prefix packs favor Cosh'}
     (HERE/'revision_evidence_verification.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result))

@@ -87,7 +87,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "f6a8aee93129edd4c4fa2f9bc00b1d9318d497e455a655af6cc82c77b133cc8d",
+          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -114,7 +114,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "f6a8aee93129edd4c4fa2f9bc00b1d9318d497e455a655af6cc82c77b133cc8d",
+          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -169,7 +169,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "f6a8aee93129edd4c4fa2f9bc00b1d9318d497e455a655af6cc82c77b133cc8d",
+          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
@@ -198,14 +198,14 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "tracked",
-          "sha256": "94283e743afbcd7100102d58dfb5dbe8f66f99bec18d44af318200aea12c066c",
+          "sha256": "05630d352227f562dd75959ed8ce321c015998e511c2baeb691e2b8db443cd57",
           "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices",
           "snapshot_note": "Existing construction and data retained; updated cross-references for new clean and NCP evidence."
         },
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "5528b5aefa0b1a5aa6a2f910e5c2874a54330bb4b6b7cbef41daeebe82f9cd4b",
+          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -264,7 +264,7 @@
         {
           "path": "paper-2027/appendix/compact_f_learning.tex",
           "availability": "tracked",
-          "sha256": "d1b2add61a053fc5e6651ffec6ee3d41d15fdbca79a58d3cf194dd9da0695c68",
+          "sha256": "e2f27b9147dd18f0e35780856d75d2ae7074c845e5461f305dff2ee8c835aa2b",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -286,7 +286,7 @@
         {
           "path": "paper-2027/appendix/compact_f_learning.tex",
           "availability": "tracked",
-          "sha256": "d1b2add61a053fc5e6651ffec6ee3d41d15fdbca79a58d3cf194dd9da0695c68",
+          "sha256": "e2f27b9147dd18f0e35780856d75d2ae7074c845e5461f305dff2ee8c835aa2b",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -297,7 +297,7 @@
       "priority": "P1",
       "question": "长程来源如何进入表征",
       "evidence_grade": "单适配pair；curated与报告",
-      "manuscript_location": "Extended records only; prior 69-page location: Appendix F.3",
+      "manuscript_location": "§6.3 / Appendix F.2 / Table cosh-mature-ppl",
       "interpretation": "native-endpoint vs midpoint conversion；同adapter任务负结果保留",
       "sources": [
         {
@@ -339,7 +339,7 @@
         {
           "path": "paper-2027/appendix/compact_f_learning.tex",
           "availability": "tracked",
-          "sha256": "d1b2add61a053fc5e6651ffec6ee3d41d15fdbca79a58d3cf194dd9da0695c68",
+          "sha256": "e2f27b9147dd18f0e35780856d75d2ae7074c845e5461f305dff2ee8c835aa2b",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -482,7 +482,7 @@
       "priority": "P2",
       "question": "更大模型中的分配后果",
       "evidence_grade": "报告与文档配对",
-      "manuscript_location": "Extended records only; prior 69-page location: Appendix F.1",
+      "manuscript_location": "§6.3 / Appendix F.2 / Table cosh-mature-ppl",
       "interpretation": "from-init trainer差异与released配对分开",
       "sources": [
         {
@@ -951,7 +951,7 @@
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "5528b5aefa0b1a5aa6a2f910e5c2874a54330bb4b6b7cbef41daeebe82f9cd4b",
+          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1023,7 +1023,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1046,7 +1046,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1123,13 +1123,13 @@
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "5528b5aefa0b1a5aa6a2f910e5c2874a54330bb4b6b7cbef41daeebe82f9cd4b",
+          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1156,7 +1156,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "f6a8aee93129edd4c4fa2f9bc00b1d9318d497e455a655af6cc82c77b133cc8d",
+          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1190,7 +1190,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1212,7 +1212,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1266,13 +1266,13 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "f6a8aee93129edd4c4fa2f9bc00b1d9318d497e455a655af6cc82c77b133cc8d",
+          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "5528b5aefa0b1a5aa6a2f910e5c2874a54330bb4b6b7cbef41daeebe82f9cd4b",
+          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1311,7 +1311,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1350,7 +1350,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1394,7 +1394,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1433,7 +1433,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1472,7 +1472,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "c45da3db06893f2149ed6a81d64c77b0e08f615345775e1eda71e95ae8dfc5ba",
+          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1518,6 +1518,105 @@
           "availability": "tracked",
           "sha256": "97ec23f94d1aedef9d514478200a1fb4e6b38dc5a1a262df2da10d8d916363ab",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
+        }
+      ]
+    },
+    {
+      "id": "A55",
+      "name": "Four-family direct static YaRN comparison",
+      "priority": "P0",
+      "question": "Four-family direct static YaRN comparison",
+      "evidence_grade": "Recorded matched model reports; aggregate arithmetic verified",
+      "manuscript_location": "§6.1 / Appendix D.6",
+      "interpretation": "Matched NIAH-8×5 and PPL-5; preserves each public method and all four outcomes",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s4_32k_yarn_quick.json",
+          "availability": "tracked",
+          "sha256": "513d796c46bbd7fce5161c8fcdefae8793e2127435dfd5bea524bcaf913e9a86"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_olmo_s4_16k_yarn_quick.json",
+          "availability": "tracked",
+          "sha256": "b0c169d0bf517265acba997580ecbf1f146351e5e826060b89ee6b96a4357183"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_yarn_quick.json",
+          "availability": "tracked",
+          "sha256": "348cc028f1b20a4cf01c04df08c2af8b34e3d3e11588cee28de75db737312cf9"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_yarn.json",
+          "availability": "tracked",
+          "sha256": "924411c32c6a0648b0c9e2b0bb58100e6c852c2e0779bbc46b390bcf7393f57a"
+        }
+      ]
+    },
+    {
+      "id": "A56",
+      "name": "GLM partial-RoPE Full-13",
+      "priority": "P0",
+      "question": "GLM partial-RoPE Full-13",
+      "evidence_grade": "Recorded matched model reports; aggregate arithmetic verified",
+      "manuscript_location": "§6.1 / Table 1 / Appendix D.6",
+      "interpretation": "65 paired prompts, +12.7949pp; GQA, 32 rotary pairs",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13.json",
+          "availability": "tracked",
+          "sha256": "3933fee82d60283212adf5d3efd20c872c2f4dc0194159d0932b877e39217a2e"
+        }
+      ]
+    },
+    {
+      "id": "A57",
+      "name": "Qwen and GLM three-arm complete-book QA",
+      "priority": "P0",
+      "question": "Qwen and GLM three-arm complete-book QA",
+      "evidence_grade": "Recorded matched model reports; aggregate arithmetic verified",
+      "manuscript_location": "§6.1 / Table 2 / Appendix D.7",
+      "interpretation": "35 questions and 7 source contexts per model; official F1, marginal and simultaneous intervals",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_naturalqa_triarm.json",
+          "availability": "tracked",
+          "sha256": "268452a2b6ff283d25bb6092d2b062920fc5d60264fdd0c2dbdf663eff8c6a8b"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_triarm.json",
+          "availability": "tracked",
+          "sha256": "5c627574312cbb82f3b160ea2de49558856822f5a2f2f47fc1f9c2ff08935108"
+        }
+      ]
+    },
+    {
+      "id": "A58",
+      "name": "Higher-factor complete task profiles",
+      "priority": "P0",
+      "question": "Higher-factor complete task profiles",
+      "evidence_grade": "Recorded matched model reports; aggregate arithmetic verified",
+      "manuscript_location": "Appendix D.8",
+      "interpretation": "Llama S16 and Qwen S8; retains retrieval, PPL and natural-task differences",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_128k_gate.json",
+          "availability": "tracked",
+          "sha256": "bc4cbfdcce8bc6383c540acbac83fce2fd417ebd84e9eb80711489a132c585a5"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_infinite_en_qa.json",
+          "availability": "tracked",
+          "sha256": "353ad67fb752e9975bf300b3d0bf1f291c831167f2b464157becb464bda46431"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_infinite_en_dia.json",
+          "availability": "tracked",
+          "sha256": "5971a441679a1085495b8ae9a279954e753e0c67b9d94642abf93bcda3f2aac1"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s8_256k_health.json",
+          "availability": "tracked",
+          "sha256": "e0e98666271072486113d839cea49023847159feb3f54f95c2fa8dd3ebff928c"
         }
       ]
     }

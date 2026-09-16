@@ -32,13 +32,7 @@ inputs span $28270$--$32606$ tokens; the fixed QA-1 supplement completes
 $200$ source-order records without output-based selection. OLMo's clean
 panel uses generation seed $20261101$ and QA source offset $5600$.
 \input{tables/table_compact_clean}
-\begin{figure}[ht]
-\centering\includegraphics[width=\linewidth]{fig_tailspline_complete.pdf}
-\caption{\textbf{Complete clean Llama length comparison.} Full-13 means and
-all task differences relative to MrPro. The $8/16$K panels contain $50$ inputs
-per task and $32$K contains $200$.}
-\label{fig:tailspline-complete}
-\end{figure}
+
 
 
 Llama $32$K T--P is $+11.72$ points, interval $[10.32,13.11]$.
@@ -195,6 +189,7 @@ $65536$ for GLM, and direct prefill for Qwen; the five-document LM runs use
 direct prefill. Llama/OLMo/GLM intervals use $10{,}000$ paired resamples;
 NIAH resampling is within task, with eight task weights fixed, and LM
 resampling is by document. Qwen retains its recorded paired intervals.
+\input{tables/table_three_method_main}
 \input{tables/table_three_method_intervals}
 \input{tables/table_three_method_tasks_lo}
 \input{tables/table_three_method_tasks_qg}
@@ -223,16 +218,13 @@ answers remain in the mean. The paired bootstrap keeps questions from a
 sampled source context together, using $20{,}000$ draws and seeds
 $20261401/20261402$ for T--P/T--Y. Table~\ref{tab:infinite-qa-intervals}
 reports both marginal intervals and simultaneous coverage for the two
-comparisons within each model. Earlier two-arm reports use another bootstrap
-seed; the means agree exactly and this table consistently uses the three-arm
-report. No cross-model pooled F1 is defined.
+comparisons within each model.
 \input{tables/table_infinite_qa_intervals}
 
 Qwen T/P/Y EOS counts are $29/28/30$, with cap counts $6/7/5$;
 GLM has EOS counts $31/29/26$ and cap counts $4/6/9$. Neither panel has
 empty outputs. Relative to P, Qwen T has higher per-question F1 on $13$
-questions, lower on $6$, and equal on $16$. The full generated answers and
-source-context identities determine the declared scoring and resampling units.
+questions, lower on $6$, and equal on $16$.
 \FloatBarrier
 
 \subsection{Higher extension factors: complete task profiles}

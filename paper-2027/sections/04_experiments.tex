@@ -1,23 +1,17 @@
 \section{Model Quality Within and Beyond the Native Window}
 \label{sec:experiments}\label{sec:exp-mature}
-We evaluate one static TailSpline table across context lengths, test internal
-shape with an equal-displacement control, and examine in-window allocation with
-NCP. Supporting Cosh experiments study allocation during learning.
-The protocol glossary in Table~\ref{tab:protocol-glossary} distinguishes
-these interventions.
+We evaluate frozen extension, equal-displacement shape, native-window quality
+and supporting learning effects (protocols: Table~\ref{tab:protocol-glossary}).
 
 \subsection{Task quality with a frozen TailSpline table}
 \label{sec:tailspline-evaluation}
-Llama-$3$-$8$B-Instruct uses $s=4$, native length $8192$, band $[18,35]$
-and gain $1+0.1\ln4$. OLMo-$2$-$1$B-Instruct uses native length $4096$
-and band $[14,32]$. Qwen-$2.5$-$3$B-Instruct and GLM-$4$-$9$B-0414
-use native length $32768$, with $64/32$ rotary pairs and bands $[23,40]/[17,30]$.
-All use the same scale and gain rule. T/P denote TailSpline
-and MrRoPE-Pro. Each pair shares weights, outer frequencies, endpoints, gain,
-inputs and decoder; only its internal allocation changes. Clean RULER
-\citep{hsieh2024ruler} uses source-order inputs, no content padding or depth
-selection, batch $1$ and the official scorer. Table~\ref{tab:clean-length-main}
-reports scores and paired $95\%$ intervals.
+We evaluate Llama-$3$-$8$B-Instruct, OLMo-$2$-$1$B-Instruct,
+Qwen-$2.5$-$3$B-Instruct and GLM-$4$-$9$B-0414 with static $s=4$ tables.
+T/P denote TailSpline/MrRoPE-Pro, sharing weights, outer bands, endpoints,
+gain $1+0.1\ln4$, inputs and decoder; only internal allocation changes.
+Clean RULER \citep{hsieh2024ruler} uses source-order inputs, no content padding
+or depth selection, batch one and official scoring. Model grids and runtime
+settings are in Appendix~\ref{sec:three-method-complete}.
 \input{tables/table_clean_length_main}
 
 \paragraph{Quality across the window.}
@@ -31,11 +25,11 @@ from original RoPE's $90.03\%$. Full native and extended task breakdowns
 are in Appendix~\ref{sec:clean-confirmation}.
 
 \begin{figure}[ht]
-\centering\includegraphics[width=.60\linewidth]{fig_tailspline_main.pdf}
+\centering\includegraphics[width=\linewidth]{fig_tailspline_complete.pdf}
 \caption{\textbf{One static allocation improves quality across context lengths.}
-Clean Llama Full-13 T--P differences with paired $95\%$ intervals.
-The $8/16$K panels use $50$ inputs per task and $32$K uses $200$.
-All task differences appear in Appendix~\ref{sec:clean-confirmation}.}
+Clean Llama Full-13 T--P differences. (a) Task-equal means with paired $95\%$
+intervals. (b) All task differences. The $8/16$K panels use $50$ inputs per task
+and $32$K uses $200$.}
 \label{fig:tailspline-main}
 \end{figure}
 
@@ -46,14 +40,13 @@ intervals. GLM extends this comparison to partial RoPE: at $128$K,
 its Full-13 score rises from $31.56$ to $44.36\%$ on $65$ paired inputs.
 Only its rotary subspace is changed; nonrotary coordinates are retained.
 
-Table~\ref{tab:three-method-main} adds official static YaRN
-\citep{peng2024yarn}, installed without training, on matched NIAH and PPL panels.
-TailSpline improves both metrics over both baselines on Llama, OLMo and GLM;
-Qwen's scores are close. On OLMo and GLM the paired retrieval and document-NLL
-intervals support both comparisons; Llama's NLL intervals are negative and its
-retrieval intervals include zero. These direct comparisons use each method's
-public rule; the controlled T/P comparison fixes outer bands and gain.
-\input{tables/table_three_method_main}
+Direct comparisons with official static YaRN \citep{peng2024yarn}, installed
+without training, test the rule against another established baseline.
+On matched NIAH-8 and five-document PPL panels, TailSpline improves both
+metrics over both baselines on Llama, OLMo and GLM. Its NIAH gains over YaRN
+are $10.00/54.38/23.75$ points, respectively; Qwen's scores are close.
+Complete three-method scores and paired intervals are in
+Appendix~\ref{sec:three-method-complete}.
 
 \paragraph{Natural question answering.}
 The five-task Natural-QA pool contains $631$ questions from $524$ source
@@ -64,7 +57,8 @@ between $8$K and $32$K, scored by multiple-choice accuracy.
 For Qwen and GLM, InfiniteBench En.QA \citep{zhang2024infinitebench}
 uses complete books with $100$K--$128$K token inputs and official token F1.
 TailSpline improves on MrPro by $3.24/3.33$ points and scores slightly above
-YaRN on both models (Table~\ref{tab:natural-transfer-main}). Each panel has
+YaRN on both models (F1 $18.45/27.32\%$; Table~\ref{tab:natural-transfer-main}).
+Each panel has
 $35$ questions from seven book contexts; source-context intervals and complete
 protocols appear in Appendix~\ref{sec:infinite-qa-new}.
 \input{tables/table_natural_transfer_main}
@@ -107,19 +101,31 @@ On OLMo's native $4$K clean Full-13 panel ($780$ paired prompts), NCP raises
 the score from $69.37$ to $70.78\%$, a $+1.41$-point gain with paired interval
 $[0.20,2.58]$. This gain establishes a direct in-window benefit from optimizing
 frequency allocation at fixed support. Appendix~\ref{sec:ncp-results-new}
-reports the complete task breakdown and companion direction controls.
+reports the complete task breakdown, including the largest gain in variable
+tracking ($+23$ points), and companion direction controls.
 
 \subsection{Supporting extrapolation evidence with Cosh}
 \label{sec:exp-capability}
-A $432$M MLA-style model uses $16$ rotary pairs, $500$M training tokens at $8$K
-and three seeds \citep{deepseekv2,deepseekv3}, with fixed Cosh strength
-$\tau=1.414$. All arms use the same FineWeb-Edu evaluation chunks. This recipe
-uses unanchored midpoint tables, distinct from the fixed-endpoint intervention.
-Cosh improves all five extended lengths in every seed; $16$K PPL falls from
-$138.8$ to $95.6$. The benefit appears during training and persists under a
-common wavelength blend (Fig.~\ref{fig:allocation-learning};
-Appendix~\ref{sec:mla-results}).
-
-A $750$M single-seed continuation fixes endpoints and reduces $16$K PPL from
-$45.1$ to $24.4$; $8$K answer-token exact match rises from $0/40$ to $31/40$.
-Full recipes and matched OLMo adaptation are in Appendix~\ref{sec:learning-summary}.
+Cosh studies connect frequency allocation during training to mature-model
+adaptation; Section~\ref{sec:controlled-findings} isolates placement within
+this line. A $432$M MLA-style model with $16$ rotary pairs trains for $500$M
+tokens at $8$K across three seeds \citep{deepseekv2,deepseekv3}, using
+unanchored midpoint Cosh. It improves
+all five extended lengths in every seed; $16$K PPL falls from $138.8$ to $95.6$,
+and the benefit persists under a common wavelength blend
+(Fig.~\ref{fig:allocation-learning}). An endpoint-anchored $750$M shared-start continuation reduces
+$16$K PPL from $45.1$ to $24.4$ and raises $8$K answer-token exact match
+from $0/40$ to $31/40$.
+\begin{figure}[ht]
+\centering\includegraphics[width=.60\linewidth]{fig_allocation_learning.pdf}
+\caption{\textbf{Cosh improves extrapolation across training seeds.} Three-seed
+mean and range for the $432$M MLA model; dashed curves use the common wavelength
+blend ($s=4$). Evaluation uses common text chunks.}
+\label{fig:allocation-learning}
+\end{figure}
+The long-range gains extend to recipe-matched $1.485$B OLMo training and
+matched Llama-$3$-$8$B LoRA, whose $16$K PPL falls from $108.96$ to $24.07$.
+With phase-exposure and answer-plus-EOS supervision, matched OLMo adaptation
+also improves complete-answer retrieval: Native/Cosh score $18/98\%$ at $8$K
+and $0/60\%$ at $16$K. Appendix~\ref{sec:compact-learning} separates these
+training and adaptation protocols and their native-window results.

@@ -94,3 +94,18 @@ scores, combined and source-specific PPL, normalized log-length AUC and paired
 bootstrap intervals. It consumes the original `generations.jsonl`,
 `lm_rows.jsonl`, `contract.json`, status, table receipts and source manifest.
 The manuscript's numerical summaries remain in `../figs/`.
+
+## September 16 direct baseline and long-book panels
+
+The archived reports in `figs/revision_evidence_inputs.json` contain the completed
+three-method NIAH/PPL panels, GLM Full-13, Qwen/GLM natural QA, and higher-scale
+evaluations. Run `python3 figs/make_revision_evidence.py` from the archive root
+to check recorded aggregate arithmetic and regenerate the added tables. This
+does not run models or rescore generated text. The script also checks the
+fixed-state softmax identity and turn-boundary formulas.
+
+The runtime includes `matched_three_method_quick_report.py`,
+`official_yarn_naturalqa.py`, `run_natural_long.py`, and their local imports.
+These retain the official task scorers, paired prompt selection, source-context
+resampling and static YaRN installation. The Natural-QA panels use complete
+books, a 40-token generation cap and the official English-QA F1 adapter.

@@ -2,8 +2,8 @@
 
 | 任务 | 入口 |
 |---|---|
-| 下一版准备（只文档，等待更多结果后改稿） | [研究定位、Pro取舍、十篇审稿经验与实验准备](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
-| 当前附录整理与完整性检查 | [六主题附录、保留映射和验证](appendix_restructure_20260916/README.md) |
+| 后续增量准备（本批完成部分已入稿） | [研究定位、Pro取舍、十篇审稿经验与实验准备](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
+| 此前附录整理与完整性检查（29页基线） | [六主题附录、保留映射和验证](appendix_restructure_20260916/README.md) |
 | 新落盘结果整合（已应用，含NCP正文） | [跨模型、自然QA、等位移与原生窗口分析](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |
 | 本轮理论整合与精确修改（已应用） | [修改记录](theory_revision_proposal_20260915/README.md) · [R08独立PDF审稿](pdf-review-rounds/20260915_theory_integration_r08/README.md) |
 | 判断现稿是否还需要修改、查看本轮文档修正 | [现状与修改必要性审计](audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md) |
@@ -22,3 +22,5 @@
 - [ICLR 2027 深度优化计划](ICLR2027_STABLE7_STRATEGY_20260915.md)：保留问题陈述与写法推演；顶部已按现稿重新评估必要性，整套重排和新增实验不再作为必改清单。实际下一步以当前研究索引为准。
 
 - [五轮 Astra/Sol 独立审稿与逐轮改稿](pdf-review-rounds/20260915_astra_sol_five_rounds/README.md)：冻结PDF、同轮相同提示词、逐项判断与AC综合。
+
+- [2026-09-16证据增量与新旧PDF对读](revision_20260916_evidence_update/README.md)：已完成结果、取舍和v1基线回归检查。
