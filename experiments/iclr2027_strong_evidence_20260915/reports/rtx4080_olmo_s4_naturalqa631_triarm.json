@@ -1,0 +1,456 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": 0.215513055716889,
+        "hotpotqa": 0.2862651906326605,
+        "multifieldqa_en": 0.34491397495963766,
+        "narrativeqa": 0.09512064622122901,
+        "qasper": 0.13940213694860804
+      },
+      "macro_f1": 0.21624300089580487,
+      "output_health": {
+        "by_task": {
+          "2wikimqa": {
+            "empty": 0,
+            "ended_eos": 169,
+            "generated_tokens": 1169,
+            "hit_cap": 4,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              17.0,
+              32.0
+            ],
+            "rows": 173
+          },
+          "hotpotqa": {
+            "empty": 0,
+            "ended_eos": 160,
+            "generated_tokens": 994,
+            "hit_cap": 6,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              20.5,
+              32.0
+            ],
+            "rows": 166
+          },
+          "multifieldqa_en": {
+            "empty": 0,
+            "ended_eos": 72,
+            "generated_tokens": 4207,
+            "hit_cap": 40,
+            "output_length_quantiles": [
+              2.0,
+              34.5,
+              64.0,
+              64.0
+            ],
+            "rows": 112
+          },
+          "narrativeqa": {
+            "empty": 0,
+            "ended_eos": 61,
+            "generated_tokens": 365,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              14.0,
+              23.0
+            ],
+            "rows": 61
+          },
+          "qasper": {
+            "empty": 0,
+            "ended_eos": 119,
+            "generated_tokens": 694,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              15.099999999999994,
+              31.0
+            ],
+            "rows": 119
+          }
+        },
+        "empty": 0,
+        "ended_eos": 581,
+        "generated_tokens": 7429,
+        "hit_cap": 50,
+        "output_length_quantiles": [
+          2.0,
+          5.0,
+          64.0,
+          64.0
+        ],
+        "rows": 631
+      }
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": 0.2629445724136932,
+        "hotpotqa": 0.34645050567143976,
+        "multifieldqa_en": 0.3579834047789464,
+        "narrativeqa": 0.09854063843002353,
+        "qasper": 0.18026681125267044
+      },
+      "macro_f1": 0.24923718650935464,
+      "output_health": {
+        "by_task": {
+          "2wikimqa": {
+            "empty": 0,
+            "ended_eos": 162,
+            "generated_tokens": 1342,
+            "hit_cap": 11,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              32.0,
+              32.0
+            ],
+            "rows": 173
+          },
+          "hotpotqa": {
+            "empty": 0,
+            "ended_eos": 161,
+            "generated_tokens": 1183,
+            "hit_cap": 5,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              22.5,
+              32.0
+            ],
+            "rows": 166
+          },
+          "multifieldqa_en": {
+            "empty": 0,
+            "ended_eos": 64,
+            "generated_tokens": 4510,
+            "hit_cap": 48,
+            "output_length_quantiles": [
+              2.0,
+              43.0,
+              64.0,
+              64.0
+            ],
+            "rows": 112
+          },
+          "narrativeqa": {
+            "empty": 0,
+            "ended_eos": 61,
+            "generated_tokens": 652,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              8.0,
+              21.0,
+              29.0
+            ],
+            "rows": 61
+          },
+          "qasper": {
+            "empty": 0,
+            "ended_eos": 119,
+            "generated_tokens": 850,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              25.099999999999994,
+              51.0
+            ],
+            "rows": 119
+          }
+        },
+        "empty": 0,
+        "ended_eos": 567,
+        "generated_tokens": 8537,
+        "hit_cap": 64,
+        "output_length_quantiles": [
+          2.0,
+          6.0,
+          64.0,
+          64.0
+        ],
+        "rows": 631
+      }
+    },
+    "yarn": {
+      "by_task": {
+        "2wikimqa": 0.24718546436830582,
+        "hotpotqa": 0.2826997063885795,
+        "multifieldqa_en": 0.32290925790808983,
+        "narrativeqa": 0.1152397348270723,
+        "qasper": 0.14556201483771275
+      },
+      "macro_f1": 0.22271923566595203,
+      "output_health": {
+        "by_task": {
+          "2wikimqa": {
+            "empty": 0,
+            "ended_eos": 169,
+            "generated_tokens": 1157,
+            "hit_cap": 4,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              18.80000000000001,
+              32.0
+            ],
+            "rows": 173
+          },
+          "hotpotqa": {
+            "empty": 0,
+            "ended_eos": 160,
+            "generated_tokens": 1134,
+            "hit_cap": 6,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              25.0,
+              32.0
+            ],
+            "rows": 166
+          },
+          "multifieldqa_en": {
+            "empty": 0,
+            "ended_eos": 74,
+            "generated_tokens": 4181,
+            "hit_cap": 38,
+            "output_length_quantiles": [
+              2.0,
+              34.5,
+              64.0,
+              64.0
+            ],
+            "rows": 112
+          },
+          "narrativeqa": {
+            "empty": 0,
+            "ended_eos": 61,
+            "generated_tokens": 397,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              15.0,
+              24.0
+            ],
+            "rows": 61
+          },
+          "qasper": {
+            "empty": 0,
+            "ended_eos": 119,
+            "generated_tokens": 646,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              12.099999999999994,
+              47.0
+            ],
+            "rows": 119
+          }
+        },
+        "empty": 0,
+        "ended_eos": 583,
+        "generated_tokens": 7515,
+        "hit_cap": 48,
+        "output_length_quantiles": [
+          2.0,
+          5.0,
+          64.0,
+          64.0
+        ],
+        "rows": 631
+      }
+    }
+  },
+  "benchmark_family": "longbench_naturalqa631",
+  "condition": "olmo2_1b",
+  "contract": "FOUR_MODEL_OFFICIAL_STATIC_YARN_NATURAL_QA_TRIARM_V1",
+  "contrasts": {
+    "mrpro_minus_yarn_descriptive": {
+      "baseline": "yarn",
+      "bootstrap_mean": -0.00622574909461787,
+      "by_task": {
+        "2wikimqa": -0.03167240865141682,
+        "hotpotqa": 0.0035654842440809853,
+        "multifieldqa_en": 0.02200471705154783,
+        "narrativeqa": -0.020119088605843286,
+        "qasper": -0.0061598778891047146
+      },
+      "candidate": "mrpro",
+      "ci95": [
+        -0.025761455172664552,
+        0.013523670960564723
+      ],
+      "comparison_family_size": 1,
+      "draws": 20000,
+      "estimate": -0.006476234770147166,
+      "familywise_ci95_bonferroni": [
+        -0.025761455172664552,
+        0.013523670960564723
+      ],
+      "probability_delta_gt_zero": 0.2651
+    },
+    "tailspline_minus_mrpro": {
+      "baseline": "mrpro",
+      "bootstrap_mean": 0.03314251371221144,
+      "by_task": {
+        "2wikimqa": 0.04743151669680418,
+        "hotpotqa": 0.060185315038779275,
+        "multifieldqa_en": 0.013069429819308753,
+        "narrativeqa": 0.00341999220879452,
+        "qasper": 0.040864674304062404
+      },
+      "candidate": "tailspline",
+      "ci95": [
+        0.0039122632999934424,
+        0.06365147716094675
+      ],
+      "comparison_family_size": 2,
+      "draws": 20000,
+      "estimate": 0.032994185613549776,
+      "familywise_ci95_bonferroni": [
+        -0.00016942239815388274,
+        0.06826298846677994
+      ],
+      "probability_delta_gt_zero": 0.98695
+    },
+    "tailspline_minus_yarn": {
+      "baseline": "yarn",
+      "bootstrap_mean": 0.026770961929549593,
+      "by_task": {
+        "2wikimqa": 0.015759108045387354,
+        "hotpotqa": 0.06375079928286026,
+        "multifieldqa_en": 0.03507414687085658,
+        "narrativeqa": -0.016699096397048765,
+        "qasper": 0.03470479641495769
+      },
+      "candidate": "tailspline",
+      "ci95": [
+        0.00042587603670178245,
+        0.054922324058981065
+      ],
+      "comparison_family_size": 2,
+      "draws": 20000,
+      "estimate": 0.02651795084340261,
+      "familywise_ci95_bonferroni": [
+        -0.0034648341590279167,
+        0.059172840053194085
+      ],
+      "probability_delta_gt_zero": 0.9771
+    }
+  },
+  "cross_model_pooling_allowed": false,
+  "cross_model_pooling_note": "Models retain separate benchmark families, tokenizations, length ranges and reports; no four-model aggregate score is defined.",
+  "excluded_models": [
+    "Qwen2.5-1.5B-Instruct"
+  ],
+  "identity": {
+    "asset_manifest_sha256": "55a6b24b94030983cd50b9987976fd816387875c78ce76fe935e5895496f7eb1",
+    "baseline_wrapper_runtime": null,
+    "model_config_sha256": "0d15ebb6cb8d998513b46ef337214176a6fd59fe5f16b30387c70d5f87795a9c",
+    "panel_sha256": "5b120bd42dfc39aa91b71c3fe8f87e31e9d402c77246f6a1c90ac898f386b36c",
+    "raw_sha256": {
+      "mrpro": "14c808eb52f3771769bbfc0a42dc137cf289b15673ed6fb3c38752b1c271f335",
+      "tailspline": "907ffe105a997f20ed030da6fbb6652ba782e227bf140bbff52725c550f965c1",
+      "yarn": "c5914ca89e010cea798fa8858f9f279f331f5a9edba0914594e558a7d5238a79"
+    },
+    "recovery_runtime": {
+      "base_arm": "Native",
+      "batch_size": 1,
+      "generation_length_caps": [
+        16384
+      ],
+      "generation_order": "panel_order_v1",
+      "generation_prefill_strategy": "direct_generate_v1",
+      "left_pad_batches": false,
+      "lm_enabled": false,
+      "prefill_chunk_size": 0,
+      "row_count": 631,
+      "row_split": null,
+      "runtime_versions": {
+        "allow_tf32": true,
+        "attention_backend": "torch_sdpa_flash_only",
+        "cache_type": null,
+        "loss_logits_dtype": "float32",
+        "model_dtype": "bfloat16",
+        "torch": "2.8.0+cu128",
+        "transformers": "5.15.1"
+      },
+      "signature_sha256": "c946c0fe1b1470a1bda150c7547e9060f1b17349a7393953105a53d66683f7d4",
+      "unadapted": true
+    },
+    "runtime_identity_level": "EXACT_RECORDED_CONTRACT",
+    "same_ordered_prompts": true,
+    "yarn_table_receipt_sha256": "9e7e5926ec455682c28e1d1a1b8434b43480e49ba0604105210a9bfafcbc696a"
+  },
+  "input_token_range": [
+    4110,
+    16319
+  ],
+  "length_cap": 16384,
+  "method_identity": "official static YaRN, zero-training installation",
+  "metric": "five-task equal macro whole-response LongBench-normalized token F1",
+  "model_id": "olmo2_1b",
+  "official_scorer": "scripts.eval.longbench_metrics.qa_f1_score",
+  "primary_comparison_family": {
+    "contrasts": [
+      "tailspline_minus_mrpro",
+      "tailspline_minus_yarn"
+    ],
+    "interval": "Bonferroni familywise 95% in addition to ordinary paired 95%",
+    "size": 2
+  },
+  "public_model_name": "OLMo-2-0425-1B-Instruct",
+  "question_equal_sensitivity": {
+    "mrpro_minus_yarn_descriptive": {
+      "bootstrap_mean": -0.006795993136200818,
+      "ci95": [
+        -0.027796215467642316,
+        0.014218856911790426
+      ],
+      "draws": 20000,
+      "estimate": -0.006946462561274519,
+      "probability_delta_gt_zero": 0.2644
+    },
+    "tailspline_minus_mrpro": {
+      "bootstrap_mean": 0.03926114908548165,
+      "ci95": [
+        0.011504393921146579,
+        0.06659895051335034
+      ],
+      "draws": 20000,
+      "estimate": 0.03919446369519324,
+      "probability_delta_gt_zero": 0.998
+    },
+    "tailspline_minus_yarn": {
+      "bootstrap_mean": 0.03240998182689926,
+      "ci95": [
+        0.006262622254141309,
+        0.05885206233626143
+      ],
+      "draws": 20000,
+      "estimate": 0.03224800113391875,
+      "probability_delta_gt_zero": 0.9926
+    }
+  },
+  "rows_per_arm": 631,
+  "scale": 4.0,
+  "source_context_clusters": 524,
+  "status": "COMPLETE",
+  "tasks": {
+    "2wikimqa": 173,
+    "hotpotqa": 166,
+    "multifieldqa_en": 112,
+    "narrativeqa": 61,
+    "qasper": 119
+  }
+}

@@ -1,0 +1,448 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": 0.3519405450041288,
+        "hotpotqa": 0.5308730302640726,
+        "multifieldqa_en": 0.5132716962820004,
+        "narrativeqa": 0.23770646475564505,
+        "qasper": 0.4103804511339937
+      },
+      "macro_f1": 0.4088344374879681,
+      "output_health": {
+        "by_task": {
+          "2wikimqa": {
+            "empty": 0,
+            "ended_eos": 172,
+            "generated_tokens": 948,
+            "hit_cap": 1,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              12.0,
+              32.0
+            ],
+            "rows": 173
+          },
+          "hotpotqa": {
+            "empty": 0,
+            "ended_eos": 165,
+            "generated_tokens": 824,
+            "hit_cap": 1,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              9.75,
+              32.0
+            ],
+            "rows": 166
+          },
+          "multifieldqa_en": {
+            "empty": 0,
+            "ended_eos": 107,
+            "generated_tokens": 2023,
+            "hit_cap": 5,
+            "output_length_quantiles": [
+              2.0,
+              12.5,
+              62.349999999999966,
+              64.0
+            ],
+            "rows": 112
+          },
+          "narrativeqa": {
+            "empty": 0,
+            "ended_eos": 61,
+            "generated_tokens": 557,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              3.0,
+              8.0,
+              16.0,
+              51.0
+            ],
+            "rows": 61
+          },
+          "qasper": {
+            "empty": 0,
+            "ended_eos": 119,
+            "generated_tokens": 2667,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              20.0,
+              54.29999999999998,
+              117.0
+            ],
+            "rows": 119
+          }
+        },
+        "empty": 0,
+        "ended_eos": 624,
+        "generated_tokens": 7019,
+        "hit_cap": 7,
+        "output_length_quantiles": [
+          2.0,
+          6.0,
+          39.0,
+          117.0
+        ],
+        "rows": 631
+      }
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": 0.36956817409044546,
+        "hotpotqa": 0.5298382076600212,
+        "multifieldqa_en": 0.5191129352414549,
+        "narrativeqa": 0.22817607088530295,
+        "qasper": 0.40726201761519737
+      },
+      "macro_f1": 0.4107914810984844,
+      "output_health": {
+        "by_task": {
+          "2wikimqa": {
+            "empty": 0,
+            "ended_eos": 171,
+            "generated_tokens": 1013,
+            "hit_cap": 2,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              12.400000000000006,
+              32.0
+            ],
+            "rows": 173
+          },
+          "hotpotqa": {
+            "empty": 0,
+            "ended_eos": 166,
+            "generated_tokens": 828,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              12.5,
+              31.0
+            ],
+            "rows": 166
+          },
+          "multifieldqa_en": {
+            "empty": 0,
+            "ended_eos": 108,
+            "generated_tokens": 1985,
+            "hit_cap": 4,
+            "output_length_quantiles": [
+              2.0,
+              12.0,
+              54.799999999999955,
+              64.0
+            ],
+            "rows": 112
+          },
+          "narrativeqa": {
+            "empty": 0,
+            "ended_eos": 61,
+            "generated_tokens": 530,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              3.0,
+              7.0,
+              18.0,
+              55.0
+            ],
+            "rows": 61
+          },
+          "qasper": {
+            "empty": 0,
+            "ended_eos": 119,
+            "generated_tokens": 2616,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              19.0,
+              54.099999999999994,
+              81.0
+            ],
+            "rows": 119
+          }
+        },
+        "empty": 0,
+        "ended_eos": 625,
+        "generated_tokens": 6972,
+        "hit_cap": 6,
+        "output_length_quantiles": [
+          2.0,
+          6.0,
+          39.5,
+          81.0
+        ],
+        "rows": 631
+      }
+    },
+    "yarn": {
+      "by_task": {
+        "2wikimqa": 0.35608387418996057,
+        "hotpotqa": 0.5606582788349903,
+        "multifieldqa_en": 0.5064835248807023,
+        "narrativeqa": 0.26087919366607887,
+        "qasper": 0.40326170860076144
+      },
+      "macro_f1": 0.41747331603449866,
+      "output_health": {
+        "by_task": {
+          "2wikimqa": {
+            "empty": 0,
+            "ended_eos": 173,
+            "generated_tokens": 1048,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              2.0,
+              5.0,
+              13.0,
+              32.0
+            ],
+            "rows": 173
+          },
+          "hotpotqa": {
+            "empty": 0,
+            "ended_eos": 165,
+            "generated_tokens": 844,
+            "hit_cap": 1,
+            "output_length_quantiles": [
+              2.0,
+              4.0,
+              13.0,
+              32.0
+            ],
+            "rows": 166
+          },
+          "multifieldqa_en": {
+            "empty": 0,
+            "ended_eos": 106,
+            "generated_tokens": 2070,
+            "hit_cap": 6,
+            "output_length_quantiles": [
+              2.0,
+              12.5,
+              64.0,
+              64.0
+            ],
+            "rows": 112
+          },
+          "narrativeqa": {
+            "empty": 0,
+            "ended_eos": 61,
+            "generated_tokens": 553,
+            "hit_cap": 0,
+            "output_length_quantiles": [
+              3.0,
+              8.0,
+              18.0,
+              53.0
+            ],
+            "rows": 61
+          },
+          "qasper": {
+            "empty": 0,
+            "ended_eos": 118,
+            "generated_tokens": 2762,
+            "hit_cap": 1,
+            "output_length_quantiles": [
+              2.0,
+              21.0,
+              57.19999999999999,
+              128.0
+            ],
+            "rows": 119
+          }
+        },
+        "empty": 0,
+        "ended_eos": 623,
+        "generated_tokens": 7277,
+        "hit_cap": 8,
+        "output_length_quantiles": [
+          2.0,
+          6.0,
+          40.5,
+          128.0
+        ],
+        "rows": 631
+      }
+    }
+  },
+  "benchmark_family": "longbench_naturalqa631",
+  "condition": "llama3_8b",
+  "contract": "FOUR_MODEL_OFFICIAL_STATIC_YARN_NATURAL_QA_TRIARM_V1",
+  "contrasts": {
+    "mrpro_minus_yarn_descriptive": {
+      "baseline": "yarn",
+      "bootstrap_mean": -0.008828256758288055,
+      "by_task": {
+        "2wikimqa": -0.004143329185831768,
+        "hotpotqa": -0.02978524857091769,
+        "multifieldqa_en": 0.006788171401298171,
+        "narrativeqa": -0.023172728910433815,
+        "qasper": 0.007118742533232247
+      },
+      "candidate": "mrpro",
+      "ci95": [
+        -0.024771775167376473,
+        0.006260340705995676
+      ],
+      "comparison_family_size": 1,
+      "draws": 20000,
+      "estimate": -0.00863887854653056,
+      "familywise_ci95_bonferroni": [
+        -0.024771775167376473,
+        0.006260340705995676
+      ],
+      "probability_delta_gt_zero": 0.1294
+    },
+    "tailspline_minus_mrpro": {
+      "baseline": "mrpro",
+      "bootstrap_mean": 0.0019059233465280297,
+      "by_task": {
+        "2wikimqa": 0.017627629086316654,
+        "hotpotqa": -0.0010348226040514108,
+        "multifieldqa_en": 0.005841238959454431,
+        "narrativeqa": -0.009530393870342102,
+        "qasper": -0.0031184335187963153
+      },
+      "candidate": "tailspline",
+      "ci95": [
+        -0.014826012703852899,
+        0.018589579742824873
+      ],
+      "comparison_family_size": 2,
+      "draws": 20000,
+      "estimate": 0.001957043610516296,
+      "familywise_ci95_bonferroni": [
+        -0.01742262627567191,
+        0.021176418803780923
+      ],
+      "probability_delta_gt_zero": 0.58505
+    },
+    "tailspline_minus_yarn": {
+      "baseline": "yarn",
+      "bootstrap_mean": -0.00695006819408959,
+      "by_task": {
+        "2wikimqa": 0.013484299900484886,
+        "hotpotqa": -0.0308200711749691,
+        "multifieldqa_en": 0.012629410360752602,
+        "narrativeqa": -0.03270312278077592,
+        "qasper": 0.004000309014435932
+      },
+      "candidate": "tailspline",
+      "ci95": [
+        -0.028698839489153884,
+        0.01375805767269749
+      ],
+      "comparison_family_size": 2,
+      "draws": 20000,
+      "estimate": -0.006681834936014264,
+      "familywise_ci95_bonferroni": [
+        -0.0322145494389705,
+        0.016303521508612688
+      ],
+      "probability_delta_gt_zero": 0.26115
+    }
+  },
+  "cross_model_pooling_allowed": false,
+  "cross_model_pooling_note": "Models retain separate benchmark families, tokenizations, length ranges and reports; no four-model aggregate score is defined.",
+  "excluded_models": [
+    "Qwen2.5-1.5B-Instruct"
+  ],
+  "identity": {
+    "asset_manifest_sha256": "51c0ccf8970bbf34cea4bfb12f976421690296b68f3e1db760ebeee391b27aa4",
+    "baseline_wrapper_runtime": null,
+    "model_config_sha256": "61f3de03a16ca8046b05dc777bce72717022bc8522152eee61a69072272ef54b",
+    "panel_sha256": "7c4524fc89b6910fde8239ebbc1cf440fff61ed4523569052a7e67f933011767",
+    "raw_sha256": {
+      "mrpro": "e5e56121ab37d135ceb5ffa3914155883aa5fb162057b3adfb5771b4f93b2ce1",
+      "tailspline": "6b161a1538cdcd7af8ab33a3d39529f49dd689184255d69129a4c603e4265ac3",
+      "yarn": "3f01f57f00b7ce0184a24862a786f6f8e82995ef613419fdf481c80b67ad9d8a"
+    },
+    "recovery_runtime": {
+      "base_arm": "Native",
+      "batch_size": 1,
+      "generation_length_caps": [
+        32768
+      ],
+      "generation_order": "panel_order_v1",
+      "generation_prefill_strategy": "dynamic_cache_lower_right_v1",
+      "left_pad_batches": false,
+      "lm_enabled": false,
+      "prefill_chunk_size": 8192,
+      "row_count": 631,
+      "row_split": null,
+      "runtime_versions": null,
+      "signature_sha256": "f3a1700016b4247b4f0d011f0de1e9096c9726880ce1a4b9e85a05caaf2ad395",
+      "unadapted": true
+    },
+    "runtime_identity_level": "RECORDED_FIELDS_ONLY_LEGACY_CONTRACT",
+    "same_ordered_prompts": true,
+    "yarn_table_receipt_sha256": "2cd308b7c07986a4e65901da8ac8477dfe03382ab746e28672eeadcc08bab39d"
+  },
+  "input_token_range": [
+    3694,
+    16304
+  ],
+  "length_cap": 32768,
+  "method_identity": "official static YaRN, zero-training installation",
+  "metric": "five-task equal macro whole-response LongBench-normalized token F1",
+  "model_id": "llama3_8b",
+  "official_scorer": "scripts.eval.longbench_metrics.qa_f1_score",
+  "primary_comparison_family": {
+    "contrasts": [
+      "tailspline_minus_mrpro",
+      "tailspline_minus_yarn"
+    ],
+    "interval": "Bonferroni familywise 95% in addition to ordinary paired 95%",
+    "size": 2
+  },
+  "public_model_name": "Meta-Llama-3-8B-Instruct",
+  "question_equal_sensitivity": {
+    "mrpro_minus_yarn_descriptive": {
+      "bootstrap_mean": -0.00870766128519595,
+      "ci95": [
+        -0.025041746426214234,
+        0.007617648737362153
+      ],
+      "draws": 20000,
+      "estimate": -0.008664466112611147,
+      "probability_delta_gt_zero": 0.15045
+    },
+    "tailspline_minus_mrpro": {
+      "bootstrap_mean": 0.004134921570036796,
+      "ci95": [
+        -0.014897942768719093,
+        0.023519854545160843
+      ],
+      "draws": 20000,
+      "estimate": 0.004088067239764642,
+      "probability_delta_gt_zero": 0.65955
+    },
+    "tailspline_minus_yarn": {
+      "bootstrap_mean": -0.004497160601014566,
+      "ci95": [
+        -0.024299661711568287,
+        0.015064182729100697
+      ],
+      "draws": 20000,
+      "estimate": -0.004576398872846513,
+      "probability_delta_gt_zero": 0.32725
+    }
+  },
+  "rows_per_arm": 631,
+  "scale": 4.0,
+  "source_context_clusters": 524,
+  "status": "COMPLETE",
+  "tasks": {
+    "2wikimqa": 173,
+    "hotpotqa": 166,
+    "multifieldqa_en": 112,
+    "narrativeqa": 61,
+    "qasper": 119
+  }
+}

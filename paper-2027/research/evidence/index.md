@@ -153,5 +153,6 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 | A54 | OLMo native allocation exploration | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json) |
 | A55 | Pro6000极限长度与自然长文配对包 | [结果owner](../../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)；Qwen S4/128K En.QA `+3.24pp`，Qwen S8/256K single-NIAH `+53.33pp`，Llama S16自然QA仅作压力边界 |
 | A59 | Qwen/GLM S4最终三臂与GLM独立换书 | [结果owner](../../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)；Qwen Full-13×10相对MrPro/YaRN `+4.53/+2.36pp`，GLM `+8.87/+11.81pp`；GLM第二书池77题仍由TailSpline胜出 |
+| A60 | Llama/OLMo官方静态YaRN大样本直接比较 | [报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)；NIAH-8×200、PPL46、Natural-QA631与Full-13×10三臂完成；Llama QA由YaRN小幅第一，其他五个模型×指标读数均为TailSpline第一 |
 
 - [A55–A58最新直接基线、GLM、长书QA和高倍率整合](../revision_20260916_evidence_update/README.md)：各报告身份与当前稿位置已登记。
