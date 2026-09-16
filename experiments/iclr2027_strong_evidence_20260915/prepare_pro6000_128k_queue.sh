@@ -13,6 +13,8 @@ ready=${plan}/pro6000_128k_queue/assets_ready.json
 cd "${repo}"
 export PYTHONPATH=.
 export TOKENIZERS_PARALLELISM=false
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
+export MKL_NUM_THREADS=${MKL_NUM_THREADS:-8}
 
 # This stage is deliberately CPU-only.  It is safe to run while a different
 # experiment owns GPU0 and creates no model generations.

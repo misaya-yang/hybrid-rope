@@ -20,6 +20,8 @@ mkdir -p "${root}/runs" "${root}/logs" "${root}/reports"
 cd "${repo}"
 export PYTHONPATH=.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
+export MKL_NUM_THREADS=${MKL_NUM_THREADS:-8}
 
 total_mib=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1 | tr -d ' ')
 if [[ "${total_mib}" -lt 45000 ]]; then

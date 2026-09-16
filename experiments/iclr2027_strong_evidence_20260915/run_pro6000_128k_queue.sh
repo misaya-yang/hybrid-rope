@@ -16,6 +16,8 @@ cd "${repo}"
 export PYTHONPATH=.
 export TOKENIZERS_PARALLELISM=false
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
+export MKL_NUM_THREADS=${MKL_NUM_THREADS:-8}
 
 # One owner for the entire expensive queue.  The generic Qwen runner receives
 # a private nested lock because this process already owns the global GPU lock.

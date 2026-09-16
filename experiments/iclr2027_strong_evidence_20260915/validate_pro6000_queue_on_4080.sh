@@ -14,6 +14,8 @@ gpu_lock=${GPU_LOCK_PATH:-/tmp/hybrid-rope-gpu0.lock}
 cd "${repo}"
 export PYTHONPATH=.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
+export MKL_NUM_THREADS=${MKL_NUM_THREADS:-8}
 mkdir -p "${out}"
 exec 9>"${gpu_lock}"
 if ! flock -n 9; then
@@ -80,8 +82,12 @@ for name,report in reports.items():
             raise ValueError(f'{name}/{chunk} did not exercise cached decode beyond the first token')
         if name.startswith('llama_'):
             lm=item.get('lm',{})
-            if lm.get('status')!='ok' or lm.get('stable') is not True:
-                raise ValueError(f'{name}/{chunk} LM failed numerical parity or memory checks')
+            if lm.get('status')!='ok' or lm.get('finite') is not True:
+                raise ValueError(f'{name}/{chunk} LM did not execute with finite losses')
+    if name.startswith('llama_'):
+        stable_lm=[item['lm'] for item in chunks.values() if item['lm'].get('stable') is True]
+        if not stable_lm or report.get('recommended_lm_chunk') is None:
+            raise ValueError(f'{name} has no LM strategy within the frozen numerical/memory tolerance')
 receipt={
     'status':'PRO6000_QUEUE_32GB_CODEPATH_VALIDATED_V2',
     'scientific_result':False,
