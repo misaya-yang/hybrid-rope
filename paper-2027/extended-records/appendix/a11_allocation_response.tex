@@ -1,0 +1,187 @@
+% Allocation response proofs and numerical comparisons; CPU-verified.
+\section{Frequency Allocation and Distance-Dependent Content Responses}
+\label{sec:allocation-response}
+
+\subsection{Positional overlap preserves content coordinates}
+\label{sec:content-coordinate-retention}
+For a block $\mathcal B$ of $r$ rotary pairs, write
+$\mathcal R_{\mathcal B}(d)=\operatorname{diag}_{k\in\mathcal B}R(\omega_kd)$.
+Each block is orthogonal, so $\mathcal R_{\mathcal B}(d)$ has rank $2r$ at
+every distance. This is the rank of an operator on content coordinates;
+the positional Gram instead measures shared dependence on distance.
+
+\begin{proposition}[Content matching in a slow block]
+\label{prop:slow-content-matching}
+Let $H>0$ and $\eta=H\max_{k\in\mathcal B}|\omega_k|$. For $|d|\le H$,
+\begin{equation}
+\left|q_{\mathcal B}^{\top}\mathcal R_{\mathcal B}(d)k_{\mathcal B}
+-q_{\mathcal B}^{\top}k_{\mathcal B}\right|
+\le\eta\|q_{\mathcal B}\|_2\|k_{\mathcal B}\|_2.
+\label{eq:slow-content-bound}
+\end{equation}
+For $2r$ content symbols represented by distinct coordinate unit vectors,
+let the query and correct key share a vector and all incorrect keys use
+other vectors. Their unscaled score margin is at least $1-2\eta$ across
+arbitrary key distances in $[-H,H]$.
+\end{proposition}
+
+\begin{proof}
+For each pair,
+$\|R(\omega d)-I\|_2=2|\sin(\omega d/2)|\le|\omega d|$.
+The block-diagonal norm is the maximum pair norm. The bilinear norm bound
+gives Eq.~\eqref{eq:slow-content-bound}. Unrotated matching scores are one
+for the correct symbol and zero for an incorrect symbol. Each score
+changes by at most $\eta$, giving the margin bound. In particular,
+$\eta<1/2$ preserves the correct ranking.
+\end{proof}
+
+As distinct frequencies approach zero, their positional subspaces approach
+$\operatorname{span}\{1,d\}$ while the content construction remains
+distinct in all $2r$ coordinates. This provides a concrete distinction
+between repeated positional dependence and repeated content information,
+consistent with prior analyses of frequency use \citep{barbero2025round}.
+The construction concerns specified content vectors and the small-phase
+regime; the next subsection evaluates the complete finite frequency tables.
+
+\subsection{Task gains with lower full-pair effective rank}
+\label{sec:allocation-rank-quality}
+We use the Llama mathematical native grid
+$\omega_k^N=500000^{-k/64}$, native length $8192$, $s=4$ and band $[18,35]$.
+The TailSpline and MrPro formulas determine all frequencies without model
+observations. Effective rank uses the full-pair Gram from
+Eq.~\eqref{eq:cross-gram}, with uniform separations on $[0,H]$.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{A successful allocation can have lower positional effective rank.}
+Ranks describe the full mathematical frequency tables; task scores reuse
+the clean paired evaluations in Table~\ref{tab:clean-length-main}.
+The $16$K and $32$K task panels contain $650$ and $2600$ paired prompts.}
+\label{tab:allocation-rank-quality}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Window & $r_2$ TailSpline & $r_2$ MrPro & RULER TailSpline (\%) & RULER MrPro (\%)\\
+\midrule
+$16$K & $8.283391$ & $8.739887$ & $86.0949$ & $82.7051$\\
+$32$K & $10.077270$ & $10.214888$ & $68.2660$ & $56.5436$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two independent continuous-Gram implementations agree within
+$3.82\times10^{-12}$. Explicit integer-position features over
+$0,\ldots,H-1$, an integer closed form, FP32 table rounding, and causal
+pair weights proportional to $H-d$ preserve the rank ordering at
+$8/16/32$K. The latter weights are a declared separation measure.
+At $8$K the continuous ranks are $7.068167/7.716063$ for T/P.
+These observations establish task gains with lower normalized positional
+diversity; they do not identify rank reduction as the cause of the gains.
+
+\subsection{How interior wavelengths respond to extension scale}
+\label{sec:allocation-scale-response}
+Write $\nu_k(s)=\omega_k^N s^{-m_k(s)}$ and let
+$A_k(s)=\omega_k^N/\nu_k(s)$ be the wavelength multiplier.
+For the index ramp in the released YaRN implementation
+\citep{peng2024yarn}, with fixed interior coordinate $0<t<1$,
+\begin{equation}
+A_Y(s,t)=\frac{1}{1-t+t/s},\qquad
+\lim_{s\to\infty}A_Y(s,t)=\frac{1}{1-t}.
+\label{eq:yarn-interior-scale-limit}
+\end{equation}
+A fixed frequency blend $\gamma+(1-\gamma)/s$ similarly has limit
+$1/\gamma$ for $\gamma>0$; the fully interpolated tail $\gamma=0$ grows
+with $s$. MrPro and TailSpline instead have
+$A_P=s^{P_q}$ and $A_T=s^{T_q}$ for their fixed finite-grid exponents.
+Their log-scale derivatives are
+\begin{equation}
+\frac{\partial\log A_Y}{\partial\log s}
+=\frac{t}{s(1-t)+t},\qquad
+\frac{\partial\log A_P}{\partial\log s}=P_q,\qquad
+\frac{\partial\log A_T}{\partial\log s}=T_q.
+\label{eq:allocation-scale-derivatives}
+\end{equation}
+These identities follow by differentiation. They describe constructor
+responses to $s$, rather than task-performance guarantees.
+
+Index and turn-count ramps use different blend weights. All numerical
+comparisons here use one shared band and the index-ramp equation of the
+released YaRN implementation (revision \texttt{995db5b}).
+They are frequency-table comparisons, not a re-evaluation of the YaRN
+baseline runs in the MrRoPE paper.
+
+\paragraph{Magnitude of the TailSpline intervention.}
+Direct subtraction of the finite-grid formulas gives
+\begin{equation}
+T_q-P_q=\frac{q(n-q)(3n+q+1)}{n(n+1)(2n+1)}\ge0,
+\qquad \frac{A_T}{A_P}=s^{T_q-P_q}.
+\label{eq:tailspline-wavelength-order}
+\end{equation}
+For the Llama $n=17$ grid, the maximum wavelength ratio is
+$1.328763$, $1.765612$, $2.346080$ and $3.117385$ at $s=2,4,8,16$.
+At pair $k=26$ ($q=8$), the multipliers are:
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Scale & YaRN index blend & MrPro & TailSpline\\
+\midrule
+$4$ & $1.545455$ & $1.385674$ & $2.423868$\\
+$16$ & $1.789474$ & $1.920093$ & $5.875134$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The YaRN/MrPro ordering at an interior pair can therefore change with
+scale. TailSpline redistributes substantial wavelength growth throughout
+the transition, in addition to its smaller terminal extra-gap jump.
+
+\subsection{Two reference responses and finite phase intervals}
+\label{sec:allocation-reference-intervals}
+The native reference is $\omega$ and the fully interpolated reference is
+$\omega/s$. For a declared phase tolerance $0<\theta\le\pi$, define
+\begin{equation}
+D_N(\nu;\theta)=\frac{\theta}{|\omega-\nu|},\qquad
+D_D(\nu;\theta)=\frac{\theta}{|\nu-\omega/s|},
+\label{eq:allocation-reference-distances}
+\end{equation}
+with infinity at a zero denominator. These are the maximal intervals
+starting at zero on which the respective unwrapped phase deviation is at
+most $\theta$. Since $\omega/s\le\nu_T\le\nu_P\le\omega$,
+\begin{equation}
+D_D(\nu_T;\theta)\ge D_D(\nu_P;\theta),\qquad
+D_N(\nu_T;\theta)\le D_N(\nu_P;\theta).
+\label{eq:allocation-reference-order}
+\end{equation}
+The exact operator difference is
+$2|\sin(d(\nu-\nu_{\rm ref})/2)|$.
+Thus the distances quantify two specified phase references; they are not
+effective context lengths of a model.
+
+For a fixed content component
+$f_\nu(d)=a\cos(\nu d-\omega d_0)$, with $a>0$ and desired stretched
+distance $d=sd_0$, its residual phase is $\delta=d(\nu-\omega/s)$.
+If $0\le\delta_T\le\delta_P\le\pi$, then $f_T(d)\ge f_P(d)$ by the
+monotonicity of cosine on $[0,\pi]$. The content phase specifies the
+reference calculation. Outside that interval, reducing residual phase
+from $2\pi$ to $\pi$ instead changes the response from $a$ to $-a$.
+The conditional example explains a possible use of distance scaling,
+while the full-model comparisons measure its actual task value.
+
+\paragraph{Equal displacement does not imply a small phase intervention.}
+On the same Llama $s=4$ mathematical grid, the largest T/C unwrapped
+phase difference over integer distances $0,\ldots,32767$ is
+$10.672514$ radians. The corresponding T/P value is $108.197815$.
+For finite comparisons one can use
+\begin{equation}
+\rho_H(\delta)=\frac4H\sum_{d=0}^{H-1}\sin^2(d\delta/2)
+=2-2\frac{\sin(H\delta/2)}{H\sin(\delta/2)}
+\cos((H-1)\delta/2),
+\label{eq:allocation-finite-phase-cost}
+\end{equation}
+with removable singularities evaluated by continuity. The fixed-slot
+rotation RMS is $[K^{-1}\sum_k\rho_H(\nu_k-\widetilde\nu_k)]^{1/2}$.
+At $H=32768$, it is $0.448329$ for T/C and $0.687543$ for T/P.
+These values compare unscaled rotary kernels, before the shared
+cosine/sine gain and the attention normalization.
+For $H|\delta|\ll1$,
+$\rho_H(\delta)=((H-1)(2H-1)/6)\delta^2+O(H^4\delta^4)$.
+The small parameter is therefore distance times frequency difference;
+matching total displacement alone does not supply it.

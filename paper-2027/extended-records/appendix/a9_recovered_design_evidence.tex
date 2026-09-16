@@ -1,0 +1,105 @@
+\subsection{Compact descriptions of a useful allocation}
+\label{sec:compact-coupling}
+
+An ordered $64$-slot movement profile can be approximated by a compact law without retaining every local feature. Define $c_k=L\omega_k/(2\pi)$, $c_{\rm orth}=(1-b^{-1/K})^{-1}$, and $\xi_k=\ln(c_k/c_{\rm orth})$. The adjacent-frequency separation is exactly $L(\omega_k-\omega_{k+1})/(2\pi)=e^{\xi_k}$. A clipped-affine law fitted to the frozen OLMo movement vector is
+\[
+G_4(\xi)=\operatorname{clip}\!\left(\frac{\xi_H-\xi}{\xi_H-\xi_L},0,1\right),\quad
+\omega'_k=\omega_k4^{-G_4(\xi_k)}.
+\]
+The fitted boundaries are $\xi_H=0.7382780681$ and $\xi_L=0.3664038351$. The two parameters were frozen before examining Qwen geometry or model results. Both checkpoints use the fixed cosine/sine gain $1+0.074\ln4$. The fit has movement MAE $0.001223$ on OLMo. The original OLMo-to-Qwen transport interpolates the full profile in $u=e^{\xi}$; C2 evaluates the frozen fitted law directly in $\xi$.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{A compact profile preserves long-context behavior.} Official task macro (\%). OLMo uses RULER-13; Qwen uses four core tasks. The tables were frozen before the long-length evaluation; Qwen $32$K was collected afterward.}
+\label{tab:c2-transport}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Model & Endpoint & Full $64$-point profile & C2 \\
+\midrule
+OLMo & $8$K & 66.71 & 66.84 \\
+OLMo & $16$K & 49.86 & 50.24 \\
+Qwen & $32$K & 70.00 & 71.25 \\
+Qwen & $64$K & 67.25 & 67.75 \\
+Qwen & $128$K & 54.50 & 57.25 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The long-end results show that detailed $64$-point structure is not required to preserve these measured behaviors. At the native window, OLMo's PPL retention is $0.870971$ and task retention $0.904932$; Qwen native-task macro is $82.00\%$ versus $71.25\%$ for C2. The compact approximation preserves long-context scores while changing native-window behavior. The original profiles, C2, and the later normalized-index placements retain distinct tensor identities.
+
+\subsection{An interior-profile control at fixed total displacement}
+\label{sec:fixed-total-profile}
+
+For a fixed band of width $n$ and unit increment mass, define $m_q=\sum_{r=1}^q\epsilon_r$ and centroid $\mu=\sum_{r=1}^n r\epsilon_r$. Reordering the finite sum gives
+\begin{equation}
+\sum_{q=1}^{n-1}m_q=\sum_{r=1}^n(n-r)\epsilon_r=n-\mu.
+\label{eq:displacement-centroid}
+\end{equation}
+At a common scale $s>1$ with identical outer bands, equal total log displacement therefore fixes $\mu$; it is not an additional independent control. Remaining contrasts concern higher-order increment shape.
+
+For $K=64$, let $k=1,\ldots,18$, $p_k=6k(19-k)/(18\cdot19\cdot20)$, and $v_k=k-19/2$. Two increment profiles are
+\[
+\epsilon_k^{A}=p_k\left(1-\frac{10}{119}v_k\right),\qquad
+\epsilon_k^{B}=p_k\left(1-\frac{10}{119}v_k+
+\frac{35}{1496}\left(v_k^2-\frac{357}{20}\right)\right).
+\]
+Both use $m_j=0$ through slot $14$, cumulative increments on slots $15$--$32$, and $m_j=1$ thereafter. They have unit increment mass, identical sampled endpoints, and $\sum_jm_j=42$; their equal centroids follow from Eq.~\eqref{eq:displacement-centroid}. Installed frequencies are $\omega'_j=\omega_j4^{-m_j}$ with fixed gain $1+0.1\ln4$ and terminal shift $m=1$. This comparison tests higher-order increment shape at equal total displacement.
+
+On $350$ shared $16$K OLMo development inputs, scores are $43.6714\%$ and $54.4000\%$. The paired difference is $+10.7286$ points, with $75$ wins, $26$ losses, and $249$ ties; the paired standardized mean is $t=5.47$. A separate $16$-document continuous-text evaluation reports NLL $2.9417$ versus $2.8309$. These observations distinguish two internal profiles that share their total displacement. The task panel was used in profile exploration. The numerical construction, row-score aggregation, and common-total checks are reproduced by \path{figs/verify_recovered_assets.py}.
+
+\subsection{Four methods on the same OLMo task panel}
+\label{sec:four-method-control}
+
+The four-method table uses the $24$ short and $48$ long prompts of the seed-$20260910$ BM--MrPro confirmation panel (Appendix~\ref{sec:bm-model-comparison}). Uni and YaRN were added as follow-up controls on those same inputs. All four methods use $s=4$ and gain $1+0.1\ln4$. MrRoPE profiles are local formula implementations; official YaRN denotes the channel-index ramp implementation. Table~\ref{tab:four-method-control} is recomputed from the recorded per-task aggregates, with matched BM/control comparisons recorded on the shared row identities.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Intermediate-profile comparison on the OLMo six-task panel.} Official task macro in percent, including partial-credit tasks.}
+\label{tab:four-method-control}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Method & $4$K & $16$K \\
+\midrule
+MrRoPE-Pro($4$) & 37.85 & 2.78 \\
+Official YaRN($4$) & 54.38 & 6.94 \\
+MrRoPE-Uni($4$) & 76.88 & 32.12 \\
+BM($4$) & 81.81 & 51.32 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{An equal-total-displacement shape control.}
+For $q=1,\ldots,n-1$, summing the cumulative profiles gives
+\[
+\sum_q m_q^{\rm BM}=\sum_q m_q^{\rm Uni}=\frac{n-1}{2},\qquad
+\sum_q m_q^{\rm Pro}=\frac{n-1}{3}.
+\]
+The outer bands agree, so BM and Uni have identical full-table displacement, whereas BM exceeds Pro by $(n-1)\log s/6$. On the actual $K=64$, $[l,h]=[14,32]$ grid, full-table $\sum_km_k$ is $40.5$ for BM/Uni and $37\frac23$ for Pro. The $16$K BM--Uni difference of $19.20$ points therefore compares different shapes at equal total displacement. This follow-up comparison tests shape at fixed total displacement; natural QA and C42 use their own panels.
+
+Appendix~\ref{sec:bm-natural} evaluates BM and MrRoPE-Pro on natural QA inputs.
+
+\subsection{Full-lag positional geometry as a candidate construction}
+\label{sec:full-lag-profile}
+
+FullLagP2 constructs the native sine--cosine column pairs across all separations $d=0,\ldots,32767$ with causal weights proportional to $32768-d$. For each pair it computes its least-squares residual fraction relative to the other pairs (cutoff $10^{-10}$), min--max normalizes these fractions to $\bar u_j$, and sets $m_j=(1-\bar u_j)^2$. The resulting full table uses $s=4$ and gain $1+0.074\ln4$. It depends on positional geometry, with no model-weight or activation fitting.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Recorded FullLagP2 task outcomes on Qwen-$1.5$B.} Eight prompts/task/length, official task score in percent. The matched-gain MrPro arm uses the same gain as FullLagP2.}
+\label{tab:full-lag-profile}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Length & Task & MrPro & MrPro, matched gain & FullLagP2 \\
+\midrule
+$64$K & MultiKey-2 & 12.50 & 25.00 & 37.50 \\
+ & Variable tracking & 82.50 & 77.50 & 87.50 \\
+ & Frequent words & 45.83 & 45.83 & 70.83 \\
+$128$K & MultiKey-2 & 0.00 & -- & 0.00 \\
+ & Variable tracking & 72.50 & -- & 85.00 \\
+ & Frequent words & 50.00 & -- & 50.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This is a positive small-panel example of converting full-pair geometry into a useful allocation. With the same full array on Qwen-$3$B at $64$K (four prompts/task), FullLagP2/MrPro scores are $75/50\%$ for MultiKey-2, $90/95\%$ for variable tracking, and $66.67/75\%$ for frequent words. The decoder uses repetition penalty $1.1$; these outputs remain separate from later screening panels. The paired score fractions and checkpoint identities are preserved in \path{figs/recovered_asset_inputs.json}. The construction's geometric residual is a design statistic, and the task measurements establish where it is useful.
+\FloatBarrier

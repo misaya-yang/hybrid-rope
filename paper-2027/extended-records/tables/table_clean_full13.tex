@@ -1,0 +1,31 @@
+\begin{table}[ht]
+\centering\small
+\caption{Clean RULER-200: all task means and output health. Scores include capped and empty responses.}
+\label{tab:clean-full13}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Task & TailSpline (\%) & MrPro (\%) & Difference (pp) \\
+\midrule
+cwe & 1.65 & 0.30 & +1.35 \\
+fwe & 61.83 & 39.67 & +22.17 \\
+niah\_multikey\_1 & 84.50 & 62.50 & +22.00 \\
+niah\_multikey\_2 & 47.00 & 9.00 & +38.00 \\
+niah\_multikey\_3 & 24.00 & 2.50 & +21.50 \\
+niah\_multiquery & 95.25 & 94.88 & +0.38 \\
+niah\_multivalue & 93.12 & 97.62 & -4.50 \\
+niah\_single\_1 & 100.00 & 97.00 & +3.00 \\
+niah\_single\_2 & 99.50 & 99.00 & +0.50 \\
+niah\_single\_3 & 100.00 & 94.00 & +6.00 \\
+qa\_1 & 64.00 & 55.50 & +8.50 \\
+qa\_2 & 37.00 & 27.50 & +9.50 \\
+vt & 79.60 & 55.60 & +24.00 \\
+\midrule
+Task-equal mean & 68.27 & 56.54 & +11.72 \\
+\midrule
+EOS count & 2573 & 2517 & --- \\
+Cap-hit count & 27 & 83 & --- \\
+Empty count & 240 & 310 & --- \\
+Generated tokens & 54330 & 58894 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}

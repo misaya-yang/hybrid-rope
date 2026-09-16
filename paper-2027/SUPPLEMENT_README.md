@@ -36,7 +36,7 @@ python3 figs/verify_routing_schedule.py
 ```
 
 These check the packaged mathematical examples or recorded numerical summaries.
-The allocation-response check reproduces Appendix K's full-pair ranks, scale
+The allocation-response check reproduces the full-pair ranks and scale
 response, finite-profile ordering, phase differences and slow-content bound.
 Its task values are existing report-backed observations, not new model outputs.
 They do not rerun training or model generation. Figures already included in the
@@ -109,3 +109,12 @@ and the exact deployed NCP FP32 table from the bundled public native grid. It al
 checks the Fourier representation of the NCP reference risk by independent
 quadrature. Paired intervals are retained from the original reports. The NCP
 constructor and scoring entry point are included under `runtime/experiments/`.
+
+## Reading the compact supplement
+
+The active PDF uses six appendices: positional geometry, explicit constructions,
+controlled identification, frozen evaluation, native-window allocation, and
+Cosh learning. Complete task-level results and matched protocols remain in these
+appendices. Repeated figures and historical side studies are preserved as source
+records under `extended-records/`, rather than appended to the submission PDF.
+These records are not inputs to the active TeX build.

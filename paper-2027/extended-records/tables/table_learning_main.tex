@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering\small
+\caption{\textbf{Allocation benefits across learning protocols.} Each block names its reference. MLA uses unanchored midpoint Cosh and $8$K training; the $750$M pair fixes endpoints. OLMo adaptation uses physical inputs $\le4$K with explicit long-phase exposure and requires the full answer plus EOS.}
+\label{tab:training-models}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Protocol & Metric & Reference & Cosh \\
+\midrule
+\multicolumn{4}{@{}l@{}}{\textit{MLA learning: Geo reference, three seeds}} \\
+50\% budget & PPL at $16$K & 166.2 & 118.0 \\
+75\% budget & PPL at $16$K & 146.2 & 101.6 \\
+100\% budget & PPL at $16$K & 138.8 & 95.6 \\
+\midrule
+\multicolumn{4}{@{}l@{}}{\textit{$750$M continuation: Geo reference, one seed}} \\
+After continuation & PPL at $4$K & 22.0 & 22.3 \\
+ & PPL at $16$K & 45.1 & 24.4 \\
+ & $8$K answer-token exact & $0/40$ & $31/40$ \\
+\midrule
+\multicolumn{4}{@{}l@{}}{\textit{OLMo adaptation: Native reference, one matched pair}} \\
+After phase exposure & $4$K complete + EOS & $95/100$ & $100/100$ \\
+ & $8$K complete + EOS & $18/100$ & $98/100$ \\
+ & $16$K complete + EOS & $0/100$ & $60/100$ \\
+\bottomrule
+\end{tabular}
+\end{table}

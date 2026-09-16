@@ -1,0 +1,703 @@
+\section{Proof Details}
+\label{sec:proofs}
+
+\FloatBarrier
+\subsection{Subspace geometry: cross-Gram, budget identity, and collapse}
+\label{sec:geometry-proofs}
+
+\paragraph{Closed-form cross-Gram.} For $\Delta\sim\mathrm{Unif}[0,L]$ and
+$x_\omega(\Delta)=[\cos(\omega\Delta)\ \ \sin(\omega\Delta)]$, write
+$d=(\omega{-}\nu)L$, $s=(\omega{+}\nu)L$, $a(t)=\sin t/t$ and
+$b_\star(t)=(1{-}\cos t)/t$. Expanding the products of sinusoids and integrating
+termwise gives
+\begin{equation}
+H_{\omega\nu}=\mathbb E[x_\omega^\top x_\nu]=\frac12
+\begin{bmatrix}
+a(d)+a(s) & b_\star(s)-b_\star(d)\\
+b_\star(s)+b_\star(d) & a(d)-a(s)
+\end{bmatrix},
+\label{eq:cross-gram}
+\end{equation}
+and $S_\omega=H_{\omega\omega}$. Since $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$
+is the whitened cross-Gram of two two-dimensional subspaces, its singular values
+are the canonical correlations, and $c_{\omega\nu}=\frac12\|Q_{\omega\nu}\|_F^2$
+is invariant under $x_\omega\mapsto x_\omega O$ for any invertible $O$ (in
+particular under rotation of the phase inside a pair), because $S_\omega$
+transforms congruently and the whitening cancels $O$.
+
+\paragraph{Basis invariance.}
+The cancellation can be stated exactly. Under independent invertible basis
+changes $x_\omega\mapsto x_\omega A_\omega$ and
+$x_\nu\mapsto x_\nu A_\nu$, let
+$U_j=S_j^{1/2}A_j(A_j^\top S_j A_j)^{-1/2}$ for $j\in\{\omega,\nu\}$. Then
+$U_j^\top U_j=I$, and the transformed whitened cross-Gram is
+$\widetilde Q_{\omega\nu}=U_\omega^\top Q_{\omega\nu}U_\nu$. Left and right
+orthogonal factors preserve the two canonical correlations and therefore
+$c_{\omega\nu}$. Thus $c_{\omega\nu}$ is an intrinsic measure of overlap
+between the two positional subspaces.
+
+\begin{theorem}[Spectral budget identity]
+\label{thm:budget}
+For the block-whitened Gram matrix $\Gamma$ with diagonal blocks $I_2$,
+$\operatorname{tr}\Gamma=2K$ and
+$\operatorname{tr}(\Gamma^2)=2K[1+(K-1)\bar c]$. Hence its
+R\'enyi-$2$ effective rank is given by \eqref{eq:budget-identity}.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:budget}]
+$\Gamma$ is the block matrix with blocks $\Gamma_{ij}=Q_{\omega_i\omega_j}$ and
+$\Gamma_{ii}=I_2$. Hence $\operatorname{tr}\Gamma=\sum_{i=1}^K\operatorname{tr}I_2=2K$.
+For the second moment,
+$\operatorname{tr}(\Gamma^2)=\sum_{i,j}\operatorname{tr}(\Gamma_{ij}\Gamma_{ji})
+=\sum_i\operatorname{tr}(I_2)+\sum_{i\neq j}\|Q_{\omega_i\omega_j}\|_F^2
+=2K+2K(K-1)\bar c$, using $\Gamma_{ji}=\Gamma_{ij}^\top$ and the definition
+$\bar c=\frac{1}{K(K-1)}\sum_{i\neq j}c_{\omega_i\omega_j}$ with
+$\|Q_{ij}\|_F^2=2c_{ij}$. Dividing gives \eqref{eq:budget-identity}.
+\end{proof}
+
+The identity determines R\'enyi-$2$ effective rank exactly from the mean pairwise
+redundancy. Shannon effective rank and log-determinant retain higher-order
+multi-subspace dependence on the full spectrum.
+
+\begin{proof}[Proof of Proposition~\ref{prop:collapse}]
+Put $t=\Delta/L$, $x=\omega L$, and use $\theta=x^2$ as the local parameter.
+The rescaled pair has the analytic basis
+\begin{align}
+u_1(\theta,t)&=\cos(\sqrt\theta\,t)
+ =1-\tfrac12\theta t^2+O(\theta^2),\\
+u_2(\theta,t)&=\frac{\sin(\sqrt\theta\,t)}{\sqrt\theta}
+ =t-\tfrac16\theta t^3+O(\theta^2).
+\label{eq:slow-basis-expansion}
+\end{align}
+Thus $V_\omega\to V_0=\operatorname{span}\{1,\Delta\}$.  The fourth-order
+coefficient follows by retaining the part of the first perturbation transverse
+to $V_0$. Under the
+uniform measure on $t\in[0,1]$,
+\begin{align}
+\Pi_0^\perp t^2&=p_2(t):=t^2-t+\tfrac16,\\
+\Pi_0^\perp t^3&=p_3(t):=t^3-\tfrac9{10}t+\tfrac15,
+\label{eq:slow-residual-polynomials}
+\end{align}
+where $\Pi_0^\perp$ is the $L_2[0,1]$ projection off
+$\operatorname{span}\{1,t\}$.  In the base $[1,t]$, its Gram and the residual
+perturbation Gram are
+\begin{equation}
+G_0=
+\begin{bmatrix}1&1/2\\[1pt]1/2&1/3\end{bmatrix},\qquad
+M=
+\begin{bmatrix}
+\langle-p_2/2,-p_2/2\rangle&\langle-p_2/2,-p_3/6\rangle\\
+\langle-p_3/6,-p_2/2\rangle&\langle-p_3/6,-p_3/6\rangle
+\end{bmatrix}
+=\begin{bmatrix}1/720&1/1440\\[1pt]1/1440&1/2800\end{bmatrix}.
+\label{eq:slow-residual-gram}
+\end{equation}
+The squared chordal distance between the two nearby planes is therefore
+\begin{equation}
+2-\lVert Q_{x,y}\rVert_F^2
+=(x^2-y^2)^2\operatorname{tr}(G_0^{-1}M)+O(\epsilon^6)
+=\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6),
+\label{eq:slow-collapse-expanded}
+\end{equation}
+with $\epsilon=\max\{|x|,|y|\}\to0$.  The exact coefficient is reproduced
+with rational polynomial inner products by
+\texttt{scripts/analysis/full\_rope\_collision\_audit.py}; at
+$x{=}0.05,y{=}0.10$ its analytic Gram gives exact/leading ratio $1.00058$.
+
+For the softmax metric with fixed $p$,
+$F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$, so the constant
+direction is annihilated before whitening.  Writing
+$\overline h=h-\mathbb E_p h$, the same expansion gives
+\begin{equation}
+\frac{\overline{\sin(\omega\Delta)}}{\omega}
+ \longrightarrow \Delta-\mathbb E_p\Delta,
+\qquad
+-\frac{2\overline{\cos(\omega\Delta)}}{\omega^2}
+ \longrightarrow \Delta^2-\mathbb E_p\Delta^2.
+\end{equation}
+These functions span the centred limit whenever $p$ has nondegenerate support
+on at least three distances. The separation weights $p$ therefore determine
+which polynomial directions survive centering.
+\end{proof}
+
+\paragraph{Directional overlap and feature scale.}
+For the original, unwhitened pair on $[0,L]$, put $x=\omega L$ and
+$\operatorname{sinc}x=\sin x/x$. The self-Gram eigenvalues are
+\[
+\lambda_\pm(S_\omega)=\frac{1\pm|\operatorname{sinc}x|}{2},
+\qquad \lambda_-(S_\omega)\sim\frac{x^2}{12},\qquad
+\kappa(S_\omega)\sim\frac{12}{x^2}\quad(x\to0).
+\]
+Thus the slow pair has a poorly scaled second direction before normalization.
+Block whitening removes this within-pair scaling and measures overlap between
+positional directions. Raw feature energy, coefficient magnitude, and numerical
+precision determine how strongly those directions can contribute to a model.
+
+The standard $u_k=k/K$ grid gives $23$ slow pairs in
+Figure~\ref{fig:frequency-geometry}; the endpoint-inclusive grid used in
+Figure~\ref{fig:spectral-budget-scaling} gives $24$ at $K=64$.
+Both figures use the uniform separation measure.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.94\linewidth]{fig_frequency_geometry.pdf}
+  \caption{\textbf{Where a finite frequency table spends its budget.}
+  (a)~At $K{=}32$, Cosh concentrates interior channels toward the fast end
+  while endpoint normalisation preserves sampled support; the deployed
+  midpoint table is shown separately.
+  (b)~For standard RoPE at $L{=}4096$, $b{=}5{\times}10^5$, and $K{=}64$,
+  phase-invariant full-subspace redundancy concentrates in the $23$ pairs with
+  $\omega L\le1$.}
+  \label{fig:frequency-geometry}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.96\linewidth]{fig_spectral_budget_scaling.pdf}
+  \caption{\textbf{Spectral-budget anatomy across channel counts.}
+  Panel (a) uses the endpoint-inclusive diagnostic grid at $L{=}4096$ and
+  $b{=}500$K: as $K$ grows from $16$ to $64$, the nominal dimension assigned to
+  pairs with $\omega L\le1$ grows from $12$ to $48$, while their phase-invariant
+  effective rank remains approximately two. Panel (b) evaluates the complete
+  fixed-endpoint table under the same uniform separation prior, using the
+  zero-search reference $\tau{=}2K/\sqrt{L}$; anchored \evq{} spends
+  progressively more of the available full-pair dimension than Geo as the
+  budget grows.}
+  \label{fig:spectral-budget-scaling}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Finite-window overlap in the identification experiment}
+\label{sec:finite-window-rank}
+
+The slow-limit proposition has a finite-window counterpart that can be calculated directly on the identification grid. Set $b=256$, $K=32$, $L=256$, and retain the $n$ slowest frequencies of $\omega_j=b^{-j/K}$. Their dimensionless frequencies are $\omega_jL=1.1892,1.4142,1.6818,2,\ldots$ in slow-to-fast order. The smallest is already greater than one, so we evaluate the full cross-Gram in~\eqref{eq:cross-gram} without a small-phase approximation.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Finite-window positional concentration on the paired-training grid.} The separation measure is uniform on $[0,L]$. The nominal coordinate count is $2n$; $r_2$ is the effective rank of the block-whitened Gram.}
+\label{tab:finite-window-rank}
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+Slowest pairs $n$ & Largest $\omega L$ & Coordinates & $r_2$ \\
+\midrule
+2 & 1.41 & 4 & 2.00030 \\
+4 & 2.00 & 8 & 2.00361 \\
+6 & 2.83 & 12 & 2.02263 \\
+8 & 4.00 & 16 & 2.11474 \\
+12 & 8.00 & 24 & 2.89256 \\
+16 & 16.00 & 32 & 4.43339 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For $n=8$, the largest two Gram eigenvalues are $7.9681$ and $7.5752$, accounting for $97.1\%$ of the trace; the third is $0.4246$. As faster pairs enter, additional positional directions acquire mass. This is the finite-window overlap represented in Fig.~\ref{fig:allocation-basis}. The accompanying \path{figs/make_story_figures.py} checks the $n=8$ closed-form calculation against independent $256$-node Gauss--Legendre quadrature and also recovers $r_2=2.00013$ for the $23$ slow pairs of the $b=500{,}000$, $K=64$, $L=4096$ grid. The machine-readable calculation is in \path{figs/finite_window_geometry.json}.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=.68\linewidth]{fig_allocation_geometry.pdf}
+\caption{\textbf{Slow pairs share positional directions.} Full-pair canonical overlap on $b=256$, $K=32$, $L=256$ under uniform separations. The slowest eight pairs have $r_2=2.11$ despite $\omega L\in[1.19,4]$.}
+\label{fig:allocation-basis}
+\end{figure}
+
+\subsection{Effective dimension and multiscale coverage}
+\label{sec:rank-coverage}
+
+The budget identity is an exact account of positional dimension under its
+separation prior. A second requirement is where that dimension is placed across
+scales.  The distinction is already visible in an exact construction that also
+identifies the complete parity class omitted by the usual $2\pi/L$ Fourier
+description.
+
+\begin{proposition}[Parity-lattice orthogonality and recurrence]
+\label{prop:parity-lattice}
+Let $a_1,\ldots,a_K$ be distinct positive integers of one parity and set
+\begin{equation}
+\omega_k=\frac{\pi a_k}{L}.
+\label{eq:parity-lattice}
+\end{equation}
+Under $\Delta\sim\mathrm{Unif}[0,L]$, the $K$ full sin/cos subspaces are
+exactly mutually orthogonal: their block-whitened Gram is
+$\Gamma=I_{2K}$ and $r_2(\Gamma)=2K$.  If support is free but restricted to
+$0<\omega\le1$, the largest same-parity class in this construction has
+\begin{equation}
+K_{\mathrm{par}}(L)
+=\left\lceil\frac{\lfloor L/\pi\rfloor}{2}\right\rceil
+\label{eq:parity-capacity}
+\end{equation}
+pairs.  The resulting feature map is recurrent: for even $a_k$,
+$\Phi_\Omega(\Delta+L)=\Phi_\Omega(\Delta)$; for odd $a_k$,
+$\Phi_\Omega(\Delta+L)=-\Phi_\Omega(\Delta)$ and hence
+$\Phi_\Omega(\Delta+2L)=\Phi_\Omega(\Delta)$.
+\end{proposition}
+
+\begin{proof}
+For $i\ne j$, same parity makes both $a_i-a_j$ and $a_i+a_j$ nonzero even
+integers.  Consequently
+\begin{equation}
+(\omega_i\!\mp\!\omega_j)L=\pi(a_i\!\mp\!a_j)\in2\pi\mathbb Z,
+\end{equation}
+so every entry of the cross-Gram in~\eqref{eq:cross-gram} vanishes:
+$a((\omega_i\mp\omega_j)L)=0$ and
+$b_\star((\omega_i\mp\omega_j)L)=0$.  Likewise
+$2\omega_iL=2\pi a_i$ gives $S_{\omega_i}=\tfrac12I_2$.
+Thus the unwhitened Gram is $\tfrac12I_{2K}$ and block whitening gives
+$\Gamma=I_{2K}$.  Among the integers
+$1,\ldots,\lfloor L/\pi\rfloor$, the larger parity class has
+$\lceil\lfloor L/\pi\rfloor/2\rceil$ elements, proving
+\eqref{eq:parity-capacity} for this construction.  Finally,
+$e^{i\omega_k(\Delta+L)}=(-1)^{a_k}e^{i\omega_k\Delta}$; the common parity
+gives the stated period or antiperiod, and every antiperiodic table repeats
+after $2L$.
+\end{proof}
+
+Proposition~\ref{prop:parity-lattice} couples maximal rank on $[0,L]$ with
+recurrence beyond that interval. Its orthogonality also depends on the
+separation measure: weighting the same lattice by the triangular causal
+histogram introduces off-diagonal Gram terms. Thus interval coverage and
+pairwise rank capture different features of a positional basis.
+
+\FloatBarrier
+\subsection{Two static ordering counterexamples}
+\label{sec:static-counterexamples}
+
+Two explicit examples show how phase coupling and interval length change
+the ordering of frequency tables.
+
+\paragraph{Cosine-only collision can choose the lower-rank table.}
+Take $K=4$, $L=8\pi$, and the two descending frequency tables
+\[
+\Omega_A=(1,5/8,3/8,1/4),\qquad
+\Omega_B=(1,6.01/8,4.01/8,1/4).
+\]
+They share both endpoints. Define $C_{\cos}$ as the mean squared normalized
+cosine--cosine overlap over distinct pairs. For $\Omega_A$, every cosine is
+an integer harmonic on $[0,L]$, so $C_{\cos}(A)=0$ exactly. Mixed harmonic
+parities nevertheless produce nonzero sine--cosine cross terms. For
+$\Omega_B$, the small perturbation of an even-harmonic table gives
+\begin{align}
+C_{\cos}(A)&=0 < 1.38725\times10^{-5}=C_{\cos}(B),\\
+r_2(A)&=6.29478 < 7.99971=r_2(B).
+\label{eq:cosine-order-counterexample}
+\end{align}
+Thus a strict cosine-only preference can have the opposite full-subspace
+rank ordering. Both values follow directly from Eq.~\eqref{eq:cross-gram}.
+
+\paragraph{Full-subspace collision can reverse across lengths.}
+Now use $K=4$, $L=2\pi$, and the fixed tables
+\[
+\Omega_A=(1,0.99,0.02,0.01),\qquad
+\Omega_B=(1,2/3,1/3,0.01).
+\]
+Again the endpoints agree. Writing $C_M$ for mean phase-invariant collision
+under the uniform measure on $[0,M]$, Eq.~\eqref{eq:cross-gram} gives
+\begin{align}
+C_L(A)&=0.538996 < 0.631721=C_L(B),\\
+C_{2L}(A)&=0.384445 > 0.204995=C_{2L}(B),\\
+C_{4L}(A)&=0.345188 > 0.033506=C_{4L}(B).
+\label{eq:length-order-counterexample}
+\end{align}
+The close pairs in $A$ retain high overlap as the interval grows, while the
+more evenly spread frequencies in $B$ become easier to distinguish. The
+example makes the interval dependence of the geometry explicit.
+
+All frequency entries and measures are specified above. The accompanying
+\path{figs/verify_explicit_geometry.py} evaluates the closed-form Gram and
+checks it against independent $128$-point Gauss--Legendre quadrature;
+the largest discrepancy in the displayed metrics is below $4\times10^{-14}$.
+These finite basis examples complement the trained allocation comparisons and
+the weight--table crossings.
+
+\FloatBarrier
+\subsection{Post-hoc transplant obstruction}
+\label{sec:obstruction-proof}
+
+\input{tables/table_coadapt}
+
+\begin{theorem}[Post-hoc transplant obstruction]
+\label{thm:obstruction}
+Let $\mathcal R_\Omega(\Delta)$ be the block-rotation operator of a frequency
+multiset $\Omega$. If position-independent invertible maps $A,B$ satisfy
+$A^\top\mathcal R_{\Omega'}(\Delta)B=\mathcal R_\Omega(\Delta)$ on an open
+interval containing zero, then $\Omega'$ and $\Omega$ have the same frequency
+multiset up to sign and permutation. Repeated frequencies may mix within their
+full equal-frequency invariant subspace.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:obstruction}]
+Both $\mathcal R_\Omega$ and $\mathcal R_{\Omega'}$ are block-diagonal with $2\times2$ rotation
+blocks, hence $\mathcal R_\Omega(0)=\mathcal R_{\Omega'}(0)=I$. Evaluating the hypothesis at
+$\Delta{=}0$ gives $A^\top B=I$, so $B=A^{-\top}$ and the hypothesis becomes the
+similarity $A^\top \mathcal R_{\Omega'}(\Delta)A^{-\top}=\mathcal R_\Omega(\Delta)$ on an interval.
+Each side is the exponential of a constant generator, $\mathcal R_\Omega(\Delta)=\exp(\Delta G_\Omega)$
+with $G_\Omega=\bigoplus_k \omega_k J$, $J=\left[\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right]$.
+Differentiating at $\Delta{=}0$ gives $A^\top G_{\Omega'}A^{-\top}=G_\Omega$, so
+the generators are similar and share a spectrum. The spectrum of $G_\Omega$ is
+$\{\pm i\omega_k\}_{k\le K}$ with multiplicity, so the frequency multisets agree
+up to sign and permutation. When a frequency is repeated, similarity may mix
+the entire equal-frequency invariant subspace, including across its original
+two-dimensional blocks. For integer positions the same argument
+is replaced by a one-step spectral argument: evaluating at $\Delta=0$ again
+gives $B=A^{-\top}$, while $\Delta=1$ makes $\mathcal R_{\Omega'}(1)$ and
+$\mathcal R_\Omega(1)$ similar. Their eigenvalue multisets
+$\{e^{\pm i\omega_k}\}$ therefore agree, which identifies frequencies up to
+sign, permutation, and the $2\pi$ alias.
+\end{proof}
+
+
+\subsection{Integer-position kernel equivalence and its boundaries}
+\label{sec:discrete-kernel-proof}
+\begin{corollary}[Integer-position equivalence]\label{cor:discrete-kernel}
+Let $\Omega,\Lambda$ contain $K$ frequencies in $(0,\pi)$ and
+$\mathcal R_\Omega(d)=\operatorname{diag}_k R(\omega_kd)$.
+Position-independent invertible $A,B$ satisfy
+$A^\top\mathcal R_\Omega(d)B=\mathcal R_\Lambda(d)$ for $d=0,1$
+if and only if the frequency multisets agree.
+\end{corollary}
+
+Corollary~\ref{cor:discrete-kernel} applies to the full bilinear kernel on the
+$2K$-dimensional rotary space. Equality for all $q,k$ is matrix equality.
+At $d=0$, $A^\top B=I$; at $d=1$ the two rotation matrices are similar.
+Their complex eigenvalues are $e^{i\omega_k},e^{-i\omega_k}$ including
+multiplicities. On $(0,\pi)$ the positive-angle eigenvalue identifies each
+frequency uniquely, proving necessity even with repeated frequencies.
+For sufficiency choose a block permutation $P$ with
+$\mathcal R_\Lambda(d)=P\mathcal R_\Omega(d)P^\top$, and set
+$A=B=P^\top$. This holds for every integer $d$, including negative distances.
+This is the discrete specialization of Theorem~\ref{thm:obstruction}, using
+standard similarity rather than a new classification of position encodings.
+
+\paragraph{Counterexamples and excluded extensions.}
+A single trace is insufficient: $(\arccos .9,\arccos .1)$ and
+$(\arccos .7,\arccos .3)$ have the same one-step trace, but different
+rotation spectra and different two-step traces. Outside $(0,\pi)$, replacing
+$\omega$ with $\omega+2\pi$ preserves every integer-position rotation while
+changing rotations at fractional positions. Frequencies at zero or $\pi$
+introduce real eigenvalue blocks; a partial rotary operator adds an identity
+subspace. The stated corollary excludes these cases. Nonlinear Q/K
+normalization need not commute with a candidate linear compensation.
+Neither exact non-equivalence nor a slot-permutation loss proves that
+retraining cannot adapt. The supplied CPU checker verifies compensation,
+repeated frequencies, same-trace/different-spectrum examples, integer
+aliasing, and the limits of a scalar gain; it measures no model performance.
+
+\FloatBarrier
+\paragraph{Approximate compatibility within a geometric family.}
+The exact kernel result leaves room for approximate recovery of a model's behavior. In the historical $50$M crossing, three geometric controls were derived from the Cosh table without fitting model loss: matching its slow endpoint ($b=331.6$K), matching its log span ($377.7$K), and minimizing log-frequency RMS within the geometric family ($8.06$K). On Cosh-trained weights these give PPL $21.69$, $22.14$, and $9.63$, compared with $23.05$ for the original Geo table and $7.16$ for the training Cosh table. A coarse geometric approximation can therefore recover substantial frozen compatibility. On Geo-trained weights the respective PPLs are $7.30$, $7.16$, and $45.63$ (original Geo: $7.14$). These historical tables also change support, so the fixed-support training and mature-model controls supply the separate interior-allocation estimates.
+
+\subsection{Slot assignment and conditional prediction error}
+\label{sec:non-identifiability-proof}
+
+Let $\mathcal R(\Omega;M,D)$ denote the risk of a fixed model $M$ on a fixed evaluation set $D$ when frequencies $\Omega$ are assigned to labeled rotary slots. This domain includes unsorted assignments. It differs from the strictly ordered allocation domain in \S\ref{sec:exponents}, where the full multiset recovers the sorted table.
+
+\begin{proposition}[Prediction error on an observed permutation pair]
+\label{thm:non-identifiability-appendix}
+Suppose a pair $\Omega,\pi\Omega$ has risk gap
+$\Delta_R=|\mathcal R(\Omega;M,D)-\mathcal R(\pi\Omega;M,D)|>0$.
+For every permutation-invariant feature map $\Phi$ and every scalar predictor $h$,
+\[
+\max_{\Xi\in\{\Omega,\pi\Omega\}}
+|h(\Phi(\Xi))-\mathcal R(\Xi;M,D)|\ge\Delta_R/2.
+\]
+\end{proposition}
+\begin{proof}
+Invariance gives the same prediction $c=h(\Phi(\Omega))$ for both assignments. The triangle inequality bounds $\Delta_R$ by the sum of the two prediction errors, and hence by twice their maximum.
+\end{proof}
+The risk-gap premise is empirical. It does not follow from unequal projection norms or from Theorem~\ref{thm:obstruction}. Synchronously transforming the Q/K blocks compensates the permutation exactly by \eqref{eq:slot-permutation}; changing the table while freezing those projections measures a different intervention. In the measured pair, OLMo-$1$B PG-19 tail NLL changes from $3.10423$ to $6.86493$, and Qwen-$2.5$-$1.5$B $64$K core-four macro changes from $0.7000$ to $0.0000$.
+
+\paragraph{Discrete orbit-count sensitivity.}
+In the archived scale-orbit construction at factor four, one-ULP float32 jitter changes the exact orbit count from $6$ to $64$, while the $16$K tail-NLL difference (jitter minus exact) is $-0.000013$ (paired interval $[-0.003682,0.003715]$) and the $16$K core-four score remains zero. This rejects the interpretation that a large increase in this exact algebraic count necessarily produces an appreciable loss change on the tested finite horizon. It does not rule out a predictor that maps different counts to the same risk. Discrete-period design, as studied by Resonance RoPE \citep{wang2024resonance}, should be distinguished from this exact-ratio sensitivity test.
+
+\subsection{Finite-phase operator changes}
+\label{sec:taylor-breakdown-observables}
+
+For $\delta=(\omega'-\omega)\Delta$, the second-order cosine remainder is bounded by $|\delta|^3/6$. The series converges for all $\delta$, but a low-order approximation need not be accurate at large phase increments. An exact finite-phase operator bound is
+\begin{equation}
+\|\mathcal R_{\Omega'}(\Delta)-\mathcal R_\Omega(\Delta)\|_2
+=2\max_j\left|\sin\frac{(\omega'_j-\omega_j)\Delta}{2}\right|
+\le\max_j\min\{2,|\omega'_j-\omega_j|\,|\Delta|\}.
+\label{eq:finite-phase-replay-bound}
+\end{equation}
+\FloatBarrier
+\subsection{Proof of the closed-form variational optimum}
+
+Let $S_\rho(t)=\int_t^1\rho(\phi)\,d\phi$. The Cosh density-design objective is
+\begin{equation}
+\Capp[\rho]=\frac\alpha2\int_0^1\rho(\phi)^2\,d\phi+
+\frac\beta2\int_0^1S_\rho(t)^2\,dt,
+\qquad \int_0^1\rho=1,\quad\rho\ge0.
+\label{eq:Capp}
+\end{equation}
+With unit mass, the first term favors spreading frequencies. Moving density
+toward slower exponents increases tail mass over the thresholds it crosses;
+the second term penalizes that concentration. These terms specify the
+extrapolation transport prior.
+
+\begin{theorem}[Unique density minimizer]\label{thm:ode}
+For $\alpha>0$ and $\beta\ge0$, the unit-mass nonnegative $L^2$ minimizer of Eq.~\eqref{eq:Capp} is uniquely $\rho_\tau(\phi)=\tau\cosh[\tau(1-\phi)]/\sinh\tau$, with the uniform limit at $\tau=0$.
+\end{theorem}
+This subsection proves the theorem directly from the stated
+variational objective. Starting from the kernel
+\begin{equation}
+K_{\mathrm{app}}(\phi,\psi)=\alpha\delta(\phi-\psi)+\beta\min(\phi,\psi),
+\end{equation}
+the allocation functional is~\eqref{eq:Capp}, which under the mass normalization $\int_0^1\rho=1$ with Lagrange multiplier $\nu$ has constrained first variation
+\begin{equation}
+\alpha\rho(\phi) + \beta\,g(\phi) + \nu = 0,\qquad
+g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi.
+\end{equation}
+\paragraph{Existence.}
+View $\mathcal{C}_{\mathrm{app}}$ as a functional on $L^2([0,1])$ and minimize over $\mathcal{A}=\{\rho\in L^2([0,1]):\rho\ge0\ {\rm a.e.},\int_0^1\rho=1\}$. The $\alpha\|\rho\|_2^2$ term is coercive and weakly lower semicontinuous, the Green-kernel term is positive semidefinite and continuous, and the mass/nonnegativity constraints are weakly closed. A minimizer therefore exists by the direct method. Strict convexity gives uniqueness. The Euler solution derived below is strictly positive, so the nonnegativity constraint is inactive a posteriori and the classical $C^2$ derivation is justified.
+
+Direct differentiation of $g$ gives
+\begin{align}
+g'(\phi)
+&=
+\int_\phi^1 \rho(\psi)\,d\psi,
+&
+g''(\phi)
+&=
+-\rho(\phi).
+\end{align}
+Differentiating the first variation twice in $\phi$ eliminates $\nu$ (a constant) and yields the homogeneous ODE
+\begin{equation}
+\rho''(\phi) - \tau^2\rho(\phi) = 0,\qquad \tau = \sqrt{\beta/\alpha}.
+\label{eq:homogeneous-ode}
+\end{equation}
+Evaluating the pre-differentiated stationarity together with $g(0){=}0$, $g'(1){=}0$, and $\int_0^1\rho = 1$ gives the derivative boundary conditions
+\begin{equation}
+\rho'(0) = -\tau^2,\qquad \rho'(1) = 0,
+\label{eq:bcs}
+\end{equation}
+since differentiating $\alpha\rho(\phi)+\beta g(\phi)+\nu = 0$ once and evaluating at $\phi{=}1$ gives $\alpha\rho'(1)+\beta g'(1) = 0$ hence $\rho'(1){=}0$, and at $\phi{=}0$ gives $\alpha\rho'(0)+\beta g'(0) = 0$ with $g'(0) = \int_0^1\rho = 1$, so $\rho'(0) = -\beta/\alpha = -\tau^2$. Substituting $\rho(\phi) = C_1\cosh(\tau\phi)+C_2\sinh(\tau\phi)$ into~\eqref{eq:homogeneous-ode} and~\eqref{eq:bcs} together with $\int_0^1\rho = 1$ gives the unique positive interior stationary density
+\begin{equation}
+\rho_\tau(\phi) \;=\; \frac{\tau\,\cosh(\tau(1-\phi))}{\sinh\tau},
+\label{eq:rho-tau-closed}
+\end{equation}
+which establishes Theorem~\ref{thm:ode} and the density used in \S\ref{sec:construction}. Mass normalization enters the
+boundary condition through $g'(0)=\int_0^1\rho=1$. Positivity holds on the closed interval since $\rho_\tau(\phi){\geq}\rho_\tau(1){=}\tau/\sinh\tau{>}0$ for $\tau{>}0$ (with $\rho_\tau(0){=}\tau\coth\tau{>}0$); the inequality constraint $\rho{>}0$ is therefore inactive throughout $[0,1]$ and the unconstrained Euler--Lagrange solution coincides with the KKT-constrained solution. For the degenerate case $\beta{=}0$ the ODE reduces to $\rho''{=}0$ with $\rho'(0){=}\rho'(1){=}0$ and $\int\rho{=}1$, forcing $\rho\equiv 1$, which is also the $\tau{\to}0$ limit of~\eqref{eq:rho-tau-closed}.
+
+\paragraph{Convexity / PSD of $\mathcal{C}_{\mathrm{app}}$.} For $\alpha{>}0$ and $\beta{\geq}0$, the objective is convex because both quadratic terms are positive semidefinite. The diagonal $\alpha{\int}\rho^2$ is manifestly PSD on $L^2$, and the Green-kernel cross term satisfies the identity
+\begin{equation}
+\iint_{[0,1]^2} f(\phi)\,f(\psi)\,\min(\phi,\psi)\,d\phi\,d\psi \;=\; \int_0^1 \!\left(\int_s^1 f(u)\,du\right)^{\!2}\!ds \;\geq\; 0.
+\label{eq:min-kernel-psd}
+\end{equation}
+The kernel is the inverse of $-d^2/d\phi^2$ with Dirichlet condition $g(0)=0$ and Neumann condition $g'(1)=0$. Thus the tail term is an $H^{-1}$-type energy with these mixed boundary conditions: $\langle\rho,g\rangle=\int_0^1|g'|^2=\int_0^1S_\rho^2$. This classifies the stated design prior without changing its empirical operating rule.
+
+The strictly convex functional on $L^2([0,1])$ therefore has the displayed
+stationary density as its unique constrained minimizer.
+
+The Cosh solution has an analytically invertible CDF, so its quantiles turn
+the continuous allocation directly into a finite frequency table.
+
+\FloatBarrier
+\subsection{The density objective in interval coordinates}
+\label{sec:cosh-gap-form}
+For a strictly positive density, let $Q=F^{-1}$ and $h(u)=Q'(u)>0$ with $\int_0^1h=1$. Then $\rho(Q(u))=1/h(u)$ and $S_\rho(Q(u))=1-u$. Changing variables in the declared density objective gives the exact identity
+\[
+\mathcal C_{\rm app}=\frac12\int_0^1\left[\frac\alpha{h(u)}+\beta(1-u)^2h(u)\right]du.
+\]
+Thus Cosh can equivalently be viewed as an interval-allocation design. Its quantile derivative is
+\[
+h_\tau(u)=\frac{\sinh\tau}{\tau\sqrt{1+(1-u)^2\sinh^2\tau}}.
+\]
+This equivalent interval formulation connects density allocation to frequency spacing. TailSpline instead designs increments of native-relative displacement; the two objectives address learning and frozen deployment.
+
+\subsection{Single-crossing budget shift}
+\label{sec:budget-crossing-proof}
+
+\begin{lemma}[Single-crossing budget shift]
+\label{lem:budget-crossing}
+For every $\tau>0$, $\rho_\tau$ crosses the uniform density exactly once, at
+\begin{equation}
+\phi_c(\tau)=1-\tau^{-1}\operatorname{arcosh}(\sinh\tau/\tau)
+\le 1-1/\sqrt3.
+\label{eq:budget-crossing}
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:budget-crossing}]
+For $\tau>0$, $\rho_\tau(\phi)=\tau\cosh(\tau(1-\phi))/\sinh\tau$ is
+strictly decreasing on $[0,1)$, with
+$\rho_\tau(0)=\tau\coth\tau>1$ and
+$\rho_\tau(1)=\tau/\sinh\tau<1$.  Hence the crossing is unique, and solving
+$\rho_\tau(\phi_c)=1$ gives~\eqref{eq:budget-crossing}.  To bound it, expand
+\[
+\frac{\sinh\tau}{\tau}
+=\sum_{n\ge0}\frac{\tau^{2n}}{(2n+1)!}
+\ge \sum_{n\ge0}\frac{\tau^{2n}}{3^n(2n)!}
+=\cosh\!\left(\frac{\tau}{\sqrt3}\right),
+\]
+where the coefficient-wise inequality is $3^n\ge2n+1$.  Monotonicity of
+$\operatorname{arcosh}$ yields
+$\operatorname{arcosh}(\sinh\tau/\tau)\ge\tau/\sqrt3$, proving the bound.
+\end{proof}
+
+\FloatBarrier
+\subsection{Balance of the density objective}
+\label{sec:self-consistency}
+
+The density objective $\mathcal{C}_{\mathrm{app}}$ contains two integral terms $T_1(\tau) = \int_0^1 \rho^2\,d\phi$ and $T_2(\tau) = \int_0^1\!\!\int_0^1 \rho(\phi)\rho(\psi)\min(\phi,\psi)\,d\phi\,d\psi$, where $\rho(\phi) = \tau\cosh(\tau(1{-}\phi))/\sinh\tau$ is the normalized cosh density.
+
+\begin{theorem}[Density-objective balance]
+\label{thm:self-consistency}
+For all $\tau > 0$:
+\begin{equation}
+\tau^2 T_2(\tau) + T_1(\tau) = \tau\coth\tau.
+\label{eq:self-consistency}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The Green's function $g(\phi) = \int_0^1 \rho(\psi)\min(\phi,\psi)\,d\psi$ satisfies $g''(\phi) = -\rho(\phi)$ with $g(0) = 0$, $g'(1) = 0$ (from the $\min$ kernel structure; see~\S\ref{sec:proofs}). Define $h(\phi) = \rho(0) - \rho(\phi)$. Then $h'' = -\rho''$, and under the Cosh ODE $\rho'' = \tau^2\rho$ this gives $h'' = -\tau^2\rho$, with $h(0) = 0$ and $h'(0) = -\rho'(0)$.
+
+Define $f(\phi) = \tau^2 g(\phi) - h(\phi)$. Then $f'' = \tau^2 g'' - h'' = -\tau^2\rho - (-\tau^2\rho) = 0$, so $f$ is linear in $\phi$. The boundary values give $f(0) = \tau^2 g(0) - h(0) = 0$ and $f'(0) = \tau^2 g'(0) + \rho'(0) = \tau^2 - \tau^2 = 0$ (using $g'(0) = \int_0^1\rho = 1$ and $\rho'(0) = -\tau^2$ from the Cosh density). Hence $f \equiv 0$, yielding $\tau^2 g(\phi) = h(\phi) = \rho(0) - \rho(\phi)$, i.e.,
+\begin{equation}
+g(\phi) = \frac{\rho(0) - \rho(\phi)}{\tau^2}.
+\label{eq:green-identity}
+\end{equation}
+Integrating against $\rho$:
+\begin{equation}
+T_2 = \int_0^1 \rho(\phi)\,g(\phi)\,d\phi = \frac{1}{\tau^2}\bigl[\rho(0)\underbrace{\int_0^1\!\rho}_{=1} - T_1\bigr]
+= \frac{\rho(0) - T_1}{\tau^2}.
+\end{equation}
+Since $\rho(0) = \tau\cosh\tau/\sinh\tau = \tau\coth\tau$, rearranging gives~\eqref{eq:self-consistency}.
+\end{proof}
+
+An immediate corollary follows.
+
+\begin{corollary}[Closed-form $T_2$]
+\begin{equation}
+T_2(\tau) = \frac{\sinh 2\tau - 2\tau}{4\tau\sinh^2\tau}.
+% \label{eq:T2-closed} % unused
+\end{equation}
+\end{corollary}
+
+This follows by substituting
+$T_1(\tau)=\tau^2(1+\sinh(2\tau)/(2\tau))/(2\sinh^2\tau)$ and
+$\rho(0)=\tau\coth\tau$ into the theorem.
+
+The identity provides a closed-form evaluation of the allocation energy.
+
+\FloatBarrier
+\subsection{Allocation strength and a reference rule}
+\label{sec:lambda-cv}
+\label{sec:tau-scaling}
+
+The Cosh family varies with the strength $\tau$. A reference used in the
+full-RoPE text experiments relates this strength to head width and training
+length:
+\begin{equation}
+\tau = c\,\dhd/\sqrt{\Ltr},\qquad
+u_k = (k+\tfrac12)/K,\qquad
+\omega_k^{\mathrm{EVQ}} = b^{-\phi_k(\tau)} .
+\label{eq:evq-practical}
+\end{equation}
+The reference sets $c=1$ before training. Table~\ref{tab:allocation-protocols}
+records the strength, grid, and setting procedure used in each experiment.
+
+\paragraph{Local scaling calculation.}
+The scaling argument uses four explicit modelling assumptions: (i) the
+Cosh family is varied only through $\tau$; (ii) full-RoPE MHA has
+$d_{\mathrm{rot}}=\dhd$; (iii) the reference post-softmax distribution is
+diffuse, $p_0=1/L$; and (iv) a fixed trade-off $\lambda>0$ compares a normalised
+channel-load stiffness with a specified phase-variance utility, with
+$Q_1(L,b)>0$.  Under those assumptions and at small $\tau$,
+\begin{align}
+S_{\chi^2}(\tau)
+&:=\frac1{\dhd}\int_0^1\frac{(1-\rho_\tau(\phi))^2}{\rho_\tau(\phi)}\,d\phi
+=\frac{\tau^4}{45\dhd}+O(\tau^6),\\
+U(\tau,L)
+&=\frac{\dhd}{L}\left[Q_0(L,b)+\tau^2Q_1(L,b)+O(\tau^4)\right],
+\end{align}
+where
+\begin{equation}
+\begin{aligned}
+Q_0(L,b)&=\int_0^1 q(Lb^{-\phi})\,d\phi,\\
+Q_1(L,b)&=\int_0^1\!\left(\frac{(1-\phi)^2}{2}-\frac16\right)
+q(Lb^{-\phi})\,d\phi,\\
+q(x)&=\frac12+\frac{\sin(2x)}{4x}
+      -\left(\frac{\sin x}{x}\right)^2.
+\end{aligned}
+\end{equation}
+The stiffness itself also has an exact expression:
+\begin{equation}
+S_{\chi^2}(\tau)=\frac1{\dhd}\left[\frac{\sinh\tau\,\arctan(\sinh\tau)}{\tau^2}-1\right].
+\label{eq:stiffness-exact}
+\end{equation}
+Indeed, unit mass reduces its defining integral to $\int\rho_\tau^{-1}-1$, and integrating $\operatorname{sech}$ gives Eq.~\eqref{eq:stiffness-exact}. The quartic term is a local expansion: at $\tau=\sqrt2,2,4$, it exceeds the exact stiffness by factors approximately $1.52,1.97,3.52$. It is not a finite-$\tau$ accuracy guarantee for the operating rule.
+
+Stationarity of
+$\mathcal F(\tau)=\tfrac12S_{\chi^2}(\tau)-\lambda U(\tau,L)$ gives the
+leading small-$\tau$ balance
+\begin{equation}
+\tau_*^2=45\lambda Q_1(L,b)\frac{\dhd^2}{L},
+\qquad
+c_{\mathrm{loc}}(L,b,\lambda)=\sqrt{45\lambda Q_1(L,b)}.
+\label{eq:tau-leading-balance}
+\end{equation}
+This calculation yields the scaling factor $\dhd/\sqrt L$ with a local
+coefficient determined by $Q_1(L,b)$ and $\lambda$. The experiments evaluate
+the exact Cosh quantiles at the protocol's chosen strength.
+
+\paragraph{Reference and neighboring strengths.}
+The staged study contains $99$ completed runs: the fixed $c{=}1$ reference
+beats the midpoint-discretised Geo baseline under runner-defined weighted
+extrapolation NLL in $7/9$ configuration means and $18/27$ paired seeds.  Its
+registered neighbours are finite multiplier arms
+at $0.75\times$, $1.25\times$, or $1.5\times$; the independent exact-range
+factorial tests $0.75\times$, $1.00\times$, and $1.25\times$, and their order
+varies by configuration.  The numeric owner is
+\texttt{data/curated/phase16\_99run\_manifest.csv}; the tracked reproduction
+entrypoint is
+\texttt{scripts/core\_text\_phases/phase16\_formula\_optimality\_sweep.py}.
+The reference and its neighboring strengths give a direct comparison of
+allocation intensity across the tested configurations.
+
+\FloatBarrier
+\subsection{Discrete-channel transport gap under finite channel counts}
+\label{sec:discrete-continuous-gap}
+
+\paragraph{Setup.} Inverse-CDF quantization replaces the continuous density $\rho$ by an atomic measure. Let $F(\phi){=}\int_0^\phi\rho$, $Q(u){=}F^{-1}(u)$, midpoint grid $u_k{=}(k{-}\tfrac{1}{2})/K$, and $\phi_k{=}Q(u_k)$. The empirical channel measure is $\mu_K{=}K^{-1}\sum_{k=1}^{K}\delta_{\phi_k}$. We compare the measures in Wasserstein distance and approximate the density
+with the associated quantile-cell histogram $\rho_K$.
+
+\paragraph{Transport bounds.} Assume $0<m\le\rho\le M$ and $\|\rho'\|_\infty\le B$; then $Q$ is $(1/m)$-Lipschitz. The midpoint quantization errors satisfy
+\begin{equation}
+W_\infty(\mu_K,\mu_\rho) \;\le\; \frac{1}{2Km}, \qquad W_1(\mu_K,\mu_\rho) \;\le\; \frac{1}{4Km}.
+\label{eq:wasserstein-bound}
+\end{equation}
+Defining the quantile-cell histogram $\rho_K(\phi){=}1/(K|I_k|)$ on $I_k{=}[Q((k{-}1)/K),\,Q(k/K)]$, the histogram density satisfies
+\begin{equation}
+\|\rho_K-\rho\|_1 \;\le\; \frac{B}{Km}, \qquad \|\rho_K-\rho\|_\infty \;\le\; \frac{B}{Km}.
+\label{eq:density-bound}
+\end{equation}
+The transport bounds couple each quantile cell to its midpoint; the histogram
+bound follows from the mean-value theorem and $|I_k|\le 1/(Km)$.
+
+\paragraph{Application to EVQ-Cosh.} For $\rho_\tau(\phi)=\tau\cosh(\tau(1{-}\phi))/\sinh\tau$, $m_\tau=\tau/\sinh\tau$ and $B_\tau=\tau^2$. Substituting,
+\begin{equation}
+W_1(\mu_{K,\tau},\mu_{\rho_\tau}) \;\le\; \frac{\sinh\tau}{4K\tau}, \qquad \|\rho_{K,\tau}-\rho_\tau\|_1 \;\le\; \frac{\tau\sinh\tau}{K} \;=\; \frac{\tau^2}{K}+O\!\left(\tfrac{\tau^4}{K}\right).
+\label{eq:evq-discrete-bound}
+\end{equation}
+
+\paragraph{Kernel-integrated errors.} For a smooth two-variable kernel $K_{\mathrm{sm}}$ with Lipschitz constant $L_K$ in each argument,
+\begin{equation}
+\left|\iint K_{\mathrm{sm}}\,d\mu_K\,d\mu_K - \iint K_{\mathrm{sm}}\,d\mu_\rho\,d\mu_\rho\right| \;\le\; \frac{L_K}{2Km}.
+\label{eq:kernel-bound}
+\end{equation}
+The kernel bound applies the $W_1$ estimate to each argument. The singular
+$\delta$-component of $K_{\mathrm{app}}$ is represented by its cell average.
+
+\paragraph{High-resolution distortion.} For midpoint scalar quantisation with
+a smooth weighted distortion $w$, the standard high-resolution (Bennett-integral)
+expansion \citep{gray1998quantization} is
+\begin{equation}
+\mathcal{D}_K[\rho] \;=\; \frac{1}{12K^2}\int_0^1 \frac{w(\phi)}{\rho(\phi)^2}\,d\phi + O(K^{-3}).
+\label{eq:high-res-distortion}
+\end{equation}
+This expansion quantifies how finite exponent samples approximate a continuous
+allocation under a smooth distortion. For endpoint-anchored comparisons,
+$K=2$ leaves no interior entries and the geometric and Cosh grids coincide.
+
+\paragraph{Large-$\tau$ regime.} At large $\tau$,
+$m_\tau{=}\tau/\sinh\tau$ becomes small and the $1/(Km_\tau)$ factor grows.
+The transport bounds are informative while this factor remains controlled.

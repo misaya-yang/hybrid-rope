@@ -1,0 +1,154 @@
+\section{Supporting Results}
+
+\subsection{Multi-head Latent Attention}
+\label{sec:mla-results}
+
+We report allocation at one fixed rotary budget in a 432M-parameter transformer following
+the MLA architectural pattern \citep{deepseekv2}, with 24 layers, width 1024,
+16 heads, and per-head width 64.
+Its decoupled rotary
+subspace has $d_{\mathrm{rope}}{=}32$ ($K{=}16$ frequencies); the remaining
+$d_{\mathrm{nope}}{=}32$ dimensions are non-rotary, and the shared KV latent
+rank is 256. The model trains from scratch on 500M FineWeb-Edu tokens
+\citep{penedo2024fineweb} at
+$L_{\mathrm{train}}{=}8192$ and base $500\mathrm{K}$ over seeds 42, 43, and
+88. \evq{} uses the pre-specified $\tau=1.414$ setting.
+At $16$K, Geo PPL is
+$141.1/132.5/142.8$ for seeds $42/43/88$, whereas \evq{} is
+$93.7/92.7/100.3$; all three paired directions agree.
+
+\paragraph{Evaluation corpus and aggregation.}
+The archived evaluator reads the shared cached FineWeb-Edu stream \texttt{val\_fineweb-edu\_5000000.pt}, nominally five million GPT-2 tokens. For each method and seed it resets NumPy RandomState to $9999$, iterates through lengths $8192$, $16384$, $20480$, $24576$, $28672$, and $32768$, and draws eight distinct start offsets per length. Every chunk scores all $L-1$ next-token targets, with full-sequence cross-entropy and no tail restriction. Its per-model PPL is the exponential of the mean chunk NLL; the table then takes the arithmetic mean and sample standard deviation of the three per-seed PPLs. Thus the requested targets per model are $8(L-1)$ at each length; starts are sampled without replacement, but overlapping windows are possible. The same offsets are reused across methods.
+
+All methods use the same fixed FineWeb-Edu evaluation cache and paired chunk offsets. The archived result JSON retains every seed and length, allowing the reported means, seed variation and scaling comparisons to be recomputed.
+
+For the supporting overlay, let $\lambda_k=2\pi/\omega_k$ and
+$t_k=\operatorname{clip}((\lambda_k-L_{\mathrm{train}})/(31L_{\mathrm{train}}),0,1)$.
+The MLA wavelength-blend operator sets
+$\omega'_k=\omega_k/[1+t_k(s-1)]$: it preserves wavelengths below the training
+length, applies the full factor $s$ above $32L_{\mathrm{train}}$, and interpolates
+between them.
+
+\begin{table}[ht]
+\caption{MLA validation (432M, $d_{\mathrm{rope}}{=}32$, 3-seed mean
+$\pm$ std). Rows marked ``MLA wavelength-blend'' use this run's wavelength-blend
+operator defined above.}
+\label{tab:mla}
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+Method & PPL@8K & PPL@16K & PPL@24K & PPL@32K \\
+\midrule
+Geo & $35.4{\pm}0.9$ & $138.8{\pm}5.5$ & $241.5{\pm}2.6$ & $323.7{\pm}5.2$ \\
+Geo + MLA wavelength-blend ($s=4$) & $35.5{\pm}0.9$ & $117.9{\pm}6.5$ & $204.9{\pm}6.9$ & $278.5{\pm}6.3$ \\
+\textbf{\evq{}} & $35.8{\pm}0.8$ & $\mathbf{95.6{\pm}4.1}$ & $204.9{\pm}14.7$ & $291.6{\pm}20.5$ \\
+\textbf{\evq{} + MLA wavelength-blend ($s=4$)} & $35.8{\pm}0.8$ & $\mathbf{71.1{\pm}4.1}$ & $\mathbf{153.2{\pm}12.5}$ & $\mathbf{236.6{\pm}15.9}$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\evq{} reduces 16K PPL by $31.1\%$ ($138.8\to95.6$), while 8K PPL changes by
+$+0.9\%$. All three training seeds favour \evq{} at 16K. The \evq{} plus MLA wavelength-blend
+row has the lowest mean PPL at 16K and beyond, showing that the allocation
+also composes with this wavelength-dependent extension.
+
+\FloatBarrier
+
+
+\subsection{Additional model comparisons}
+\label{sec:relocated-floats}
+The following comparisons provide protocol-level detail for the main results.
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\caption{\textbf{Table and amplitude separated on the Qwen-$2.5$-$3$B $36$-row panel (\%).}
+Matching the coefficient across tables makes the table contrast comparable; the
+last row varies amplitude alone at a fixed table.}
+\label{tab:gain-factorial}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Table & Coefficient $c$ in $g=1+c\ln s$ & $32$K & $128$K \\
+\midrule
+MrRoPE-Pro & $0.1$   & 87.22 & 78.13 \\
+BM         & $0.1$   & 91.67 & 70.83 \\
+MrRoPE-Pro & $0.074$ & 98.33 & 75.35 \\
+BM         & $0.074$ & 100.00 & 70.00 \\
+BM         & $g=1$   & 89.58 & 58.82 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Matched six-task RULER comparisons (\%).}
+Each column averages six tasks ($s=4$; short/long prompt counts per arm).}
+\label{tab:bm-models}
+\begin{tabular}{@{}lclrrrr@{}}
+\toprule
+& & & \multicolumn{2}{c}{Short} & \multicolumn{2}{c}{Long}\\
+Model & Lengths & Rows & MrPro & BM & MrPro & BM \\
+\midrule
+OLMo-$1$B & $4/16$K & $24/48$ & 37.85 & 81.81 & 2.78 & 51.32 \\
+Qwen-$3$B & $32/128$K & $12/24$ & 87.22 & 91.67 & 78.13 & 70.83 \\
+Qwen-$7$B & $32/128$K & $6/12$ & 83.33 & 80.00 & 84.44 & 71.11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.80\linewidth]{fig_8b_length_curve.pdf}
+  \caption{\textbf{Cosh allocation improves extrapolation under matched adaptation.} PPL is the exponential of equal-domain mean NLL.}
+  \label{fig:8b-length-curve}
+\end{figure}
+
+
+
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Static extension across native and extended windows.}
+Qwen-$0.5$B RULER-13 macro (\%); $g$ is fixed amplitude.}
+\label{tab:static-index-main}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Installed table & $g$ & $32$K & $64$K \\
+\midrule
+Native & 1.0000 & 54.78 & 22.05 \\
+YaRN-$2$ & 1.0693 & 55.94 & 45.37 \\
+Normalized-index-$2$ & 1.0513 & 55.92 & \textbf{51.46} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+
+
+\FloatBarrier
+
+\subsection{Learning and natural-QA summaries}
+\label{sec:learning-summary}
+The $750$M continuation starts from a common $2$K Geo checkpoint and uses
+$500$M tokens at $4$K, including $3\%$ passkey and $10\%$ downstream mix.
+Its $8$K task endpoint is greedy answer-token exact, not complete-response exact.
+The OLMo adaptation pair trains on physical inputs at most $4$K with explicit
+target-range positions; evaluation uses real contiguous prompts. The Q/K-only
+RULER adaptation has Cosh--Native macro differences $-29.75/+29.61/+4.65$
+points at $4/8/16$K. These are learned protocols, not static-installation evidence.
+\input{tables/table_learning_main}
+\input{tables/table_bm_qa_main}
+Small frozen Qwen $128$K panels favor MrPro over BM ($78.13/70.83\%$ at $3$B
+and $84.44/71.11\%$ at $7$B). Frozen Qwen-$0.5$B improves $64$K RULER-13 over
+YaRN by $6.09$ points (Appendix~\ref{sec:index-adjustment}). These older results
+retain their local protocols and do not substitute for the current clean comparison.

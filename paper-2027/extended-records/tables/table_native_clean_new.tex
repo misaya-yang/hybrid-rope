@@ -1,0 +1,24 @@
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Llama clean $8$K, $50$ inputs per task.} Original RoPE uses its native table and unit gain; T/P retain their fixed $s=4$ deployment settings.}
+\label{tab:native-clean-new}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Task & Original RoPE & TailSpline & MrPro \\
+\midrule
+cwe & 97.60 & 95.40 & 89.60 \\
+fwe & 87.33 & 9.33 & 4.00 \\
+multikey\_1 & 100.00 & 100.00 & 98.00 \\
+multikey\_2 & 96.00 & 100.00 & 94.00 \\
+multikey\_3 & 98.00 & 98.00 & 94.00 \\
+multiquery & 99.50 & 96.50 & 97.00 \\
+multivalue & 97.50 & 97.00 & 92.50 \\
+single\_1 & 100.00 & 100.00 & 100.00 \\
+single\_2 & 100.00 & 100.00 & 100.00 \\
+single\_3 & 100.00 & 100.00 & 100.00 \\
+qa\_1 & 70.00 & 70.00 & 72.00 \\
+qa\_2 & 32.00 & 46.00 & 44.00 \\
+vt & 92.40 & 94.80 & 86.00 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,375 @@
+\section{Mature-scale protocols}
+\label{sec:mature-details}
+
+\subsection{OLMo-2 \texorpdfstring{$1.485$B}{1.485B}}
+\label{sec:olmo2-1b}
+
+All OLMo-2 \evq{} arms use the standard $u_k{=}k/K$ grid with $\tau{=}2$ and
+base $500{,}000$; the frequency tensor is fixed throughout each continuation.
+
+\paragraph{Matched routing conversion.}
+We use OLMo-2-0425-1B-Instruct \citep{olmo2furious} ($1.485$B actual
+parameters) with rank-$64$, alpha-$128$ Q/K/V/O LoRA \citep{hu2022lora}.
+Native and \evq{} share the checkpoint, training rows and order, token budget,
+optimizer, and evaluation rows; the fixed frequency substrate is the intended
+intervention. Every backward pass contains at most $4$K physical tokens,
+with explicit position IDs providing target-range relative phases. On $8$K
+\texttt{niah\_single\_1}, strict first-generated-number exact is $0/100$
+for Native and $69/100$ for the matched \evq{} seed; an independently trained
+\evq{} seed scores $67/100$ on the same rows. The two \evq{} results are
+training-seed replications on a shared evaluation set.
+
+\paragraph{Complete numeric answers after matched routing continuation.}
+A separate follow-up to the routing parents applies the same $100$-step
+query-gap continuation and $32$-step answer-plus-EOS continuation to Native
+and \evq{} (training seed $20260728$). Every backward pass uses at most
+$4096$ physical tokens; explicit position IDs expose target-range phases,
+with maximum observed position ID $16{,}257$. Evaluation uses real contiguous
+prompts from the same numeric NIAH family and greedy decoding.
+The endpoint requires the complete expected answer string followed by
+observed terminal EOS, measured from generated token IDs.
+
+
+\paragraph{Stage identities and supervision.}
+The starting artifacts are the two $300$-step counterfactual-routing parents (rank-$64$, alpha-$128$ Q/K/V/O LoRA). Their SHA-256 prefixes are \texttt{6570ab94aec6} (Native) and \texttt{95ceeb70117c} (Cosh); the later stages continue each arm's own parent. Table~\ref{tab:routing-stages} specifies the two matched follow-ups. Both use fused AdamW with $(\beta_1,\beta_2)=(0.9,0.95)$, zero weight decay, gradient clipping $1$, BF16, and cosine decay to $0.1$ of peak LR after linear warmup. Global batch $8$ uses microbatch $4$ and accumulation $2$. The trainable Q/K/V/O adapters contain $16{,}777{,}216$ parameters; the base checkpoint is frozen.
+
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{The matched continuation producing complete-answer outcomes.} Training seed $20260728$. Each cycle contains two counterfactual-routing updates and one natural-text update. Counts include both variants of a routing pair.}
+\label{tab:routing-stages}
+\begin{tabular}{@{}lrrp{.39\linewidth}@{}}
+\toprule
+Stage & Steps & Peak LR / warmup & Supervision and position policy \\
+\midrule
+Query-gap & 100 & $5\times10^{-5}$ / 20 & Answer CE plus counterfactual margin; semantic query-block offsets through $16$K. \\
+Answer + EOS & 32 & $10^{-5}$ / 4 & Answer CE, immediate EOS CE (weight 1), same counterfactual margin; realized source-to-answer gap curriculum. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Routing examples contain eight key--value blocks and one query. The two variants replace the queried source value while preserving the surrounding context; the answer changes accordingly. The training set has $1024$ paired examples, the separate calibration set $128$, with seeds $20293725$ and $20304725$ and different query templates. The final stage reuses the raw training rows with rebuilt answer-plus-EOS labels, covering three answer tokens and EOS; padding and other prompt tokens carry no answer loss. The counterfactual term uses margin $1$ and weight $0.5$, comparing the correct and swapped answer where their tokens differ. Natural replay uses ordinary next-token loss. The $100$-step stage contains $67$ routing/$33$ natural updates; the final stage contains $22/10$.
+
+\paragraph{Position-ID construction.}
+Let $q$ be the semantic query-block start, $a$ the answer start, $h$ the end-exclusive source span, and $n$ the active sequence length. Context positions before $q$ remain contiguous. Both counterfactual variants share the position array:
+\[
+p_i=i+o\,\mathbf1\{i\ge q\}.
+\]
+In the $100$-step stage, each routing update uses four pair offsets: a low offset alternating between $0$ and $[1,4096]$, one from $[4097,8192]$, and two from $[8193,12289]$. Values traverse each band by a seed-derived coprime modular stride, with a deterministic per-update permutation. In the final stage, the stream instead specifies realized gap targets: the low target alternates between contiguous and $[4096,8191]$, one target lies in $[8192,12287]$, and two in $[12288,16079]$. For a noncontiguous target $g$, set
+\[
+o=\min\{g-(a-h),\ 12289,\ 16384-\min(n,4095)\}.
+\]
+The implementation requires the resulting gap to remain in the target band and all active position IDs below $16384$. Natural replay remains contiguous. The exact two deterministic schedules are included in \path{figs/verify_routing_schedule.py}; recomputation matches the run-record hashes for all $268$ query offsets and all $88$ final-stage gap targets. This procedure exposes target-range phases during training while keeping physical sequences at most $4096$ tokens.
+
+The evaluation uses separately generated, real contiguous numeric-NIAH prompts, $100$ per length, with greedy decoding and complete-string-plus-EOS scoring. Training uses custom counterfactual query templates rather than the official evaluation template. The source receipts and full parent/final adapter hashes are included in \path{figs/routing_protocol_receipts.json} and \path{figs/recovered_asset_inputs.json}.
+
+\begin{table}[ht]
+\centering\small
+\caption{Complete-answer-string plus terminal-EOS exact match after the
+matched routing follow-up, $100$ inputs per length and one trained pair.}
+\label{tab:complete-answer-eos}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Length & Native & \evq{} \\
+\midrule
+$4$K & $95/100$ & $100/100$ \\
+$8$K & $18/100$ & $98/100$ \\
+$16$K & $0/100$ & $60/100$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All final generations in both arms terminate with EOS. On the \evq{} subsets
+whose source--query gap exceeds the original training range, exact match is
+$48/50$ at $8$K and $31/66$ at $16$K. These outputs belong to the
+additional continuation above, separately from the earlier first-number
+retrieval comparison.
+
+\paragraph{Selective Q/K phase adaptation.}
+To test a less intrusive mature-checkpoint adaptation, we start from the
+protocol-matched Native and \evq{} Stage-A parents, freeze every inherited V/O
+LoRA tensor within each arm (verified bitwise), and continue only the existing Q/K tensors for
+$300$ steps. Each arm trains $8{,}388{,}608$ Q/K parameters while freezing the
+$8{,}388{,}608$ inherited V/O parameters, with global batch $8$, learning rate
+$5{\times}10^{-5}$, and $20$ warmup steps. The QA and RULER generators use
+seeds $20260728$ and $20260729$, respectively; the bundled Q/K
+\texttt{metrics.json} records the full protocol. Both arms use the same
+$1{:}1{:}2$ mixture of continuous-$4$K,
+target-$8$K, and target-$16$K phase exposure, complete answer-plus-EOS
+supervision, and physical sequences no longer than $4$K; long phases again use
+explicit position IDs. On $200$ held-out 2WikiMultiHopQA rows per length
+\citep{ho2020twowiki},
+Native/\evq{} token-F1 is $25.99/24.84\%$ at $4$K, $0.07/21.48\%$ at $8$K,
+and $0/8.57\%$ at $16$K; exact match is $22.0/21.5\%$, $0/17.5\%$, and
+$0/4.0\%$, respectively. Prompts retain the official question and context and are
+deterministically filled with answer-filtered 2Wiki distractors to reach the
+target length, forming a held-out 2Wiki length-transfer evaluation. The RULER adapters are independent of
+the QA adapters: Table~\ref{tab:ruler} reports both the earlier $276$-step
+full-Q/K/V/O continuation and the $300$-step selective-Q/K continuation, each
+trained over all $13$ families. Evaluation uses $20$ examples per family and
+length. A paired family-stratified bootstrap over the tracked Q/K-only
+per-example predictions gives \evq{}-minus-Native official-scorer macro differences
+of $-29.75$ points at $4$K (95\% CI $[-34.42,-24.85]$), $+29.61$ at $8$K
+($[26.54,32.74]$), and $+4.65$ at $16$K ($[3.17,6.38]$). These intervals
+quantify evaluation-row variation for the trained pair.
+
+\input{tables/table_ruler}
+\FloatBarrier
+
+\paragraph{From initialisation.}
+Starting from the public step-$0$ initialisation, the same-recipe Geo/\evq{}
+comparison gives PPL $177.99/191.36$, $161.19/167.45$,
+$163.88/156.87$, and $182.73/159.64$ at $2$/$4$/$8$/$16$K under a matched
+$2.097$B-token budget.
+The \evq{}-minus-Geo NLL is
+$+0.0724/+0.0381/-0.0437/-0.1351$ at $2$/$4$/$8$/$16$K, with
+$122/128$ and $126/128$ held-out documents favouring \evq{} at $8$K and
+$16$K.
+
+The \evq{} branch uses a Hugging Face single-GPU loop; the released Geo
+checkpoint was produced by AI2's distributed OLMo trainer. Both start from the
+same public step-$0$ initialisation and match the pinned recipe, reconstructed
+seed-$6198$ data-order prefix, $512$-sequence global batch, $4$K context,
+$1{,}000$ optimizer steps, and $2{,}097{,}152{,}000$ counted input tokens.
+This comparison includes the frequency-table change and the two trainer
+implementations.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.88\linewidth]{fig_olmo_scale_crossover.pdf}
+  \caption{\textbf{Full-parameter scale evidence crosses beyond the training
+  window.} The $1.485$B Geo and \evq{} arms start from the same public
+  initialisation and follow the same scientific recipe for $2.097$B tokens.
+  Error bars are paired bootstrap intervals over the same $128$ held-out
+  documents, conditioned on this trained pair; the lower panel gives the
+  document count favouring \evq{} at each length.}
+  \label{fig:olmo-scale-crossover}
+\end{figure}
+\FloatBarrier
+
+\FloatBarrier
+\subsection{Frozen fixed-support allocation}
+\label{sec:frozen-fixed-support}
+
+The mature-checkpoint intervention in Table~\ref{tab:frozen-exponent-main}
+holds both models frozen. The three matched-support arms contain $64$ rotary
+pairs and share the Native fast endpoint and the Native slow endpoint divided
+by four. The reference rows use the original Native table and the
+Transformers YaRN frequency map.
+The three matched-support arms also share the factor-four attention amplitude
+$1+0.1\ln4$, evaluation rows, greedy decoder, precision, and hardware. The
+uniform-allocation arm is log-linear between the endpoints. The coarse control
+is a label-free, model-relative projection of the frozen derived table: among
+the registered discrete linear ramps, it minimises displacement-space MSE,
+using transition pairs $20$--$22$ for OLMo and $28$--$31$ for Qwen. The
+remaining arm installs the frozen derived interior allocation. For that arm,
+$\widetilde U_k$ is the normalised residual-energy fraction left after the full
+sin/cos pair is projected onto all other pairs over Native separations weighted
+by their causal pair count, $p(\Delta)\propto L-\Delta$; it sets
+$w_k=(1-\widetilde U_k)^2$ in the frequency blend of Eq.~\eqref{eq:adjustment-families}, so less unique
+pairs move farther.
+
+
+\paragraph{Numerical construction of the fixed-support controls.}
+The following specifies the derived arm independently of the later FullLagP2 construction. Use the checkpoint's actual float32 native tensor promoted to float64, with $L=4096$ for OLMo and $32768$ for Qwen. Start from integer separations $d=0,\ldots,L-1$ and weights $L-d$. Group consecutive separations in blocks of two, retain each block's rounded weighted-centroid separation, and sum its weights; normalize the weights to unit mass. This gives $2048$ and $16384$ weighted support points, respectively.
+
+Build $X$ with columns $\sqrt{w_d}\cos(d\omega_k)$ and $\sqrt{w_d}\sin(d\omega_k)$ in float64. For each two-column block $X_k$, solve $B_k=\arg\min_B\|X_k-X_{-k}B\|_F$ with singular-value cutoff \texttt{rcond}$=10^{-10}$, and compute
+\[
+U_k=\operatorname{clip}\!\left(\frac{\|X_k-X_{-k}B_k\|_F^2}{\|X_k\|_F^2},0,1\right).
+\]
+If the marginal energy is zero, set $U_k=0$. Min--max normalize the $U_k$ values; if their span is zero, use the zero vector. Then $w_k=(1-\widetilde U_k)^2$ and $\omega'_k=\omega_k(1-w_k)+\omega_kw_k/4$. Cast to float32, overwrite the first frequency with the exact native first entry and the last with the float32 native last entry divided by four, and require strict positivity and decreasing order. The resulting tensor SHA-256 prefixes are \texttt{a435d7544144} (OLMo) and \texttt{3512335e408c} (Qwen).
+
+The uniform control is log-linear between the same endpoints. The coarse control enumerates all integer ramp bounds $0\le l<h<K$, minimizes mean squared distance to $w_k$ in movement space, and breaks ties lexicographically in $(l,h)$. It uses the same frequency blend and endpoint overwrite. The selected bounds are $(20,22)$ for OLMo and $(28,31)$ for Qwen. FullLagP2 in Appendix~\ref{sec:full-lag-profile} instead uses every integer separation and installs a log-frequency shift; its measurements are a separate experiment.
+
+\begin{table}[ht]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\caption{\textbf{Exact frozen mature-checkpoint RULER macro (\%).} Reference rows are
+separated from the fixed-support block; only the lower block changes interior
+$z$ while holding the stated checkpoint protocol fixed.}
+\label{tab:frozen-fixed-support}\label{tab:frozen-exponent-main}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Installed table & OLMo unseen-nine, 16K & Qwen core-four, 64K \\
+\midrule
+Native & 0.00 & 54.50 \\
+Official Transformers YaRN ($s{=}4$) & 7.94 & 60.25 \\
+\midrule
+Uniform allocation $z$ & 0.56 & 57.75 \\
+Coarse label-free $z$ & 61.04 & 64.00 \\
+Derived allocation $z$ & 60.47 & 66.50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Method selection used the core-four tasks NIAH single-1, NIAH multikey-2/3,
+and variable tracking. After the table, amplitude, split rule, checkpoint, and
+metric were frozen, the remaining nine RULER families---NIAH single-2/3,
+multikey-1, multivalue, multiquery, CWE, FWE, and QA-1/2---formed the OLMo
+confirmation set at $16$K, with $20$ rows per task. Qwen2.5-1.5B-Instruct
+\citep{qwen2024qwen25} uses the four development RULER tasks
+at $64$K, also with $20$ rows per task; it evaluates a factor-four table at
+twice the Native context length. Row resampling conditions on each fixed
+checkpoint and task set. Both reallocated tables produce the large OLMo
+recovery. The derived-minus-uniform-allocation intervals are $[54.88,64.80]$ points for
+OLMo and $[0.25,17.50]$ points for Qwen; the paired
+derived-minus-coarse-control intervals contain zero on both models. The
+control therefore attributes the effect to
+fixed-support reallocation while leaving profile-specific ordering unresolved.
+
+\paragraph{Fresh-distribution allocation and routing controls.}
+On a disjoint $512$-document FineWeb-Edu holdout from a shard absent from the
+calibration data, the session policy is exactly Native on all $512/512$ $4$K
+rows. Table~\ref{tab:fresh-fineweb-controls} separates its routing contrast from
+the fixed-support allocation contrasts. For the latter, support, attention gain,
+Native/long route, checkpoint, rows, and runtime are fixed; only interior $z$
+changes. The coarse ramp again matches the detailed derived profile, whereas
+the same-support geometric allocation is slightly better at $8$K and fails on
+all $512$ rows at $16$K.
+
+\begin{table}[ht]
+\caption{Fresh FineWeb-Edu holdout-$512$ final-$1{,}024$-token NLL contrasts.
+The first row evaluates the complete session policy; the lower rows compare
+long allocations at fixed support, gain, and route. Negative favours the first
+named method.}
+\label{tab:fresh-fineweb-controls}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Contrast & 8K & 16K \\
+\midrule
+Session-s4 $-$ Native & $-4.0953$ & $-4.4393$ \\
+Geometric $-$ derived $z$ & $-0.0288$ & $+4.4560$ \\
+Coarse ramp $-$ derived $z$ & $+0.0005$ & $+0.0006$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The OLMo deployment policy selects the exact Native table when observed prefill plus generation
+reserve fits the Native window; otherwise one frozen factor-four table and
+amplitude are selected before prefill and retained for the KV-cache lifetime.
+It adds no learned parameters or training tokens. Statically forcing the same
+long profile at $4$K regresses NLL from $2.7538$ to $2.8774$; routing, rather
+than the long allocation, is therefore the identified in-window retention
+mechanism.
+
+\begin{table}[ht]
+\caption{Compact zero-training deployment endpoints on the frozen OLMo
+checkpoint, using the specified table, amplitude, and session routing.}
+\label{tab:zero-training-policy-endpoints}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Endpoint & Official YaRN ($s{=}4$) & Zero-training policy \\
+\midrule
+PG-19 tail NLL, 8K/16K & $3.4404/3.7955$ & $\mathbf{3.1060/3.0977}$ \\
+RULER-13 macro, 8K/16K (\%) & $23.82/5.88$ & $\mathbf{67.72/54.40}$ \\
+Qasper token F1, 16K ($n{=}200$, \%) & $18.03$ & $\mathbf{24.57}$ \\
+2Wiki token F1, 16K ($n{=}200$, \%) & $25.69$ & $\mathbf{26.66}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Applying the long profile to every 2Wiki row scores $27.74\%$; the routed policy
+pays that small difference to preserve the exact Native short path. Across the
+six-task natural-context matrix, routed/YaRN macro is $28.58/21.27\%$ at
+$2\times$ and $24.97/25.59\%$ at $4\times$. The QA arms use identical rows,
+and every post-chat input plus generation reserve fits within $16$K.
+Table~\ref{tab:frozen-exponent-main} gives the corresponding
+allocation-only comparison.
+
+\FloatBarrier
+\subsection{LLaMA-3-8B-Instruct}
+\label{sec:llama8b}
+
+The LLaMA-3-8B-Instruct checkpoint \citep{grattafiori2024llama3} is frozen
+apart from the stated adapters. The \evq{} arm in both LLaMA protocols uses midpoint quantisation with
+$\tau{=}1.414$; Native retains the pretrained model's original frequency table.
+
+\paragraph{Probability and causal source use.}
+The matched seed-$42$ protocol uses $300$ optimizer steps of BF16 rank-$64$,
+alpha-$128$ LoRA on Q/K/V/O, physical $8{,}192$-token sequences, and learning
+rate $10^{-4}$. Arms share model and tokenizer bytes, frozen training rows and
+order, seed, objective, optimizer, scheduler, batch/accumulation, LoRA capacity,
+checkpointing, compile mode, and evaluator. Native uses the pretrained
+endpoint grid, and Cosh uses midpoint quantiles; the same adaptation recipe is
+applied to these two frequency tables.
+The frozen adaptation tensor is drawn from LongAlpaca-12k
+\citep{chen2023longlora}: $7{,}476$ training and $152$ validation rows after
+length filtering, with effective batch $8$ (microbatch $2$, accumulation $4$).
+
+\paragraph{Temporal holdout and aggregation.}
+Evaluation uses arXiv titles/abstracts, Federal Register titles/abstracts, and
+Stack Overflow question bodies selected by publication or creation timestamps
+between January 1 and July 12, 2026. These are separate from the LongAlpaca
+adaptation corpus. Collection was frozen before evaluation; each domain has
+eight disjoint-document $32{,}768$-token packs formed by concatenation with EOS
+separators. Positions and causal attention continue across document boundaries.
+The $8$K and $16$K conditions are exact prefixes of the same $32$K packs.
+All ordinary text targets in each prefix are scored, excluding document-first
+tokens and inserted EOS separators. For domain $d$, let $\ell_d(L)$ and
+$n_d(L)$ be the summed token loss and valid-token count over its eight packs.
+The reported aggregate is
+\[
+\operatorname{NLL}(L)=\frac13\sum_{d=1}^{3}\frac{\ell_d(L)}{n_d(L)},
+\qquad \operatorname{PPL}(L)=\exp(\operatorname{NLL}(L)).
+\]
+Table~\ref{tab:llama-temporal-protocol} gives token counts and the distribution
+of the $24$ paired pack-level NLL differences. The accompanying
+\texttt{figs/llama\_temporal\_summary.json} retains each pack's loss sum and count,
+its domain identity, and the frozen collection hash.
+
+\begin{table}[ht]
+\centering\small
+\caption{Llama-$3$-$8$B temporal holdout: scored tokens and the $24$ paired
+pack NLL differences (\evq{} minus Native). Each length uses the same packs.}
+\label{tab:llama-temporal-protocol}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Prefix & Valid tokens/arm & Valid tokens/pack & Pack $\Delta$NLL: min / median / max \\
+\midrule
+$8$K & 194,794 & 8,051--8,183 & $+0.193 / +0.432 / +0.613$ \\
+$16$K & 389,672 & 16,111--16,353 & $-2.069 / -1.436 / -1.278$ \\
+$32$K & 779,400 & 32,243--32,679 & $-2.319 / -2.074 / -1.754$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+\FloatBarrier
+
+The domain-macro \evq{}-minus-Native NLL is
+$+0.390/-1.510/-2.048$ at $8$/$16$/$32$K.
+
+\paragraph{Position-preserving source intervention.}
+On ten frozen true-$16$K
+passkey cases, median target-block hit@16 over $32$ retrieval heads rises from
+$18.75\%$ to $64.06\%$. Blocking answer-side decode attention to the remote
+gold block in every head preserves all prompt tokens, original rotary KV
+indices, and the $128$-token block geometry. NLL pools the negative log
+probabilities of the $30$ answer tokens ($3$ per case); deletion changes this
+mean by $-0.0095$ for Native and $+1.5055$ for \evq{}. The \evq{} change is
+positive in all ten cases. Case-level hit@16 ranges are $3.12$--$34.38\%$
+for Native and $62.50$--$68.75\%$ for \evq{}.
+These are matched teacher-forced probability
+and position-preserving causal-routing measurements; autoregressive task
+accuracy is evaluated separately. Descriptive Native/\evq{} PPL is
+$6.817/10.068$, $108.958/24.068$, and $991.475/127.911$ at those lengths.
+
+
+\paragraph{Generation and natural-QA outcomes of the same adapters.}
+The same three-arm source collection also includes the unadapted base model. Its domain-macro prefix PPL at $8/16/32$K is $7.948/150.545/1492.915$, compared with $6.817/108.958/991.475$ for Native-LoRA and $10.068/24.068/127.911$ for Cosh-LoRA. This adds the adaptation baseline while retaining the $8$K cost; the matched Native-LoRA comparison remains the control for generic adaptation. The portable three-arm prefix summaries retain their source collection identity.
+
+The source interventions reveal how remote evidence affects answer probabilities. Task evaluation measures whether those probabilities produce the required output. In the seed-$42$ capability evaluation, Cosh passkey exact is $100/0/0\%$ at $8/16/32$K, and single-needle top-1 is $56.67/3.33/0\%$. The registered three-arm QA comparison gives task-macro F1 $0.2309$ for the base model, $0.2110$ for Native-LoRA, and $0.1126$ for Cosh-LoRA; the paired Cosh-minus-Native difference is $-0.0984$, with $95\%$ bootstrap interval $[-0.1297,-0.0697]$. The deficit is concentrated in inputs of at most $8$K; on the longer subset all arms are near the floor. Forced-gold inclusion changes NLL by $-0.034$, and the sparse readout pilot does not improve conversion. These report-backed outcomes accompany the probability and source-use measurements of the same $300$-step adapters. They motivate distinguishing access to a distant source from successful task readout.
+
+\paragraph{RULER-family continuation.}
+A separate seed-$20420726$ continuation uses $516$ steps, rank-$64$/alpha-$128$
+Q/K/V/O LoRA, global batch $8$ (micro batch $2$, accumulation $4$), BF16 and
+Flash-only attention. Its $1{,}376$ physical-$8$K training rows comprise $96$
+rows for each of $13$ RULER families plus $128$ natural-replay rows; it processes
+$33{,}816{,}576$ input tokens. Training and evaluation rows have zero exact
+overlap, and evaluation uses $20$ examples per family and length.
+At $16$K, Native/\evq{} official-scorer macro is
+$0.295/14.03\%$ and normalized exact is $0/1.54\%$. At $8$K,
+Table~\ref{tab:ruler} reports official scorer macro ($94.44/77.60\%$) and
+normalized exact ($17.69/21.54\%$).

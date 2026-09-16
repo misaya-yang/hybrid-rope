@@ -1,0 +1,309 @@
+\section{TailSpline: Construction and Frozen Evaluation}
+\label{sec:tailspline-details}
+\subsection{Finite-grid proof}
+Let $D\epsilon=(\epsilon_{q+1}-\epsilon_q)_{q=1}^{n-1}$ and $H=D^\top D+e_ne_n^\top$. A zero value of $\epsilon^\top H\epsilon$ requires constant increments and a zero terminal increment, hence $\epsilon=0$. Thus $H$ is positive definite. For $n>1$, the proposed $\epsilon_q=c(n+q)(n-q+1)$, with $c=3/[n(n+1)(2n+1)]$, satisfies
+\[
+\epsilon_1-\epsilon_2=2c,\quad
+2\epsilon_q-\epsilon_{q-1}-\epsilon_{q+1}=2c,\quad
+2\epsilon_n-\epsilon_{n-1}=2c.
+\]
+Therefore $H\epsilon=2c\mathbf1$, the equality-constrained stationarity equation. The increments are positive and sum to one; summing them yields Eq.~\eqref{eq:tailspline}. The objective minimum is $2c=6/[n(n+1)(2n+1)]$. For $n=1$, the constraint gives $\epsilon_1=1$, agreeing with the formulas. Positivity makes additional nonnegativity constraints inactive.
+
+Adding $\epsilon_1^2$ yields the symmetric objective, with unique solution
+\begin{equation}
+\epsilon_q^{\rm BM}=\frac{6q(n-q+1)}{n(n+1)(n+2)},\qquad
+m_q^{\rm BM}=\frac{q(q+1)(3n+2-2q)}{n(n+1)(n+2)}.
+\label{eq:bm-formula}
+\end{equation}
+Both profiles are monotone with $m_0=0,m_n=1$. The portable CPU check independently solves the constrained tridiagonal system and verifies each closed form.
+
+\paragraph{What the objective smooths.}
+On the geometric native grid, Eq.~\eqref{eq:increment-log-gap} makes each change between neighboring log gaps equal to $(\epsilon_{q+1}-\epsilon_q)\log s$. The terminal change is $-\epsilon_n\log s$ because the fully interpolated tail has constant displacement. Thus $(\log s)^2$ times Eq.~\eqref{eq:tailspline-objective} is exactly the squared log-gap variation within the transition and at its low-frequency junction. The high-frequency junction is deliberately unpenalized.
+
+At the terminal gap,
+\[
+\epsilon_n^{\rm Pro}=\frac2{n+1},\quad
+\epsilon_n^{\rm TS}=\frac6{(n+1)(2n+1)},\quad
+\frac{\epsilon_n^{\rm TS}}{\epsilon_n^{\rm Pro}}=\frac3{2n+1}.
+\]
+The opposite entry behavior is also explicit: $\epsilon_1^{\rm Pro}=2/[n(n+1)]$, whereas $\epsilon_1^{\rm TS}=3/(2n+1)$. TailSpline trades a larger entry jump for a smaller terminal jump. A useful boundary prior need not minimize both. In the continuum limit, $m^{\rm TS}(u)=(3u-u^3)/2$ solves $\min\int_0^1(m''(u))^2du$ under $m(0)=0,m(1)=1,m'(1)=0$; the natural entry condition is $m''(0)=0$. The finite-grid formula is used in every model experiment, not this limiting polynomial.
+
+\subsection{An exact equal-displacement control}
+\label{sec:tailspline-dose-control}
+Use local indices $q=0,\ldots,n$. Write $T_q=m_q^{\rm TS}$, $B_q=m_q^{\rm BM}$, $U_q=q/n$, and $P_q=q(q+1)/[n(n+1)]$. Define the front-loaded profile $F_q=2U_q-P_q$ and the control
+\begin{equation}
+C_q=(1-w_n)U_q+w_nF_q,\qquad w_n=\frac{3n}{2(2n+1)}.
+\label{eq:tailspline-dose-control}
+\end{equation}
+Substitution of the finite-grid formulas gives $T=(1-w_n)B+w_nF$. Subtracting $C$ gives
+\begin{equation}
+m^{\rm TS}-m^C=(1-w_n)(m^{\rm BM}-m^{\rm Uni}).
+\label{eq:tailspline-shape-contrast}
+\end{equation}
+In local coordinates, the explicit difference is
+\begin{equation}
+T_q-C_q=(1-w_n)(B_q-U_q)=\frac{q(n-q)(2q-n)}{2n(n+1)(2n+1)}.
+\label{eq:tailspline-antisymmetric-contrast}
+\end{equation}
+This cumulative-profile difference is antisymmetric under $q\mapsto n-q$, vanishes at both endpoints, and sums to zero. Since $U$ and $F$ have positive increments and $0<w_n<1$, $C$ is monotone with $C_0=0,C_n=1$. Extending both $T$ and $C$ by the same constant outer bands gives identical endpoints and total log displacement at a common scale. Their equal increment centroids follow from Eq.~\eqref{eq:displacement-centroid}, rather than imposing a further constraint. For $n=1,2$, $B=U$ and $T=C$; for wider bands the contrast tests higher-order shape.
+
+The reported TailSpline--MrPro results below change total displacement and shape together. The completed $T$--$C$ diagnostic in Appendix~\ref{sec:current-controls} tests the zero-total correction above under the recorded cross-batch runtimes. Its primary interval spans both signs. The algebra specifies the contrast, while the runtime-qualified result supplies its observed task response. The independent CPU check in \path{figs/allocation_design.py} verifies the finite-sum and profile identities with exact rational arithmetic.
+
+\subsection{Protocol and complete length responses}
+Frozen Llama-$3$-$8$B-Instruct has native window $8192$. Both arms use exact finite-grid profiles, $s=4$, canonical $32/1$-turn band $[18,35]$, and cosine/sine gain $1+0.1\ln4$. Each table is installed before prefill and shared across layers, requests and evaluation lengths. Construction uses no weights, activations or calibration outputs.
+
+The depth-balanced RULER-13 panel contains $10$ prompts per task at $8/16/32$K: $390$ paired inputs per arm. NIAH and passkey are subsets of this panel. PPL uses $32$ Proof-Pile-test and $14$ PG-19-test documents at each length: $138$ rows per arm \citep{azerbayev2022proofpile,rae2019compressive}. Both compared methods retain their $s=4$ table even at the native input length.
+
+Normalized trapezoidal log-length AUC weights the three endpoints by $1/4,1/2,1/4$. For PPL it integrates PPL over log length, not log PPL. At each length, PPL is the exponential of total whole-sequence loss divided by total scored tokens across the 46 documents. The paired document bootstrap resamples document identities jointly across lengths, recomputing token-weighted NLL, PPL and AUC for each draw. Task aggregates weight tasks equally. The recorded paired intervals characterize the tested inputs and task families for this frozen checkpoint.
+\begin{table}[ht]
+\centering\small
+\caption{Recorded Llama responses. NIAH uses recorded paired differences; absolute scores are not reconstructed.}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Endpoint & $8$K & $16$K & $32$K \\
+\midrule
+RULER-13 MrPro (\%) & 87.5000 & 80.0897 & 54.7308 \\
+RULER-13 TailSpline (\%) & 89.7436 & 84.0513 & 57.3590 \\
+NIAH TailSpline--MrPro (pp) & $-0.3125$ & $+5.9375$ & $+3.4375$ \\
+PPL MrPro & 5.286429 & 4.518111 & 4.161831 \\
+PPL TailSpline & 5.295283 & 4.530318 & 4.110622 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\FloatBarrier
+Family AUC differences are retrieval $+3.750$ points, tracking $+6.500$, aggregation approximately $+3.792$, and QA $-1.250$. Multikey-2 improves by $22.5$ points; QA-1 and multikey-1 each decrease by $5.0$. Out of $390$ inputs, TailSpline and MrPro respectively have $30$ and $37$ empty outputs, $388$ and $384$ EOS-terminated outputs, and $2$ and $6$ budget-limited outputs. Task scores include partial credit.
+
+The portable input \path{figs/allocation_value_inputs.json} records the aggregates and source identities. The packaged constructor computes the boundaries and FP32 table from the public native grid, reference length and scale. TailSpline and MrPro share their outer bands, endpoints and gain, so their matched comparison tests interior allocation. Their total log-frequency displacement also differs; at fixed support this is a statistic of $z$. The equal-total controls in Appendix~\ref{sec:four-method-control} further isolate shape at fixed displacement.
+\FloatBarrier
+
+\subsection{Prospective OLMo confirmation}
+The OLMo-$2$-0425-$1$B-Instruct comparison uses original window $4096$, canonical band $[14,32]$, $s=4$ and the same gain as Llama. Generation batch size is four. The methods and data were frozen before reading outputs from this experiment; historical BM/front-loaded work on OLMo had informed the direction. Each model has its own tokenized panel and within-model paired comparison.
+\begin{table}[ht]
+\centering\small
+\caption{Complete OLMo length responses under the frozen two-arm contract.}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Endpoint & $4$K & $8$K & $16$K \\
+\midrule
+RULER-13 MrPro (\%) & 32.5128 & 14.8462 & 7.2436 \\
+RULER-13 TailSpline (\%) & 72.6667 & 72.5513 & 48.6154 \\
+NIAH MrPro (\%) & 33.1250 & 13.1250 & 7.1875 \\
+NIAH TailSpline (\%) & 88.7500 & 87.8125 & 60.0000 \\
+PPL MrPro & 13.795244 & 14.356459 & 12.827048 \\
+PPL TailSpline & 11.152472 & 10.117407 & 8.536196 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\FloatBarrier
+Full-13 AUC difference is $0.492340$ with paired $95\%$ interval $[0.453365,0.530449]$; NIAH difference $0.644531$ has interval $[0.592188,0.694531]$; PPL difference $-3.852932$ has interval $[-4.775042,-3.125459]$. Passkey AUC is $0.950$ versus $0.375$. All $13$ task differences are positive, ranging from $+0.0325$ for common words to $+0.875$ for single-3. Family differences are retrieval $+0.64453$, tracking $+0.37000$, aggregation approximately $+0.16208$, and QA approximately $+0.27563$.
+
+Neither arm has empty outputs. TailSpline and MrPro terminate with EOS on $257$ and $248$ of $390$ inputs, respectively, and hit the cap on $133$ and $142$ ($34.1\%$ and $36.4\%$). PPL uses the same document sources as Llama with OLMo-tokenized prefixes. Report and original stream identities accompany the portable aggregates.
+\FloatBarrier
+
+\begin{figure}[ht]
+\centering\includegraphics[width=\linewidth]{fig_tailspline_details.pdf}
+\caption{\textbf{NIAH and language-modeling responses.} NIAH is a subset of each model's depth-balanced RULER-13 panel. Both columns show TailSpline relative to MrPro; PPL changes use each length's absolute PPL. Llama's $8/16$K PPL slightly increases, while OLMo improves at every measured length. The panels have separate vertical scales.}
+\label{fig:tailspline-details}
+\end{figure}
+\FloatBarrier
+
+\subsection{Evaluation implementation}
+\label{sec:tailspline-implementation}
+Generation is greedy, with repetition penalty $1$, no repeat-ngram restriction and the model's EOS IDs. Llama uses batch size one with cached $8192$-token prefill chunks; OLMo uses batches of at most four identical-length inputs. The static FP32 frequency table is installed after model loading and its installed values are checked against the receipt. NIAH point-depth tasks use two prompts at each target depth $10/30/50/70/90\%$ per length. Other tasks keep their recorded task-specific output budgets.
+
+\paragraph{Input construction.}
+The generator pins NVIDIA RULER revision \texttt{c3f5e3b}. Each NIAH task--length cell selects $10$ rows from $64$ candidates using only evidence positions and row identifiers. For single-evidence tasks, the five target depths above each receive two prompts; selection minimizes absolute depth error with tolerance $0.10$. Multi-evidence tasks alternate dispersed targets $(0.10,0.35,0.65,0.90)$ and middle-cluster targets $(0.35,0.45,0.55,0.65)$, with mean absolute tolerance $0.18$. Depths use token positions divided by the context cap, after padding. Task scores are not used in selection.
+
+The filler unit is \texttt{Irrelevant archive padding record; it does not answer the question.} followed by a newline, tokenized without special tokens. Its token sequence is repeated and truncated to the required padding count, then inserted immediately after the user header, before the original task template, until the input occupies cap minus $128$ tokens. The original context, question and references are preserved. In the pinned aggregation templates, the numbered list or coded text follows the task instruction; filler is placed before that instruction. The task-specific generation budgets remain $128$ (NIAH), $30$ (tracking), $120$ (common words), $50$ (frequent words) and $32$ (QA). The row records store padding-token counts and achieved depth errors.
+
+The Llama and OLMo preparation seeds are $20260924$ and $20260925$; each cell adds $300000+10000i+100j$ for length index $i$ and task index $j$. QA uses question-index blocks starting at $5000$, $5010$ and $5020$ for the three lengths. These rules specify sample selection within each model; the two model panels have separate tokenizations. Both exact tables were fixed before their corresponding comparison; historical Llama and OLMo experiments informed the design direction.
+
+\paragraph{Natural-text sources.}
+Proof-Pile uses the original \texttt{hoskinson-center/proof-pile} test archive, selecting the first $32$ arXiv records with at least $300000$ characters and retaining up to the first million characters. PG-19 uses individual test-book prefixes. The frozen $46$-document source manifest records the selected $32$ Proof-Pile and $14$ PG-19 identities; each tokenizer takes a prefix of maximum evaluation length plus one token. Documents are scored separately rather than concatenated.
+
+Full-13 intervals use $20{,}000$ paired resamples within each task--length cell, retaining fixed task weights; NIAH intervals aggregate the corresponding retrieval tasks. The report treats different length cells separately for this panel. PPL intervals instead resample the $46$ document identities jointly across all lengths, also using $20{,}000$ draws. The two uncertainty calculations therefore preserve different experimental units. These are conditional evaluation intervals, not uncertainty across training seeds or model families.
+
+\subsection{The fixed T/C exchange and task response}
+\label{sec:tc-task-connection}
+The profile difference in Eq.~\eqref{eq:tailspline-antisymmetric-contrast} satisfies
+$\delta_{n-q}=-\delta_q$, $\sum_q\delta_q=0$ and $\delta_q<0$ for
+$0<q<n/2$. For a continuously differentiable utility $\mathcal V$ on a
+neighborhood of the C-to-T path, define
+\begin{equation}
+G_q=\int_0^1\partial_{m_q}\mathcal V(C+t\delta)\,dt,
+\qquad
+\mathcal V(T)-\mathcal V(C)=\sum_{q<n/2}(-\delta_q)(G_{n-q}-G_q).
+\label{eq:tc-path-utility}
+\end{equation}
+The fundamental theorem of calculus gives the path integral; pairing indices
+gives the second expression. The hypothesis is that later-half slowdown has
+higher marginal task value for this fixed exchange. A sequence log-likelihood
+can be differentiable; greedy accuracy and F1 do not satisfy this premise.
+The $G_q$ identity is explanatory, not an independent predictor or an
+optimization procedure. This exposition was clarified after the E1 outputs
+were available; it does not retroactively preregister a new prediction.
+No equivalence margin was preregistered for the current comparison.
+
+\paragraph{From logits to value readout.}
+For fixed visible keys and current-layer content Q/K/V, let $\eta_j$ be the
+finite score change caused by switching tables. Direct softmax algebra yields
+\begin{equation}
+p'_j=\frac{p_j e^{\eta_j}}{\mathbb E_p e^\eta},\qquad
+\log\frac{p'_j/p'_r}{p_j/p_r}=\eta_j-\eta_r,\qquad
+o'-o=\frac{\operatorname{Cov}_p(v,e^\eta)}{\mathbb E_p e^\eta}.
+\label{eq:finite-readout}
+\end{equation}
+A common logit shift has no effect. Reweighting keys only helps an output when
+it changes the useful value mixture. A scalar gain absorbs a score change
+exactly only when the target scores equal a common positive multiple of the
+original scores plus a row constant; a shared gain requires the same multiple
+across queries. These are standard identities, related to LeRoPE's
+frequency--attention--value gradient chain \citep{karypis2026lerope}.
+They do not hold the entire Transformer trajectory fixed after a table swap.
+A mechanism claim requires a separate output intervention with runtime-matched
+no-op and shuffled controls; no such completed result is claimed here.
+
+\subsection{Clean source-order RULER confirmation}
+\label{sec:clean-confirmation}
+The clean panel uses RULER upstream revision
+\texttt{c3f5e3b4f87f} (full revision in the data receipt), source-order selection,
+$200$ rows per task and a $32{,}768$-token cap. Actual input lengths are
+$28{,}270$--$32{,}606$ tokens. It uses neither content padding nor depth
+balancing; it is distinct from the classic panel and smaller than upstream's
+$500$-per-task default. Each completed arm has $2{,}600$ unique prompt hashes.
+Both run contracts use batch $1$, no left padding, and prefill chunks of $8192$;
+they differ only in the arm label and static table. Scores were recomputed from
+all stored answers using the recorded scorer. The single-length endpoint is
+the task-equal score at that length, with no division by a zero log-length span.
+
+\paragraph{Selection and table reuse.}
+The clean preparation takes the first $200$ upstream source rows per task in file order, appending the fixed additional QA-1 source fragment when needed to reach that count. It prepares the shared input IDs before running either arm and reads no generated model answers or scores. The runner reuses the classic static table files; the retained TailSpline contracts have identical frequency arrays, gain and construction metadata. The change from classic to clean is in input selection and padding policy, with no new allocation fit. Full-13 task-equal score at $32$K is the endpoint for this separate source-order panel.
+
+\input{tables/table_clean_full13}
+
+The paired within-task bootstrap uses $20{,}000$ draws, seed $20260923$,
+with tasks fixed. The T--P macro interval is $[10.32,13.11]$ points.
+Intervals condition on the selected source records, not independent documents
+from the entire QA corpus. The portable score-only pairs retain source-record
+and prompt hashes for checking the point estimand. An independent bootstrap
+with a different frozen seed agrees within Monte Carlo variation.
+
+Family differences are retrieval $+10.86$, tracking $+24.00$, aggregation
+$+11.76$ and QA $+9.00$ points; their separate $95\%$ intervals are
+$[9.11,12.61]$, $[20.60,27.40]$, $[8.80,14.77]$ and $[4.25,13.75]$.
+These are descriptive decompositions, not four independent confirmations or
+multiplicity-adjusted family claims. Leaving out any single task leaves a
+positive macro difference, from $9.53$ to $13.07$ points. The one negative task,
+\texttt{niah\_multivalue}, remains in the primary score. EOS, cap-hit and empty
+counts in Table~\ref{tab:clean-full13} include every response; no answer was
+excluded for termination behavior. This result supports TailSpline over MrPro
+on this clean panel. The corresponding natural-QA evaluations are reported in
+Appendices~\ref{sec:tailspline-natural-qa} and~\ref{sec:natural-transfer-new}.
+
+\begin{figure}[ht]
+\centering\includegraphics[width=.9\linewidth]{fig_tailspline_classic.pdf}
+\caption{\textbf{Classic length responses on Llama and OLMo.} Each model uses its recorded depth-selected, prefix-padded input protocol. Curves and log-length AUC intervals complement the clean length panels in the main text.}
+\label{fig:tailspline-classic}
+\end{figure}
+
+\subsection{Current equal-dose and original-Native controls}
+\label{sec:current-controls}
+The completed E1 classic T/C comparison has $390$ generations and $138$ LM
+rows per arm. Raw task scores reproduce Full-13 AUC $78.8013\%$ for T and
+$79.2115\%$ for C. The reported T--C difference is $-0.4103$ points, interval
+$[-2.6282,1.8205]$; the NIAH subset differs by $+2.0313$ points and PPL AUC
+by $-0.000616$. These secondary endpoints do not replace Full-13. T/C have
+$388/380$ EOS, $2/10$ cap-hit and $30/22$ empty outputs. Their installed
+$\sum m$ differs by $-7.65\times10^{-9}$ from float32 reconstruction;
+this does not change the exact same-dose construction.
+
+Generation runtime differs: T uses batch $1$, C batch $2$ and reordered
+batches. Their legacy contracts also lack complete revision/backend identity
+fields. E0 replays one T row per task and length ($39$ rows) at batch $2$:
+no official score changes, but six token sequences and decoded outputs change.
+Thus E1 remains a cross-runtime diagnostic. Neither E0 nor the interval permits
+an equivalence claim; a complete matched C arm and explicit runtime provenance
+would be needed for a stronger residual-shape attribution. The original E1
+interval is a paired task-length-row analysis; it does not establish independent
+source blueprints across lengths or tail-only mediation.
+
+The original-Native LM reference uses original frequencies and gain on $46$
+matched $8$K documents, $376{,}832$ scored targets. Whole-prefix token-pooled
+PPL is $5.275919$ (Native), $5.295283$ (T), and $5.286429$ (MrPro).
+Corresponding NLL is $1.663153/1.666816/1.665143$. T--Native PPL is
+$+0.019364$ (document-bootstrap $95\%$ interval $[0.006602,0.034861]$);
+MrPro--Native is $+0.010510$ ($[-0.000722,0.024591]$).
+This whole-prefix LM reference is distinct from the classic PPL-AUC
+aggregation. It quantifies native-language-model cost and does not measure
+native generated-task retention.
+
+
+The completed original-Native task reference uses the classic $8$K slice
+($130$ paired inputs), with task-equal macro $91.8846\%$ (Native),
+$89.7436\%$ (T), and $87.5000\%$ (MrPro). Reversing the reported
+Native--T contrast gives T--Native $-2.1410$ points and interval
+$[-6.1410,1.9231]$. The point difference is a $2.33\%$ relative native-task trade-off. The interval
+is reported as paired uncertainty; no noninferiority margin was specified.
+This task comparison and the whole-prefix LM comparison quantify different costs.
+
+\subsection{TailSpline on the frozen natural-QA pool}
+\label{sec:tailspline-natural-qa}
+The Natural-QA631 V2 pool preserves the previously defined $631$ natural
+questions from HotpotQA, 2WikiMQA, Qasper, NarrativeQA and MultiFieldQA-en
+\citep{bai2024longbench}. Pool membership was originally defined by an OLMo
+input-length threshold and is retained after Llama retokenization. The Llama
+inputs range from $3694$ to $16304$ tokens, with $316$ within $8192$ tokens
+and $315$ above it. Thus the pool tests natural inputs through roughly twice
+the Llama native window, while the same installed table has scale $s=4$.
+It is this frozen finite source pool, not the full LongBench benchmark.
+
+The two complete arms use the same prompt hashes, references, order, decoder,
+per-task caps, batch $1$ and unpadded prefill chunks of $8192$. Their saved
+contracts differ only in arm label and static table. Both reuse the classic
+TailSpline/MrPro tables and common gain. Output caps are $32$ for HotpotQA and
+2WikiMQA, $128$ for Qasper and NarrativeQA, and $64$ for MultiFieldQA-en.
+All $1262$ completed answers were rescored with the recorded whole-response
+normalized token-F1 scorer; no empty or capped output was discarded.
+
+There are $524$ distinct source-context clusters, with no cluster shared across
+tasks. The primary estimand averages question F1 within each task and then gives
+the five task means equal weight. Within each task, the paired bootstrap
+resamples source-context clusters and divides the sampled score sums by sampled
+question counts; $20{,}000$ draws use seed $20260914$. The within-native and
+extended strata use seeds $20260916$ and $20260915$, respectively. The portable
+score-only pairs retain the cluster and input-length identifiers and reproduce
+all three intervals in Table~\ref{tab:tailspline-natural-main}.
+
+\input{tables/table_tailspline_natural_main}
+\input{tables/table_tailspline_natural_tasks}
+
+Overall T--P is $+0.1957$ points, with interval $[-1.5311,1.8864]$.
+The extended stratum is $-0.9383$ points ($[-4.1494,1.9539]$), and the within-native
+stratum is $+0.6998$ ($[-1.2478,2.8073]$). The $315$ extended questions have task
+counts $142/52/11/53/57$ in the order listed above, drawn from
+$142/52/9/5/46$ source contexts. Their smaller number of source contexts,
+particularly for NarrativeQA and Qasper, is retained in the clustered intervals.
+These strata compare the two fixed T/P extension tables.
+
+For the document-equal sensitivity, question scores are first averaged within
+source context, then contexts within task, and tasks equally. T/P macro is
+$40.8141/40.8375\%$, a difference of $-0.0234$ points. This alternative weighting
+does not replace the frozen primary estimand. The Llama F1 scores are close, with the primary interval spanning both
+signs. The new OLMo TailSpline evaluation appears in
+Appendix~\ref{sec:natural-transfer-new}; the older BM comparison retains its
+separate construction identity.
+
+\subsection{Clean confirmation at the intermediate length}
+\label{sec:clean16k-confirmation}
+The $16$K clean RULER panel evaluates the same $s=4$ frozen constructions on
+$50$ paired inputs per task, for $650$ pairs across all $13$ tasks. The primary
+score is the task-equal mean at this length. The completed matched report uses
+$20{,}000$ paired bootstrap draws within task and length (seed $20260923$).
+It gives TailSpline/MrPro $86.0949/82.7051\%$ and difference $+3.3897$ points,
+with interval $[1.5307,5.3385]$. This is a separate length panel with its own
+inputs and sample count.
+Retrieval improves by $4.50$ points, with interval $[2.50,6.69]$; QA improves
+by $8.00$ points, with interval $[1.00,15.00]$. Aggregation and tracking
+contrasts are $-2.77$ and $-2.40$ points, respectively. The full task-equal
+aggregate retains these families. Complete task means follow.
+\input{tables/table_clean16k_full13}

@@ -7,6 +7,7 @@ python_bin=${PYTHON_BIN:-/root/miniconda3/bin/python}
 upstream_pid=${UPSTREAM_PID:?set UPSTREAM_PID to the active Pro6000 follow-up driver}
 infinite=${plan}/tailspline_llama_s16_infinitebench_100k128k
 root=${plan}/four_model_128k_extreme/qwen25_3b_256k
+qa_root=${plan}/four_model_128k_extreme/qwen25_3b_128k
 
 mkdir -p "${root}/logs"
 
@@ -26,13 +27,13 @@ done
 cd "${repo}"
 export PYTHONPATH=.
 
-"${python_bin}" - "${infinite}" "${root}" <<'PY'
+"${python_bin}" - "${infinite}" "${root}" "${qa_root}" <<'PY'
 import hashlib
 import json
 import sys
 from pathlib import Path
 
-infinite, root = map(Path, sys.argv[1:])
+infinite, root, qa_root = map(Path, sys.argv[1:])
 complete = json.loads((infinite / "complete.json").read_text())
 if complete.get("status") != "INFINITEBENCH_100K128K_COMPLETE_V1":
     raise SystemExit("InfiniteBench upstream queue did not complete")
@@ -55,13 +56,16 @@ if (
 ):
     raise SystemExit("Qwen 256K LongBook PPL5 assets are not frozen")
 
-qa = json.loads((root / "infinitebench_en_qa_assets/manifest.json").read_text())
+qa = json.loads((qa_root / "infinitebench_en_qa_assets/manifest.json").read_text())
 if (
     qa.get("status") != "COMPLETE"
     or qa.get("tasks") != ["longbook_qa_eng"]
+    or qa.get("scale") != 4
+    or qa.get("lengths") != [131072]
+    or qa.get("minimum_input_tokens") != 100000
     or qa.get("summary", {}).get("selected_rows") != 50
 ):
-    raise SystemExit("Qwen 256K Natural-QA assets are not frozen")
+    raise SystemExit("Qwen 128K Natural-QA assets are not frozen")
 PY
 
 if [[ -f "${root}/append_complete.json" ]]; then

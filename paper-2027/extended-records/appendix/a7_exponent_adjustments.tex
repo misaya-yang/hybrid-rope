@@ -1,0 +1,199 @@
+\section{Frozen Exponent-Adjustment Protocols}
+\label{sec:adjustment-details}
+
+This section specifies the static profiles and evaluation panels used in
+\S\ref{sec:exp-frozen-support} and the BM natural-QA comparison in \S\ref{sec:experiments}. An amplitude $g$ multiplies both the cosine
+and sine tables, so its contribution to a rotated Q/K logit is $g^2$.
+Every table is installed before prefill and retained for the entire request.
+The accompanying \texttt{figs/recorded\_runtime\_identities.json} records
+checkpoint, tokenizer, and evaluator identities. The index/placement studies
+use RULER commit \texttt{c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a}.
+
+\FloatBarrier
+For the native-relative displacement in~\eqref{eq:movement-allocation}, the three installation laws are
+\begin{equation}
+d_k=\begin{cases}
+-\log(1-w_k+w_k/s),&\text{frequency blend},\\
+m_k\log s,&\text{log-frequency shift},\\
+\sum_{j<k}\log\lambda_j,&\text{mixed-radix conversion}.
+\end{cases}
+\label{eq:adjustment-families}
+\end{equation}
+The blend weight $w_k$ and log-shift profile $m_k$ have different meanings; the first line is the exact conversion between them.
+
+\paragraph{YaRN implementation coordinate.}
+The index-linear YaRN baseline uses
+$r_k=\operatorname{clip}((k-l)/(h-l),0,1)$ and
+$\omega'_k=\omega_k(1-r_k+r_k/s)$, with the recorded correction indices and separate cosine/sine gain. This is the channel-index ramp in the author implementation (revision \texttt{995db5b}) and its Transformers implementation \citep{peng2024yarn}. It is distinct from the historical smoothstep scaler in Appendix~\ref{sec:experiment-details} and the MLA wavelength blend in Appendix~\ref{sec:mla-results}.
+
+
+
+\subsection{Normalized-index profile}
+\label{sec:index-adjustment}
+
+For a native table with $K$ pairs, base $b$, and reference length
+$L_{\rm ref}$, the normalized-index construction evaluates the profile on
+a $64$-pair reference grid with the same $b,L_{\rm ref}$:
+\begin{align}
+\bar\omega_j&=b^{-j/64},&
+c_{64}&=(1-b^{-1/64})^{-1},&
+\xi_j&=\log\frac{L_{\rm ref}\bar\omega_j}{2\pi c_{64}},\\
+\bar m_j&=\operatorname{clip}\left(
+\frac{\xi_H-\xi_j}{\xi_H-\xi_L},0,1\right),&
+\xi_H&=0.7382780681078285,&
+\xi_L&=0.366403835112904 .
+\end{align}
+These two constants were fitted to the existing OLMo displacement profile and
+then frozen. Linear interpolation of $(j/63,\bar m_j)$ at $k/(K-1)$ gives
+$m_k$ on the target grid. The installed table is
+$\omega'_k=\omega_k^N s^{-m_k}$.
+
+The Qwen-$2.5$-$0.5$B-Instruct experiment uses its native $K=32$ pairs,
+$b=10^6$, and original context length $L_{\rm ref}=32768$, with $s=2$ and fixed amplitude
+$g=1+0.074\log2=1.0512928914$. The YaRN-$2$ comparison uses the
+Transformers index-linear YaRN table and $g=1+0.1\log2=1.0693147181$;
+Native uses $g=1$.
+
+The full RULER-13 confirmation uses seed $202609027$, $20$ examples per
+task and length, the same tokenizer and native chat template, and greedy
+task-budgeted generation. It contains $520$ generations per arm across
+$32768$ and $65536$ tokens. Per-task scores are shown in
+Table~\ref{tab:index-full13}. The macro averages the thirteen task means
+equally. Paired intervals use $10{,}000$ bootstrap samples within task strata
+with seed $202609028$.
+The $64$K index-minus-YaRN difference is $6.0897$ percentage points,
+with interval $[2.7627,9.5835]$; at $32$K it is $-0.0256$ points,
+with interval $[-3.2630,3.2179]$.
+
+\input{tables/table_index_full13}
+
+\FloatBarrier
+\subsection{Placement on another finite pair grid}
+\label{sec:coordinate-confirmation}
+
+The alternative direct-gap construction evaluates the same clipped profile
+using the target table's local frequency spacing:
+\[
+c_K=(1-b^{-1/K})^{-1},\qquad
+\xi_k^{(K)}=\log\frac{L_{\rm ref}\omega_k^N}{2\pi c_K},\qquad
+m_k^{\rm gap}=\operatorname{clip}
+\left(\frac{\xi_H-\xi_k^{(K)}}{\xi_H-\xi_L},0,1\right).
+\]
+Both placements share the frozen $\xi_H,\xi_L$ and amplitude coefficient
+$0.074$. Within each comparison, endpoints, scale, amplitude, checkpoint,
+inputs, decoder, and scorer are matched. Table~\ref{tab:coordinate-confirmation}
+reports two independent-input confirmations with $80$ rows per task.
+
+Qwen-$0.5$B uses the $32$-pair, $s=2$ setting above and data seed
+$202609026$, with four tasks at each of $32$K and $64$K. These are separate
+inputs from the subsequent RULER-13 confirmation.
+Gemma-$1.1$-$2$B-Instruct uses $K=128$, $b=10{,}000$, a fixed operating
+reference of $4096$, $s=4$, and $g=1+0.074\log4=1.1025857827$.
+Its confirmation uses data seed $202609028$ at $16$K.
+The task vector is NIAH single-1, multikey-2, multikey-3, and variable tracking.
+Gemma's direct-gap scores are $100/88.75/20/82.50\%$;
+normalized-index scores are $100/88.75/40/87.25\%$.
+Both tables were frozen before these inputs were generated, and the earlier
+selection rows are excluded. This confirmation compares the two placements;
+the Native/YaRN baseline panel uses a different, earlier input set.
+
+\input{tables/table_coordinate_confirmation}
+
+\FloatBarrier
+\subsection{Boundary-matched intermediate exponents}
+\label{sec:bm-construction}
+
+Let $l$ be the last native frequency pair making more than $32$ turns over
+the reference window and $h$ the first making less than one turn. Write
+$N=h-l$ and $q=\operatorname{clip}(k-l,0,N)$. All profiles leave the fast
+band unchanged and divide the slow-band frequencies by $s$:
+\begin{equation}
+\omega'_k=\omega_k^N s^{-m_q},\qquad m_0=0,\quad m_N=1.
+\end{equation}
+With the same band boundaries, the three intermediate allocations are
+\begin{align}
+m_q^{\rm Uni}&=\frac{q}{N},\\
+m_q^{\rm Pro}&=\frac{q(q+1)}{N(N+1)},\\
+m_q^{\rm BM}&=\frac{q(q+1)(3N+2-2q)}{N(N+1)(N+2)}.
+\label{eq:bm-exponents}
+\end{align}
+The Uni and Pro rules follow the uniform and progressive mixed-radix
+constructions of \citet{tian2026mrrope}. BM smooths the radix increments
+$\epsilon_q=m_q-m_{q-1}$ at both band boundaries.
+
+To obtain BM, minimize
+$\sum_{q=0}^{N}(\epsilon_{q+1}-\epsilon_q)^2$ with
+$\epsilon_0=\epsilon_{N+1}=0$ and $\sum_{q=1}^{N}\epsilon_q=1$.
+The discrete Euler equation gives
+\[
+\epsilon_q=\frac{6q(N+1-q)}{N(N+1)(N+2)};
+\]
+summing gives \eqref{eq:bm-exponents}. The quadratic form is strictly convex
+with the endpoints fixed, so this solution is unique. Figure~\ref{fig:bm-profiles}
+shows the actual profile shapes for the tested transition widths.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\linewidth]{fig_bm_exponent_profiles.pdf}
+\caption{\textbf{Intermediate-band exponent displacements.}
+All three profiles have the same cumulative scale at the endpoints. BM
+redistributes the increments toward the middle of the transition band.}
+\label{fig:bm-profiles}
+\end{figure}
+
+OLMo-$2$-$0425$-$1$B-Instruct uses $b=500{,}000$, reference length $4096$,
+$K=64$, and $(l,h,N)=(14,32,18)$. Qwen-$2.5$-$3$B/$7$B-Instruct use
+$b=10^6$, reference length $32768$, $K=64$, and $(l,h,N)=(23,40,17)$.
+The factor-four comparisons use $g=1+0.1\log4=1.1386294361$ for both
+MrRoPE-Pro and BM, with FP32 frequency tables and BF16 model execution.
+
+\FloatBarrier
+\subsection{Six-task model comparisons}
+\label{sec:bm-model-comparison}
+
+The shared task types are NIAH single-2, multikey-2, multiquery, variable
+tracking, frequent words, and QA-1. OLMo's confirmation uses seed $20260910$
+with four short and eight long examples per task, after a separate development
+panel with seed $20260909$; BM's formula was fixed before the confirmation.
+Its $4$K/$16$K scores are listed in Table~\ref{tab:bm-models}.
+MrRoPE-Uni and official YaRN were subsequently evaluated on these same
+inputs, scoring $76.88/32.12\%$ and $54.38/6.94\%$. These are follow-up
+controls on the BM--MrPro confirmation panel, not new independent confirmations.
+The Qwen-$3$B panel has two $32$K and four $128$K examples per task.
+The $7$B screen reuses the first one short and two long examples per task;
+this selection was fixed before its outputs were inspected.
+Table~\ref{tab:bm-full-tasks} reports every task mean.
+
+All arms use the corresponding native chat template and the same task-specific
+generation caps, score the entire saved response with the RULER task metric,
+and retain generated token IDs and EOS flags. On Qwen-$7$B, a tokenwise MLP
+chunk size of $4096$ makes $128$K evaluation fit in memory; both arms share
+that path while retaining full attention.
+
+\input{tables/table_bm_tasks}
+
+\FloatBarrier
+\subsection{Natural question answering}
+\label{sec:bm-natural}
+
+The natural comparison reuses frozen, source-verified LongBench prompts
+\citep{bai2024longbench}. Inputs are untruncated, retain their source questions
+and references, and fit the $16$K input-plus-generation budget.
+Selection follows the pre-existing source-hash order; no generated answer
+participates in selection. The complete eligible pool contains $778$ questions,
+of which $631$ have more than $4096$ input tokens.
+Both methods retain the same factor-four table at every length.
+
+Greedy generation uses a $32$-token cap for HotpotQA and 2WikiMQA,
+$128$ for Qasper and NarrativeQA, and $64$ for MultiFieldQA-en.
+The metric is token F1 on the complete saved generated response against
+the task references. Table~\ref{tab:bm-qa-complete} gives the long-input
+and original-window-length strata, including EOS counts.
+The long-input macro averages the five task means; the shorter-input macro
+averages its four available tasks. The respective BM-minus-MrPro changes are
+$+3.8194$ and $+2.0028$ points, with paired within-task bootstrap intervals
+$[1.3161,6.2920]$ and $[-3.5618,7.4742]$.
+The MultiFieldQA long-input row includes $40$ capped responses in each arm;
+these remain in the F1 calculation.
+
+\input{tables/table_bm_qa_all}

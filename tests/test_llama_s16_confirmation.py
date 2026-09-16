@@ -52,6 +52,27 @@ def test_generation_reuses_runtime_and_skips_lm():
     assert command[command.index("--static-table-json") + 1] == "/gate/tables/tailspline.json"
 
 
+def test_gate_configuration_accepts_nested_frozen_table_receipt(tmp_path):
+    gate = tmp_path / "gate"
+    runtime = {key: None for key in subject.RUNTIME_KEYS}
+    values = [1.0, 0.5]
+    gain = 1 + 0.1 * subject.math.log(16)
+    for arm in subject.ARMS:
+        (gate / "runs" / arm).mkdir(parents=True)
+        (gate / "tables").mkdir(exist_ok=True)
+        active = {"values_float32": values, "gain": gain, "construction": {}}
+        (gate / "runs" / arm / "contract.json").write_text(json.dumps({
+            **runtime, "lm_prefill_chunk_size": 65536, "static_table": active,
+        }))
+        (gate / "tables" / f"{arm}.json").write_text(json.dumps({
+            "scale": 16.0, "band_envelope": [18, 35], "gain": gain,
+            "table": active,
+        }))
+    result = subject.gate_configuration(gate)
+    assert result["tables"]["tailspline"] == {"values_float32": values, "gain": gain}
+    assert result["lm_prefill_chunk_size"] == 65536
+
+
 def test_report_keeps_independent40_separate_from_observed_gate(monkeypatch, tmp_path):
     args = Namespace(gate=tmp_path / "gate", out=tmp_path / "confirm")
     runtime = {key: None for key in subject.RUNTIME_KEYS}

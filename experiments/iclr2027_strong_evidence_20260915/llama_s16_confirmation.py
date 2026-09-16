@@ -71,10 +71,11 @@ def gate_configuration(gate: Path) -> dict:
         raise ValueError("gate arms used different generation runtimes")
     tables = {}
     for arm in ARMS:
-        table = read_json(gate / "tables" / f"{arm}.json")
+        receipt = read_json(gate / "tables" / f"{arm}.json")
+        table = receipt.get("table", receipt)
         active = contracts[arm].get("static_table") or {}
-        if (table.get("scale") != 16 or table.get("band_envelope") != [18, 35]
-                or table.get("gain") != 1 + 0.1 * math.log(16)
+        if (receipt.get("scale") != 16 or receipt.get("band_envelope") != [18, 35]
+                or receipt.get("gain") != 1 + 0.1 * math.log(16)
                 or any(active.get(key) != table.get(key) for key in ("values_float32", "gain"))):
             raise ValueError(f"gate does not contain the frozen S16 table: {arm}")
         tables[arm] = {key: table[key] for key in ("values_float32", "gain")}
