@@ -1,16 +1,17 @@
 \section{Introduction}
 \label{sec:intro}
-For a model trained to length $L$, $sL$ specifies a target window; quality
-within that window determines its usefulness. RoPE's base sets a frequency
-range, while internal placement determines the positional basis. We study
-how this allocation affects model quality.
+For a model trained to length $L$, reaching $sL$ is useful only if it can use
+information throughout that window. RoPE's base chooses a geometric frequency
+table, but its endpoints leave many possible interior placements. We study
+this allocation, $z$, as a design variable for extension and native-window quality.
 
-Frequency design includes frozen scaling policies such as YaRN and MrRoPE
-and learned frequencies such as LeRoPE
+YaRN and MrRoPE redistribute frequency scaling for frozen extension;
+LeRoPE learns frequencies
 \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}.
-Our paired interventions show that interior placement improves performance
-at fixed frequency endpoints. Further controls isolate shape effects at equal
-total displacement and distinguish positional structure from learned coordinate use.
+These methods motivate a sharper question: what does internal placement
+contribute beyond the chosen frequency range? Our matched interventions isolate
+this effect, then distinguish total displacement, internal shape and learned
+coordinate use.
 
 We turn this design freedom into explicit constructions. TailSpline connects
 the transition to the extended low-frequency tail, improving long-context tasks

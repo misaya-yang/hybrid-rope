@@ -86,16 +86,35 @@ answer-plus-EOS stage uses $10^{-5}$ and $4$ warmup steps. Both use seed
 $20260728$, AdamW $(0.9,0.95)$, zero weight decay, clipping $1$, BF16,
 batch $8$ (micro $4$, accumulation $2$), and cosine LR decay.
 
-Each cycle has two counterfactual-routing updates and one natural-text update.
-The $1024$ training pairs and $128$ calibration pairs use different seeds and
-query templates. Examples contain eight key--value blocks; changing the
-queried value changes the target answer. Loss combines answer CE and a
-counterfactual margin, adding immediate EOS CE of weight one in the final
-stage. Physical training inputs stay at most $4096$ tokens; explicit position
-IDs expose target-range phases. Query offsets follow
-$16\lfloor(211i\bmod12300)/16\rfloor$; final source-to-answer gaps are
-$4608+(211i\bmod10753)$. The bundled schedule verifier reproduces these
-policies and the complete source receipts.
+Each cycle has two counterfactual-routing updates and one natural-text update:
+$67/33$ updates in the query-gap stage and $22/10$ in the final stage.
+The $1024$ training pairs and $128$ calibration pairs use seeds
+$20293725/20304725$ and different query templates. Examples contain eight
+key--value blocks; changing the queried value changes the target answer.
+Answer cross-entropy is combined with a counterfactual margin of $1$, weighted
+by $0.5$, on positions where correct and swapped answer tokens differ.
+The final stage supervises three answer tokens and immediate EOS, with EOS
+weight one; prompt and padding tokens carry no answer loss. Natural replay
+uses ordinary next-token loss.
+
+\paragraph{Position schedule.}
+Physical inputs stay at most $4096$ tokens. Let $q$ be the semantic query-block
+start, $a$ the answer start, $h$ the end-exclusive source span and $n$ the active
+sequence length. Both counterfactual variants use
+$p_i=i+o\,\mathbf1\{i\ge q\}$. Each query-gap update uses four pair offsets:
+one alternating between $0$ and $[1,4096]$, one in $[4097,8192]$, and two
+in $[8193,12289]$. A seed-derived coprime stride traverses each band, followed
+by a deterministic per-update permutation. In the final stage, realized gap
+targets instead comprise one alternating between contiguous and $[4096,8191]$,
+one in $[8192,12287]$, and two in $[12288,16079]$. For a noncontiguous target
+$g$, the offset is
+\[
+o=\min\{g-(a-h),\ 12289,\ 16384-\min(n,4095)\}.
+\]
+The resulting gap must remain in its target band and active position IDs below
+$16384$. Natural replay stays contiguous. The bundled
+\path{figs/verify_routing_schedule.py} reproduces all $268$ query offsets and
+$88$ final-stage gap targets against the recorded run receipts.
 
 Evaluation uses real contiguous numeric-NIAH prompts, $100$ per length,
 and requires the complete expected answer followed by terminal EOS.

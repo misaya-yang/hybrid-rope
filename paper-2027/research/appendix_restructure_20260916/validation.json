@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "as_of": "2026-09-16",
+  "model_execution": false,
+  "page_count": {
+    "previous_total": 69,
+    "main": 9,
+    "total": 29,
+    "editorial_target": 35,
+    "author_maximum": 40
+  },
+  "official_rule": {
+    "url": "https://iclr.cc/Conferences/2027/AuthorGuidelines",
+    "submission_main_limit": 9,
+    "appendix_limit": null,
+    "reviewers_required_to_read_appendix": false
+  },
+  "abstract_no_digits": true,
+  "abstract_words": 158,
+  "first_page_no_figure": true,
+  "visual_inspection": "Main pages1-9 and supplement14-29; no clipping/overlap observed.",
+  "compile": {
+    "local": "PASS",
+    "extracted_source": "PASS",
+    "undefined_references": 0,
+    "overfull_hbox_pt": 0,
+    "unembedded_fonts": 0,
+    "type3_fonts": 0
+  },
+  "numeric_checks": {
+    "consolidated_task_table_cells_from_stored_rows": 117,
+    "completed_evidence_score_rows": 19722,
+    "ncp_exact_fp32_table": "PASS",
+    "explicit_geometry": "PASS",
+    "finite_grid_optimization_and_equal_displacement": "PASS",
+    "allocation_scale_response": "PASS",
+    "routing_schedules": "PASS"
+  },
+  "archive": {
+    "files_preserved": 56,
+    "whitespace_only_changes": [
+      "appendix/a6_mature_scale.tex",
+      "appendix/a8_profile_diagnostics.tex"
+    ],
+    "source_manifest": "PASS",
+    "independent_rebuild_text_identical": true,
+    "portable_cpu_checks": {
+      "verify_completed_evidence.py": "PASS",
+      "verify_routing_schedule.py": "PASS"
+    }
+  },
+  "sha256": {
+    "main.pdf": "4fe12297f45ec2646286122162883b938faff1c4523154c576daea92c9a4acac",
+    "exponent-allocation-source.zip": "4f868b060fc82b4f06a27aef35f8efbaa86affaf3dc9f16c0be19558bddb3e6f"
+  },
+  "repairs": [
+    "Restored recorded two-stage OLMo position schedule and loss details.",
+    "Restored factorial validation/chunk protocol.",
+    "Corrected semantic and duplicate appendix pointers.",
+    "Corrected classic figure caption to task curves."
+  ],
+  "scope": "Current main-claim proofs and experiment details retained in active PDF; historical side studies in extended-records and immutable previous snapshot."
+}

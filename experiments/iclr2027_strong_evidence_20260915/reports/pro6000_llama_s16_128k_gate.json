@@ -1,0 +1,135 @@
+{
+  "claim_boundary": "Single 128K endpoint gate with 10 rows/task and 10 ProofPile documents; a positive gate authorizes but does not replace the 8/16/32/64/128K curve.",
+  "decision": {
+    "advance_to_independent_128k_confirmation": true,
+    "ppl_role": "independent language-modeling health signal; not averaged with or used to gate the task confirmation",
+    "rule": "advance only if the paired task-equal 95% interval at 128K is strictly positive"
+  },
+  "evaluation_length": 131072,
+  "model": "Meta-Llama-3-8B-Instruct",
+  "native_length": 8192,
+  "proofpile_ppl": {
+    "arms": {
+      "mrpro": {
+        "documents": 10,
+        "target_tokens": 1310720,
+        "whole_nll": 0.9825885706130066,
+        "whole_ppl": 2.6713623096225696
+      },
+      "tailspline": {
+        "documents": 10,
+        "target_tokens": 1310720,
+        "whole_nll": 0.9505097314526211,
+        "whole_ppl": 2.5870280128311265
+      }
+    },
+    "delta_nll_tailspline_minus_mrpro": -0.032078839160385564,
+    "paired_inference": {
+      "delta_nll": {
+        "ci95": [
+          -0.03504991668133702,
+          -0.029182883329194675
+        ],
+        "mean": -0.03208393090430305,
+        "probability_lt_zero": 1.0
+      },
+      "delta_ppl": {
+        "ci95": [
+          -0.0981384281272808,
+          -0.07220183877120473
+        ],
+        "mean": -0.08451630704131782
+      },
+      "draws": 20000,
+      "resampling": "paired ProofPile documents",
+      "seed": 20261002
+    }
+  },
+  "rows_per_arm": 130,
+  "ruler": {
+    "arms": {
+      "mrpro": {
+        "by_task": {
+          "cwe": 0.0,
+          "fwe": 0.16666666666666666,
+          "niah_multikey_1": 0.0,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.0,
+          "niah_multivalue": 0.0,
+          "niah_single_1": 0.0,
+          "niah_single_2": 0.0,
+          "niah_single_3": 0.0,
+          "qa_1": 0.0,
+          "qa_2": 0.0,
+          "vt": 0.0
+        },
+        "macro": 0.01282051282051282
+      },
+      "tailspline": {
+        "by_task": {
+          "cwe": 0.0,
+          "fwe": 0.26666666666666666,
+          "niah_multikey_1": 0.3,
+          "niah_multikey_2": 0.0,
+          "niah_multikey_3": 0.0,
+          "niah_multiquery": 0.225,
+          "niah_multivalue": 0.375,
+          "niah_single_1": 0.7,
+          "niah_single_2": 0.7,
+          "niah_single_3": 0.1,
+          "qa_1": 0.0,
+          "qa_2": 0.2,
+          "vt": 0.0
+        },
+        "macro": 0.2205128205128205
+      }
+    },
+    "delta_tailspline_minus_mrpro": 0.20769230769230768,
+    "paired_inference": {
+      "ci95": [
+        0.1596153846153846,
+        0.2564262820512807
+      ],
+      "draws": 20000,
+      "mean_delta": 0.20776179487179489,
+      "probability_delta_gt_zero": 1.0,
+      "resampling": "paired rows within task; 13 tasks fixed and equally weighted",
+      "seed": 20261001
+    },
+    "rows_per_task": 10,
+    "tasks": [
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2"
+    ]
+  },
+  "runtime_contract": {
+    "batch_size": 2,
+    "generation_prefill_strategy": "direct_generate_v1",
+    "lm_execution_strategy": "direct_no_cache_v1",
+    "lm_prefill_chunk_size": 0,
+    "prefill_chunk_size": 0,
+    "runtime_versions": {
+      "allow_tf32": true,
+      "attention_backend": "torch_sdpa_flash_only",
+      "cache_type": null,
+      "loss_logits_dtype": "float32",
+      "model_dtype": "bfloat16",
+      "torch": "2.8.0+cu128",
+      "transformers": "5.15.1"
+    }
+  },
+  "scale": 16,
+  "status": "TAILSPLINE_MRPRO_LLAMA_S16_128K_GATE_COMPLETE_V1"
+}

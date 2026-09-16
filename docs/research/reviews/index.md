@@ -28,3 +28,5 @@
 - [Qwen allocation response: task decomposition and matched-scale geometry](QWEN_ALLOCATION_RESPONSE_ANALYSIS_20260916.md). Read-only result analysis, with bounded follow-up comparisons.
 
 - [非Llama原生长窗口模型选择：GLM-4-9B-0414](NATIVE_LONG_CONTEXT_MODEL_SELECTION_20260916.md) — 官方原生32K/base10000、partial RoPE接入点及256K显存估计。
+
+- [Qwen256K与base/尺度综合分析](QWEN_BASE_SCALE_SYNTHESIS_20260916.md) — 完成报告、Pro推导独立CPU复算及新结果下的解释更新。

@@ -1,0 +1,141 @@
+{
+  "conclusion_boundary": "This quantifies sampling variation under the completed S4/32K population. It does not explain S16/128K versus S4/32K differences as sampling alone.",
+  "draws_per_sample_size": 20000,
+  "external_s16_128k_gate": {
+    "ci95": [
+      0.1596153846153846,
+      0.2564262820512807
+    ],
+    "comparison_boundary": "different S and absolute length; shown alongside sampling calibration but not interpreted as a sample-size-only difference",
+    "delta": 0.20769230769230768,
+    "evaluation_length": 131072,
+    "model": "Meta-Llama-3-8B-Instruct",
+    "rows_per_task": 10,
+    "scale": 16
+  },
+  "full_population_delta": 0.11722435897435897,
+  "identity": {
+    "baseline": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200_clean/runs/mrpro/generations.jsonl",
+    "candidate": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200_clean/runs/tailspline/generations.jsonl",
+    "paired_population_rows": 2600,
+    "population_rows_per_task": 200,
+    "selection": "nested source-order prefixes plus uniform without-replacement subsamples within each task",
+    "tasks": [
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2"
+    ]
+  },
+  "sample_sizes": {
+    "10": {
+      "nested_minus_full": 0.0031602564102564124,
+      "nested_source_order_delta": 0.12038461538461538,
+      "nested_to_full_ratio": 1.0269590419423635,
+      "random_subsample": {
+        "absolute_error_median": 0.02107051282051281,
+        "absolute_error_p95": 0.06094230769230768,
+        "external_comparison_is_cross_condition": true,
+        "fraction_at_least_external_gate_delta": 0.0021,
+        "interval95": [
+          0.05717948717948718,
+          0.17897435897435898
+        ],
+        "mean": 0.11744872435897437,
+        "probability_positive": 1.0,
+        "std": 0.03114914032679969
+      }
+    },
+    "100": {
+      "nested_minus_full": -0.001493589743589721,
+      "nested_source_order_delta": 0.11573076923076925,
+      "nested_to_full_ratio": 0.9872587083720678,
+      "random_subsample": {
+        "absolute_error_median": 0.004826923076923076,
+        "absolute_error_p95": 0.014121794871794865,
+        "interval95": [
+          0.10314102564102566,
+          0.13139743589743588
+        ],
+        "mean": 0.11718402051282054,
+        "probability_positive": 1.0,
+        "std": 0.007182415148819356
+      }
+    },
+    "20": {
+      "nested_minus_full": 0.010596153846153852,
+      "nested_source_order_delta": 0.12782051282051282,
+      "nested_to_full_ratio": 1.090392081806748,
+      "random_subsample": {
+        "absolute_error_median": 0.014487179487179494,
+        "absolute_error_p95": 0.042391025641025634,
+        "interval95": [
+          0.07480769230769233,
+          0.15955128205128205
+        ],
+        "mean": 0.11728280128205129,
+        "probability_positive": 1.0,
+        "std": 0.021630348818562184
+      }
+    },
+    "200": {
+      "nested_minus_full": 0.0,
+      "nested_source_order_delta": 0.11722435897435897,
+      "nested_to_full_ratio": 1.0,
+      "random_subsample": {
+        "absolute_error_median": 0.0,
+        "absolute_error_p95": 0.0,
+        "interval95": [
+          0.11722435897435897,
+          0.11722435897435897
+        ],
+        "mean": 0.11722435897435896,
+        "probability_positive": 1.0,
+        "std": 1.387813476552062e-17
+      }
+    },
+    "5": {
+      "nested_minus_full": -0.029019230769230756,
+      "nested_source_order_delta": 0.08820512820512821,
+      "nested_to_full_ratio": 0.752447093563734,
+      "random_subsample": {
+        "absolute_error_median": 0.030467948717948737,
+        "absolute_error_p95": 0.0879083333333333,
+        "interval95": [
+          0.029743589743589753,
+          0.20589743589743587
+        ],
+        "mean": 0.11646284615384615,
+        "probability_positive": 0.9964,
+        "std": 0.04474843480948437
+      }
+    },
+    "50": {
+      "nested_minus_full": 0.012416666666666673,
+      "nested_source_order_delta": 0.12964102564102564,
+      "nested_to_full_ratio": 1.105922239842511,
+      "random_subsample": {
+        "absolute_error_median": 0.008339743589743612,
+        "absolute_error_p95": 0.02448141025641024,
+        "interval95": [
+          0.09307692307692307,
+          0.14192307692307693
+        ],
+        "mean": 0.11726746794871794,
+        "probability_positive": 1.0,
+        "std": 0.012495015000997261
+      }
+    }
+  },
+  "seed": 20260916,
+  "status": "RULER_SAMPLING_STABILITY_COMPLETE_V1"
+}

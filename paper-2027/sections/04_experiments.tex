@@ -26,8 +26,7 @@ and a $+3.39$-point gain. RULER QA improves by $8$ and $9$ points at
 $16$K and $32$K, respectively. The same table serves native-length inputs:
 on $650$ clean $8$K prompts, it scores $85.16\%$, with a slight reduction
 from original RoPE's $90.03\%$. Full native and extended task breakdowns
-are in Appendices~\ref{sec:clean-confirmation},~\ref{sec:clean16k-confirmation}
-and~\ref{sec:clean-native-new}.
+are in Appendix~\ref{sec:clean-confirmation}.
 
 \begin{figure}[ht]
 \centering\includegraphics[width=\linewidth]{fig_tailspline_main.pdf}
@@ -44,8 +43,8 @@ points, with positive differences on all $13$ tasks. Retrieval, tracking,
 aggregation and QA improve by $60.19$, $9.70$, $16.13$ and $7.50$ points,
 respectively; each family interval is positive. This confirms the allocation
 advantage on a second model family at its target window
-(Appendix~\ref{sec:olmo-clean-new}). Classic multi-length task and PPL curves
-remain in Appendix~\ref{sec:tailspline-details}; these retain their original
+(Appendix~\ref{sec:olmo-clean-new}). Classic multi-length task curves and PPL results
+remain in Appendix~\ref{sec:current-controls}; these retain their original
 sampling protocols.
 
 \paragraph{Natural question answering.}
@@ -58,7 +57,7 @@ mean differences on all five tasks. Llama's F1 scores are close
 extends the Llama evaluation to $117$ complete inputs between $8$K and $32$K,
 using its multiple-choice accuracy metric. Source-context clustered intervals,
 per-task results and output statistics are in
-Appendices~\ref{sec:tailspline-natural-qa} and~\ref{sec:natural-transfer-new}.
+Appendix~\ref{sec:natural-transfer-new}.
 \input{tables/table_natural_transfer_main}
 
 \paragraph{Internal shape at equal displacement.}
