@@ -1,5 +1,12 @@
 # Native增强：实验准备入口
 
+## 2026-09-16状态澄清
+
+既有NCP在OLMo原生Full-13上的总体收益已完成并入稿；本目录的288题及其他新增GPU比较仍未据此完成。
+下一步由[统一准备清单](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)安排；
+参考风险符号不自动升级为模型准确率预测。
+
+
 本包只新增CPU准备与分析路径，复用现有NCP构造和冻结模型评估器。
 
 最新优先级见[native定义、旧方法谱系与LeRoPE审查](../../docs/research/reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)。

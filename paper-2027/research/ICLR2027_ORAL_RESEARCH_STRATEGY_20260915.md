@@ -1,5 +1,13 @@
 # ICLR 2027 Oral目标：研究增量与完成标准
 
+## 2026-09-16优先级覆盖
+
+当前native增强已有NCP结果，跨模型自然QA新增Qwen；现稿9/29页。
+下一轮以[统一准备清单](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)为准。
+本文后续章节保留历史分析，尤其不再用“native不是关键路径”排除NCP独立确认。
+十篇真实审稿的适用性见[审稿经验](../../docs/research/reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)。
+
+
 ## 作者纠正：本页的TailSpline中心定位已撤回
 
 本页将上位研究目标收窄为TailSpline的广泛采用，未充分保持作者的研究定位。

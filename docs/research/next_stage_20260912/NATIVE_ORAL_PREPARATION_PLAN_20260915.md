@@ -1,5 +1,14 @@
 # Native增强与oral补强：理论先行的准备计划
 
+## 当前更新：NCP已有模型结果
+
+NCP的OLMo780条原生Full-13比较已完成并进入论文，见
+[正式报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json)。
+本包的288题机制、其他模型迁移及新来源确认仍属准备，不与已完成NCP混淆。
+后续研究和改稿取舍见[统一准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md)；
+下文原始优先安排与执行授权按其日期解释，不覆盖当前实验owner。
+
+
 日期：2026-09-15。作者授权：在当前服务器编写代码、准备数据及CPU验证，保持GPU作业不受影响；
 直接修改主稿不属于本轮。本文是本轮协调owner，完成回执附于末尾。
 
@@ -16,7 +25,7 @@
 并在不同模型保持同一构造规则？
 
 这里的“两条零训练方式”是native增强与扩展增强。NCP是当前native候选，TailSpline是已有扩展构造；
-Cosh保留已有配对学习和辅助外推角色。原生增强是研究主线之一，但尚未获得的NCP模型收益不能写成论文事实。
+Cosh保留已有配对学习和辅助外推角色。NCP已有OLMo原生总体收益；其他确认与迁移结果仍须分别完成。
 
 完整研究链路、已解决与未解决缺口见[成果与缺口分析](ORAL_EVIDENCE_GAP_REVIEW_20260915.md)；
 推导、假设及可证伪内容见[统一理论](NATIVE_EXTENSION_THEORY_BRIDGE_20260915.md)。

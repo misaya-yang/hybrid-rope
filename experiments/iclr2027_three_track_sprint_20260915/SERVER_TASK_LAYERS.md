@@ -4,7 +4,32 @@ This file is the execution handoff for the current experiment server. It routes
 operators to runnable work; it is not another experiment plan or result
 narrative.
 
-## Live queue override: 2026-09-15
+## Current observed snapshot: 2026-09-16T08:02:47Z
+
+This snapshot was read without changing processes, queues, files or GPU work.
+The active PRO6000 endpoint is `ssh -p 51638 root@connect.westd.seetacloud.com`.
+The old32GB endpoint and its shutdown instructions below are historical.
+
+| Work | Observed state | Interpretation |
+|---|---|---|
+| GLM model download | `DOWNLOAD_COMPLETE_VERIFIED` at `/root/models/GLM-4-9B-0414/DOWNLOAD_RECEIPT.json` | Download complete; not a model evaluation result |
+| Qwen S4 official static YaRN | `official_yarn/run/status.json`: COMPLETE,40 generation rows,5 LM rows | Generation complete; paired result must come from its report |
+| GLM S4/128K | `run_glm4_9b_s4_128k_queue.sh` active; no queue/QA completion report observed | In execution, no result claimed |
+| Llama S16 gate and natural tasks; Qwen S8 health and S4 QA | Completed portable reports | [Result owner](../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| Extra10/task RULER block | User reports assignment to another experiment agent | Completion and exact block identity remain with that owner |
+
+The current GLM script uses Full13×5 per arm, PPL5 and En.QA. It preserves
+partial RoPE handling; code/runtime readiness is distinct from task success.
+This documentation update does not authorize a new launch or reorder existing work.
+[Next manuscript preparation](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)
+contains proposed follow-ups only. Read fresh completion receipts before treating
+this timestamped snapshot as current execution state.
+
+## Historical32GB queue override: 2026-09-15 (superseded)
+
+Everything below records earlier locations, contracts and queue states. Its
+"running now", "ready only" and shutdown instructions are not the current queue.
+
 
 The currently authorized 32 GB sequence is X4 matched-dose control, then X5
 Llama clean 8K Native/TailSpline/MrPro, then the OLMo Native Contrastive

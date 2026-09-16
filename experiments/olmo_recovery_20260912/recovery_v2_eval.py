@@ -325,7 +325,7 @@ def main():
         static_table=payload.get('table',payload)
         values=np.asarray(static_table.get('values_float32'),dtype=np.float32)
         gain=float(static_table.get('gain'))
-        if values.shape!=(64,) or not np.isfinite(values).all() or not np.all(values[:-1]>values[1:]) or not np.isfinite(gain) or gain<=0:
+        if values.ndim!=1 or len(values)<2 or not np.isfinite(values).all() or not np.all(values[:-1]>values[1:]) or not np.isfinite(gain) or gain<=0:
             raise ValueError('invalid frozen solver table')
         static_table={'values_float32':values.tolist(),'gain':gain,
                       'construction':static_table.get('construction',{})}

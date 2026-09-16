@@ -1,18 +1,18 @@
 # 当前研究入口
 
-上位研究对象是RoPE内部频率分布z。Cosh、TailSpline等是不同构造；原生窗口增强、
-外推及窗口内外联合改善是作用形式。现稿的具体构造重心不定义整个研究的范围。
+上位对象为RoPE内部配置z：固定实际范围与旋转预算后，内部位置仍可影响原生与扩展窗口质量。
+TailSpline、NCP、Cosh分别承担冻结扩展、原生增强和学习/外推支持，三者不冒充同一个任务最优解。
+构造只使用各自声明的公开参数；不从模型权重、激活、Q/K/V、梯度或输出中拟合通用规则。
 
-现稿研究频率覆盖范围确定之后，内部配置怎样改变有限窗口的位置结构及模型对频率的使用。
-受控干预、完整旋转对几何、解析构造和模型验证构成论证链。exact TailSpline是主要冻结部署
-构造，Cosh保留辅助外推及配对学习证据；同一静态表在2L/4L的质量提升是核心实证贡献。
-BM、YaRN、旧mix075和Native-Z探索各保留其证据角色。
+**当前阶段：**[下一版论文准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md)。
+本轮更新概念、证据和导航，等待更多实验后统一改稿；现稿9/29页暂不修改。
+[Pro采用判断](../reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md)和
+[十篇审稿经验](../reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)是编辑依据，不是自动执行指令。
 
-模型前向只用于验证已经冻结的规则，不用于从权重、激活、Q/K/V、梯度或校准分数中拟合
-通用TailSpline构造。Native-Z5是单独标记的checkpoint-calibrated反事实，不改变这一边界。
-
-最新服务器回查：OLMo clean 16K、OLMo Natural-QA、Llama clean Native 8K、LongBench v2及clean X4均已完成。
-[论文价值与推荐改稿](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)汇总新增结论；主稿已吸收本批结果，NCP进入正文原生窗口性能小节。
+已入稿的Llama/OLMo、等位移、NCP和学习证据见[论文索引](../../../paper-2027/index.md)。
+新完成的Qwen S4自然QA、S8单针及Llama S16结果见
+[本批结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)，尚待统一入稿。
+GLM和YaRN的易变状态见[带时间戳执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
 
 ## 唯一读取顺序
 
@@ -27,12 +27,16 @@ TailSpline主线优先级。
 
 | 需要回答的问题 | Canonical owner |
 |---|---|
+| 下一版怎样吸收Pro、新结果和审稿经验？ | [下一版准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
 | 当前有哪些成立、失败、运行中或仅准备好的实验？ | [关键实验罗盘](KEY_EXPERIMENT_COMPASS_20260914.md) |
 | TailSpline定义、控制变量和统一评测合同是什么？ | [方法与评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
 | Llama classic、clean 16K/32K与Natural-QA的完整结果是什么？ | [Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
 | OLMo跨模型确认是什么？ | [OLMo结果owner](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md) |
 | Qwen、NIAH小样本与PPL补充结果说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
 | Native-Z5结果支持到哪一步？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md)；[预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md) |
+| Qwen 32K/64K、NIAH小样本和ProofPile-only PPL说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
+| Pro6000上的128K/256K与自然长文结果是什么？ | [极限长度与自然长文结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| Native-Z5究竟成立了什么？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md) |
 | 如何重新研究native增强？ | [给Web Pro的自包含分析提示词](WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md) |
 | 原生四臂完成后，如何设计零训练增强方法？ | [完整Web Pro提示词：证据与方法交付](WEB_PRO_NATIVE_ZERO_TRAIN_NEXT_STEP_20260915.md) · [接续迁移回复的纠偏提示词](WEB_PRO_NATIVE_METHOD_DELIVERY_CORRECTION_20260915.md) |
 | base如何改变z的作用，怎样向Pro追问？ | [自包含分析提示词](WEB_PRO_BASE_ALLOCATION_PROMPT_20260916.md) |
@@ -47,31 +51,24 @@ TailSpline主线优先级。
 | 外部AI分析或公司PC交接材料在哪里？ | [独立问题清单](OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md) |
 | 当前实现与Llama资产定位在哪里？ | [实验流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md)；[资产审计](LLAMA_CLASSIC_ASSET_AUDIT_20260914.md) |
 
-## 下一轮强实验计划（尚未执行）
+## 准备材料与历史规格
 
-**最新研究纠正：**[native正收益定义、既有方法谱系与LeRoPE审查](../reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)
-从服务器实际结果出发修订原NCP优先方案，包含新完成X4、旧Qwen原生正结果及可复用机制干预；
-只新增旧正结果缺失对照的CPU准备，不改当前GPU队列。
+当前优先级由[下一版准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md)统领：回收已在执行的
+GLM和直接基线报告，准备NCP独立确认及必要的YaRN单臂，机制面板作为有明确问题的增强。
 
-[Native增强与oral补强准备计划](NATIVE_ORAL_PREPARATION_PLAN_20260915.md)是本轮理论、实验、行为
-三条线的协调owner：含[成果与缺口分析](ORAL_EVIDENCE_GAP_REVIEW_20260915.md)、
-[native/外推理论桥接](NATIVE_EXTENSION_THEORY_BRIDGE_20260915.md)、
-[RULER吞吐分析](RULER_THROUGHPUT_PREPARATION_20260915.md)及
-[CPU实验包](../../../experiments/native_enhancement_oral_20260915/index.md)。
-本轮只授权服务器代码与CPU准备，native零校准增强是研究主线之一；不修改主稿或现有GPU队列。
-
-[面向强接收与突出研究评价的实验计划](STRONG_EXPERIMENT_PLAN_20260915.md)：
-统一clean跨模型矩阵、自然长文、等位移配置对照与部署取舍；列明已有入口和待实现包装器。
-这是后续执行规格，不自动改变当前队列或YaRN停放状态。
-
-[Oral目标的研究判断](../../../paper-2027/research/ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md)
-保留具体实验增强建议；顶部已按作者纠正撤回TailSpline中心定位。操作仍沿用上述计划和执行owner。
+- [Native/oral准备包](NATIVE_ORAL_PREPARATION_PLAN_20260915.md)保留通用构表、288题反事实、
+  参考数学和吞吐资产；其中旧“尚无NCP结果”的时间状态已更新。
+- [强实验规格](STRONG_EXPERIMENT_PLAN_20260915.md)保留X1–X8实施细节，不能把其旧待跑列表当现状。
+- [方法谱系与native审查](../reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)保留历史比较与gain控制。
+- [Oral研究判断](../../../paper-2027/research/ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md)为历史策略参考，
+  不排除NCP的核心地位，也不自动要求重跑已有实验。
 
 ## 当前执行边界
 
 - Llama NIAH Full20正式报告已完成，见[720条每臂配对报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)；后续执行以服务器任务分层为准。
-- Llama S16 128K gate的CPU资产已冻结，但GPU尚未执行，且入口要求至少45,000 MiB显存。
-- YaRN代码处于停放状态；没有明确推进决定时不自动运行。
+- Llama S16 128K gate、自然长文压力测试、Qwen 256K健康检查与Qwen S4/128K En.QA均已完成，见[结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)。
+- Qwen官方静态YaRN生成已完成（40条/5篇LM），配对结论另读报告；Llama clean32K YaRN仍是单独准备项。
+- GLM下载已完成、S4队列已启动；本轮快照无完成报告。详情及时间戳见执行owner。
 - Native-Z5的V1、consensus和all-50 refit均已结束；现有结果不支持继续复用同一确认集调表。
 - fixed-u、proxy选表、曲线系数/band/gain追调及旧队列均已退出当前路线。
 

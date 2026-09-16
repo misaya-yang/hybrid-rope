@@ -151,3 +151,4 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 | A52 | Llama clean Native8K three-arm comparison | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_native8k.json) |
 | A53 | Llama LongBench-v2 actual8K-32K subset | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json) |
 | A54 | OLMo native allocation exploration | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json) |
+| A55 | Pro6000极限长度与自然长文配对包 | [结果owner](../../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)；Qwen S4/128K En.QA `+3.24pp`，Qwen S8/256K single-NIAH `+53.33pp`，Llama S16自然QA仅作压力边界 |

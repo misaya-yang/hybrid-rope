@@ -34,7 +34,11 @@ def seed_all(seed: int = 42) -> None:
 
 def table_for_config(config, arm: str) -> dict:
     if arm not in TABLE_ARMS: raise ValueError(arm)
-    dim = config.hidden_size // config.num_attention_heads
+    attention_dim = int(getattr(config, "head_dim", config.hidden_size // config.num_attention_heads))
+    parameters = getattr(config, "rope_parameters", {}) or {}
+    partial = float(getattr(config, "partial_rotary_factor", parameters.get("partial_rotary_factor", 1.0)))
+    dim = int(attention_dim * partial)
+    if dim != attention_dim * partial or dim % 2: raise ValueError("invalid partial RoPE dimension")
     base = getattr(config, "rope_theta", None) or getattr(config, "rope_parameters", {}).get("rope_theta")
     if config.model_type == "olmo2" and dim == 128 and config.num_hidden_layers == 16 and base == 500000:
         reference_length = 4096
@@ -52,6 +56,11 @@ def table_for_config(config, arm: str) -> dict:
         reference_length = 32768
         if arm != "Native":
             raise ValueError("Qwen band screens require an explicit static table")
+    elif (config.model_type == "glm4" and attention_dim == 128 and dim == 64
+          and config.max_position_embeddings == 32768 and base == 10000):
+        reference_length = 32768
+        if arm != "Native":
+            raise ValueError("GLM partial-RoPE screens require an explicit static table")
     else:
         raise ValueError("unsupported recovery-v2 model geometry")
     native = native_table(dim, base).astype(np.float32)
@@ -184,7 +193,7 @@ def table_for_config(config, arm: str) -> dict:
         values[[0, -1]] = native[[0, -1]]; gain = 1.0
         construction = {"method": "anchored midpoint Cosh", "tau": tau, "same_native_endpoints": True}
     else: raise AssertionError("unreachable arm")
-    if values.shape != (64,) or not np.isfinite(values).all() or not np.all(values[:-1] > values[1:]):
+    if values.shape != (dim // 2,) or not np.isfinite(values).all() or not np.all(values[:-1] > values[1:]):
         raise ValueError("invalid static frequency table")
     return {"values_float32": values.tolist(), "gain": float(gain), "construction": construction}
 
@@ -226,7 +235,7 @@ def load_model(model_path, arm, checkpoint=None, training=True):
     values = np.asarray(table["values_float32"], dtype=np.float32)
     install_static(model, values, table["gain"])
     rotary = model.model.rotary_emb
-    if rotary.inv_freq.shape != (64,) or not torch.isfinite(rotary.inv_freq).all() or float(rotary.attention_scaling) != table["gain"]:
+    if rotary.inv_freq.shape != values.shape or not torch.isfinite(rotary.inv_freq).all() or float(rotary.attention_scaling) != table["gain"]:
         raise RuntimeError("static table installation failed")
     model.config.use_cache = not training
     if training:

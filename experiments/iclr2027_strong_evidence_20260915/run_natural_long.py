@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
+from contextlib import contextmanager
 import fcntl
 import hashlib
 import json
@@ -57,6 +58,38 @@ RUNNER_CONTRACT = "strong-natural-long-run-v1"
 REPORT_CONTRACT = "strong-natural-long-paired-report-v1"
 BOOTSTRAP_SEED = 20261105
 BOOTSTRAP_DRAWS = 2000
+
+
+@contextmanager
+def acquire_gpu_lock(path: Path = GPU_LOCK, *, inherited_fd: int = 9):
+    """Own the GPU lock, reusing an outer shell's inherited fd when present.
+
+    Queue wrappers use ``exec 9>...; flock -n 9`` before invoking this module.
+    Opening the same path again would create a distinct open-file description
+    and can conflict with that already-held lock.  Duplicating fd 9 preserves
+    the same open-file description; a fresh invocation still opens and locks
+    the path normally.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = None
+    try:
+        inherited = os.fstat(inherited_fd)
+        target = os.stat(path)
+        if (inherited.st_dev, inherited.st_ino) == (target.st_dev, target.st_ino):
+            descriptor = os.dup(inherited_fd)
+    except (OSError, ValueError):
+        pass
+    if descriptor is None:
+        descriptor = os.open(path, os.O_RDWR | os.O_CREAT | os.O_APPEND, 0o666)
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise RuntimeError("another Hybrid-RoPE evaluation owns GPU 0") from error
+        yield
+    finally:
+        os.close(descriptor)
 
 
 def sha256_file(path: Path) -> str:
@@ -631,12 +664,7 @@ def execute(args) -> dict:
     repo_root = Path(__file__).resolve().parents[2]
     env = _repo_environment(repo_root)
 
-    GPU_LOCK.parent.mkdir(parents=True, exist_ok=True)
-    with GPU_LOCK.open("a+") as lock:
-        try:
-            fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as error:
-            raise RuntimeError("another Hybrid-RoPE evaluation owns GPU 0") from error
+    with acquire_gpu_lock():
         out.mkdir(parents=True, exist_ok=True)
         (out / "tables").mkdir(exist_ok=True)
         (out / "runs").mkdir(exist_ok=True)

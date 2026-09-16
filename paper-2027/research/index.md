@@ -2,6 +2,7 @@
 
 | 任务 | 入口 |
 |---|---|
+| 下一版准备（只文档，等待更多结果后改稿） | [研究定位、Pro取舍、十篇审稿经验与实验准备](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
 | 当前附录整理与完整性检查 | [六主题附录、保留映射和验证](appendix_restructure_20260916/README.md) |
 | 新落盘结果整合（已应用，含NCP正文） | [跨模型、自然QA、等位移与原生窗口分析](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |
 | 本轮理论整合与精确修改（已应用） | [修改记录](theory_revision_proposal_20260915/README.md) · [R08独立PDF审稿](pdf-review-rounds/20260915_theory_integration_r08/README.md) |

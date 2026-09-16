@@ -44,16 +44,22 @@ def model_geometry(config: dict) -> dict:
     heads = int(config["num_attention_heads"])
     if hidden % heads:
         raise ValueError("hidden size must be divisible by attention heads")
-    head_dim = hidden // heads
+    parameters = config.get("rope_parameters") or {}
+    attention_head_dim = int(config.get("head_dim") or hidden // heads)
+    partial = float(config.get("partial_rotary_factor") or parameters.get("partial_rotary_factor") or 1.0)
+    head_dim = int(attention_head_dim * partial)
+    if not math.isfinite(partial) or not 0 < partial <= 1 or head_dim != attention_head_dim * partial:
+        raise ValueError("partial RoPE dimension must be a positive integer")
     if head_dim % 2:
         raise ValueError("RoPE head dimension must be even")
-    parameters = config.get("rope_parameters") or {}
     base = float(config.get("rope_theta") or parameters.get("rope_theta") or 0.0)
     native_length = int(config.get("max_position_embeddings", 0))
     if not math.isfinite(base) or base <= 1 or native_length <= 0:
         raise ValueError("model config lacks valid RoPE base/native length")
     return {
         "model_type": str(config.get("model_type", "unknown")),
+        "attention_head_dim": attention_head_dim,
+        "partial_rotary_factor": partial,
         "head_dim": head_dim,
         "pairs": head_dim // 2,
         "base": base,

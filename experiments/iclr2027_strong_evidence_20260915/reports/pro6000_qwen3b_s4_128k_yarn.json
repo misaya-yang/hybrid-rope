@@ -1,0 +1,100 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "niah_multikey_1": 1.0,
+        "niah_multikey_2": 0.2,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 0.9,
+        "niah_multivalue": 0.75,
+        "niah_single_1": 1.0,
+        "niah_single_2": 1.0,
+        "niah_single_3": 1.0
+      },
+      "niah8_macro": 0.73125,
+      "nll": 0.8455831386496584,
+      "passkey": 1.0,
+      "ppl": 2.3293357443016323
+    },
+    "tailspline": {
+      "by_task": {
+        "niah_multikey_1": 0.8,
+        "niah_multikey_2": 0.2,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 1.0,
+        "niah_multivalue": 0.8,
+        "niah_single_1": 1.0,
+        "niah_single_2": 1.0,
+        "niah_single_3": 1.0
+      },
+      "niah8_macro": 0.725,
+      "nll": 0.8446557029114956,
+      "passkey": 1.0,
+      "ppl": 2.3271764365505514
+    },
+    "yarn": {
+      "by_task": {
+        "niah_multikey_1": 1.0,
+        "niah_multikey_2": 0.4,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 0.95,
+        "niah_multivalue": 0.75,
+        "niah_single_1": 1.0,
+        "niah_single_2": 1.0,
+        "niah_single_3": 1.0
+      },
+      "niah8_macro": 0.7625,
+      "nll": 0.8449139711716953,
+      "passkey": 1.0,
+      "ppl": 2.3277775499809152
+    }
+  },
+  "contrasts": {
+    "mrpro_minus_yarn": {
+      "delta_nll": 0.0006691674779630841,
+      "delta_nll_ci95": [
+        0.00020207706115797918,
+        0.001060916117785382
+      ],
+      "niah8_ci95": [
+        -0.0875,
+        0.00625
+      ],
+      "niah8_macro": -0.03125
+    },
+    "tailspline_minus_mrpro": {
+      "delta_nll": -0.0009274357381627851,
+      "delta_nll_ci95": [
+        -0.0019842338597754862,
+        0.0004372100054752082
+      ],
+      "niah8_ci95": [
+        -0.09375,
+        0.07500000000000001
+      ],
+      "niah8_macro": -0.006249999999999978
+    },
+    "tailspline_minus_yarn": {
+      "delta_nll": -0.00025826826019970106,
+      "delta_nll_ci95": [
+        -0.001107207914128594,
+        0.0011031593086954672
+      ],
+      "niah8_ci95": [
+        -0.13125,
+        0.06249999999999999
+      ],
+      "niah8_macro": -0.03749999999999998
+    }
+  },
+  "identity": {
+    "model": "Qwen2.5-3B",
+    "native": 32768,
+    "ppl_documents": 5,
+    "rows_per_task": 5,
+    "scale": 4,
+    "target": 131072
+  },
+  "status": "QWEN25_3B_S4_128K_STATIC_YARN_COMPARISON_COMPLETE_V1",
+  "yarn_table_sha256": "a1f51ec6542939d5b884d867213948d43bc4d3cc3c62e535489daabc59f2c9ce"
+}
