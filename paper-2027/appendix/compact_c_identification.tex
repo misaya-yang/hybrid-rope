@@ -117,6 +117,14 @@ exponential $z_\gamma(t)=(e^{\gamma t}-1)/(e^\gamma-1)$ whose RMS node
 movement matches reference Cosh without task fitting. Every arm shares
 sampled endpoints. The OOD mean weights ratios $r\in\{2,4,8\}$ by
 $\log_2(r+1)$; the bootstrap unit is configuration after averaging paired seeds.
+Training and evaluation use separate WikiText-2 raw train/validation splits,
+tokenized with GPT-NeoX-20B. Nonempty stripped rows are concatenated without
+extra special tokens and independently repeated/truncated to $8{,}388{,}608$
+training and $1{,}048{,}576$ evaluation tokens. NumPy RandomState($9999$)
+selects four distinct starts at each of $L,2L,4L,8L$, in that order, identically
+across arms. Full next-token cross-entropy scores $4(rL-1)$ targets and averages
+the four chunk NLLs before exponentiation. Structural configurations, rather
+than repeated text windows, are the bootstrap units.
 \input{tables/table_m4}
 
 \paragraph{Standard-grid replication.}\label{sec:native-grid-control}

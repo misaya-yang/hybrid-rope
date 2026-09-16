@@ -1,0 +1,133 @@
+{
+  "llama_s4": {
+    "base": 500000.0,
+    "K": 64,
+    "L": 8192,
+    "s": 4,
+    "head": 128,
+    "band": [
+      18,
+      35
+    ],
+    "n": 17,
+    "c": 0.20503692777194263,
+    "eta_plus": 0.016635678175249496,
+    "eta_minus": 0.003256191148048662,
+    "turn_identity_relative_error": 2.220446049250313e-16,
+    "max_wavelength_ratio": 1.7656116661049952,
+    "max_target_phase_difference": 108.20111744343734,
+    "causal_rms_head": 0.6745514080211653,
+    "causal_rms_fp32_head": 0.6745514014056675,
+    "rms_at_128k": null,
+    "example_k31": null
+  },
+  "olmo_s4": {
+    "base": 500000.0,
+    "K": 64,
+    "L": 4096,
+    "s": 4,
+    "head": 128,
+    "band": [
+      14,
+      32
+    ],
+    "n": 18,
+    "c": 0.20503692777194263,
+    "eta_plus": 0.1436362087030748,
+    "eta_minus": 0.0812925883921662,
+    "turn_identity_relative_error": 2.220446049250313e-16,
+    "max_wavelength_ratio": 1.767701290611035,
+    "max_target_phase_difference": 118.89473275792102,
+    "causal_rms_head": 0.6935020900491252,
+    "causal_rms_fp32_head": 0.6935020912087296,
+    "rms_at_128k": null,
+    "example_k31": null
+  },
+  "qwen_s4": {
+    "base": 1000000.0,
+    "K": 64,
+    "L": 32768,
+    "s": 4,
+    "head": 128,
+    "band": [
+      23,
+      40
+    ],
+    "n": 17,
+    "c": 0.21586735246819178,
+    "eta_plus": 0.1286456324216967,
+    "eta_minus": 0.07536345673783713,
+    "turn_identity_relative_error": 2.220446049250313e-16,
+    "max_wavelength_ratio": 1.7656116661049954,
+    "max_target_phase_difference": 117.15646792886093,
+    "causal_rms_head": 0.6731253566666463,
+    "causal_rms_fp32_head": 0.6731253533276496,
+    "rms_at_128k": 0.6731253566666463,
+    "example_k31": {
+      "P": 0.23529411764705882,
+      "T": 0.6386554621848739,
+      "T_wavelength_growth": 2.4238676476824166,
+      "P_wavelength_growth": 1.3856743389806951,
+      "T_target_phase": 67.10440412568296,
+      "P_target_phase": 117.38125589948983
+    }
+  },
+  "qwen_s8": {
+    "base": 1000000.0,
+    "K": 64,
+    "L": 32768,
+    "s": 8,
+    "head": 128,
+    "band": [
+      23,
+      40
+    ],
+    "n": 17,
+    "c": 0.21586735246819178,
+    "eta_plus": 0.1286456324216967,
+    "eta_minus": 0.07536345673783713,
+    "turn_identity_relative_error": 2.220446049250313e-16,
+    "max_wavelength_ratio": 2.3460798236423495,
+    "max_target_phase_difference": 318.8862535096125,
+    "causal_rms_head": 0.6857705764533656,
+    "causal_rms_fp32_head": 0.6857705746326083,
+    "rms_at_128k": 0.66750056039186,
+    "example_k31": {
+      "P": 0.23529411764705882,
+      "T": 0.6386554621848739,
+      "T_wavelength_growth": 3.7736650796895965,
+      "P_wavelength_growth": 1.6311419669655502,
+      "T_target_phase": 86.20383141718999,
+      "P_target_phase": 199.4335226134055
+    }
+  },
+  "glm_s4": {
+    "base": 10000.0,
+    "K": 32,
+    "L": 32768,
+    "s": 4,
+    "head": 128,
+    "band": [
+      17,
+      30
+    ],
+    "n": 13,
+    "c": 0.28782313662425574,
+    "eta_plus": 0.20060141657776048,
+    "eta_minus": 0.07536345673783713,
+    "turn_identity_relative_error": 3.3306690738754696e-16,
+    "max_wavelength_ratio": 1.7452319656050361,
+    "max_target_phase_difference": 121.16551331862041,
+    "causal_rms_head": 0.5845749943201978,
+    "causal_rms_fp32_head": 0.5845749944328102,
+    "rms_at_128k": null,
+    "example_k31": null
+  },
+  "qwen_ABF_phase_ratios": {
+    "23": 1.5287623799763523,
+    "29": 0.9927502086013756,
+    "32": 0.8,
+    "40": 0.4498730601522793
+  },
+  "conditions": "Public geometric grids; boundary crossings present; no model loading. RMS uses integer causal weights, full head normalization, unscaled rotations."
+}

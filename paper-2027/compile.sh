@@ -11,6 +11,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 MAIN=main
 LIMIT=9   # ICLR 2027: 9 pages of main text at submission (10 at rebuttal/CR)
+TOTAL_TARGET=35  # Author's editorial target, not a conference appendix limit.
+TOTAL_LIMIT=40   # Author's maximum total PDF length.
 
 clean() { rm -f "$MAIN".{aux,bbl,blg,log,out,brf,fls,fdb_latexmk,synctex.gz}; }
 case "${1:-full}" in clean) clean; echo "cleaned"; exit 0 ;; esac
@@ -100,6 +102,11 @@ if command -v pdfinfo >/dev/null; then
   PAGE_SIZE=$(pdfinfo "$MAIN.pdf" | awk -F': *' '/^Page size/{print $2}')
   PDF_AUTHOR=$(pdfinfo "$MAIN.pdf" | awk -F': *' '/^Author/{print $2}')
   echo "total pages            : $PAGES"
+  if [ "$PAGES" -gt "$TOTAL_LIMIT" ]; then
+    echo "[BLOCK] exceeds author's $TOTAL_LIMIT-page total limit"; FAIL=1
+  elif [ "$PAGES" -gt "$TOTAL_TARGET" ]; then
+    echo "[REVIEW] exceeds author's $TOTAL_TARGET-page editorial target"
+  fi
   echo "page size              : $PAGE_SIZE"
   echo "PDF author             : ${PDF_AUTHOR:-<none>}"
   case "$PAGE_SIZE" in "612 x 792 pts"*) ;; *) echo "[BLOCK] not US Letter" >&2; FAIL=1 ;; esac

@@ -8,6 +8,9 @@ outer bands and gain $1+0.1\ln4$, while using their respective static $s=4$
 interior tables. Tables are installed in FP32 after loading BF16 weights and
 are fixed across layers and input lengths. Evaluation uses Flash-SDPA and
 greedy decoding. No table is fitted using model outputs.
+The gain multiplies both cosine and sine, hence contributes $g^2$ to the
+rotated Q/K logit. Clean panels reuse the tables fixed for the classic runs;
+changing input selection does not refit the allocation.
 
 Clean RULER pins revision \texttt{c3f5e3b4f87f}, selects source records in
 order, and uses neither content padding nor depth selection. Both arms use
@@ -16,7 +19,8 @@ $30$ for tracking, $120$ for common words, $50$ for frequent words and $32$
 for QA. The endpoint is the official within-task score averaged equally
 across the $13$ tasks. All outputs, including empty and capped answers,
 remain in the score. Intervals use $20{,}000$ paired resamples within task
-and length, with tasks fixed; source-record intervals for RULER and
+and length, with tasks fixed; all reported intervals are $95\%$ percentile
+intervals. Source-record intervals for RULER and
 source-context clustered intervals for natural QA are separate estimands.
 
 \subsection{Clean results across length and model}
@@ -129,7 +133,7 @@ PPL AUC integrates PPL itself. The document bootstrap resamples document IDs
 jointly across lengths; task bootstrap resamples within task--length cells.
 \begin{figure}[ht]
 \centering\includegraphics[width=.85\linewidth]{fig_tailspline_classic.pdf}
-\caption{\textbf{Classic task and PPL curves.} Each model retains its own
+\caption{\textbf{Classic task curves.} Each model retains its own
 recorded depth-selected, prefix-padded protocol.}
 \label{fig:tailspline-classic}
 \end{figure}

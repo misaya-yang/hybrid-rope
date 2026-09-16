@@ -4,10 +4,12 @@
 
 [投稿标题与摘要纯文本](title_abstract.txt)。
 
-最新已完成[新落盘结果与NCP正文整合](research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)：
-主文9页、总计69页，摘要158词且无数字，第一页无图。主结果加入clean8K、OLMo clean16K、
-OLMo自然QA及等位移C对照；正文6.2明确展示NCP对RoPE原生窗口内任务性能的提升。
-[本轮验证](research/COMPLETED_EVIDENCE_REVISION_VALIDATION_20260915.json)记录编译、数值与源码包检查。
+最新已完成[附录整理与完整性检查](research/appendix_restructure_20260916/README.md)：
+主文9页、总计29页（此前69页），摘要158词且无数字，第一页无图。
+六个主题附录保留当前主张所需证明、实验协议和分任务结果；历史旁支保留源码归档。
+总页数目标不超过35页、硬上限40页；这是作者的编辑约束，ICLR 2027附录本身无页数上限。
+[本轮验证](research/appendix_restructure_20260916/validation.json)记录编译、数值和源码包检查。
+上一轮[新落盘结果与NCP正文整合](research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)的结果全部延续。
 
 研究对象为z：受控干预识别其作用，完整旋转对理论区分位置结构与模型使用；TailSpline改善
 外推质量，NCP展示in-window性能增益，Cosh提供学习与外推辅助证据。
@@ -24,7 +26,7 @@ OLMo自然QA及等位移C对照；正文6.2明确展示NCP对RoPE原生窗口内
 构建：`bash paper-2027/compile.sh`；打包：`python3 paper-2027/package_source.py`。
 CPU复核：`python3 paper-2027/figs/verify_completed_evidence.py`；既有检查：`python3 paper-2027/figs/verify_field_gap.py`；主图重建：`python3 paper-2027/figs/make_allocation_value.py`。
 
-历史修订与交接记录保留在[REVISION_BRIEF](REVISION_BRIEF.md)、[HANDOFF](HANDOFF.md)和[research索引](research/index.md)；当前验收以本轮决策映射末尾回执为准。
+历史修订与交接记录保留在[REVISION_BRIEF](REVISION_BRIEF.md)、[HANDOFF](HANDOFF.md)和[research索引](research/index.md)；当前验收以本轮附录整理验证为准。
 
 本轮已完成[两轮独立PDF审稿与优化](research/pdf-review-rounds/20260915_two_rounds/README.md)，
 完整Natural-QA631已入§6.1段落与附录H.9（表41）；该轮表号为历史位置；当前表1为跨长度/模型clean结果，表2为自然任务结果。

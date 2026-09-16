@@ -1,6 +1,6 @@
 # Beyond the Base：当前论证与证据安放表
 
-## Current completed-evidence revision (2026-09-15)
+## Current compact manuscript (2026-09-16)
 
 The manuscript studies frequency allocation within and beyond the native context.
 The abstract has no digits. TailSpline supplies the main closed-form extension;
@@ -11,17 +11,17 @@ RoPE retained as a reference. It is not called native enhancement.
 
 | Claim | Evidence | Current location |
 |---|---|---|
-| Fixed-support allocation changes performance | A01, A08, paired training and frozen controls | Section 3; Figure 1; Appendix B |
-| Positional structure differs from learned use | A03-A06, A48; complete-pair geometry, coordinate interventions and rank/quality observations | Section 4; Figure 2; Appendices A, K |
-| TailSpline has an exact finite-grid construction | A37; constrained discrete objective and closed form | Section 5.1; Figure 3; Appendix H.1 |
-| TailSpline quality across L/2L/4L | A46, existing clean32K, A52 clean8K | Section 6.1; Table 1; Figure 4; Appendices H.7, H.10, L.2 |
-| Cross-model clean confirmation | A49; OLMo2600 paired inputs, +41.42pp | Section 6.1; Table 1; Appendix L.1 |
-| Natural-QA gains on OLMo | A50;631 pairs/524 clusters, +3.30pp; all five task point differences positive | Section 6.1; Table 2; Appendix L.4; Llama's close observed scores retained |
-| Internal shape matters at equal displacement | A51;clean T-C +2.10pp at32K;16K near tie | Sections 3.2,6.1; Appendix L.3; previous classic cross-batch diagnostic stays in H.8 |
-| Longer real-input evaluation | A53;LongBench-v2 complete-input8K-32K subset117 pairs, +4.27pp with interval spanning zero | Section 6.1; Table 2; Appendix L.4 |
-| In-window task quality improves at native support | A54;public-parameter NCP, gain1,780-row OLMo development panel,+1.41pp | Section 6.2; Eq.10; Appendix L.5-L.6; distinct from TailSpline and calibrated V1 |
-| Cosh supports learned extrapolation | A09,A10;432M three-seed and750M shared-start continuation | Section 6.3; Figure 5; Appendices D,E |
-| Integer kernel equivalence and allocation-response identities | A44,A48;conditional mathematics and CPU checks | Sections 4-5; Appendices A.6,K |
+| Fixed-support allocation changes performance | A01, A08, paired training and frozen controls | Section 3; Figure 1; Appendix C |
+| Positional structure differs from learned use | A03-A06, A48; complete-pair geometry, coordinate interventions and rank/quality observations | Section 4; Figure 2; Appendices A, B |
+| TailSpline has an exact finite-grid construction | A37; constrained discrete objective and closed form | Section 5.1; Figure 3; Appendix B.1 |
+| TailSpline quality across L/2L/4L | A46, existing clean32K, A52 clean8K | Section 6.1; Table 1; Figure 4; Appendix D.2 |
+| Cross-model clean confirmation | A49; OLMo2600 paired inputs, +41.42pp | Section 6.1; Table 1; Appendix D.2 |
+| Natural-QA gains on OLMo | A50;631 pairs/524 clusters, +3.30pp; all five task point differences positive | Section 6.1; Table 2; Appendix D.4; Llama's close observed scores retained |
+| Internal shape matters at equal displacement | A51;clean T-C +2.10pp at32K;16K near tie | Sections 3.2,6.1; Appendix D.3; previous classic cross-batch diagnostic stays in D.5 |
+| Longer real-input evaluation | A53;LongBench-v2 complete-input8K-32K subset117 pairs, +4.27pp with interval spanning zero | Section 6.1; Table 2; Appendix D.4 |
+| In-window task quality improves at native support | A54;public-parameter NCP, gain1,780-row OLMo development panel,+1.41pp | Section 6.2; Eq.10; Appendix E; distinct from TailSpline and calibrated V1 |
+| Cosh supports learned extrapolation | A09,A10;432M three-seed and750M shared-start continuation | Section 6.3; Figure 5; Appendix F |
+| Integer kernel equivalence and allocation-response identities | A44,A48;conditional mathematics and CPU checks | Sections 4-5; Appendices A.4,B.4-B.5 |
 
 [Completed-result interpretation](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md),
 [portable inputs](../figs/completed_evidence_inputs.json),
@@ -29,6 +29,8 @@ RoPE retained as a reference. It is not called native enhancement.
 [asset registry](evidence/asset_registry.json) preserve the evidence mapping.
 No pending128K result is used. The main text retains the existing title and
 nine-page format; the latest validation records the final compiled artifact.
+
+[Appendix retention audit and length policy](appendix_restructure_20260916/README.md) records the consolidation; the historical map below is not current navigation.
 
 ## Historical placement map (2026-09-14; superseded by the current table above)
 

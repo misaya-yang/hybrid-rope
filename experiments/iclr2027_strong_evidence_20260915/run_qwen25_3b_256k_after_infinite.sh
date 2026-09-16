@@ -63,7 +63,8 @@ if (
     or qa.get("scale") != 4
     or qa.get("lengths") != [131072]
     or qa.get("minimum_input_tokens") != 100000
-    or qa.get("summary", {}).get("selected_rows") != 50
+    or qa.get("summary", {}).get("selected_rows") != 35
+    or qa.get("summary", {}).get("source_clusters", {}).get("selected") != 7
 ):
     raise SystemExit("Qwen 128K Natural-QA assets are not frozen")
 PY

@@ -2464,6 +2464,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/reviews/TEN_QUESTIONS_ASSESSMENT_20260914.md",
       "area": "docs",
       "category": "document"
@@ -5149,6 +5154,21 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/base_scale_20260916/qwen256k_report.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/base_scale_20260916/results.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/base_scale_20260916/verify_public_geometry.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/inputs.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -5210,6 +5230,36 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_naturalqa631.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_128k_gate.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_infinite_en_dia.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_llama_s16_infinite_en_qa.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_en_qa.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s8_256k_health.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
@@ -9887,6 +9937,11 @@
       "path": "paper-2027/research/appendix_restructure_20260916/previous_69page_source.zip",
       "area": "paper-2027",
       "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/appendix_restructure_20260916/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
     },
     {
       "path": "paper-2027/research/archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md",
