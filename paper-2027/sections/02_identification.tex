@@ -7,4 +7,4 @@ Within each of three seeds, architecture, initialization, token order, optimizer
 
 With the training support retained at evaluation, mean Cosh-minus-Geo tail NLL is $+0.026$ at the training length and $-0.281/-0.176/-0.146$ at $512/1024/2048$ tokens. All three paired seeds improve at every extended length (Fig.~\ref{fig:method-overview}b).
 
-Retargeting both supports to $b=L_{\rm eval}$ while retaining each trained checkpoint and normalized allocation reverses the ordering: Cosh-minus-Geo NLL becomes $+0.060/+0.227/+0.460$, with all three seeds favoring Geo (Fig.~\ref{fig:spectral-budget-overview}a). Allocation is a useful design variable, and its preferred setting depends on the support policy.
+Retargeting both supports to $b=L_{\rm eval}$ while retaining each trained checkpoint and normalized allocation reverses the ordering: Cosh-minus-Geo NLL becomes $+0.060/+0.227/+0.460$, with all three seeds favoring Geo (Table~\ref{tab:exact-range-3seed}). Allocation is a useful design variable, and its preferred setting depends on the support policy.
