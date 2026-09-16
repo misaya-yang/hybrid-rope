@@ -37,6 +37,7 @@ records the applied manuscript changes, including the main-text NCP subsection.
 | `prepare_natural_long.py` | X3, X7 | implemented and tested | CPU-only; never downloads data |
 | `run_natural_long.py` | X3, X7 | implemented and tested | plan-only by default; `--execute` required |
 | `summarize_matrix.py` | all completed matrix cells | implemented and tested | report-only; refuses mixed contracts |
+| `four_model_yarn_full13.py` | four-model Full-13×10 T/P/static-YaRN | strict reuse/resume/report orchestrator; plan-only by default | reuses Llama/OLMo, resumes Qwen T/P, adds only GLM back5, then runs YaRN |
 | `prepare_olmo_naturalqa631.py` | OLMo QA transfer | implemented; server assets frozen | CPU-only; preserves the historical 631-row source pool |
 | `run_olmo_naturalqa631.sh` | OLMo QA transfer | implemented and dry-run guarded | `--execute` required; TailSpline then canonical MrPro |
 | `run_olmo_qa_then_ruler200.sh` | requested OLMo order | implemented and dry-run guarded | QA first; clean 16K RULER-13×200 last |
@@ -132,6 +133,25 @@ embedded.
   separate. Cross-model aggregation is descriptive only.
 - Reports and manifests must not contain personal workstation paths. Repository
   artifacts use relative paths; remote raw evidence may use its stable server path.
+
+## Four-model static-YaRN Full-13 comparison
+
+`run_four_model_yarn_full13.sh` now delegates to `four_model_yarn_full13.py`.
+The existing `run_yarn_full_after_quick.sh` chain remains unchanged: it waits for
+the quick-YaRN completion marker and then invokes the strict full runner.
+
+The frozen model set is Llama-3-8B, Qwen2.5-3B, OLMo-2-1B and GLM-4-9B;
+Qwen2.5-1.5B is explicitly excluded. Llama/OLMo reuse the first ten source-order
+rows per task from their completed 200-per-task runs. Qwen uses only
+`tailspline_qwen25_s4_128k_ruler10_clean`, resuming its partial TailSpline arm and
+running its missing MrPro arm. GLM first proves that current assets5 are exactly
+rows 0--4 of assets10, then runs only rows 5--9 (65 generations per T/P arm) in
+separate supplement directories. Existing GLM main outputs are read-only.
+
+Every model receives a canonical 130-row merge in assets10 order and a three-arm
+paired report. The report refuses mismatched row IDs, prompt hashes, task/length,
+table FP32 hash or gain. Static YaRN is a frozen inference table comparison, not
+evidence for a checkpoint trained with YaRN.
 
 ## Qwen response analysis
 

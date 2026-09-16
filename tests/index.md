@@ -35,6 +35,7 @@
 - [test_finite_k_cosh_regret_audit.py](test_finite_k_cosh_regret_audit.py) — test_finite_k_cosh_regret_audit.py
 - [test_finite_scale_covariance.py](test_finite_scale_covariance.py) — test_finite_scale_covariance.py
 - [test_fixed_support_z.py](test_fixed_support_z.py) — test_fixed_support_z.py
+- [test_four_model_yarn_full13.py](test_four_model_yarn_full13.py) — 四模型Full-13×10 T/P/静态YaRN的严格panel复用、GLM后5合并与table/gain身份合同
 - [test_frozen_coupling_transport.py](test_frozen_coupling_transport.py) — test_frozen_coupling_transport.py
 - [test_gap_capped.py](test_gap_capped.py) — test_gap_capped.py
 - [test_gemma_k128_coordinate_confirmation.py](test_gemma_k128_coordinate_confirmation.py) — test_gemma_k128_coordinate_confirmation.py

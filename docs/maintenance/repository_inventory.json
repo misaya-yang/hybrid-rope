@@ -5134,12 +5134,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/four_model_yarn_full13.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/llama_s16_confirmation.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/matched_olmo_naturalqa_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/matched_three_method_quick_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/official_yarn_naturalqa.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5339,6 +5354,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_four_model_naturalqa_yarn.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_four_model_yarn_full13.sh",
       "area": "experiments",
       "category": "code"
@@ -5415,6 +5435,11 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/summarize_matrix.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/test_official_yarn_naturalqa.py",
       "area": "experiments",
       "category": "code"
     },
@@ -14744,6 +14769,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_four_model_yarn_full13.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_frozen_coupling_transport.py",
       "area": "tests",
       "category": "code"
@@ -14825,6 +14855,11 @@
     },
     {
       "path": "tests/test_long_lora_native_teacher.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_matched_three_method_quick_report.py",
       "area": "tests",
       "category": "code"
     },
@@ -15425,6 +15460,56 @@
     },
     {
       "path": "tmp/pdfs/mrrope_native_check/page-09.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-01.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-02.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-03.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-04.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-05.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-06.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-07.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-08.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current-09.png",
+      "area": "tmp",
+      "category": "other"
+    },
+    {
+      "path": "tmp/pdfs/size_audit/current_contact.png",
       "area": "tmp",
       "category": "other"
     }
