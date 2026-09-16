@@ -1619,6 +1619,32 @@
           "sha256": "e0e98666271072486113d839cea49023847159feb3f54f95c2fa8dd3ebff928c"
         }
       ]
+    },
+    {
+      "id": "A59",
+      "name": "Qwen and GLM S4 final three-arm completion",
+      "priority": "P0",
+      "question": "At 128K and S=4, does fixed TailSpline outperform MrPro and official static YaRN on full RULER task coverage, and does the GLM natural-QA ordering survive an independent book pool",
+      "evidence_grade": "Qwen and GLM Full-13, 13 tasks x 10 paired rows per arm; GLM independent En.QA pool, 77 paired rows from 15 non-overlapping source books; aggregate arithmetic verified",
+      "manuscript_location": "next revision; current manuscript unchanged",
+      "interpretation": "Qwen Full-13 TailSpline/MrPro/YaRN 64.40/59.87/62.04%; GLM 39.65/30.78/27.85%; GLM second-book QA 26.87/22.86/23.50%. Fixed benchmark scores are primary; clustered resampling is a transfer-sensitivity appendix.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_full13x10_triarm.json",
+          "availability": "tracked",
+          "sha256": "df30a6e1407058fdb7497d7f3277a0ac48e42ef60fac772a1d491e6e0354df3e"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13x10_triarm.json",
+          "availability": "tracked",
+          "sha256": "657869cde2ef335dcc50e4eb7b6723ce8f74e6fd4fce7b4d83893cc73e769416"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_second_books_triarm.json",
+          "availability": "tracked",
+          "sha256": "4e8abbe666ac6255781a4f5eac563b4939b63913a428153477dad3a8dd0bfc7b"
+        }
+      ]
     }
   ]
 }

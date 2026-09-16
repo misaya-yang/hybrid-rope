@@ -1,0 +1,469 @@
+{
+  "arms": [
+    "tailspline",
+    "mrpro",
+    "yarn"
+  ],
+  "condition": "qwen25_3b_s4_128k",
+  "contrasts": {
+    "mrpro": {
+      "bootstrap": {
+        "delta_task_macro_interval95": [
+          -0.004102564102564099,
+          0.09487179487179488
+        ],
+        "delta_task_macro_mean": 0.04487971794871795,
+        "draws": 20000,
+        "probability_delta_gt_zero": 0.96405,
+        "resampling": "paired rows within task at one registered length; tasks fixed",
+        "seed": 20260916
+      },
+      "delta_by_task": {
+        "cwe": -0.009999999999999995,
+        "fwe": 0.13333333333333336,
+        "niah_multikey_1": 0.09999999999999998,
+        "niah_multikey_2": 0.09999999999999998,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 0.02499999999999991,
+        "niah_multivalue": 0.0,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0,
+        "qa_1": -0.09999999999999998,
+        "qa_2": 0.10000000000000003,
+        "vt": 0.2400000000000001
+      },
+      "delta_task_macro_official": 0.04525641025641047
+    },
+    "yarn": {
+      "bootstrap": {
+        "delta_task_macro_interval95": [
+          -0.02782051282051282,
+          0.07487179487179488
+        ],
+        "delta_task_macro_mean": 0.02354499358974359,
+        "draws": 20000,
+        "probability_delta_gt_zero": 0.8142,
+        "resampling": "paired rows within task at one registered length; tasks fixed",
+        "seed": 20260917
+      },
+      "delta_by_task": {
+        "cwe": -0.029999999999999992,
+        "fwe": 0.06666666666666676,
+        "niah_multikey_1": 0.09999999999999998,
+        "niah_multikey_2": 0.0,
+        "niah_multikey_3": 0.1,
+        "niah_multiquery": 0.07499999999999996,
+        "niah_multivalue": -0.025000000000000022,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0,
+        "qa_1": -0.09999999999999998,
+        "qa_2": -0.09999999999999998,
+        "vt": 0.21999999999999997
+      },
+      "delta_task_macro_official": 0.02358974358974375
+    }
+  },
+  "excluded_models": [
+    "qwen25_1p5b"
+  ],
+  "identity_checks": [
+    "row_id",
+    "prompt_sha256",
+    "task",
+    "length_cap",
+    "table",
+    "gain"
+  ],
+  "lengths": [
+    131072
+  ],
+  "metric_contract": "RULER official score -> task-equal endpoint macro",
+  "model_id": "qwen25_3b",
+  "paired_prompts": 130,
+  "panel": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_full13/panels/qwen25_3b_s4_128k/inputs.jsonl",
+  "panel_sha256": "281b1ffde6271f5ec6a2dfd9e5ad6e6411fec1aed9b2266e431650ccf89faae4",
+  "receipts": {
+    "mrpro": {
+      "merged_generations": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_full13/qwen25_3b_s4_128k/merged/mrpro/generations.jsonl",
+      "merged_generations_sha256": "7cf527677bbcf5584e284291ee837d4b692e01b9c1305e12e32924241e24df33",
+      "sources": [
+        {
+          "contract_sha256": "769bae118de4d6efc1db54155c5a730d6e620ddeb258c56a034c8ef92e3e6799",
+          "generations_sha256": "710482b61f7628d4673e8963448eeb6dab378df6c9882441fb640a5a28d53016",
+          "run": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_qwen25_s4_128k_ruler10_clean/runs/mrpro",
+          "selected_rows": 130,
+          "source_arm": "qwen25_3b_s4_128k_mrpro_full13x10"
+        }
+      ],
+      "table": {
+        "gain": 1.138629436111989,
+        "path": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_qwen25_s4_64k128k_clean/tables/mrpro.json",
+        "receipt_sha256": "7907c4cfd2e9fc12cb0e336045d9e6aa91a0a9baa43b5d4cf08d9233baf3a508",
+        "table_sha256_float32": "33cbe3a40994ac2a79126a14ce30282867bd6d49b74c1ada4d4cce8a7e76016f"
+      }
+    },
+    "tailspline": {
+      "merged_generations": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_full13/qwen25_3b_s4_128k/merged/tailspline/generations.jsonl",
+      "merged_generations_sha256": "9ccf81d9bb5d6742148994e9011f4fa786362befee1d53716aec0ee96e4d2e17",
+      "sources": [
+        {
+          "contract_sha256": "3c9eef5829ec5b8ddb3c9abe18c72b24719f365a5a2b09de411017c86bc4ba81",
+          "generations_sha256": "f7e93d62dcc24a837ac79ae6ea3a06d1775138b50494dfeec46cd42dd4ddc316",
+          "run": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_qwen25_s4_128k_ruler10_clean/runs/tailspline",
+          "selected_rows": 130,
+          "source_arm": "strong_qwen25_3b_s4_tailspline"
+        }
+      ],
+      "table": {
+        "gain": 1.138629436111989,
+        "path": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_qwen25_s4_128k_ruler10_clean/tables/tailspline.json",
+        "receipt_sha256": "8e7a42a55a6665cb56540e1a2fe07f7241a83718d481e853b241af9f0088dbb6",
+        "table_sha256_float32": "5524d0e280219798d1973950fbd6af87a7c11480bc9b1b3b09930aab0945b305"
+      }
+    },
+    "yarn": {
+      "merged_generations": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_full13/qwen25_3b_s4_128k/merged/yarn/generations.jsonl",
+      "merged_generations_sha256": "6556b362736f71efabcce1655b272095729d1fa902e4893ffafcf384cc4cbb0f",
+      "sources": [
+        {
+          "contract_sha256": "843d64c69b2f61007d94ad1bf4917b49b30e7aa4251dd5393f55e025d2c1d3ea",
+          "generations_sha256": "72e63b95b728d85adfaf1fbbcdcc8493a77318ac2e5757ed3248d98741a7b26c",
+          "run": "/root/autodl-tmp/today_rope_plan_20260914/official_yarn_full13/qwen25_3b_s4_128k/run",
+          "selected_rows": 130,
+          "source_arm": "qwen25_3b_s4_128k_official_static_yarn_full13"
+        }
+      ],
+      "table": {
+        "gain": 1.138629436111989,
+        "path": "/root/autodl-tmp/today_rope_plan_20260914/four_model_128k_extreme/qwen25_3b_128k/official_yarn/tables/yarn.json",
+        "receipt_sha256": "f5c2bac7949651314052ae85720b6748896f90f0300c64b8c79cc122a2f58f3b",
+        "table_sha256_float32": "a1f51ec6542939d5b884d867213948d43bc4d3cc3c62e535489daabc59f2c9ce"
+      }
+    }
+  },
+  "rows_per_task": 10,
+  "status": "FULL13_THREE_ARM_STRICT_PAIRED_REPORT_V1",
+  "summaries": {
+    "mrpro": {
+      "by_length": {
+        "131072": {
+          "task_macro_cap_rate": 0.3384615384615385,
+          "task_macro_eos_rate": 0.6615384615384615,
+          "task_macro_official": 0.5987179487179486,
+          "tasks": {
+            "cwe": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.04,
+              "rows": 10
+            },
+            "fwe": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.4333333333333333,
+              "rows": 10
+            },
+            "niah_multikey_1": {
+              "cap_rate": 0.6,
+              "eos_rate": 0.4,
+              "official": 0.9,
+              "rows": 10
+            },
+            "niah_multikey_2": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.4,
+              "rows": 10
+            },
+            "niah_multikey_3": {
+              "cap_rate": 0.2,
+              "eos_rate": 0.8,
+              "official": 0.1,
+              "rows": 10
+            },
+            "niah_multiquery": {
+              "cap_rate": 0.7,
+              "eos_rate": 0.3,
+              "official": 0.925,
+              "rows": 10
+            },
+            "niah_multivalue": {
+              "cap_rate": 0.6,
+              "eos_rate": 0.4,
+              "official": 0.825,
+              "rows": 10
+            },
+            "niah_single_1": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_single_2": {
+              "cap_rate": 0.9,
+              "eos_rate": 0.1,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_single_3": {
+              "cap_rate": 0.7,
+              "eos_rate": 0.3,
+              "official": 1.0,
+              "rows": 10
+            },
+            "qa_1": {
+              "cap_rate": 0.3,
+              "eos_rate": 0.7,
+              "official": 0.3,
+              "rows": 10
+            },
+            "qa_2": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.3,
+              "rows": 10
+            },
+            "vt": {
+              "cap_rate": 0.4,
+              "eos_rate": 0.6,
+              "official": 0.5599999999999999,
+              "rows": 10
+            }
+          }
+        }
+      },
+      "family_log_length_auc": {
+        "aggregation": 0.23666666666666664,
+        "qa": 0.3,
+        "retrieval": 0.76875,
+        "tracking": 0.5599999999999999
+      },
+      "log_length_auc": 0.5987179487179486,
+      "rows": 130,
+      "rows_per_task_length": [
+        10
+      ],
+      "worst_length_score": 0.5987179487179486
+    },
+    "tailspline": {
+      "by_length": {
+        "131072": {
+          "task_macro_cap_rate": 0.26153846153846155,
+          "task_macro_eos_rate": 0.7384615384615384,
+          "task_macro_official": 0.6439743589743591,
+          "tasks": {
+            "cwe": {
+              "cap_rate": 0.1,
+              "eos_rate": 0.9,
+              "official": 0.030000000000000006,
+              "rows": 10
+            },
+            "fwe": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.5666666666666667,
+              "rows": 10
+            },
+            "niah_multikey_1": {
+              "cap_rate": 0.6,
+              "eos_rate": 0.4,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_multikey_2": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.5,
+              "rows": 10
+            },
+            "niah_multikey_3": {
+              "cap_rate": 0.1,
+              "eos_rate": 0.9,
+              "official": 0.1,
+              "rows": 10
+            },
+            "niah_multiquery": {
+              "cap_rate": 0.1,
+              "eos_rate": 0.9,
+              "official": 0.95,
+              "rows": 10
+            },
+            "niah_multivalue": {
+              "cap_rate": 0.5,
+              "eos_rate": 0.5,
+              "official": 0.825,
+              "rows": 10
+            },
+            "niah_single_1": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_single_2": {
+              "cap_rate": 0.7,
+              "eos_rate": 0.3,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_single_3": {
+              "cap_rate": 0.5,
+              "eos_rate": 0.5,
+              "official": 1.0,
+              "rows": 10
+            },
+            "qa_1": {
+              "cap_rate": 0.2,
+              "eos_rate": 0.8,
+              "official": 0.2,
+              "rows": 10
+            },
+            "qa_2": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.4,
+              "rows": 10
+            },
+            "vt": {
+              "cap_rate": 0.6,
+              "eos_rate": 0.4,
+              "official": 0.8,
+              "rows": 10
+            }
+          }
+        }
+      },
+      "family_log_length_auc": {
+        "aggregation": 0.29833333333333334,
+        "qa": 0.30000000000000004,
+        "retrieval": 0.796875,
+        "tracking": 0.8
+      },
+      "log_length_auc": 0.6439743589743591,
+      "rows": 130,
+      "rows_per_task_length": [
+        10
+      ],
+      "worst_length_score": 0.6439743589743591
+    },
+    "yarn": {
+      "by_length": {
+        "131072": {
+          "task_macro_cap_rate": 0.25384615384615383,
+          "task_macro_eos_rate": 0.7461538461538461,
+          "task_macro_official": 0.6203846153846153,
+          "tasks": {
+            "cwe": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.06,
+              "rows": 10
+            },
+            "fwe": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.4999999999999999,
+              "rows": 10
+            },
+            "niah_multikey_1": {
+              "cap_rate": 0.6,
+              "eos_rate": 0.4,
+              "official": 0.9,
+              "rows": 10
+            },
+            "niah_multikey_2": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.5,
+              "rows": 10
+            },
+            "niah_multikey_3": {
+              "cap_rate": 0.2,
+              "eos_rate": 0.8,
+              "official": 0.0,
+              "rows": 10
+            },
+            "niah_multiquery": {
+              "cap_rate": 0.6,
+              "eos_rate": 0.4,
+              "official": 0.875,
+              "rows": 10
+            },
+            "niah_multivalue": {
+              "cap_rate": 0.2,
+              "eos_rate": 0.8,
+              "official": 0.85,
+              "rows": 10
+            },
+            "niah_single_1": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_single_2": {
+              "cap_rate": 0.5,
+              "eos_rate": 0.5,
+              "official": 1.0,
+              "rows": 10
+            },
+            "niah_single_3": {
+              "cap_rate": 0.7,
+              "eos_rate": 0.3,
+              "official": 1.0,
+              "rows": 10
+            },
+            "qa_1": {
+              "cap_rate": 0.2,
+              "eos_rate": 0.8,
+              "official": 0.3,
+              "rows": 10
+            },
+            "qa_2": {
+              "cap_rate": 0.0,
+              "eos_rate": 1.0,
+              "official": 0.5,
+              "rows": 10
+            },
+            "vt": {
+              "cap_rate": 0.3,
+              "eos_rate": 0.7,
+              "official": 0.5800000000000001,
+              "rows": 10
+            }
+          }
+        }
+      },
+      "family_log_length_auc": {
+        "aggregation": 0.2799999999999999,
+        "qa": 0.4,
+        "retrieval": 0.765625,
+        "tracking": 0.5800000000000001
+      },
+      "log_length_auc": 0.6203846153846153,
+      "rows": 130,
+      "rows_per_task_length": [
+        10
+      ],
+      "worst_length_score": 0.6203846153846153
+    }
+  },
+  "tasks": [
+    "cwe",
+    "fwe",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multiquery",
+    "niah_multivalue",
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "qa_1",
+    "qa_2",
+    "vt"
+  ],
+  "uncertainty_unit": "paired prompts within task; tasks fixed; no cross-model pooling"
+}

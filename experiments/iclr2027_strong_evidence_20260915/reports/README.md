@@ -35,6 +35,9 @@ contains the proposed manuscript integration. [Execution entry points](../README
 - [GLM Full-13](pro6000_glm_s4_128k_full13.json)
 - [Qwen three-arm complete-book QA](pro6000_qwen_s4_128k_naturalqa_triarm.json)
 - [GLM three-arm complete-book QA](pro6000_glm_s4_128k_naturalqa_triarm.json)
+- [Qwen Full-13×10 three-arm completion](pro6000_qwen_s4_128k_full13x10_triarm.json)
+- [GLM Full-13×10 three-arm completion](pro6000_glm_s4_128k_full13x10_triarm.json)
+- [GLM independent second-book three-arm QA](pro6000_glm_s4_128k_naturalqa_second_books_triarm.json)
 
 These are exact report copies. Their row-level score or aggregate arithmetic
 was checked as recorded; importing does not imply raw-text rescoring or a new
