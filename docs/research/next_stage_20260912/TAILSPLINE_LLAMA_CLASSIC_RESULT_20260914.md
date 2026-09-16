@@ -183,3 +183,22 @@ S4 construction. The report is in
 The paper now centers quality within the intended context window. Cosh remains
 a supporting extrapolation transport, not a claimed native-quality method.
 Potential S1/native improvements and S16/128K evaluation remain future work.
+
+## 10. Clean X4等位移对照完成：2026-09-15服务器回查
+
+同一clean输入复用T/P，新增C共3250条（16K650、32K2600）。本轮从三臂原始
+`ruler_official_score`重新按任务等权聚合，与已完成报告一致；不是重新生成或从文本重评分。
+
+| 输入 | T | C | P | T−C及原报告95%区间 |
+|---|---:|---:|---:|---|
+| 16K，13×50 | 86.0949% | 86.3462% | 82.7051% | -0.2513pp，[-1.4051,+0.8949]pp |
+| 32K，13×200 | 68.2660% | 66.1699% | 56.5436% | +2.0962pp，[+1.1134,+3.0769]pp |
+
+32K支持在该等位移比较中残余形状有贡献；16K未分出排序。32K C−P为+9.6263pp，
+同时T−C在QA1为-5.5pp、MK1为-3.5pp，不能写成逐任务支配或普适平滑最优。
+不将三张具体表的算术差分解释为普适“剂量/形状贡献比例”。
+
+原报告：服务器`today_rope_plan_20260914/strong_evidence/llama_s4_clean_matched_dose_c/reports/tailspline_vs_control_and_mrpro.json`。
+[便携raw复算与原区间](../../../experiments/native_enhancement_oral_20260915/reports/existing_evidence_review.json)
+的`verified_reports.x4_clean`保存源文件、表/gain身份、逐任务得失及原报告contrast。
+这次登记更新结果owner，未修改论文主张或主稿。

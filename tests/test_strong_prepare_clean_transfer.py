@@ -140,6 +140,17 @@ def test_prepares_generic_full13_source_order_panels_without_llama_label(tmp_pat
         assert all(not Path(source["artifact"]).is_absolute()
                    for sources in panel_manifest["sources"].values() for source in sources)
 
+    # Re-freezing a completed first panel is the interrupted two-length resume
+    # path: its source records already carry ``artifact`` rather than ``path``.
+    first_path = out / "panels" / "8192" / "manifest.json"
+    before = first_path.read_bytes()
+    subject._freeze_panel_manifest(
+        panel_dir=first_path.parent, out=out, model_id="olmo2_1b",
+        identity=manifest["model_identity"], scale=4.0, length=8192,
+        rows_per_task=2,
+    )
+    assert first_path.read_bytes() == before
+
 
 def test_frozen_manifest_skips_equal_request_and_rejects_artifact_drift(tmp_path):
     model, data_root, out = _fixture(tmp_path, "qwen25_3b")

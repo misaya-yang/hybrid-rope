@@ -1,0 +1,37 @@
+{
+  "status": "CPU_CANARY_PASS",
+  "model_loaded": false,
+  "gpu_used": false,
+  "native_length": 16,
+  "target_ids": [
+    14,
+    15,
+    16
+  ],
+  "loss_positions": {
+    "full": [
+      13,
+      14,
+      15
+    ],
+    "recent": [
+      3,
+      4,
+      5
+    ]
+  },
+  "same_targets": true,
+  "shared_relative_positions_equal": true,
+  "scores": {
+    "full": {
+      "nll_sum": 0.007026124667968148,
+      "target_count": 3,
+      "nll": 0.0023420415559893826
+    },
+    "recent": {
+      "nll_sum": 0.007026124667968148,
+      "target_count": 3,
+      "nll": 0.0023420415559893826
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "status": "CPU_PREPARATION_COMPLETE_NO_NEW_GPU_EXPERIMENT",
+  "completed_at_utc": "2026-09-15T21:00:51.469973+00:00",
+  "remote_repo": "/root/autodl-tmp/hybrid-rope",
+  "remote_root": "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu",
+  "python": "3.12.3",
+  "numpy": "2.3.2",
+  "scipy": "1.18.1",
+  "execution_limits": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "cpu_affinity": 127,
+    "nice": 19,
+    "blas_threads": 1,
+    "weights_loaded": false,
+    "gpu_experiments_launched": 0,
+    "existing_queue_changed": false
+  },
+  "tests": {
+    "full_suite_log": "........................................................................ [ 70%]\n..............................                                           [100%]\n102 passed in 3.60s",
+    "final_targeted_log": ".........................                                                [100%]\n25 passed in 0.46s"
+  },
+  "existing_gpu_job_snapshot": {
+    "gpu": "NVIDIA vGPU-32GB, 100 %, 21339 MiB, 32760 MiB",
+    "evaluator_processes": [
+      "110533   21901 /root/miniconda3/bin/python -m experiments.olmo_recovery_20260912.recovery_v2_eval --data /root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_classic/assets/ppl46/manifest.json --model /root/autodl-tmp/models/Meta-Llama-3-8B-Instruct --arm Native --extra-panel /root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200_clean/assets/inputs.jsonl --only-extra-panels --skip-lm --length-cap 32768 --prefill-chunk-size 8192 --batch-size 1 --static-table-json /root/autodl-tmp/today_rope_plan_20260914/strong_evidence/llama_s4_clean_matched_dose_c/tables/tailspline_dose_control.json --table-label llama3_8b_s4_clean_32768_full13_dose_control_c --out /root/autodl-tmp/today_rope_plan_20260914/strong_evidence/llama_s4_clean_matched_dose_c/runs/32768/dose_control_c --execute"
+    ],
+    "x4_live": {
+      "phase": "generation",
+      "completed": 2545,
+      "total": 2600
+    },
+    "initial_observed_x4_pid": 110533,
+    "initial_observed_memory_mib": 21339
+  },
+  "prepared": {
+    "counterfactual_rows": 288,
+    "independent_worlds": 72,
+    "native_geometry_models": [
+      "olmo2_1b",
+      "llama3_8b",
+      "qwen2_5_3b"
+    ],
+    "mechanism_launcher_scope": "OLMo native4K only; other models need their own panels and mapping",
+    "generated_method_accuracy": null
+  },
+  "remaining": [
+    "GPU evaluation of prepared mechanism/control arms",
+    "Fresh Full13 confirmation source/QA identity freeze for OLMo and Llama",
+    "Native natural-QA source census and source-context exclusion",
+    "Fresh-document same-target LM corpus and GPU score-only runtime",
+    "Actual Q/K capture for content-margin replay",
+    "GPU equivalence and throughput canary for exact-length batch2; valid variable-length Flash path"
+  ]
+}

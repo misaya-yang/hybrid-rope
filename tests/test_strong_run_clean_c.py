@@ -97,6 +97,19 @@ def test_runtime_comparison_rejects_batch_or_prefill_drift():
         runner.validate_runtime_match(reference, changed, label="batch2")
 
 
+def test_runtime_comparison_accepts_new_optional_metadata_missing_from_legacy_reference():
+    legacy = {
+        "generation_length_caps": [16384], "limit_per_cell": 0,
+        "prefill_chunk_size": 8192, "batch_size": 1,
+    }
+    current = {
+        **legacy,
+        "generation_prefill_strategy": "dynamic_cache_lower_right_v1",
+        "runtime_versions": {"model_dtype": "bfloat16"},
+    }
+    runner.validate_runtime_match(legacy, current, label="legacy/current")
+
+
 def test_report_contract_contains_all_three_arms_and_c_minus_p(tmp_path):
     jobs = runner.build_jobs(
         data_root=tmp_path / "data", out=tmp_path / "new",

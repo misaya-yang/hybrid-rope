@@ -34,6 +34,13 @@ def write(path,value):
     temporary.write_text(json.dumps(value,indent=2)+'\n');temporary.replace(path)
 
 
+def normalize_existing_identity(value):
+    normalized=dict(value)
+    if 'generation_order' not in normalized and int(normalized.get('batch_size',1))==1:
+        normalized['generation_order']='panel_order_v1'
+    return normalized
+
+
 def collect_rows(args,manifest):
     panels=[]
     if not args.only_extra_panels:
@@ -270,6 +277,8 @@ def main():
                         help='contiguous exact-length generation batch using Flash SDPA')
     parser.add_argument('--left-pad-batches',action='store_true',
                         help='batch variable prompt lengths using masked left pad tokens; prompt content and position ids are unchanged')
+    parser.add_argument('--longest-first',action='store_true',
+                        help='when batching, sort physical length caps descending before shape grouping')
     parser.add_argument('--static-table-json',type=Path,
                         help='install the table object (or result.table) from this frozen solver receipt')
     parser.add_argument('--table-label',help='result label for --static-table-json; does not alter the table')
@@ -298,7 +307,9 @@ def main():
     if args.task:
         allowed_tasks=set(args.task);rows=[row for row in rows if row['task'] in allowed_tasks]
     if args.batch_size > 1:
-        rows=sorted(rows,key=lambda row:(row['length_cap'],row['max_new_tokens'],len(row['prompt_ids']),row['task'],row['eval_id']))
+        rows=sorted(rows,key=lambda row:(
+            -row['length_cap'] if args.longest_first else row['length_cap'],
+            row['max_new_tokens'],len(row['prompt_ids']),row['task'],row['eval_id']))
     lm_path=None if args.skip_lm else manifest.get('lm_evaluation',{}).get(args.split)
     if not rows and not lm_path:raise ValueError('no evaluation material supplied')
     state=json.loads((args.checkpoint/'state.json').read_text()) if args.checkpoint else {}
@@ -332,6 +343,10 @@ def main():
               'lm_prefill_chunk_size':args.lm_prefill_chunk_size,
               'lm_execution_strategy':('direct_no_cache_v1' if args.lm_prefill_chunk_size==0 else 'dynamic_cache_exact_nll_v1'),
               'batch_size':args.batch_size,
+              'generation_order':(
+                  'longest_first_shape_sorted_v1' if args.batch_size>1 and args.longest_first
+                  else 'ascending_shape_sorted_v1' if args.batch_size>1
+                  else 'panel_order_v1'),
               'runtime_versions':{
                   'torch':torch.__version__,'transformers':transformers.__version__,
                   'model_dtype':'bfloat16','loss_logits_dtype':'float32',
@@ -342,7 +357,9 @@ def main():
               **({'left_pad_batches':True} if args.left_pad_batches else {}),
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
-    if contract.exists() and json.loads(contract.read_text())!=identity:raise ValueError('output contains a different evaluation')
+    if contract.exists():
+        existing=json.loads(contract.read_text());normalized=normalize_existing_identity(existing)
+        if normalized!=identity:raise ValueError('output contains a different evaluation')
     write(contract,identity)
     model,wrapper,table=load_model(args.model,args.arm,checkpoint=args.checkpoint,training=False)
     if static_table:

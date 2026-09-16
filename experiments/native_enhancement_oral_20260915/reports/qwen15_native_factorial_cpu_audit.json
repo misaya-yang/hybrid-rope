@@ -1,0 +1,8 @@
+{
+  "status": "EXISTING_POSITIVE_FACTORIAL_CPU_PASS",
+  "model_execution": false,
+  "rows": 108,
+  "all_original_frequency_values_unchanged": true,
+  "generation_budget_preserved": true,
+  "defaults_do_not_execute_gpu": true
+}

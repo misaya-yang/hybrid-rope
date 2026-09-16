@@ -4,6 +4,8 @@ import pytest
 
 from experiments.iclr2027_three_track_sprint_20260915.llama_s16_128k_report import (
     TASKS,
+    advance_to_independent_confirmation,
+    ppl_bootstrap,
     ppl_summary,
     task_summary,
 )
@@ -40,3 +42,28 @@ def test_s16_report_uses_task_equal_macro_and_token_weighted_nll():
         {"whole_loss_sum": 10.0, "whole_target_count": 10},
     ])
     assert ppl["whole_nll"] == 1.5
+
+
+def test_s16_advancement_uses_paired_task_interval_only():
+    assert advance_to_independent_confirmation({"ci95": [0.001, 0.2]}) is True
+    assert advance_to_independent_confirmation({"ci95": [0.0, 0.2]}) is False
+    assert advance_to_independent_confirmation({"ci95": [-0.1, 0.2]}) is False
+    with pytest.raises(ValueError, match="95% interval"):
+        advance_to_independent_confirmation({})
+
+
+def test_s16_ppl_bootstrap_returns_complete_paired_interval():
+    runs = {
+        "tailspline": (None, [
+            {"document": index, "whole_loss_sum": 10.0, "whole_target_count": 10}
+            for index in range(10)
+        ], None),
+        "mrpro": (None, [
+            {"document": index, "whole_loss_sum": 20.0, "whole_target_count": 10}
+            for index in range(10)
+        ], None),
+    }
+    result = ppl_bootstrap(runs, draws=100, seed=7)
+    assert result["delta_nll"]["mean"] == pytest.approx(-1.0)
+    assert result["delta_nll"]["ci95"] == pytest.approx([-1.0, -1.0])
+    assert result["delta_ppl"]["ci95"][0] < 0

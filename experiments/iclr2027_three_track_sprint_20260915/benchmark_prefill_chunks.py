@@ -52,7 +52,9 @@ def main() -> None:
     parser.add_argument('--model', type=Path, required=True)
     parser.add_argument('--table', type=Path, required=True)
     parser.add_argument('--panel', type=Path, required=True)
-    parser.add_argument('--lm-array', type=Path, required=True)
+    parser.add_argument('--lm-array', type=Path)
+    parser.add_argument('--skip-lm', action='store_true',
+                        help='benchmark generation only; useful for task-only matrices')
     parser.add_argument('--length', type=int, required=True)
     parser.add_argument('--chunks', default='0,8192,16384,32768')
     parser.add_argument('--max-new-tokens', type=int, default=0,
@@ -65,6 +67,8 @@ def main() -> None:
     chunks = parse_chunks(args.chunks)
     if args.length <= 0 or args.max_new_tokens < 0:
         raise ValueError('length must be positive and max-new-tokens nonnegative')
+    if not args.skip_lm and args.lm_array is None:
+        raise ValueError('--lm-array is required unless --skip-lm is set')
     if not 0.0 <= args.minimum_free_fraction < 1.0:
         raise ValueError('minimum-free-fraction must be in [0,1)')
 
@@ -81,9 +85,11 @@ def main() -> None:
         raise ValueError('panel has no row at the requested length')
     row = rows[0]
     max_new_tokens = args.max_new_tokens or int(row['max_new_tokens'])
-    lm = np.load(args.lm_array, mmap_mode='r', allow_pickle=False)
-    if lm.ndim != 2 or lm.shape[1] < args.length + 1:
-        raise ValueError('LM array is shorter than the benchmark length')
+    lm = None
+    if not args.skip_lm:
+        lm = np.load(args.lm_array, mmap_mode='r', allow_pickle=False)
+        if lm.ndim != 2 or lm.shape[1] < args.length + 1:
+            raise ValueError('LM array is shorter than the benchmark length')
     payload = json.loads(args.table.read_text())
     table = payload.get('table', payload)
     values = np.asarray(table['values_float32'], dtype=np.float32)
@@ -100,7 +106,11 @@ def main() -> None:
     if pad is None:
         pad = min(eos)
     prompt = torch.tensor([row['prompt_ids']], dtype=torch.long, device='cuda')
-    lm_ids = torch.tensor(lm[0, :args.length + 1].copy(), dtype=torch.long, device='cuda').unsqueeze(0)
+    lm_ids = None
+    if lm is not None:
+        lm_ids = torch.tensor(
+            lm[0, :args.length + 1].copy(), dtype=torch.long, device='cuda',
+        ).unsqueeze(0)
     baseline = memory_snapshot(torch)
     results = []
 
@@ -129,26 +139,36 @@ def main() -> None:
                 }
             except torch.OutOfMemoryError as error:
                 entry['generation'] = {'status': 'oom', 'error': str(error)}
+            except RuntimeError as error:
+                # A new GPU/shape can reject an otherwise valid Flash-SDPA path.
+                # Preserve that candidate failure and keep testing safer chunks;
+                # the benchmark still fails closed when none is stable.
+                entry['generation'] = {'status': 'runtime_error', 'error': str(error)}
             torch.cuda.empty_cache()
 
-            torch.cuda.reset_peak_memory_stats(); torch.cuda.synchronize()
-            before = memory_snapshot(torch); started = time.perf_counter()
-            try:
-                losses = lm_loss_rows(model, lm_ids, prefill_chunk_size=chunk)
-                torch.cuda.synchronize()
-                entry['lm'] = {
-                    'status': 'ok', 'seconds': time.perf_counter() - started,
-                    'whole_nll': losses['whole_loss_sum'] / losses['whole_target_count'],
-                    'tail128_nll': losses['tail128_loss_sum'] / losses['tail128_target_count'],
-                    'actual_strategy': ('direct_no_cache_v1' if losses['lm_prefill_chunk_size'] == 0
-                                        else 'dynamic_cache_exact_nll_v1'),
-                    'peak_allocated_bytes': int(torch.cuda.max_memory_allocated()),
-                    'peak_reserved_bytes': int(torch.cuda.max_memory_reserved()),
-                    'before': before, 'after': memory_snapshot(torch),
-                }
-            except torch.OutOfMemoryError as error:
-                entry['lm'] = {'status': 'oom', 'error': str(error)}
-            torch.cuda.empty_cache()
+            if args.skip_lm:
+                entry['lm'] = {'status': 'skipped'}
+            else:
+                torch.cuda.reset_peak_memory_stats(); torch.cuda.synchronize()
+                before = memory_snapshot(torch); started = time.perf_counter()
+                try:
+                    losses = lm_loss_rows(model, lm_ids, prefill_chunk_size=chunk)
+                    torch.cuda.synchronize()
+                    entry['lm'] = {
+                        'status': 'ok', 'seconds': time.perf_counter() - started,
+                        'whole_nll': losses['whole_loss_sum'] / losses['whole_target_count'],
+                        'tail128_nll': losses['tail128_loss_sum'] / losses['tail128_target_count'],
+                        'actual_strategy': ('direct_no_cache_v1' if losses['lm_prefill_chunk_size'] == 0
+                                            else 'dynamic_cache_exact_nll_v1'),
+                        'peak_allocated_bytes': int(torch.cuda.max_memory_allocated()),
+                        'peak_reserved_bytes': int(torch.cuda.max_memory_reserved()),
+                        'before': before, 'after': memory_snapshot(torch),
+                    }
+                except torch.OutOfMemoryError as error:
+                    entry['lm'] = {'status': 'oom', 'error': str(error)}
+                except RuntimeError as error:
+                    entry['lm'] = {'status': 'runtime_error', 'error': str(error)}
+                torch.cuda.empty_cache()
             results.append(entry)
             write_json(args.out.with_name(args.out.name + '.progress'), {
                 'status': 'IN_PROGRESS', 'length': args.length,
@@ -175,6 +195,9 @@ def main() -> None:
             generation['stable'] = False
 
         lm_result = item['lm']
+        if args.skip_lm:
+            lm_result['stable'] = False
+            continue
         if lm_result['status'] == 'ok' and lm_reference is not None:
             reference = lm_reference['lm']
             lm_result['whole_nll_abs_delta_reference'] = abs(lm_result['whole_nll'] - reference['whole_nll'])
@@ -201,7 +224,7 @@ def main() -> None:
         'environment': environment, 'model': str(args.model.resolve()),
         'table': str(args.table.resolve()), 'length': args.length,
         'generation_row_id': row['row_id'], 'lm_document': 0,
-        'max_new_tokens': max_new_tokens,
+        'max_new_tokens': max_new_tokens, 'skip_lm': args.skip_lm,
         'whole_nll_tolerance': args.whole_nll_tolerance,
         'tail_nll_tolerance': args.tail_nll_tolerance,
         'minimum_free_fraction': args.minimum_free_fraction,

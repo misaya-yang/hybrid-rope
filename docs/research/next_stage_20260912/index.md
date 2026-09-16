@@ -31,6 +31,7 @@ TailSpline主线优先级。
 | Qwen、NIAH小样本与PPL补充结果说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
 | Native-Z5结果支持到哪一步？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md)；[预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md) |
 | 如何重新研究native增强？ | [给Web Pro的自包含分析提示词](WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md) |
+| 原生四臂完成后，如何设计零训练增强方法？ | [完整Web Pro提示词：证据与方法交付](WEB_PRO_NATIVE_ZERO_TRAIN_NEXT_STEP_20260915.md) · [接续迁移回复的纠偏提示词](WEB_PRO_NATIVE_METHOD_DELIVERY_CORRECTION_20260915.md) |
 | CPU理论核验支持到哪一层？ | [理论深化CPU结果](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md) |
 | Web Pro的有限窗口、换基与边界理论是否值得采用？ | [独立CPU核查与采用判断](WEB_PRO_FINITE_WINDOW_AUDIT_20260915.md) |
 | 三段式改进做过什么，怎样向Pro追问下一步？ | [详细研究总结](THREE_BAND_RESEARCH_SYNTHESIS_FOR_PRO_20260915.md) · [可直接发送的提示词](WEB_PRO_THREE_BAND_FOLLOWUP_PROMPT_20260915.md) |
@@ -43,6 +44,17 @@ TailSpline主线优先级。
 | 当前实现与Llama资产定位在哪里？ | [实验流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md)；[资产审计](LLAMA_CLASSIC_ASSET_AUDIT_20260914.md) |
 
 ## 下一轮强实验计划（尚未执行）
+
+**最新研究纠正：**[native正收益定义、既有方法谱系与LeRoPE审查](../reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)
+从服务器实际结果出发修订原NCP优先方案，包含新完成X4、旧Qwen原生正结果及可复用机制干预；
+只新增旧正结果缺失对照的CPU准备，不改当前GPU队列。
+
+[Native增强与oral补强准备计划](NATIVE_ORAL_PREPARATION_PLAN_20260915.md)是本轮理论、实验、行为
+三条线的协调owner：含[成果与缺口分析](ORAL_EVIDENCE_GAP_REVIEW_20260915.md)、
+[native/外推理论桥接](NATIVE_EXTENSION_THEORY_BRIDGE_20260915.md)、
+[RULER吞吐分析](RULER_THROUGHPUT_PREPARATION_20260915.md)及
+[CPU实验包](../../../experiments/native_enhancement_oral_20260915/index.md)。
+本轮只授权服务器代码与CPU准备，native零校准增强是研究主线之一；不修改主稿或现有GPU队列。
 
 [面向强接收与突出研究评价的实验计划](STRONG_EXPERIMENT_PLAN_20260915.md)：
 统一clean跨模型矩阵、自然长文、等位移配置对照与部署取舍；列明已有入口和待实现包装器。

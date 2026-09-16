@@ -1,0 +1,86 @@
+{
+  "status": "CPU_PREPARED_NO_GPU_AUTHORIZATION",
+  "model": "/root/autodl-tmp/qwen25_1p5b_32k",
+  "native_length": 32768,
+  "rows_per_new_arm": 108,
+  "new_generations_if_authorized": 216,
+  "historical_blocks": {
+    "development6": 36,
+    "additional12": 72
+  },
+  "new_frequency_shape": false,
+  "frozen_weights": true,
+  "source_gain": 1.0340767466953285,
+  "reusable_arms": {
+    "candidate": [
+      "/root/autodl-tmp/fixed_rope_three_interfaces_20260913/runs/qwen15_s2_candidate_core6_32k48k64k6/generations.jsonl",
+      "/root/autodl-tmp/fixed_rope_three_interfaces_20260913/runs/qwen15_s2_candidate_core6_block12_rows6_17/generations.jsonl"
+    ],
+    "native": [
+      "/root/autodl-tmp/fixed_rope_three_interfaces_20260913/runs/qwen15_native_core6_32k6/generations.jsonl",
+      "/root/autodl-tmp/fixed_rope_three_interfaces_20260913/runs/qwen15_native_core6_block12_rows6_17_32k/generations.jsonl"
+    ]
+  },
+  "commands_without_execute": {
+    "mix075_gain1": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "experiments.olmo_recovery_20260912.recovery_v2_eval",
+      "--data",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/data.json",
+      "--model",
+      "/root/autodl-tmp/qwen25_1p5b_32k",
+      "--arm",
+      "Native",
+      "--extra-panel",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/inputs.jsonl",
+      "--only-extra-panels",
+      "--skip-lm",
+      "--length-cap",
+      "32768",
+      "--batch-size",
+      "1",
+      "--prefill-chunk-size",
+      "8192",
+      "--static-table-json",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/tables/mix075_gain1.json",
+      "--table-label",
+      "mix075_gain1",
+      "--out",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/runs/mix075_gain1"
+    ],
+    "native_gain_mid": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "experiments.olmo_recovery_20260912.recovery_v2_eval",
+      "--data",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/data.json",
+      "--model",
+      "/root/autodl-tmp/qwen25_1p5b_32k",
+      "--arm",
+      "Native",
+      "--extra-panel",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/inputs.jsonl",
+      "--only-extra-panels",
+      "--skip-lm",
+      "--length-cap",
+      "32768",
+      "--batch-size",
+      "1",
+      "--prefill-chunk-size",
+      "8192",
+      "--static-table-json",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/tables/native_gain_mid.json",
+      "--table-label",
+      "native_gain_mid",
+      "--out",
+      "/root/autodl-tmp/today_rope_plan_20260914/native_enhancement_oral_cpu/qwen15_native_gain_factorial/runs/native_gain_mid"
+    ]
+  },
+  "estimands": {
+    "frequency_at_gain1": "Y(mix,1)-Y(native,1)",
+    "gain_at_native": "Y(native,g)-Y(native,1)",
+    "interaction": "Y(mix,g)-Y(mix,1)-Y(native,g)+Y(native,1)"
+  },
+  "evidence_scope": "Retrospective attribution of a previously positive Core6 result. Report blocks separately. New independent confirmation remains necessary for generalization; changed slow endpoint means frequency-only, not fixed-support pure-z."
+}

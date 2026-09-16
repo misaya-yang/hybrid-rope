@@ -118,6 +118,13 @@ def ppl_bootstrap(runs, *, draws=20_000, seed=20261002):
     }
 
 
+def advance_to_independent_confirmation(ruler_inference: dict) -> bool:
+    ci95 = ruler_inference.get("ci95")
+    if not isinstance(ci95, list) or len(ci95) != 2:
+        raise ValueError("S16 RULER gate lacks a paired 95% interval")
+    return bool(float(ci95[0]) > 0.0)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", action="append", required=True, help="ARM=RUN_DIR")
@@ -151,6 +158,8 @@ def main() -> None:
     ppl = {arm: ppl_summary(runs[arm][1]) for arm in ARMS}
     ruler_delta = summaries["tailspline"]["macro"] - summaries["mrpro"]["macro"]
     ppl_delta = ppl["tailspline"]["whole_nll"] - ppl["mrpro"]["whole_nll"]
+    ruler_inference = task_bootstrap(runs)
+    ppl_inference = ppl_bootstrap(runs)
     report = {
         "status": "TAILSPLINE_MRPRO_LLAMA_S16_128K_GATE_COMPLETE_V1",
         "model": "Meta-Llama-3-8B-Instruct",
@@ -162,15 +171,16 @@ def main() -> None:
         "ruler": {
             "tasks": list(TASKS), "rows_per_task": 10,
             "arms": summaries, "delta_tailspline_minus_mrpro": ruler_delta,
-            "paired_inference": task_bootstrap(runs),
+            "paired_inference": ruler_inference,
         },
         "proofpile_ppl": {
             "arms": ppl, "delta_nll_tailspline_minus_mrpro": ppl_delta,
-            "paired_inference": ppl_bootstrap(runs),
+            "paired_inference": ppl_inference,
         },
         "decision": {
-            "advance_to_s16_full_curve": bool(ruler_delta > 0.0 and ppl_delta <= 0.0),
-            "rule": "advance only if 128K Full-13 point delta is positive and ProofPile NLL point delta is nonpositive",
+            "advance_to_independent_128k_confirmation": advance_to_independent_confirmation(ruler_inference),
+            "rule": "advance only if the paired task-equal 95% interval at 128K is strictly positive",
+            "ppl_role": "independent language-modeling health signal; not averaged with or used to gate the task confirmation",
         },
         "claim_boundary": (
             "Single 128K endpoint gate with 10 rows/task and 10 ProofPile documents; "

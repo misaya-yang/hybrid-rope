@@ -1,0 +1,12 @@
+{
+  "status": "CPU_RUNTIME_INTERFACE_PASS",
+  "model_execution": false,
+  "rows": 288,
+  "groups": 72,
+  "native_lengths": [
+    4096,
+    8192,
+    32768
+  ],
+  "old_olmo_table_equal": true
+}

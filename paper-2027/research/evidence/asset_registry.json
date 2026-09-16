@@ -903,8 +903,8 @@
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
           "availability": "tracked",
-          "sha256": "aed3a6106ab3d5e5da573945a1728e1bdab6dd0070be053d4bcc6f2807213876",
-          "revision_note": "2026-09-15: completed clean16K result and authorized narrative revisions"
+          "sha256": "4537069cfcd8e5db9aa954350ae0556b293b6cd15e628b31ccf71099b403f0dc",
+          "revision_note": "2026-09-15: append completed clean X4 and raw-score reaggregation; manuscript unchanged"
         },
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean_ruler200_tailspline_vs_mrpro.json",

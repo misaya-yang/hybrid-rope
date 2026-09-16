@@ -108,14 +108,15 @@ def freeze_complete_arm(args, arm, panels, rows):
     label = runner.candidate_id(args.model_id, args.scale, arm)
     kernel = {
         "arm": label, "base_arm": "Native", "unadapted": True,
-        "row_ids": [runner.eval_id(path, row) for path, row in runner.expected_eval_rows(panels)],
+        "row_ids": [runner.eval_id(path, row) for path, row in runner.expected_eval_rows(args, panels)],
         "generation_length_caps": sorted(args.lengths), "lm_enabled": False,
-        "batch_size": 1, "prefill_chunk_size": 8192,
+        "batch_size": args.batch_size, "prefill_chunk_size": args.prefill_chunk_size,
+        "generation_order": runner.generation_order(args),
         "static_table": runner.read_json(table)["table"],
     }
     write_json(run / "contract.json", kernel)
     output = []
-    for path, source in runner.expected_eval_rows(panels):
+    for path, source in runner.expected_eval_rows(args, panels):
         output.append({
             "eval_id": runner.eval_id(path, source), "row_id": source["row_id"],
             "task": source["task"], "length_cap": source["length_cap"],
@@ -142,6 +143,50 @@ def test_default_is_read_only_plan_with_explicit_portable_contract(tmp_path, cap
     assert plan["gpu_lock"] == "/tmp/hybrid-rope-gpu0.lock"
     assert all("--batch-size" in command and command[command.index("--batch-size") + 1] == "1"
                for command in plan["evaluations"].values())
+
+
+def test_longest_first_changes_execution_order_not_declared_lengths(tmp_path):
+    args = fixture(tmp_path)
+    args.longest_first = True
+    plan, panels, rows = runner.build_plan(args)
+    assert plan["lengths"] == [8192, 16384]
+    assert plan["execution_length_order"] == [16384, 8192]
+    assert [int(path.parent.name) for path in panels] == [16384, 8192]
+    assert rows[0]["length_cap"] == 16384 and rows[-1]["length_cap"] == 8192
+
+
+def test_exact_length_batch2_requires_direct_prefill(tmp_path):
+    for batch_size in (2, 4, 8):
+        args = fixture(tmp_path / str(batch_size))
+        args.batch_size = batch_size
+        args.prefill_chunk_size = 0
+        plan, _, _ = runner.build_plan(args)
+        assert plan["batch_size"] == batch_size and plan["prefill_chunk_size"] == 0
+
+        args.prefill_chunk_size = 8192
+        with pytest.raises(ValueError, match="direct prefill"):
+            runner.build_plan(args)
+
+
+def test_batch2_longest_first_matches_kernel_and_raw_prefix_order(tmp_path, monkeypatch):
+    args = fixture(tmp_path)
+    args.batch_size = 2
+    args.prefill_chunk_size = 0
+    args.longest_first = True
+    plan, panels, rows = runner.build_plan(args)
+    install_fake_expected_tables(monkeypatch)
+    freeze_complete_arm(args, "tailspline", panels, rows)
+    table = args.out / "tables" / "tailspline.json"
+    assert runner.arm_is_complete(args, "tailspline", table, panels, rows, args.out / "runs" / "tailspline")
+    assert plan["execution_length_order"] == [16384, 8192]
+    assert plan["evaluations"]["tailspline"].count("--longest-first") == 1
+    ordered = runner.expected_eval_rows(args, panels)
+    assert [row["length_cap"] for _, row in ordered[:13]] == [16384] * 13
+    keys = [
+        (-row["length_cap"], row["max_new_tokens"], len(row["prompt_ids"]), row["task"], runner.eval_id(path, row))
+        for path, row in ordered
+    ]
+    assert keys == sorted(keys)
 
 
 def test_complete_arms_are_strictly_validated_and_not_repeated(tmp_path, monkeypatch):
@@ -261,8 +306,8 @@ def test_incomplete_arms_never_form_a_matched_report(tmp_path):
 
 def test_batching_and_manifest_identity_fail_closed(tmp_path):
     args = fixture(tmp_path)
-    args.batch_size = 2
-    with pytest.raises(ValueError, match="batch-size 1"):
+    args.batch_size = 3
+    with pytest.raises(ValueError, match="batch-size 1, 2, 4 or 8"):
         runner.build_plan(args)
     args = fixture(tmp_path / "second")
     manifest = runner.read_json(args.data_root / "manifest.json")
