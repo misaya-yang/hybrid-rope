@@ -198,6 +198,17 @@ def tailspline():
     ax.tick_params(axis='y',labelsize=7.5);ax.set_title('(b) All task means',loc='left',fontsize=9)
     ax.legend(frameon=False,fontsize=7,loc='lower right');axis_style(ax)
     fig.subplots_adjust(left=.12,right=.985,bottom=.20,top=.86,wspace=.58)
+    finish(fig,'fig_tailspline_complete')
+    fig,ax=plt.subplots(figsize=(3.8,1.72))
+    for y,(value,interval,color) in enumerate(zip(points,intervals,['#387c66',BLUE,ORANGE])):
+        value*=100;lo,hi=np.array(interval)*100
+        ax.errorbar(value,y,xerr=[[value-lo],[hi-value]],fmt='o',color=color,capsize=3,ms=5)
+        ax.text(value,y+.17,f'{value:+.2f}',ha='center',va='top',fontsize=8,color=color)
+    ax.axvline(0,color=INK,lw=.7)
+    ax.set(yticks=[0,1,2],yticklabels=['8K (L)','16K (2L)','32K (4L)'],
+           ylim=(-.4,2.65),xlim=(-.5,14.5),xticks=[0,5,10],xlabel='Full-13 gain over MrPro (pp)')
+    ax.invert_yaxis();axis_style(ax)
+    fig.subplots_adjust(left=.22,right=.97,bottom=.30,top=.95)
     finish(fig,'fig_tailspline_main')
 
 
