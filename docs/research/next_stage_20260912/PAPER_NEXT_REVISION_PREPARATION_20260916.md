@@ -24,13 +24,43 @@
 |---|---|---|
 | 已入现稿 | Llama clean8/16/32K、OLMo clean16K及自然QA、clean T/C、NCP、学习支持 | [现稿索引](../../../paper-2027/index.md)、[当前主张表](../../../paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
 | 已完成，待下一版统一整合 | Qwen S4/128K En.QA、S8/256K单针；Llama S16 RULER/PPL/自然任务；抽样稳定性 | [Pro6000正式结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| 生成完成，配对结论待报告核对 | Qwen S4官方静态YaRN；本轮只读status为40条生成、5篇LM | [执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md) |
+| 已完成，待下一版统一整合 | Qwen S4官方静态YaRN quick三方法：NIAH T/P/Y为72.50/73.125/76.25%，PPL接近；T−Y区间跨零 | [配对报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_yarn.json) |
+| 已完成，远端正式报告已核对 | Llama与OLMo官方静态YaRN quick三方法，NIAH及PPL结果见下节 | 远端报告owner及核对范围见§2.1 |
 | 在执行，未计结果 | GLM S4/128K：当前脚本Full-13×5/臂、PPL5、En.QA | [GLM队列](../../../experiments/iclr2027_strong_evidence_20260915/run_glm4_9b_s4_128k_queue.sh) |
 | 用户已交给其他实验agent，完成状态待owner报告 | 另一组10/task RULER | 不根据口头启动推定模型、独立样本身份或已完成数量 |
 | 仅建议/准备 | NCP新来源确认、Llama clean32K YaRN、原生反事实机制 | 本文§4；不自动入队 |
 
 当前GLM脚本的5/task规格不同于此前讨论中的10/task建议，文档按实际合同记录，不改队列。
 已完成报告、输入预算与实际长度、单针与Full-13、官方F1与accuracy分别维护。
+
+### 2.1 新增三方法直接比较：Llama与OLMo
+
+2026-09-16读取PRO6000正式报告，并从报告中的40条配对评分及5篇文档NLL独立复算宏均值和差值；
+未重新评分原始生成文本。两份报告均为`COMPLETE`，合同为
+`official-static-yarn-zero-training-quick-three-method-v1`。
+远端owner在`root@connect.westd.seetacloud.com:51638`：
+`/root/autodl-tmp/today_rope_plan_20260914/official_yarn_quick/`下的
+`llama3_8b_s4_32k/report.json`与`olmo2_1b_s4_16k/report.json`。
+这批比较使用官方静态YaRN的零训练安装，不代表经过微调的YaRN模型。
+
+| 模型与长度 | NIAH-8×5：T / P / Y（%） | T−Y（pp），95%区间 | PPL-5：T / P / Y |
+|---|---|---|---|
+| Llama S4/32K | 85.00 / 75.00 / 75.00 | +10.00，[-0.625, 20.00] | 2.7698 / 2.7958 / 2.7889 |
+| OLMo S4/16K | 61.875 / 8.125 / 7.50 | +54.375，[43.125, 66.25] | 5.6616 / 8.3218 / 7.9126 |
+
+Llama的T−P NIAH为+10.00pp，区间[-0.625,20.625]；文档平均NLL的T−P/T−Y
+为−0.009362/−0.006891，两项文档bootstrap区间均低于零。
+OLMo的T−P NIAH为+53.75pp，区间[41.25,66.25]；文档平均NLL的T−P/T−Y
+为−0.385183/−0.334756，区间分别为[-0.447080,-0.349714]、[-0.382658,-0.303669]。
+PPL为同一5篇文档的token汇总指标，区间针对配对文档平均NLL差；不混用既有46篇结果。
+
+**改稿价值：** OLMo在直接三方法比较中同时提高检索准确性并降低语言建模损失；
+Llama两项指标方向一致，检索quick区间仍跨零。已有大样本T/P结果继续承担主证据，
+quick补充直接YaRN基线，不视为独立复现已复用的T/P样本，也不以NIAH替代Full-13或自然QA。
+这批结果强化配置设计的实际价值，不单独证明尾部平滑性是收益的唯一机制。
+
+后续按用户已确定的四模型计划完成GLM、三方法quick、Full-13与QA直接对照。
+以下NCP等建议是该队列之后的研究候选，不取代当前执行优先级；本记录不改变GPU队列。
 
 ## 3. 已确定的概念纠正
 

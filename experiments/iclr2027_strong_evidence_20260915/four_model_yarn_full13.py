@@ -603,8 +603,15 @@ def build_plan(plan: Path) -> dict:
 def execute(args: argparse.Namespace) -> dict:
     repo = Path(__file__).resolve().parents[2]
     root = args.plan / "official_yarn_full13"
+    requested = set(args.condition or ())
+    selected_conditions = [
+        condition for condition in conditions(args.plan)
+        if not requested or condition.name in requested
+    ]
+    if requested != {condition.name for condition in selected_conditions}:
+        raise ValueError(f"unknown or duplicate condition selection: {sorted(requested)}")
     frozen = {}
-    for condition in conditions(args.plan):
+    for condition in selected_conditions:
         if condition.name.startswith("qwen25_3b") and not condition.source_panel.is_file():
             condition = replace(
                 condition,
@@ -677,11 +684,17 @@ def execute(args: argparse.Namespace) -> dict:
             })
     complete = {
         "status": COMPLETE_STATUS,
-        "models": [item.model_id for item in conditions(args.plan)],
+        "models": [item.model_id for item in selected_conditions],
+        "condition_scope": [item.name for item in selected_conditions],
+        "all_four_models_complete": len(selected_conditions) == 4,
         "excluded_models": ["qwen25_1p5b"],
         "reports": report_paths,
     }
-    write_once_or_equal(root / "complete.json", complete)
+    receipt = (
+        root / "complete.json" if len(selected_conditions) == 4
+        else root / ("complete__" + "__".join(item.name for item in selected_conditions) + ".json")
+    )
+    write_once_or_equal(receipt, complete)
     return complete
 
 
@@ -701,6 +714,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--bootstrap-draws", type=int, default=20_000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260916)
+    parser.add_argument(
+        "--condition", action="append",
+        choices=(
+            "llama3_8b_s4_32k", "qwen25_3b_s4_128k",
+            "olmo2_1b_s4_16k", "glm4_9b_s4_128k",
+        ),
+        help="Run only selected conditions; omit for the complete four-model queue.",
+    )
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args(argv)
     if args.bootstrap_draws < 1:
