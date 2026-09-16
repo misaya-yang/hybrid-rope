@@ -1102,7 +1102,8 @@
         {
           "path": "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
           "availability": "tracked",
-          "sha256": "80cf166200ba51c6cb07eab4b17b98be704447a34e0d8657b6efe1db80150ed6"
+          "sha256": "5e6f611210edc46adef442930d2bc2a6eae10d0b5756d08c95187ab73b728caa",
+          "snapshot_note": "Appended separate small extreme-panel analysis and expansion priority; original results unchanged."
         }
       ]
     },

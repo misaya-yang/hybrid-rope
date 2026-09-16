@@ -126,3 +126,28 @@ embedded.
   separate. Cross-model aggregation is descriptive only.
 - Reports and manifests must not contain personal workstation paths. Repository
   artifacts use relative paths; remote raw evidence may use its stable server path.
+
+## Qwen response analysis
+
+[Task decomposition and same-scale geometry](../../docs/research/reviews/QWEN_ALLOCATION_RESPONSE_ANALYSIS_20260916.md)
+explain the current Qwen observations and distinguish measured behavior from
+mechanistic hypotheses. The portable CPU analysis is in `qwen_diagnosis/`.
+It does not change tables, launch GPU work, or alter the manuscript.
+
+## Fixed S16 confirmation blocks
+
+[`llama_s16_confirmation.py`](llama_s16_confirmation.py) prepares four independent
+Full13 × 10 blocks at Llama 8K→128K (S16). Default invocation only prints the plan;
+`--prepare` freezes CPU assets, while `--execute` is a separate GPU opt-in after
+the existing InfiniteBench and Qwen append queue. It does not modify that queue.
+QA source offsets are 5810/5820/5830/5840, disjoint from the gate's 5800–5809;
+each block has a distinct source-seed range. All four blocks are fixed before
+evaluation; no score-dependent stopping or candidate selection is implemented.
+The runner reuses the gate's installed tables and measured batch/chunk runtime,
+resumes individual arms, and does not rerun PPL or a preflight benchmark.
+
+The primary report is independent **confirm40** (520 rows/arm). A separate
+**gate10 + confirm40 cumulative50** summary includes the already-observed gate
+and must not be described as an independent 50/task confirmation. Each paired
+block is 260 generations; the approximate two-hour target is an estimate, not
+a timeout that discards slow rows. Existing gate PPL10 remains separate.

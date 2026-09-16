@@ -1,0 +1,197 @@
+\section{Explicit Constructions and Distance Scaling}
+\label{sec:compact-constructions}\label{sec:allocation-response}
+\subsection{TailSpline and the symmetric construction}\label{sec:tailspline-details}\label{sec:bm-construction}
+Let $D\epsilon=(\epsilon_{q+1}-\epsilon_q)_{q=1}^{n-1}$ and $H=D^\top D+e_ne_n^\top$. A zero value of $\epsilon^\top H\epsilon$ requires constant increments and a zero terminal increment, hence $\epsilon=0$. Thus $H$ is positive definite. For $n>1$, the proposed $\epsilon_q=c(n+q)(n-q+1)$, with $c=3/[n(n+1)(2n+1)]$, satisfies
+\[
+\epsilon_1-\epsilon_2=2c,\quad
+2\epsilon_q-\epsilon_{q-1}-\epsilon_{q+1}=2c,\quad
+2\epsilon_n-\epsilon_{n-1}=2c.
+\]
+Therefore $H\epsilon=2c\mathbf1$, the equality-constrained stationarity equation. The increments are positive and sum to one; summing them yields Eq.~\eqref{eq:tailspline}. The objective minimum is $2c=6/[n(n+1)(2n+1)]$. For $n=1$, the constraint gives $\epsilon_1=1$, agreeing with the formulas. Positivity makes additional nonnegativity constraints inactive.
+
+Adding $\epsilon_1^2$ yields the symmetric objective, with unique solution
+\begin{equation}
+\epsilon_q^{\rm BM}=\frac{6q(n-q+1)}{n(n+1)(n+2)},\qquad
+m_q^{\rm BM}=\frac{q(q+1)(3n+2-2q)}{n(n+1)(n+2)}.
+\label{eq:bm-formula}
+\end{equation}
+Both profiles are monotone with $m_0=0,m_n=1$. The portable CPU check independently solves the constrained tridiagonal system and verifies each closed form.
+
+\paragraph{What the objective smooths.}
+On the geometric native grid, Eq.~\eqref{eq:increment-log-gap} makes each change between neighboring log gaps equal to $(\epsilon_{q+1}-\epsilon_q)\log s$. The terminal change is $-\epsilon_n\log s$ because the fully interpolated tail has constant displacement. Thus $(\log s)^2$ times Eq.~\eqref{eq:tailspline-objective} is exactly the squared log-gap variation within the transition and at its low-frequency junction. The high-frequency junction is deliberately unpenalized.
+
+At the terminal gap,
+\[
+\epsilon_n^{\rm Pro}=\frac2{n+1},\quad
+\epsilon_n^{\rm TS}=\frac6{(n+1)(2n+1)},\quad
+\frac{\epsilon_n^{\rm TS}}{\epsilon_n^{\rm Pro}}=\frac3{2n+1}.
+\]
+The opposite entry behavior is also explicit: $\epsilon_1^{\rm Pro}=2/[n(n+1)]$, whereas $\epsilon_1^{\rm TS}=3/(2n+1)$. TailSpline trades a larger entry jump for a smaller terminal jump. A useful boundary prior need not minimize both. In the continuum limit, $m^{\rm TS}(u)=(3u-u^3)/2$ solves $\min\int_0^1(m''(u))^2du$ under $m(0)=0,m(1)=1,m'(1)=0$; the natural entry condition is $m''(0)=0$. The finite-grid formula is used in every model experiment, not this limiting polynomial.
+
+\subsection{An exact equal-displacement control}
+\label{sec:tailspline-dose-control}
+Use local indices $q=0,\ldots,n$. Write $T_q=m_q^{\rm TS}$, $B_q=m_q^{\rm BM}$, $U_q=q/n$, and $P_q=q(q+1)/[n(n+1)]$. Define the front-loaded profile $F_q=2U_q-P_q$ and the control
+\begin{equation}
+C_q=(1-w_n)U_q+w_nF_q,\qquad w_n=\frac{3n}{2(2n+1)}.
+\label{eq:tailspline-dose-control}
+\end{equation}
+Substitution of the finite-grid formulas gives $T=(1-w_n)B+w_nF$. Subtracting $C$ gives
+\begin{equation}
+m^{\rm TS}-m^C=(1-w_n)(m^{\rm BM}-m^{\rm Uni}).
+\label{eq:tailspline-shape-contrast}
+\end{equation}
+In local coordinates, the explicit difference is
+\begin{equation}
+T_q-C_q=(1-w_n)(B_q-U_q)=\frac{q(n-q)(2q-n)}{2n(n+1)(2n+1)}.
+\label{eq:tailspline-antisymmetric-contrast}
+\end{equation}
+This cumulative-profile difference is antisymmetric under $q\mapsto n-q$, vanishes at both endpoints, and sums to zero. Since $U$ and $F$ have positive increments and $0<w_n<1$, $C$ is monotone with $C_0=0,C_n=1$. Extending both $T$ and $C$ by the same constant outer bands gives identical endpoints and total log displacement at a common scale. Their equal increment centroids follow from Eq.~\eqref{eq:displacement-centroid}, rather than imposing a further constraint. For $n=1,2$, $B=U$ and $T=C$; for wider bands the contrast tests higher-order shape.
+
+The clean T--C results are in Appendix~\ref{sec:clean-shape-new}.
+The finite-sum identities are checked with exact rational arithmetic in the
+bundled allocation constructor.
+
+\subsection{Cosh density and finite installation}
+\label{sec:proofs}\label{sec:table-identities}
+Let $S_\rho(t)=\int_t^1\rho(\phi)d\phi$. For $\alpha>0$, $\beta\ge0$, the
+Cosh transport minimizes
+\begin{equation}
+\Capp[\rho]=\frac\alpha2\int_0^1\rho^2+
+\frac\beta2\int_0^1 S_\rho^2,\qquad \rho\ge0,\quad\int_0^1\rho=1.
+\label{eq:Capp}
+\end{equation}
+Coercivity and weak lower semicontinuity on the closed convex constraint set
+give existence; the first term makes the objective strictly convex. For
+$g(\phi)=\int_0^1\min(\phi,\psi)\rho(\psi)d\psi$, stationarity is
+$\alpha\rho+\beta g+\lambda=0$. Since $g''=-\rho$, $g'(1)=0$ and
+$g'(0)=1$, this gives $\rho''=\tau^2\rho$, $\rho'(0)=-\tau^2$ and
+$\rho'(1)=0$, where $\tau^2=\beta/\alpha$. Thus the unique solution is
+\begin{equation}
+\rho_\tau(\phi)=\frac{\tau\cosh[\tau(1-\phi)]}{\sinh\tau}.
+\label{eq:rho-tau-closed}
+\end{equation}
+It is positive and has unit mass, so it satisfies the inequality constraint.
+At $\beta=0$ the solution is uniform. Integrating and inverting its CDF yields
+Eq.~\eqref{eq:warp}. Equivalently, for $h=Q'$,
+$\Capp=\tfrac12\int_0^1[\alpha/h+\beta(1-u)^2h]du$.
+
+For midpoint quantiles $u_k=(k+1/2)/K$, anchored installation uses
+\begin{equation}
+z_k=\frac{Q_\tau(u_k)-Q_\tau(u_0)}{Q_\tau(u_{K-1})-Q_\tau(u_0)}
+\le\frac{k}{K-1},\qquad \omega_k=\exp(-a-Rz_k).
+\label{eq:anchored-cosh-order}
+\end{equation}
+The inequality follows from convexity of $Q_\tau$ and its endpoint chord.
+Unanchored midpoint installation instead uses $\omega_k=b^{-Q_\tau(u_k)}$.
+Its uniform limit is midpoint Geo; standard Geo uses $k/K$, differing by the
+common frequency factor $b^{-1/(2K)}$. Each experimental protocol below
+specifies its actual grid and support convention. Native denotes the inherited
+frequency table of a released model.
+\subsection{Scale response and finite phase changes}
+\label{sec:allocation-scale-response}
+Write $\nu_k(s)=\omega_k^N s^{-m_k(s)}$ and let
+$A_k(s)=\omega_k^N/\nu_k(s)$ be the wavelength multiplier.
+For the index ramp in the released YaRN implementation
+\citep{peng2024yarn}, with fixed interior coordinate $0<t<1$,
+\begin{equation}
+A_Y(s,t)=\frac{1}{1-t+t/s},\qquad
+\lim_{s\to\infty}A_Y(s,t)=\frac{1}{1-t}.
+\label{eq:yarn-interior-scale-limit}
+\end{equation}
+A fixed frequency blend $\gamma+(1-\gamma)/s$ similarly has limit
+$1/\gamma$ for $\gamma>0$; the fully interpolated tail $\gamma=0$ grows
+with $s$. MrPro and TailSpline instead have
+$A_P=s^{P_q}$ and $A_T=s^{T_q}$ for their fixed finite-grid exponents.
+Their log-scale derivatives are
+\begin{equation}
+\frac{\partial\log A_Y}{\partial\log s}
+=\frac{t}{s(1-t)+t},\qquad
+\frac{\partial\log A_P}{\partial\log s}=P_q,\qquad
+\frac{\partial\log A_T}{\partial\log s}=T_q.
+\label{eq:allocation-scale-derivatives}
+\end{equation}
+These identities follow by differentiation. They describe constructor
+responses to $s$, rather than task-performance guarantees.
+
+Index and turn-count ramps use different blend weights. All numerical
+comparisons here use one shared band and the index-ramp equation of the
+released YaRN implementation (revision \texttt{995db5b}).
+They are frequency-table comparisons, not a re-evaluation of the YaRN
+baseline runs in the MrRoPE paper.
+
+\paragraph{Magnitude of the TailSpline intervention.}
+Direct subtraction of the finite-grid formulas gives
+\begin{equation}
+T_q-P_q=\frac{q(n-q)(3n+q+1)}{n(n+1)(2n+1)}\ge0,
+\qquad \frac{A_T}{A_P}=s^{T_q-P_q}.
+\label{eq:tailspline-wavelength-order}
+\end{equation}
+For the Llama $n=17$ grid, the maximum wavelength ratio is
+$1.328763$, $1.765612$, $2.346080$ and $3.117385$ at $s=2,4,8,16$.
+At pair $k=26$ ($q=8$), the multipliers are:
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Scale & YaRN index blend & MrPro & TailSpline\\
+\midrule
+$4$ & $1.545455$ & $1.385674$ & $2.423868$\\
+$16$ & $1.789474$ & $1.920093$ & $5.875134$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The YaRN/MrPro ordering at an interior pair can therefore change with
+scale. TailSpline redistributes substantial wavelength growth throughout
+the transition, in addition to its smaller terminal extra-gap jump.
+
+\subsection{Two reference responses and finite phase intervals}
+\label{sec:allocation-reference-intervals}
+The native reference is $\omega$ and the fully interpolated reference is
+$\omega/s$. For a declared phase tolerance $0<\theta\le\pi$, define
+\begin{equation}
+D_N(\nu;\theta)=\frac{\theta}{|\omega-\nu|},\qquad
+D_D(\nu;\theta)=\frac{\theta}{|\nu-\omega/s|},
+\label{eq:allocation-reference-distances}
+\end{equation}
+with infinity at a zero denominator. These are the maximal intervals
+starting at zero on which the respective unwrapped phase deviation is at
+most $\theta$. Since $\omega/s\le\nu_T\le\nu_P\le\omega$,
+\begin{equation}
+D_D(\nu_T;\theta)\ge D_D(\nu_P;\theta),\qquad
+D_N(\nu_T;\theta)\le D_N(\nu_P;\theta).
+\label{eq:allocation-reference-order}
+\end{equation}
+The exact operator difference is
+$2|\sin(d(\nu-\nu_{\rm ref})/2)|$.
+Thus the distances quantify two specified phase references; they are not
+effective context lengths of a model.
+
+For a fixed content component
+$f_\nu(d)=a\cos(\nu d-\omega d_0)$, with $a>0$ and desired stretched
+distance $d=sd_0$, its residual phase is $\delta=d(\nu-\omega/s)$.
+If $0\le\delta_T\le\delta_P\le\pi$, then $f_T(d)\ge f_P(d)$ by the
+monotonicity of cosine on $[0,\pi]$. The content phase specifies the
+reference calculation. Outside that interval, reducing residual phase
+from $2\pi$ to $\pi$ instead changes the response from $a$ to $-a$.
+The conditional example explains a possible use of distance scaling,
+while the full-model comparisons measure its actual task value.
+
+\paragraph{Equal displacement does not imply a small phase intervention.}
+On the same Llama $s=4$ mathematical grid, the largest T/C unwrapped
+phase difference over integer distances $0,\ldots,32767$ is
+$10.672514$ radians. The corresponding T/P value is $108.197815$.
+For finite comparisons one can use
+\begin{equation}
+\rho_H(\delta)=\frac4H\sum_{d=0}^{H-1}\sin^2(d\delta/2)
+=2-2\frac{\sin(H\delta/2)}{H\sin(\delta/2)}
+\cos((H-1)\delta/2),
+\label{eq:allocation-finite-phase-cost}
+\end{equation}
+with removable singularities evaluated by continuity. The fixed-slot
+rotation RMS is $[K^{-1}\sum_k\rho_H(\nu_k-\widetilde\nu_k)]^{1/2}$.
+At $H=32768$, it is $0.448329$ for T/C and $0.687543$ for T/P.
+These values compare unscaled rotary kernels, before the shared
+cosine/sine gain and the attention normalization.
+For $H|\delta|\ll1$,
+$\rho_H(\delta)=((H-1)(2H-1)/6)\delta^2+O(H^4\delta^4)$.
+The small parameter is therefore distance times frequency difference;
+matching total displacement alone does not supply it.

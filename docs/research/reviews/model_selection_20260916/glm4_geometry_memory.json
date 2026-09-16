@@ -1,0 +1,41 @@
+{
+  "model_id": "zai-org/GLM-4-9B-0414",
+  "revision": "645b8482494e31b6b752272bf7f7f273ef0f3caf",
+  "source_url": "https://huggingface.co/zai-org/GLM-4-9B-0414/resolve/645b8482494e31b6b752272bf7f7f273ef0f3caf/config.json",
+  "model_execution": false,
+  "weights_downloaded": false,
+  "public_native_length": 32768,
+  "public_rope_base": 10000.0,
+  "head_dim": 128,
+  "rotary_dim": 64,
+  "rotary_pairs": 32,
+  "partial_rotary_factor": 0.5,
+  "canonical_band": [
+    17,
+    30
+  ],
+  "transition_width": 13,
+  "bf16_weights_gib": 17.509384155273438,
+  "bf16_kv_gib_batch1": {
+    "32768": 1.25,
+    "65536": 2.5,
+    "131072": 5.0,
+    "262144": 10.0
+  },
+  "cpu_constructions": {
+    "4": {
+      "target": 131072,
+      "gain": 1.138629436111989,
+      "max_TP_wavelength_ratio": 1.7452319656050361,
+      "same_support": true,
+      "no_model_evaluation": true
+    },
+    "8": {
+      "target": 262144,
+      "gain": 1.2079441541679836,
+      "max_TP_wavelength_ratio": 2.3055775696985363,
+      "same_support": true,
+      "no_model_evaluation": true
+    }
+  }
+}

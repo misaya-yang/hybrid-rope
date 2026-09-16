@@ -2354,6 +2354,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_BASE_ALLOCATION_PROMPT_20260916.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/WEB_PRO_FINITE_WINDOW_AUDIT_20260915.md",
       "area": "docs",
       "category": "document"
@@ -2444,12 +2449,22 @@
       "category": "document"
     },
     {
+      "path": "docs/research/reviews/NATIVE_LONG_CONTEXT_MODEL_SELECTION_20260916.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/reviews/PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md",
       "area": "docs",
       "category": "document"
     },
     {
       "path": "docs/research/reviews/PRO_AUDIT_DISPOSITION_20260914.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/reviews/QWEN_ALLOCATION_RESPONSE_ANALYSIS_20260916.md",
       "area": "docs",
       "category": "document"
     },
@@ -2462,6 +2477,16 @@
       "path": "docs/research/reviews/index.md",
       "area": "docs",
       "category": "navigation"
+    },
+    {
+      "path": "docs/research/reviews/model_selection_20260916/glm4_9b_0414_config.json",
+      "area": "docs",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "docs/research/reviews/model_selection_20260916/glm4_geometry_memory.json",
+      "area": "docs",
+      "category": "data-or-receipt"
     },
     {
       "path": "docs/research/rope_allocation_20260910/agents/astra01.md",
@@ -5044,7 +5069,17 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/analyze_ruler_sampling_stability.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/extreme_condition_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/llama_s16_confirmation.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5074,6 +5109,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_infinitebench_longbook_pool.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/prepare_natural_long.py",
       "area": "experiments",
       "category": "code"
@@ -5089,9 +5129,34 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_proofpile256_pool.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_qwen25_3b_256k_ppl5.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/pro6000_128k_preflight.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/analysis.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/analyze.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/qwen_diagnosis/inputs.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/README.md",
@@ -5195,6 +5260,21 @@
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_pro6000_followup_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_qwen25_3b_256k_after_infinite.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_qwen25_3b_256k_append_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_qwen25_3b_256k_ppl_niah.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -6035,6 +6115,11 @@
     },
     {
       "path": "experiments/native_enhancement_oral_20260915/run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/run_native_factorial.py",
       "area": "experiments",
       "category": "code"
     },
@@ -8459,6 +8544,36 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/appendix/compact_a_geometry.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/appendix/compact_b_constructions.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/appendix/compact_c_identification.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/appendix/compact_d_frozen.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/appendix/compact_e_native.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/appendix/compact_f_learning.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/build.mk",
       "area": "paper-2027",
       "category": "manuscript"
@@ -9482,6 +9597,11 @@
       "path": "paper-2027/research/UNUSED_ASSET_INVENTORY_20260914.md",
       "area": "paper-2027",
       "category": "document"
+    },
+    {
+      "path": "paper-2027/research/appendix_restructure_20260916/previous_69page_source.zip",
+      "area": "paper-2027",
+      "category": "manuscript"
     },
     {
       "path": "paper-2027/research/archive/2026-08/CODEX_CLAUDE_PAPER_REVIEW_LOG.md",
@@ -11305,6 +11425,11 @@
     },
     {
       "path": "paper-2027/tables/table_coadapt.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_compact_clean.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -14254,6 +14379,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_llama_s16_confirmation.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_log_p2_phase_transfer_lora.py",
       "area": "tests",
       "category": "code"
@@ -14315,6 +14445,11 @@
     },
     {
       "path": "tests/test_native_enhancement_evidence_review.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_enhancement_factorial.py",
       "area": "tests",
       "category": "code"
     },

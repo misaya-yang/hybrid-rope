@@ -1,0 +1,473 @@
+{
+  "conditions": {
+    "qwen25_3b_64k": {
+      "scale": 2.0,
+      "native_length": 32768,
+      "target": 65536,
+      "base": 1000000.0,
+      "band": [
+        23,
+        40
+      ],
+      "transition_width": 17,
+      "different_TP_slots": 16,
+      "fixed_high_pairs": 24,
+      "fully_scaled_low_pairs": 24,
+      "max_TP_log_ratio": 0.2842485134037891,
+      "max_TP_wavelength_ratio": 1.328763105166806,
+      "sum_m_difference": 4.609523624909782,
+      "max_target_TP_phase_gap": 32.34122708556242,
+      "native_phase_span_at_changed_edges": [
+        184.2623819578439,
+        7.2308059760543975
+      ],
+      "rows_NIAH": 40,
+      "T_wins": 5,
+      "P_wins": 2,
+      "score_ties": 33,
+      "same_output_text": 12,
+      "task_scores": {
+        "niah_multikey_1": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_multikey_2": {
+          "tailspline": 0.8,
+          "mrpro": 0.6
+        },
+        "niah_multikey_3": {
+          "tailspline": 0.2,
+          "mrpro": 0.0
+        },
+        "niah_multiquery": {
+          "tailspline": 1.0,
+          "mrpro": 0.9
+        },
+        "niah_multivalue": {
+          "tailspline": 0.9,
+          "mrpro": 0.95
+        },
+        "niah_single_1": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_single_2": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_single_3": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        }
+      },
+      "score_T": 0.8625,
+      "score_P": 0.80625,
+      "health": {
+        "tailspline": {
+          "empty": 0,
+          "ended_eos": 35,
+          "hit_cap": 5
+        },
+        "mrpro": {
+          "empty": 0,
+          "ended_eos": 33,
+          "hit_cap": 7
+        }
+      },
+      "per_task_contribution_pp": {
+        "niah_multikey_1": 0.0,
+        "niah_multikey_2": 2.500000000000001,
+        "niah_multikey_3": 2.5,
+        "niah_multiquery": 1.2499999999999998,
+        "niah_multivalue": -0.6249999999999991,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0
+      }
+    },
+    "qwen25_3b_128k": {
+      "scale": 4.0,
+      "native_length": 32768,
+      "target": 131072,
+      "base": 1000000.0,
+      "band": [
+        23,
+        40
+      ],
+      "transition_width": 17,
+      "different_TP_slots": 16,
+      "fixed_high_pairs": 24,
+      "fully_scaled_low_pairs": 24,
+      "max_TP_log_ratio": 0.5684971979174815,
+      "max_TP_wavelength_ratio": 1.7656116917661526,
+      "sum_m_difference": 4.609523900812663,
+      "max_target_TP_phase_gap": 117.15556979016401,
+      "native_phase_span_at_changed_edges": [
+        184.26238195784387,
+        7.230805976054397
+      ],
+      "rows_NIAH": 40,
+      "T_wins": 5,
+      "P_wins": 3,
+      "score_ties": 32,
+      "same_output_text": 5,
+      "task_scores": {
+        "niah_multikey_1": {
+          "tailspline": 0.8,
+          "mrpro": 1.0
+        },
+        "niah_multikey_2": {
+          "tailspline": 0.2,
+          "mrpro": 0.2
+        },
+        "niah_multikey_3": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multiquery": {
+          "tailspline": 1.0,
+          "mrpro": 0.9
+        },
+        "niah_multivalue": {
+          "tailspline": 0.8,
+          "mrpro": 0.75
+        },
+        "niah_single_1": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_single_2": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_single_3": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        }
+      },
+      "score_T": 0.725,
+      "score_P": 0.73125,
+      "health": {
+        "tailspline": {
+          "empty": 0,
+          "ended_eos": 27,
+          "hit_cap": 13
+        },
+        "mrpro": {
+          "empty": 0,
+          "ended_eos": 23,
+          "hit_cap": 17
+        }
+      },
+      "per_task_contribution_pp": {
+        "niah_multikey_1": -2.4999999999999996,
+        "niah_multikey_2": 0.0,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 1.2499999999999998,
+        "niah_multivalue": 0.6250000000000006,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0
+      }
+    },
+    "qwen25_1p5b_128k": {
+      "scale": 4.0,
+      "native_length": 32768,
+      "target": 131072,
+      "base": 1000000.0,
+      "band": [
+        23,
+        40
+      ],
+      "transition_width": 17,
+      "different_TP_slots": 16,
+      "fixed_high_pairs": 24,
+      "fully_scaled_low_pairs": 24,
+      "max_TP_log_ratio": 0.5684971979174815,
+      "max_TP_wavelength_ratio": 1.7656116917661526,
+      "sum_m_difference": 4.609523900812663,
+      "max_target_TP_phase_gap": 117.15556979016401,
+      "native_phase_span_at_changed_edges": [
+        184.26238195784387,
+        7.230805976054397
+      ],
+      "rows_NIAH": 40,
+      "T_wins": 3,
+      "P_wins": 1,
+      "score_ties": 36,
+      "same_output_text": 21,
+      "task_scores": {
+        "niah_multikey_1": {
+          "tailspline": 1.0,
+          "mrpro": 0.8
+        },
+        "niah_multikey_2": {
+          "tailspline": 0.6,
+          "mrpro": 0.6
+        },
+        "niah_multikey_3": {
+          "tailspline": 0.2,
+          "mrpro": 0.0
+        },
+        "niah_multiquery": {
+          "tailspline": 0.95,
+          "mrpro": 0.9
+        },
+        "niah_multivalue": {
+          "tailspline": 0.75,
+          "mrpro": 0.85
+        },
+        "niah_single_1": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_single_2": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        },
+        "niah_single_3": {
+          "tailspline": 1.0,
+          "mrpro": 1.0
+        }
+      },
+      "score_T": 0.8125,
+      "score_P": 0.76875,
+      "health": {
+        "tailspline": {
+          "empty": 0,
+          "ended_eos": 38,
+          "hit_cap": 2
+        },
+        "mrpro": {
+          "empty": 0,
+          "ended_eos": 39,
+          "hit_cap": 1
+        }
+      },
+      "per_task_contribution_pp": {
+        "niah_multikey_1": 2.4999999999999996,
+        "niah_multikey_2": 0.0,
+        "niah_multikey_3": 2.5,
+        "niah_multiquery": 0.6249999999999991,
+        "niah_multivalue": -1.2499999999999998,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0
+      }
+    },
+    "olmo2_1b_64k": {
+      "scale": 16.0,
+      "native_length": 4096,
+      "target": 65536,
+      "base": 500000.0,
+      "band": [
+        14,
+        32
+      ],
+      "transition_width": 18,
+      "different_TP_slots": 17,
+      "fixed_high_pairs": 15,
+      "fully_scaled_low_pairs": 32,
+      "max_TP_log_ratio": 1.1393599804822945,
+      "max_TP_wavelength_ratio": 3.1247678126697105,
+      "sum_m_difference": 4.9009008838540655,
+      "max_target_TP_phase_gap": 793.3309121243656,
+      "native_phase_span_at_changed_edges": [
+        189.04178760945797,
+        7.109111426398158
+      ],
+      "rows_NIAH": 40,
+      "T_wins": 0,
+      "P_wins": 0,
+      "score_ties": 40,
+      "same_output_text": 0,
+      "task_scores": {
+        "niah_multikey_1": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multikey_2": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multikey_3": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multiquery": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multivalue": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_single_1": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_single_2": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_single_3": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        }
+      },
+      "score_T": 0.0,
+      "score_P": 0.0,
+      "health": {
+        "tailspline": {
+          "empty": 0,
+          "ended_eos": 4,
+          "hit_cap": 36
+        },
+        "mrpro": {
+          "empty": 0,
+          "ended_eos": 17,
+          "hit_cap": 23
+        }
+      },
+      "per_task_contribution_pp": {
+        "niah_multikey_1": 0.0,
+        "niah_multikey_2": 0.0,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 0.0,
+        "niah_multivalue": 0.0,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0
+      }
+    },
+    "llama3_8b_128k": {
+      "scale": 16.0,
+      "native_length": 8192,
+      "target": 131072,
+      "base": 500000.0,
+      "band": [
+        18,
+        35
+      ],
+      "transition_width": 17,
+      "different_TP_slots": 16,
+      "fixed_high_pairs": 19,
+      "fully_scaled_low_pairs": 29,
+      "max_TP_log_ratio": 1.1369943394092814,
+      "max_TP_wavelength_ratio": 3.117384470200787,
+      "sum_m_difference": 4.609523874528021,
+      "max_target_TP_phase_gap": 713.864365617279,
+      "native_phase_span_at_changed_edges": [
+        166.51569689624012,
+        7.6870393169811
+      ],
+      "rows_NIAH": 80,
+      "T_wins": 31,
+      "P_wins": 0,
+      "score_ties": 49,
+      "same_output_text": 0,
+      "task_scores": {
+        "niah_multikey_1": {
+          "tailspline": 0.3,
+          "mrpro": 0.0
+        },
+        "niah_multikey_2": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multikey_3": {
+          "tailspline": 0.0,
+          "mrpro": 0.0
+        },
+        "niah_multiquery": {
+          "tailspline": 0.225,
+          "mrpro": 0.0
+        },
+        "niah_multivalue": {
+          "tailspline": 0.375,
+          "mrpro": 0.0
+        },
+        "niah_single_1": {
+          "tailspline": 0.7,
+          "mrpro": 0.0
+        },
+        "niah_single_2": {
+          "tailspline": 0.7,
+          "mrpro": 0.0
+        },
+        "niah_single_3": {
+          "tailspline": 0.1,
+          "mrpro": 0.0
+        }
+      },
+      "score_T": 0.3,
+      "score_P": 0.0,
+      "health": {
+        "tailspline": {
+          "empty": 0,
+          "ended_eos": 72,
+          "hit_cap": 8
+        },
+        "mrpro": {
+          "empty": 0,
+          "ended_eos": 59,
+          "hit_cap": 21
+        }
+      },
+      "per_task_contribution_pp": {
+        "niah_multikey_1": 3.75,
+        "niah_multikey_2": 0.0,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 2.8125,
+        "niah_multivalue": 4.6875,
+        "niah_single_1": 8.75,
+        "niah_single_2": 8.75,
+        "niah_single_3": 1.25
+      }
+    }
+  },
+  "comparison_notes": [],
+  "same_scale_geometry": {
+    "llama": {
+      "band": [
+        18,
+        35
+      ],
+      "S4_max_wavelength_ratio": 1.7656116661049952,
+      "S4_max_target_phase_difference": 108.20111744343734,
+      "S4_sum_m_difference": 4.609523809523809
+    },
+    "olmo": {
+      "band": [
+        14,
+        32
+      ],
+      "S4_max_wavelength_ratio": 1.767701290611035,
+      "S4_max_target_phase_difference": 118.89473275792102,
+      "S4_sum_m_difference": 4.9009009009009015
+    },
+    "qwen3b": {
+      "band": [
+        23,
+        40
+      ],
+      "S4_max_wavelength_ratio": 1.7656116661049954,
+      "S4_max_target_phase_difference": 117.15646792886093,
+      "S4_sum_m_difference": 4.609523809523809
+    },
+    "qwen1p5b": {
+      "band": [
+        23,
+        40
+      ],
+      "S4_max_wavelength_ratio": 1.7656116661049954,
+      "S4_max_target_phase_difference": 117.15646792886093,
+      "S4_sum_m_difference": 4.609523809523809
+    }
+  },
+  "qwen_s4_same_installed_tables": {
+    "tailspline": true,
+    "mrpro": true
+  },
+  "qwen3b_s4_one_binary_row_weight_pp": 2.5
+}

@@ -37,24 +37,30 @@ def main() -> None:
     parser.add_argument("--scale", type=int, required=True)
     parser.add_argument("--rows-per-task", type=int, default=5)
     parser.add_argument("--ppl-documents", type=int, default=5)
+    parser.add_argument("--task", action="append", choices=TASKS,
+                        help="report only this prepared NIAH task; repeat as needed")
+    parser.add_argument("--ppl-dataset-label")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.target != args.native * args.scale:
         raise ValueError("target/native is not the declared scale")
+    selected_tasks = tuple(args.task or TASKS)
+    if len(selected_tasks) != len(set(selected_tasks)) or "niah_single_1" not in selected_tasks:
+        raise ValueError("reported tasks must be unique and include niah_single_1 passkey")
 
     runs = {}
     contracts = {}
     for arm in ARMS:
         run = args.root / f"runs/{arm}"
         status = json.loads((run / "status.json").read_text())
-        expected_rows = len(TASKS) * args.rows_per_task
+        expected_rows = len(selected_tasks) * args.rows_per_task
         if status != {"status": "COMPLETE", "rows": expected_rows, "lm_rows": args.ppl_documents}:
             raise ValueError(f"incomplete {arm} run: {status}")
         generations = read_jsonl(run / "generations.jsonl")
         lm = read_jsonl(run / "lm_rows.jsonl")
         if len(generations) != expected_rows or len(lm) != args.ppl_documents:
             raise ValueError(f"raw row count drift: {arm}")
-        if {row["task"] for row in generations} != set(TASKS):
+        if {row["task"] for row in generations} != set(selected_tasks):
             raise ValueError(f"NIAH task coverage drift: {arm}")
         if any(int(row["length_cap"]) != args.target for row in generations):
             raise ValueError(f"generation length drift: {arm}")
@@ -100,11 +106,13 @@ def main() -> None:
         task_scores["mrpro"][task].append(b)
         paired_by_task[task].append(a - b)
     summaries = {}
+    macro_key = "niah8_task_macro" if len(selected_tasks) == 8 else "niah_task_macro"
     for arm in ARMS:
-        by_task = {task: float(np.mean(task_scores[arm][task])) for task in TASKS}
+        by_task = {task: float(np.mean(task_scores[arm][task])) for task in selected_tasks}
         summaries[arm] = {
             "passkey_niah_single_1": by_task["niah_single_1"],
-            "niah8_task_macro": float(np.mean(list(by_task.values()))),
+            macro_key: float(np.mean(list(by_task.values()))),
+            "niah_task_count": len(selected_tasks),
             "by_task": by_task,
         }
     rng = np.random.default_rng(20260915)
@@ -112,7 +120,7 @@ def main() -> None:
     passkey = np.empty(10000, dtype=np.float64)
     for draw in range(len(draws)):
         task_means = []
-        for task in TASKS:
+        for task in selected_tasks:
             values = np.asarray(paired_by_task[task], dtype=np.float64)
             task_means.append(float(np.mean(rng.choice(values, len(values), replace=True))))
         draws[draw] = float(np.mean(task_means))
@@ -142,17 +150,18 @@ def main() -> None:
                      "target_length": args.target, "scale": args.scale,
                      "target_over_native": args.target / args.native},
         "rows_per_task_per_arm": args.rows_per_task,
-        "tasks": list(TASKS),
+        "tasks": list(selected_tasks),
         "generation": {
             "arms": summaries,
             "delta_tailspline_minus_mrpro": {
                 "passkey_niah_single_1": summaries["tailspline"]["passkey_niah_single_1"] - summaries["mrpro"]["passkey_niah_single_1"],
                 "passkey_ci95": interval(passkey),
-                "niah8_task_macro": summaries["tailspline"]["niah8_task_macro"] - summaries["mrpro"]["niah8_task_macro"],
-                "niah8_task_macro_ci95": interval(draws),
+                macro_key: summaries["tailspline"][macro_key] - summaries["mrpro"][macro_key],
+                f"{macro_key}_ci95": interval(draws),
             },
         },
         "ppl": {
+            "dataset": args.ppl_dataset_label,
             "arms": ppl,
             "delta_nll_tailspline_minus_mrpro": ppl["tailspline"]["whole_nll"] - ppl["mrpro"]["whole_nll"],
             "delta_nll_ci95": interval(ppl_draws),

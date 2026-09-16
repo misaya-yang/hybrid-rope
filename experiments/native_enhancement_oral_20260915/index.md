@@ -21,6 +21,7 @@ NCP和reference_predictions保留为候选/参考模型资产，不再默认决�
 
 - [既有报告与27个方法的raw复算](evidence_review.py)：配对真实prompt身份，保留不完整开发面板。
 - [旧原生正结果的缺失gain对照准备](prepare_native_factorial.py)：Qwen1.5B两新臂，各108条；不构造新频率曲线。
+- [两格短追加与四格配对报告](run_native_factorial.py)：默认只输出计划；显式`--execute`才执行216次新生成，复用旧两格并共同bootstrap，分别报告36/72条历史块。它不接入或改变当前GPU队列；历史未记录的runtime版本在报告中保留为缺失，不能据此宣称已完成严格同环境资格。
 - [本轮实际证据回执](reports/existing_evidence_review.json)。
 
 | 需要做的事 | 入口 |

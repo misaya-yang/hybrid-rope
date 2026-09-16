@@ -44,7 +44,13 @@ run_condition() {
     --root "${root}" --model "${model}" --model-id "${model_id}" \
     --target "${target}" --scale "${scale}" --rows-per-task 5 --ppl-documents 5 \
     >"${root}/logs/validate_gpu_entry.log" 2>&1
-  if [[ "${target}" -eq 131072 ]]; then chunks=0,65536,32768; else chunks=0,32768,16384; fi
+  if [[ "${target}" -ge 262144 ]]; then
+    chunks=0,131072,65536
+  elif [[ "${target}" -eq 131072 ]]; then
+    chunks=0,65536,32768
+  else
+    chunks=0,32768,16384
+  fi
   runtime=${root}/runtime/prefill_${target}_${gpu_uuid}.json
   mkdir -p "${root}/runtime" "${root}/runs" "${root}/reports"
   if [[ ! -f "${runtime}" ]]; then

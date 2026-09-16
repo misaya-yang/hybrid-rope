@@ -1,0 +1,177 @@
+\section{Controlled Allocation Experiments}
+\label{sec:identification-details}
+\subsection{Intervention identities}
+With the native fast endpoint fixed and its slow endpoint divided by $s$,
+$z'_k=(Rz_k+\log s\,m_k)/(R+\log s)$. Fixing the cumulative increment mass
+$\sum_q\epsilon_q=1$ fixes the added log span; fixing total displacement
+$D=\log s\sum_km_k$ further constrains the interior allocation. In particular,
+\begin{equation}
+\sum_{q=1}^n q\epsilon_q=n-\sum_{q=1}^{n-1}m_q,
+\qquad D=Ka'+R'\sum_kz'_k-\sum_kx_k^N.
+\label{eq:displacement-centroid}
+\end{equation}
+Thus equal total displacement already fixes the increment centroid. A
+frequency-multiset permutation instead keeps the spectrum and changes its
+coordinate assignment. Gain is controlled separately in every matched comparison.
+
+\subsection{Fixed-support training and range interaction}
+\label{sec:exact-range-control}
+The paired $151{,}898{,}880$-parameter decoder has $12$ layers, width $768$,
+$12$ heads of dimension $64$, MLP width $3072$ and vocabulary $50304$.
+Within each seed ($42,137,256$), Geo and anchored Cosh share initialization,
+token order, optimizer, batch and training length $256$. Each arm sees
+$499{,}974{,}144$ tokens in $7629$ updates of $256$ sequences. Seed $42$
+uses microbatch $64$ with accumulation $4$; the other seeds use $128\times2$.
+Fused AdamW uses $(\beta_1,\beta_2)=(0.9,0.95)$, weight decay $0.01$,
+clipping $1$, peak/minimum LR $6\times10^{-4}/6\times10^{-5}$ and $762$
+warmup steps followed by cosine decay.
+
+FineWeb-Edu training and validation use disjoint unshuffled shards
+\texttt{sample/10BT/000\_00000.parquet} and
+\texttt{sample/10BT/004\_00000.parquet}, revision \texttt{87f09149ef47},
+with GPT-NeoX-20B tokenizer revision \texttt{c292233c833e}
+\citep{penedo2024fineweb,black2022gptneox}. Geo uses $b=256$ and
+$\omega_k=\exp[-Rk/(K-1)]$, $R=(K-1)\log256/K$, $K=32$.
+Cosh uses anchored midpoint quantiles with $\tau=4$ and exactly the same
+endpoints. Only the $30$ interior coordinates differ.
+
+Evaluation scores the final $128$ target tokens at $32$ fixed validation
+anchors. Seed $20260723$ selects one end position from each of $32$
+equal-width stream bins with a $2048$-token guard; the longest windows are
+disjoint. At anchor $e$, length $H$ uses tokens $[e-H,e)$ and scores
+$[e-128,e)$. The retained-range condition keeps $R$ fixed; the target-matched
+condition uses $R(H)=(K-1)\log H/K$ while retaining each trained weight set
+and normalized $z$. Both use unit gain. Training seed is the replication unit.
+\begin{table}[ht]
+\caption{Exact-range anchored \evq{} minus the matched geometric control tail-NLL contrasts.
+Mean$\pm$SD is across three independent training seeds.}
+\label{tab:exact-range-3seed}
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}r rrr c rrr c@{}}
+\toprule
+& \multicolumn{4}{c}{Fixed training range}
+& \multicolumn{4}{c}{Target-matched range} \\
+Length & Seed 42 & Seed 137 & Seed 256 & Mean$\pm$SD
+       & Seed 42 & Seed 137 & Seed 256 & Mean$\pm$SD \\
+\midrule
+$256$  & $+0.033$ & $+0.029$ & $+0.017$ & $+0.026\pm0.008$
+       & $+0.033$ & $+0.029$ & $+0.017$ & $+0.026\pm0.008$ \\
+$512$  & $-0.478$ & $-0.271$ & $-0.094$ & $-0.281\pm0.192$
+       & $+0.061$ & $+0.053$ & $+0.067$ & $+0.060\pm0.007$ \\
+$1{,}024$ & $-0.205$ & $-0.191$ & $-0.132$ & $-0.176\pm0.039$
+       & $+0.182$ & $+0.156$ & $+0.344$ & $+0.227\pm0.102$ \\
+$2{,}048$ & $-0.113$ & $-0.181$ & $-0.143$ & $-0.146\pm0.034$
+       & $+0.279$ & $+0.399$ & $+0.701$ & $+0.460\pm0.218$ \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{Crossed weights and runtime tables}
+\label{sec:crossing-151m}
+For seeds $137,256$, each Geo- or Cosh-trained checkpoint installs a factor-four
+table derived from either training allocation. The derivation uses
+$L_0=256$, $\Delta_j=2j$ for $j=0,\ldots,127$, and grouped causal weights
+$p_j=(2L_0-4j-1)/(L_0(L_0+1)/2)$. Let $X_k$ contain the weighted sine/cosine
+pair and $X_{-k}$ the other pairs. Define
+\[
+U_k=\frac{\|X_k-X_{-k}X_{-k}^{\dagger}X_k\|_F^2}{\|X_k\|_F^2},\quad
+\bar U_k=\frac{U_k-\min_iU_i}{\max_iU_i-\min_iU_i},\quad
+\omega'_k=\omega_k[1-3(1-\bar U_k)^2/4].
+\]
+The pseudoinverse cutoff is $10^{-10}$; zero normalization span gives
+$\bar U_k=0$. Tables are FP32 with endpoints overwritten to $\omega_0$ and
+$\omega_{K-1}/4$, and gain $1+0.1\ln4$. Evaluation uses the same anchors and
+tail-NLL metric at $512/1024$ tokens. The $1024$-token mean crossing is:
+\begin{table}[ht]
+\caption{Two-training-seed mean tail NLL at $1{,}024$ tokens for the
+$151.9$M weights-by-table crossing (lower is better). Each row freezes one
+trained weight set; each column installs one separately derived runtime table.}
+\label{tab:crossing-151m}
+\centering
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Frozen weights & Geo-derived table & Anchored-\evq{}-derived table \\
+\midrule
+Geo-trained & \textbf{3.426} & 5.776 \\
+Anchored-\evq{}-trained & 4.455 & \textbf{3.479} \\
+\bottomrule
+\end{tabular}
+\end{table}
+Both seeds favor the table derived from their training allocation. The
+seed-specific interaction contrasts are $3.400/3.251$ NLL at $1024$ tokens
+and $2.663/2.564$ at $512$.
+
+\subsection{Multiple shapes at fixed support}
+\label{sec:exact-range-factorial}
+The $50.9$M decoder has $6$ layers, width $512$, MLP width $2048$ and
+vocabulary $50304$. The $12$ configurations cross bases $500$K/$1$M,
+training lengths $256/1024$ and $4/8/16$ heads (head dimensions $128/64/32$).
+Each of three seeds $42/137/256$ trains each arm for $8{,}388{,}608$ tokens,
+$128$ updates, on a shared repeated WikiText-2 raw stream with a $1\%$
+supervised passkey mix. Execution is float32 on MPS. The preassigned arms are
+Geo, anchored Cosh at $0.75/1/1.25$ times $d_{\rm head}/\sqrt L$, and an
+exponential $z_\gamma(t)=(e^{\gamma t}-1)/(e^\gamma-1)$ whose RMS node
+movement matches reference Cosh without task fitting. Every arm shares
+sampled endpoints. The OOD mean weights ratios $r\in\{2,4,8\}$ by
+$\log_2(r+1)$; the bootstrap unit is configuration after averaging paired seeds.
+\input{tables/table_m4}
+
+\paragraph{Standard-grid replication.}\label{sec:native-grid-control}
+A separate short-training study uses the $151.9$M architecture, $b=500000$,
+head dimension $64$, length $128$ and $14{,}974{,}976$ tokens. Standard-grid
+RoPE and span-matched native-grid Cosh are evaluated on $32$ test anchors
+separate from $16$ selection anchors. Three-seed mean tail NLL for Native/Cosh
+is $5.5046/5.4645$ at $128$, $5.6563/5.5434$ at $512$,
+$5.8456/5.6966$ at $1$K and $6.3928/6.2935$ at $8$K. All three seeds
+favor Cosh at $512/1$K/$2$K/$4$K/$8$K; complete recorded curves are in the
+bundled numerical inputs. This protocol is separate from the longer
+fixed-support training comparison.
+
+\subsection{Frozen fixed-support and equal-displacement interventions}
+\label{sec:frozen-fixed-support}\label{sec:four-method-control}
+Frozen OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B use $64$ pairs, their native fast
+endpoint and the native slow endpoint divided by four. Matched-support arms
+share gain $1+0.1\ln4$, inputs, greedy decoder and precision. Uniform $z$
+is log-linear between these endpoints. The derived arm computes residual
+fractions $U_k$ as above over native integer separations weighted by $L-d$,
+grouped in pairs at rounded weighted centroids, then uses
+$\omega'_k=\omega_k[1-3(1-\bar U_k)^2/4]$ and exact endpoint overwrite.
+The coarse arm enumerates integer linear-ramp bounds, minimizing MSE to
+$(1-\bar U_k)^2$ with lexicographic tie-breaking: bounds are $(20,22)$ for
+OLMo and $(28,31)$ for Qwen. These are geometric, label-free controls.
+
+On OLMo's nine held-out tasks ($20$/task, $16$K), uniform/coarse/derived
+score $0.56/61.04/60.47\%$; Qwen's four development tasks ($20$/task,
+$64$K) score $57.75/64.00/66.50\%$. The sampled support is identical
+within each three-arm block.
+A separate OLMo six-task follow-up uses $24/48$ inputs at $4/16$K,
+$s=4$, band $[14,32]$ and gain $1+0.1\ln4$:
+\begin{center}\small
+\begin{tabular}{@{}lrrrr@{}}\toprule
+ & MrPro & Official YaRN & MrUni & BM\\\midrule
+$4$K &37.85&54.38&76.88&81.81\\
+$16$K &2.78&6.94&32.12&51.32\\\bottomrule
+\end{tabular}
+\end{center}
+BM and Uni have the same interior sum $(n-1)/2$ and full-table sum $40.5$;
+Pro's full-table sum is $37\tfrac23$. Thus BM--Uni identifies a shape
+contrast at equal total displacement. The newer clean T--C comparison is
+reported separately in Appendix~\ref{sec:clean-shape-new}.
+
+\subsection{Spectrum-preserving coordinate reassignment}
+\label{sec:slot-protocol}
+A block permutation obeys
+$\mathcal R_{\pi\Omega}(d)=P\mathcal R_\Omega(d)P^\top$, so jointly
+permuting Q/K and frequencies preserves the bilinear kernel exactly.
+With weights fixed, permuting only interior frequency assignments changes
+model performance. The historical OLMo log-law table uses $L_0=4096$,
+$b=500000$, $K=64$, $s=4$, gain $1+0.074\ln4$, and fixes slots $0,63$.
+Its $20$-document PG-19 tail NLL changes from $3.10423$ to $6.86493$.
+Qwen-$2.5$-$1.5$B recomputes the same profile at $L_0=32768$, $b=10^6$;
+on $20$ inputs per task at $64$K (single-key, multikey-2, multikey-3,
+tracking), macro changes from $70$ to $0\%$. These fixed-spectrum
+interventions isolate coordinate assignment; their table is distinct from
+TailSpline. Source identities remain in the numerical supplement.
