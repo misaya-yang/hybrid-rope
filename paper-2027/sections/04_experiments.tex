@@ -1,106 +1,120 @@
-\section{Model Quality Within the Target Window}
+\section{Model Quality Within and Beyond the Native Window}
 \label{sec:experiments}\label{sec:exp-mature}
-The main task evaluation measures quality within the intended window under
-one static TailSpline table. Supporting Cosh experiments examine another
-way to transport frequencies for extrapolation. Table~\ref{tab:protocol-main}
-summarizes the distinct interventions.
-\begin{table}[ht]
-\centering\small
-\caption{\textbf{Controls and operating settings.} The paired training interventions identify allocation; subsequent evaluations test the two constructions in use. Fixed support means actual sampled endpoints.}
-\label{tab:protocol-main}
-\begin{tabular}{@{}p{.28\linewidth}p{.19\linewidth}p{.19\linewidth}p{.25\linewidth}@{}}
-\toprule
-Protocol & Weight updates & Support fixed? & Main question \\
-\midrule
-$151.9$M, three seeds & Paired training & Yes & Interior allocation \\
-$432$M MLA, three seeds & $500$M tokens & No (midpoints) & Learning utility \\
-TailSpline--MrPro & None & Yes, extended & Frozen deployment \\
-TailSpline--C (E1) & None & Yes; dose too & Shape diagnostic \\
-Frequency-slot swap & None & Same multiset & Learned assignment \\
-Native comparison & None & Different tables & Original-window cost \\
-\bottomrule
-\end{tabular}
-\end{table}
+We evaluate one static TailSpline table across context lengths, test internal
+shape with an equal-displacement control, and examine in-window allocation with
+NCP. Supporting Cosh experiments study allocation during learning.
+The protocol glossary in Table~\ref{tab:protocol-glossary} distinguishes
+these interventions.
 
-\subsection{Long-context gains from a frozen TailSpline table}
+\subsection{Task quality with a frozen TailSpline table}
 \label{sec:tailspline-evaluation}
-Frozen Llama-$3$-$8$B-Instruct uses $s=4$, native window $8192$, band $[18,35]$
-and gain $1+0.1\ln4$. TailSpline and MrPro share weights, outer frequencies,
-endpoints, gain, inputs and decoder; their interior allocation and resulting
-total displacement differ. Each arm installs one static table before prefill. This evaluates quality
-within a fixed target range. MrRoPE's published Llama comparison uses $s=16$
-($8$K to $128$K), while its Qwen comparison uses $s=4$
-($32$K to $128$K) \citep{tian2026mrrope}; our paired Llama comparison uses $s=4$.
-
-\paragraph{Clean RULER-200 at $32$K.}
-The confirmation panel uses $200$ source-order inputs per RULER task
-($2{,}600$ paired prompts), without depth selection or content padding.
-Actual lengths are $28{,}270$--$32{,}606$ tokens; both arms use unpadded batch $1$
-and the same official scorer. TailSpline scores $68.27\%$ versus $56.54\%$,
-a task-equal difference of $+11.72$ points (paired $95\%$ interval
-$[10.32,13.11]$). It wins $12$ of $13$ task means. Retrieval, tracking,
-aggregation and QA all have positive family contrasts; leave-one-task-out
-differences remain positive (Appendix~\ref{sec:clean-confirmation}).
-The primary endpoint is the task-equal score at $32$K.
-
-\paragraph{Quality at the intermediate length.}
-The completed clean $16$K panel uses $50$ inputs per task ($650$ pairs).
-TailSpline scores $86.09\%$ versus $82.71\%$, a $+3.39$-point Full-13 gain
-with interval $[1.53,5.34]$. Retrieval improves by $4.50$ points; the RULER
-QA family scores $68/60\%$, a $+8$-point gain with interval $[1,15]$.
-Together with the $+9$-point QA gain at $32$K, these comparisons show task
-benefits at both tested extended lengths (Table~\ref{tab:clean-length-main}).
-The complete task breakdown is in Appendix~\ref{sec:clean16k-confirmation}.
+Llama-$3$-$8$B-Instruct uses $s=4$, native length $8192$, band $[18,35]$
+and gain $1+0.1\ln4$. OLMo-$2$-$1$B-Instruct uses native length $4096$
+and band $[14,32]$ with the same scale and gain rule. T/P denote TailSpline
+and MrRoPE-Pro. Each pair shares weights, outer frequencies, endpoints, gain,
+inputs and decoder; only its internal allocation changes. Clean RULER
+\citep{hsieh2024ruler} uses source-order inputs, no content padding or depth
+selection, batch $1$ and the official scorer. Table~\ref{tab:clean-length-main}
+reports scores and paired $95\%$ intervals.
 \input{tables/table_clean_length_main}
 
-
+\paragraph{Quality across the window.}
+The Llama $32$K panel contains $2{,}600$ paired prompts, with actual lengths
+$28{,}270$--$32{,}606$ tokens. Its $+11.72$-point gain spans all four task
+families; $12$ of $13$ task means improve. The $16$K panel adds $650$ pairs
+and a $+3.39$-point gain. RULER QA improves by $8$ and $9$ points at
+$16$K and $32$K, respectively. The same table serves native-length inputs:
+on $650$ clean $8$K prompts, it scores $85.16\%$, with a slight reduction
+from original RoPE's $90.03\%$. Full native and extended task breakdowns
+are in Appendices~\ref{sec:clean-confirmation},~\ref{sec:clean16k-confirmation}
+and~\ref{sec:clean-native-new}.
 
 \begin{figure}[ht]
 \centering\includegraphics[width=\linewidth]{fig_tailspline_main.pdf}
-\caption{\textbf{TailSpline improves task quality at both $2L$ and $4L$.} Clean source-order RULER with one static $s=4$ table. (a) Full-13 task-equal gains and paired $95\%$ intervals. (b) All task differences at each length; $16$K uses $50$ inputs per task and $32$K uses $200$. MK, MQ, MV and S denote multikey, multiquery, multivalue and single-key retrieval.}
+\caption{\textbf{One static allocation improves quality across context lengths.}
+Clean Llama Full-13 T--P differences. (a) Task-equal scores with paired $95\%$
+intervals at $L$, $2L$ and $4L$. (b) All task differences at each length.
+The $8/16$K panels use $50$ inputs per task and $32$K uses $200$.}
 \label{fig:tailspline-main}
 \end{figure}
 
+\paragraph{Cross-model confirmation.}
+OLMo's clean $16$K panel contains $2{,}600$ pairs and improves by $41.42$
+points, with positive differences on all $13$ tasks. Retrieval, tracking,
+aggregation and QA improve by $60.19$, $9.70$, $16.13$ and $7.50$ points,
+respectively; each family interval is positive. This confirms the allocation
+advantage on a second model family at its target window
+(Appendix~\ref{sec:olmo-clean-new}). Classic multi-length task and PPL curves
+remain in Appendix~\ref{sec:tailspline-details}; these retain their original
+sampling protocols.
 
-\paragraph{Native-window trade-off.}
-TailSpline's $+11.72$-point clean long-context gain accompanies a small native-window trade-off. On the matched $130$-prompt $8$K task reference, it scores $89.74\%$ versus original Native's $91.88\%$: an observed $2.14$-point difference, or $2.33\%$ relative reduction (paired T--Native interval $[-6.14,1.92]$ points). This native estimate uses the classic padded panel; the long-context gain uses the clean source-order panel. Whole-prefix $8$K PPL is $5.29528$ versus $5.27592$, a $0.37\%$ relative increase. The same static table serves both windows, without length-specific switching. Paired intervals and the separate equal-dose T/C diagnostic are reported in Appendix~\ref{sec:current-controls}.
+\paragraph{Natural question answering.}
+The frozen five-task Natural-QA pool contains $631$ questions from $524$
+source-context clusters. Each model retokenizes the same source pool;
+OLMo's actual inputs are $4{,}110$--$16{,}319$ tokens, all beyond its native
+window. Task-macro whole-response F1 improves by $3.30$ points, with positive
+mean differences on all five tasks. Llama's F1 scores are close
+(Table~\ref{tab:natural-transfer-main}). LongBench v2 \citep{bai2025longbenchv2}
+extends the Llama evaluation to $117$ complete inputs between $8$K and $32$K,
+using its multiple-choice accuracy metric. Source-context clustered intervals,
+per-task results and output statistics are in
+Appendices~\ref{sec:tailspline-natural-qa} and~\ref{sec:natural-transfer-new}.
+\input{tables/table_natural_transfer_main}
 
-\paragraph{Classic length curves and transfer.}
-The classic Llama panel has $10$ paired inputs per task at $8/16/32$K
-($390$/arm), with output-independent depth selection and prefix padding.
-PPL uses $32$ Proof-Pile and $14$ PG-19 test documents ($138$ LM rows/arm)
-\citep{azerbayev2022proofpile,rae2019compressive}.
-Full-13 AUC rises from $75.60$ to $78.80\%$ ($+3.20$ points,
-$95\%$ interval $[0.65,5.79]$); its nested NIAH subset improves by $3.75$ points.
-PPL AUC changes by $-0.097\%$, with small $8/16$K increases; QA-family AUC
-changes by $-1.25$ points. On OLMo-$2$-$1$B-Instruct, the same formula at
-band $[14,32]$ and $4/8/16$K raises Full-13 AUC from $17.36$ to $66.60\%$
-($+49.23$ points, interval $[45.34,53.04]$), with all task AUC differences
-positive. Full curves (Fig.~\ref{fig:tailspline-classic}), aggregation weights and termination counts are in Appendix~\ref{sec:tailspline-details}.
-
-\paragraph{TailSpline on natural QA.}
-The frozen five-task Natural-QA pool contains $631$ paired questions from $524$ source-context clusters, retokenized for Llama with actual inputs $3694$--$16304$ tokens. Both methods use the same $s=4$ tables, unpadded batch $1$, prompts and generation caps. Whole-response token F1 is averaged within each task, then equally across tasks; uncertainty resamples source-context clusters. Overall F1 is $41.08/40.88\%$ for T/P, a $+0.20$-point difference with interval $[-1.53,1.89]$. Appendix~\ref{sec:tailspline-natural-qa} reports the complete pool and native-length strata. The observed F1 scores are close, with the interval spanning both orderings. T/P end with EOS on $625/624$ inputs, reach the cap on $6/7$, and produce no empty responses. Full task scores and protocol are in Appendix~\ref{sec:tailspline-natural-qa}.
-
+\paragraph{Internal shape at equal displacement.}
+\label{sec:clean-shape-main}
+The clean T--C comparison matches frequency endpoints, outer bands, gain and
+total log-frequency displacement. At $32$K, T/C score $68.27/66.17\%$:
+a $+2.10$-point difference with interval $[1.11,3.08]$. At $16$K, they score
+$86.09/86.35\%$. Thus, total displacement does not fully determine allocation
+quality; the internal shape matters at the target length
+(Appendix~\ref{sec:clean-shape-new}). C has slightly higher positional effective
+rank than T at $32$K ($10.093/10.077$), complementing the distinction between
+positional structure and learned use in Section~\ref{sec:theory}.
 \label{sec:interval-main}
+
+\subsection{Improving task performance within RoPE's native context}
+\label{sec:ncp-main}
+Optimizing $z$ improves task performance within RoPE's native context. We construct
+\emph{Native Contrastive Proximal} allocation (NCP) from the public native grid
+and length. A binary reference comparison models an aligned target competing
+with a uniformly phased distractor. Averaging its logistic loss over relative
+separations gives a reference risk $\mathcal R(\phi)$ at phase span
+$\phi=(L-1)\omega$. NCP selects log-frequency shifts $u_k$ through
+\begin{equation}
+\min_u\ \sum_k\left[\mathcal R(\phi_ke^{-u_k})+\frac{9}{8}u_k^2\right],
+\qquad \omega'_k=\omega_ke^{-u_k}.
+\label{eq:ncp-main}
+\end{equation}
+The quadratic term keeps the allocation near its native grid. We fix both
+endpoints, bound shifts, and preserve frequency ordering and minimum log gaps;
+Appendix~\ref{sec:ncp-construction-new} gives the reference model, constraints
+and numerical construction. Gain remains $1$, and the same table is installed
+across layers and inputs without weight updates or calibration.
+
+On OLMo's native $4$K clean Full-13 panel ($780$ paired prompts), NCP raises
+the score from $69.37$ to $70.78\%$, a $+1.41$-point gain with paired interval
+$[0.20,2.58]$. This gain establishes a direct in-window benefit from optimizing
+frequency allocation at fixed support. Appendix~\ref{sec:ncp-results-new}
+reports the complete task breakdown and companion direction controls.
 
 \subsection{Supporting extrapolation evidence with Cosh}
 \label{sec:exp-capability}
 A $432$M MLA-style model uses $16$ rotary pairs, $500$M training tokens at $8$K
-and three seeds \citep{deepseekv2,deepseekv3}, with fixed Cosh strength $\tau=1.414$. All arms use the same FineWeb-Edu evaluation chunks. This learning recipe
-uses unanchored midpoint tables; Table~\ref{tab:protocol-main} distinguishes it
-from the fixed-endpoint intervention. Cosh improves all five extended lengths in every seed;
-$16$K PPL falls from $138.8$ to $95.6$. The benefit appears at half and
-three-quarters of training and persists under a common wavelength blend
-(Fig.~\ref{fig:allocation-learning}; Appendix~\ref{sec:mla-results}).
-
+and three seeds \citep{deepseekv2,deepseekv3}, with fixed Cosh strength
+$\tau=1.414$. All arms use the same FineWeb-Edu evaluation chunks. This recipe
+uses unanchored midpoint tables, distinct from the fixed-endpoint intervention.
+Cosh improves all five extended lengths in every seed; $16$K PPL falls from
+$138.8$ to $95.6$. The benefit appears during training and persists under a
+common wavelength blend (Fig.~\ref{fig:allocation-learning};
+Appendix~\ref{sec:mla-results}).
 \begin{figure}[ht]
 \centering\includegraphics[width=.70\linewidth]{fig_allocation_learning.pdf}
-\caption{\textbf{Cosh improves extrapolation across training seeds.} Three-seed mean and range for the $432$M MLA model; dashed curves use the common wavelength blend ($s=4$). Evaluation uses common text chunks across arms (Appendix~\ref{sec:mla-results}).}
+\caption{\textbf{Cosh improves extrapolation across training seeds.} Three-seed
+mean and range for the $432$M MLA model; dashed curves use the common wavelength
+blend ($s=4$). Evaluation uses common text chunks.}
 \label{fig:allocation-learning}
 \end{figure}
-
-A $750$M single-seed continuation from a shared checkpoint fixes endpoints
-and reduces $16$K PPL from $45.1$ to $24.4$; $8$K answer-token exact match
-rises from $0/40$ to $31/40$, with $4$K PPL changing from $22.0$ to $22.3$.
-This uses the recorded mixed-training recipe. Full budgets, supervision and
-matched OLMo adaptation results are in Appendix~\ref{sec:learning-summary}.
+A $750$M single-seed continuation fixes endpoints and reduces $16$K PPL from
+$45.1$ to $24.4$; $8$K answer-token exact match rises from $0/40$ to $31/40$.
+Full recipes and matched OLMo adaptation are in Appendix~\ref{sec:learning-summary}.

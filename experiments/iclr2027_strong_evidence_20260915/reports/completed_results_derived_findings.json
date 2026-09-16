@@ -1,0 +1,38 @@
+{
+  "longbench_tailspline": {
+    "correct": 41.0,
+    "n": 117,
+    "accuracy": 0.3504273504273504
+  },
+  "longbench_mrpro": {
+    "correct": 36.0,
+    "n": 117,
+    "accuracy": 0.3076923076923077
+  },
+  "x4_geometry": {
+    "T_minus_C_sum_m_fp32": -7.645480116190428e-09,
+    "same_gain": true,
+    "same_outer_slots_and_endpoints": true
+  },
+  "complete_pair_contract_match": [
+    "olmo_clean",
+    "olmo_qa",
+    "x5"
+  ],
+  "x4_shared_runtime_match": true,
+  "fixed_tables_reused_across_new_panels": true,
+  "native_diagnostic": {
+    "T_minus_N_excluding_fwe_pp": 1.2249999999999992,
+    "fwe_T_minus_N_pp": -77.99999999999999,
+    "T_minus_N_full13_pp": -4.86923076923077,
+    "native_cost_reduction_T_vs_P_fraction": 0.3621095062143099,
+    "relative_native_cost_T": 0.054087154656792924
+  },
+  "native_halfturn_exact_deltas_pp": {
+    "contract-native": 0.13461538461537748,
+    "contract-reverse": 1.6111111111110965,
+    "v1-native": 3.0106837606837855
+  },
+  "validation": "PASS",
+  "confidence_intervals": "original paired report intervals retained, not recomputed in this audit"
+}

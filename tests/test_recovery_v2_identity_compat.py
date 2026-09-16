@@ -1,4 +1,4 @@
-from experiments.olmo_recovery_20260912.recovery_v2_eval import normalize_existing_identity
+from experiments.olmo_recovery_20260912.recovery_v2_eval import main, normalize_existing_identity
 
 
 def test_legacy_batch1_contract_infers_panel_order():
@@ -12,3 +12,8 @@ def test_legacy_batch1_contract_infers_panel_order():
 def test_batched_contract_never_infers_an_unknown_order():
     batched = {"batch_size": 2, "row_ids": ["a", "b"]}
     assert normalize_existing_identity(batched) == batched
+
+
+def test_main_does_not_shadow_the_normalized_text_scorer():
+    local_names = (*main.__code__.co_varnames, *main.__code__.co_cellvars)
+    assert "normalized" not in local_names

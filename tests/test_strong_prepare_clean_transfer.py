@@ -70,7 +70,8 @@ def _fake_cores(out: Path):
         source_root = Path(get("--source-parts"))
         records = []
         sources = {}
-        for task in subject.TASKS:
+        tasks = tuple(get("--tasks").split(","))
+        for task in tasks:
             source = source_root / task / "source" / str(length) / task / "validation.jsonl"
             sources[task] = [{"path": str(source.resolve()), "sha256": _sha(source)}]
             for index in range(count):
@@ -168,6 +169,23 @@ def test_frozen_manifest_skips_equal_request_and_rejects_artifact_drift(tmp_path
         stream.write("{}\n")
     with pytest.raises(ValueError, match="drifted"):
         subject.prepare(argv, planb_main=planb, converter_main=converter)
+
+
+def test_prepares_declared_task_subset_without_generating_other_tasks(tmp_path):
+    model, data_root, out = _fixture(tmp_path, "qwen25_3b")
+    planb, converter, planb_calls, converter_calls = _fake_cores(out)
+    tasks = ("niah_single_1", "niah_multikey_1")
+    argv = [*_argv(model, data_root, out, "qwen25_3b"), "--tasks", ",".join(tasks)]
+    manifest = subject.prepare(argv, planb_main=planb, converter_main=converter)
+
+    assert len(planb_calls) == len(tasks)
+    assert [call[call.index("--tasks") + 1] for call in planb_calls] == list(tasks)
+    assert manifest["tasks"] == list(tasks)
+    assert manifest["rows"] == len(tasks) * 2 * 2
+    for length in (8192, 16384):
+        panel = json.loads((out / "panels" / str(length) / "manifest.json").read_text())
+        assert panel["tasks"] == list(tasks)
+        assert panel["rows"] == len(tasks) * 2
 
 
 def test_panel_validation_rejects_padding_or_incomplete_full13(tmp_path):

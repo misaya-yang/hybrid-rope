@@ -197,7 +197,8 @@ positive macro difference, from $9.53$ to $13.07$ points. The one negative task,
 \texttt{niah\_multivalue}, remains in the primary score. EOS, cap-hit and empty
 counts in Table~\ref{tab:clean-full13} include every response; no answer was
 excluded for termination behavior. This result supports TailSpline over MrPro
-on this clean panel; it does not yet compare YaRN or establish natural-QA transfer.
+on this clean panel. The corresponding natural-QA evaluations are reported in
+Appendices~\ref{sec:tailspline-natural-qa} and~\ref{sec:natural-transfer-new}.
 
 \begin{figure}[ht]
 \centering\includegraphics[width=.9\linewidth]{fig_tailspline_classic.pdf}
@@ -282,15 +283,15 @@ stratum is $+0.6998$ ($[-1.2478,2.8073]$). The $315$ extended questions have tas
 counts $142/52/11/53/57$ in the order listed above, drawn from
 $142/52/9/5/46$ source contexts. Their smaller number of source contexts,
 particularly for NarrativeQA and Qasper, is retained in the clustered intervals.
-These are T/P extension-table contrasts, not comparisons against original Native.
+These strata compare the two fixed T/P extension tables.
 
 For the document-equal sensitivity, question scores are first averaged within
 source context, then contexts within task, and tasks equally. T/P macro is
 $40.8141/40.8375\%$, a difference of $-0.0234$ points. This alternative weighting
-does not replace the frozen primary estimand. The observed natural-QA differences
-are much smaller than the clean RULER effect; their primary interval spans both
-signs. The result measures the natural-input behavior of TailSpline itself and
-is separate from the older BM/OLMo natural-QA result.
+does not replace the frozen primary estimand. The Llama F1 scores are close, with the primary interval spanning both
+signs. The new OLMo TailSpline evaluation appears in
+Appendix~\ref{sec:natural-transfer-new}; the older BM comparison retains its
+separate construction identity.
 
 \subsection{Clean confirmation at the intermediate length}
 \label{sec:clean16k-confirmation}

@@ -8,30 +8,25 @@ how this allocation affects model quality.
 Frequency design includes frozen scaling policies such as YaRN and MrRoPE
 and learned frequencies such as LeRoPE
 \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}.
-Paired experiments hold the
-frequency endpoints fixed and show that interior placement improves both learned
-extrapolation and frozen-model performance. Additional controls distinguish
-its effects from total frequency displacement and learned coordinate assignment.
+Our paired interventions show that interior placement improves performance
+at fixed frequency endpoints. Further controls isolate shape effects at equal
+total displacement and distinguish positional structure from learned coordinate use.
 
-Full sine--cosine geometry reveals how distinct frequencies can supply
-overlapping positional directions. For frozen extension, a model already uses
-its native frequencies; we introduce TailSpline to allocate extension through
-a smooth connection to the low-frequency tail. A single static table improves
-clean RULER over MrRoPE-Pro at both $2L$ and $4L$, by $3.39$ and $11.72$
-percentage points.
-Cosh provides a complementary frequency transport for extrapolation, used in
-paired training to establish the wider value of changing $z$.
+We turn this design freedom into explicit constructions. TailSpline connects
+the transition to the extended low-frequency tail, improving long-context tasks
+across model families and on natural question answering. Native Contrastive
+Proximal allocation (NCP) improves task performance within the original window.
+Cosh supplies complementary evidence through paired learning and extrapolation.
 
 Our contributions are:
 \begin{itemize}
 \item \textbf{Range and allocation have distinct, interacting effects.}
-At fixed endpoints, internal placement improves model performance;
-changing the evaluation range can reverse the preferred allocation.
+At fixed endpoints, internal placement improves performance; changing the
+range can reverse the preferred allocation.
 \item \textbf{Positional structure and learned use are distinct.}
-Complete rotary pairs expose finite-window direction overlap. Task gains
-with lower positional effective rank, together with coordinate and table
-interventions, distinguish this structure from its learned use.
-\item \textbf{Analytic allocation improves task quality.}
-TailSpline gives a closed-form static extension with clean RULER gains at
-both $2L$ and $4L$. Cosh provides a supporting extrapolation transport.
+Complete rotary pairs characterize positional overlap; coordinate interventions
+and rank--quality comparisons distinguish it from learned frequency use.
+\item \textbf{Explicit allocations improve extension and in-window quality.}
+TailSpline provides a closed-form extension with cross-model and natural-QA
+gains; NCP improves native-window tasks at unchanged endpoints.
 \end{itemize}

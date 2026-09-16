@@ -1,0 +1,418 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": 0.215513055716889,
+        "hotpotqa": 0.2862651906326605,
+        "multifieldqa_en": 0.34491397495963766,
+        "narrativeqa": 0.09512064622122901,
+        "qasper": 0.13940213694860804
+      },
+      "macro_f1": 0.21624300089580487
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": 0.2629445724136932,
+        "hotpotqa": 0.34645050567143976,
+        "multifieldqa_en": 0.3579834047789464,
+        "narrativeqa": 0.09854063843002353,
+        "qasper": 0.18026681125267044
+      },
+      "macro_f1": 0.24923718650935464
+    }
+  },
+  "candidate_minus_baseline": {
+    "bootstrap_mean": 0.033233971055040896,
+    "by_task": {
+      "2wikimqa": 0.04743151669680418,
+      "hotpotqa": 0.060185315038779275,
+      "multifieldqa_en": 0.013069429819308753,
+      "narrativeqa": 0.00341999220879452,
+      "qasper": 0.040864674304062404
+    },
+    "ci95": [
+      0.0033585322596922465,
+      0.06402802114743783
+    ],
+    "draws": 20000,
+    "estimate": 0.032994185613549776,
+    "probability_delta_gt_zero": 0.9862
+  },
+  "contract": "TAILSPLINE_OLMO_S4_NATURAL_QA_FROZEN631_PAIRED_V1",
+  "input_length_audit": {
+    "input_token_max": 16319,
+    "input_token_min": 4110,
+    "native_length": 4096,
+    "rows_by_band": {
+      "4k_to_8k": 316,
+      "8k_to_16k": 315
+    },
+    "rows_by_task": {
+      "2wikimqa": 173,
+      "hotpotqa": 166,
+      "multifieldqa_en": 112,
+      "narrativeqa": 61,
+      "qasper": 119
+    }
+  },
+  "length_bands": {
+    "4k_to_8k": {
+      "baseline_macro_f1": 0.20856345173276186,
+      "candidate_macro_f1": 0.27255234344514595,
+      "candidate_minus_baseline": {
+        "bootstrap_mean": 0.06380218111838307,
+        "by_task": {
+          "2wikimqa": 0.04079301999049717,
+          "hotpotqa": 0.043703703703703634,
+          "multifieldqa_en": -0.03672222688702681,
+          "narrativeqa": 0.21875,
+          "qasper": 0.05341996175474645
+        },
+        "ci95": [
+          0.018746508580971197,
+          0.10870644808801351
+        ],
+        "draws": 20000,
+        "estimate": 0.06398889171238409,
+        "probability_delta_gt_zero": 0.9975
+      },
+      "output_health": {
+        "mrpro": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 119,
+              "hit_cap": 2,
+              "rows": 121
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 24,
+              "hit_cap": 0,
+              "rows": 24
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 38,
+              "hit_cap": 17,
+              "rows": 55
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 8,
+              "hit_cap": 0,
+              "rows": 8
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 108,
+              "hit_cap": 0,
+              "rows": 108
+            }
+          },
+          "empty": 0,
+          "ended_eos": 297,
+          "hit_cap": 19,
+          "rows": 316
+        },
+        "tailspline": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 115,
+              "hit_cap": 6,
+              "rows": 121
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 23,
+              "hit_cap": 1,
+              "rows": 24
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 29,
+              "hit_cap": 26,
+              "rows": 55
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 8,
+              "hit_cap": 0,
+              "rows": 8
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 108,
+              "hit_cap": 0,
+              "rows": 108
+            }
+          },
+          "empty": 0,
+          "ended_eos": 283,
+          "hit_cap": 33,
+          "rows": 316
+        }
+      },
+      "question_equal_sensitivity": {
+        "bootstrap_mean": 0.03613135242411703,
+        "ci95": [
+          -0.001229736581524775,
+          0.07334131967947646
+        ],
+        "draws": 20000,
+        "estimate": 0.03634328385590249,
+        "probability_delta_gt_zero": 0.97155
+      },
+      "rows": 316,
+      "rows_by_task": {
+        "2wikimqa": 121,
+        "hotpotqa": 24,
+        "multifieldqa_en": 55,
+        "narrativeqa": 8,
+        "qasper": 108
+      },
+      "source_documents_by_task": {
+        "2wikimqa": 121,
+        "hotpotqa": 24,
+        "multifieldqa_en": 44,
+        "narrativeqa": 1,
+        "qasper": 80
+      }
+    },
+    "8k_to_16k": {
+      "baseline_macro_f1": 0.24058241607181183,
+      "candidate_macro_f1": 0.2556775494872804,
+      "candidate_minus_baseline": {
+        "bootstrap_mean": 0.015764901773741763,
+        "by_task": {
+          "2wikimqa": 0.06287878787878784,
+          "hotpotqa": 0.06297093948977794,
+          "multifieldqa_en": 0.06111401085173773,
+          "narrativeqa": -0.02908265047667044,
+          "qasper": -0.08240542066629022
+        },
+        "ci95": [
+          -0.04943199184638011,
+          0.07694296014154939
+        ],
+        "draws": 20000,
+        "estimate": 0.015095133415468559,
+        "probability_delta_gt_zero": 0.6897
+      },
+      "output_health": {
+        "mrpro": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 50,
+              "hit_cap": 2,
+              "rows": 52
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 136,
+              "hit_cap": 6,
+              "rows": 142
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 34,
+              "hit_cap": 23,
+              "rows": 57
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 53,
+              "hit_cap": 0,
+              "rows": 53
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 11,
+              "hit_cap": 0,
+              "rows": 11
+            }
+          },
+          "empty": 0,
+          "ended_eos": 284,
+          "hit_cap": 31,
+          "rows": 315
+        },
+        "tailspline": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 47,
+              "hit_cap": 5,
+              "rows": 52
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 138,
+              "hit_cap": 4,
+              "rows": 142
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 35,
+              "hit_cap": 22,
+              "rows": 57
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 53,
+              "hit_cap": 0,
+              "rows": 53
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 11,
+              "hit_cap": 0,
+              "rows": 11
+            }
+          },
+          "empty": 0,
+          "ended_eos": 284,
+          "hit_cap": 31,
+          "rows": 315
+        }
+      },
+      "question_equal_sensitivity": {
+        "bootstrap_mean": 0.04255930197878661,
+        "ci95": [
+          0.002491467492566495,
+          0.08370884452567001
+        ],
+        "draws": 20000,
+        "estimate": 0.04205469489905321,
+        "probability_delta_gt_zero": 0.981
+      },
+      "rows": 315,
+      "rows_by_task": {
+        "2wikimqa": 52,
+        "hotpotqa": 142,
+        "multifieldqa_en": 57,
+        "narrativeqa": 53,
+        "qasper": 11
+      },
+      "source_documents_by_task": {
+        "2wikimqa": 52,
+        "hotpotqa": 142,
+        "multifieldqa_en": 46,
+        "narrativeqa": 5,
+        "qasper": 9
+      }
+    }
+  },
+  "metric": "five-task equal macro whole-response LongBench-normalized token F1",
+  "output_health": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": {
+          "empty": 0,
+          "ended_eos": 169,
+          "hit_cap": 4,
+          "rows": 173
+        },
+        "hotpotqa": {
+          "empty": 0,
+          "ended_eos": 160,
+          "hit_cap": 6,
+          "rows": 166
+        },
+        "multifieldqa_en": {
+          "empty": 0,
+          "ended_eos": 72,
+          "hit_cap": 40,
+          "rows": 112
+        },
+        "narrativeqa": {
+          "empty": 0,
+          "ended_eos": 61,
+          "hit_cap": 0,
+          "rows": 61
+        },
+        "qasper": {
+          "empty": 0,
+          "ended_eos": 119,
+          "hit_cap": 0,
+          "rows": 119
+        }
+      },
+      "empty": 0,
+      "ended_eos": 581,
+      "hit_cap": 50,
+      "rows": 631
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": {
+          "empty": 0,
+          "ended_eos": 162,
+          "hit_cap": 11,
+          "rows": 173
+        },
+        "hotpotqa": {
+          "empty": 0,
+          "ended_eos": 161,
+          "hit_cap": 5,
+          "rows": 166
+        },
+        "multifieldqa_en": {
+          "empty": 0,
+          "ended_eos": 64,
+          "hit_cap": 48,
+          "rows": 112
+        },
+        "narrativeqa": {
+          "empty": 0,
+          "ended_eos": 61,
+          "hit_cap": 0,
+          "rows": 61
+        },
+        "qasper": {
+          "empty": 0,
+          "ended_eos": 119,
+          "hit_cap": 0,
+          "rows": 119
+        }
+      },
+      "empty": 0,
+      "ended_eos": 567,
+      "hit_cap": 64,
+      "rows": 631
+    }
+  },
+  "panel_sha256": "5b120bd42dfc39aa91b71c3fe8f87e31e9d402c77246f6a1c90ac898f386b36c",
+  "primary_pool": "exact historical OLMo-tokenizer >4096 frozen source pool",
+  "question_equal_sensitivity": {
+    "bootstrap_mean": 0.0390508418469239,
+    "ci95": [
+      0.011977356638272162,
+      0.06679412240570659
+    ],
+    "draws": 20000,
+    "estimate": 0.03919446369519324,
+    "probability_delta_gt_zero": 0.9976
+  },
+  "raw_sha256": {
+    "mrpro": "14c808eb52f3771769bbfc0a42dc137cf289b15673ed6fb3c38752b1c271f335",
+    "tailspline": "907ffe105a997f20ed030da6fbb6652ba782e227bf140bbff52725c550f965c1"
+  },
+  "rows_per_arm": 631,
+  "scope": "Paired five-task natural-QA transfer evidence on a previously defined finite OLMo source pool; not full LongBench, not a new independent sample, and not reusable with a different table identity",
+  "source_cluster_audit": {
+    "clusters_shared_across_tasks": 0,
+    "shared_cluster_tasks": {},
+    "unique_source_documents": 524
+  },
+  "status": "COMPLETE",
+  "tasks": [
+    "hotpotqa",
+    "2wikimqa",
+    "qasper",
+    "narrativeqa",
+    "multifieldqa_en"
+  ]
+}

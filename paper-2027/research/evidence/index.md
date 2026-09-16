@@ -137,3 +137,16 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 - Current field-gap additions: [paired clean score records](../../figs/field_gap_inputs.json), [reproduction](../../figs/verify_field_gap.py), [qualified E1 audit](../../../experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json), and [discrete kernel checks](../../../experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json).
 
 - [TailSpline Natural-QA631 V2](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json): complete, independently rescored 631-pair result with source-context intervals; §6.1 paragraph and Appendix H.9 / Table 41.
+
+## 新落盘结果（已核验并进入主稿）
+
+[采用建议与论文落点](../COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)。
+
+| ID | 证据 | 正式报告 |
+|---|---|---|
+| A49 | OLMo clean 16K Full-13 confirmation | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_clean16k_ruler200.json) |
+| A50 | OLMo TailSpline Natural-QA631 | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_naturalqa631.json) |
+| A51 | Llama clean matched-displacement C | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_matched_dose_c.json) |
+| A52 | Llama clean Native8K three-arm comparison | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_native8k.json) |
+| A53 | Llama LongBench-v2 actual8K-32K subset | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json) |
+| A54 | OLMo native allocation exploration | [报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json) |

@@ -1,14 +1,14 @@
 \section{Discussion and Conclusion}
 \label{sec:discussion}
 A frequency range leaves a consequential choice open: where to place the
-frequencies within it. Our controlled interventions establish that this choice
-can improve learned extrapolation and frozen-model task performance.
-Full-pair geometry characterizes the resulting positional overlap, while
-learned-coordinate effects clarify how frequency changes interact with a
-pretrained model.
+frequencies within it. Controlled interventions and equal-displacement
+comparisons establish the value of this choice. Full-pair geometry characterizes
+positional overlap, while coordinate interventions distinguish it from learned
+frequency use.
 
-TailSpline provides an explicit native-relative allocation that retains
-standard rotary computation. Cosh offers a complementary transport for
-extrapolation and supports the broader value of changing $z$. The clean RULER comparisons show TailSpline gains over MrPro at both
-$2L$ and $4L$ under one static table. Natural-QA evaluation gives close observed F1 scores for TailSpline and MrPro. Together, these results establish frequency
-allocation as a practical design dimension for quality within a chosen context window.
+TailSpline turns this freedom into a closed-form extension, improving
+long-context task quality across model families and on natural question
+answering. NCP demonstrates a complementary use of allocation within the native
+window, with fixed support and no weight updates. Cosh supplies paired learning
+and extrapolation evidence. Together, these constructions make $z$ a practical
+design dimension for both extension and in-window quality.

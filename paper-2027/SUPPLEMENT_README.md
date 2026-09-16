@@ -29,6 +29,7 @@ python3 figs/make_allocation_value.py
 python3 figs/make_fig_exact_range_control.py
 python3 figs/verify_explicit_geometry.py
 python3 figs/verify_allocation_response.py
+python3 figs/verify_completed_evidence.py
 python3 figs/verify_profile_diagnostics.py
 python3 figs/verify_recovered_assets.py
 python3 figs/verify_routing_schedule.py
@@ -102,3 +103,9 @@ the full-pool and both native-length-stratum point estimates and reproduces thei
 cluster-bootstrap intervals exactly, then rebuilds the main and detailed QA tables.
 The clean and natural input preparers and completed-generation reporters are
 bundled under `runtime/`; required original corpora/checkpoints remain external.
+
+The completed-evidence check reproduces the added clean and natural-task score means
+and the exact deployed NCP FP32 table from the bundled public native grid. It also
+checks the Fourier representation of the NCP reference risk by independent
+quadrature. Paired intervals are retained from the original reports. The NCP
+constructor and scoring entry point are included under `runtime/experiments/`.

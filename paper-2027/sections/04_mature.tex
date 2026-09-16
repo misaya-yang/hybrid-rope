@@ -45,7 +45,7 @@ TailSpline and MrPro retain the same outer bands and endpoints, so their
 comparison tests complete internal allocations. At fixed support, total
 log-frequency displacement is a statistic of $z$. The control $C$ also
 matches this statistic to study the remaining shape difference
-(Appendices~\ref{sec:tailspline-dose-control} and~\ref{sec:current-controls}).
+(Appendices~\ref{sec:tailspline-dose-control} and~\ref{sec:clean-shape-new}).
 
 \paragraph{Installation.}
 (1) Read the public native grid, reference length and scale $s$; (2) compute the $32/1$-turn band; (3) evaluate $m_k$, $\omega'_k=\omega_k^Ns^{-m_k}$ and $g=1+0.1\ln s$; (4) install before prefill, retaining one table across layers and input lengths. The baseline shares $g$. Construction costs $O(K)$ and leaves the rotary computation unchanged. Neither constructor reads weights, activations or calibration outputs.

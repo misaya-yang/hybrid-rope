@@ -149,6 +149,30 @@ def test_infinitebench_keeps_source_order_and_full_candidate_inventory(tmp_path)
     assert all("prompt_ids" not in row for row in candidates)
 
 
+def test_infinitebench_can_freeze_one_task_and_enforce_minimum_length(tmp_path):
+    root = tmp_path / "InfiniteBench" / "data"
+    sources = {}
+    for task in ("longdialogue_qa_eng", "longbook_qa_eng"):
+        path = root / f"{task}.jsonl"
+        write_jsonl(path, [infinite_row(0, 40), infinite_row(1, 100), infinite_row(2, 110)])
+        sources[task] = path
+    out = tmp_path / "out"
+    config = PrepareConfig(
+        benchmark=INFINITEBENCH, model_id="llama", data_root=tmp_path,
+        out=out, scale=8, lengths=(256,), native_length=32, rows_per_task=1,
+        tasks=("longdialogue_qa_eng",), minimum_input_tokens=130,
+    )
+    manifest = prepare_dataset(config, WordTokenizer(), sources)
+    candidates = read_jsonl(out / "candidates.jsonl")
+    inputs = read_jsonl(out / "inputs.jsonl")
+
+    assert {row["task"] for row in candidates} == {"longdialogue_qa_eng"}
+    assert len(inputs) == 1 and inputs[0]["source_index"] == 1
+    assert manifest["tasks"] == ["longdialogue_qa_eng"]
+    assert manifest["minimum_input_tokens"] == 130
+    assert manifest["summary"]["by_reason"]["below_minimum_input_tokens"] == 1
+
+
 def test_missing_or_ambiguous_official_data_is_explicit(tmp_path):
     with pytest.raises(DataRootError, match="missing local official data files"):
         locate_sources(INFINITEBENCH, tmp_path)
@@ -159,6 +183,14 @@ def test_missing_or_ambiguous_official_data_is_explicit(tmp_path):
     write_jsonl(second, [])
     with pytest.raises(DataRootError, match="ambiguous"):
         locate_sources(LONGBENCH_V2, tmp_path)
+
+
+def test_single_infinitebench_task_does_not_require_the_other_source(tmp_path):
+    path = tmp_path / "data" / "longdialogue_qa_eng.jsonl"
+    write_jsonl(path, [infinite_row(0, 100)])
+    assert locate_sources(
+        INFINITEBENCH, tmp_path, tasks=("longdialogue_qa_eng",),
+    ) == {"longdialogue_qa_eng": path.resolve()}
 
 
 def test_cli_missing_data_writes_portable_status_without_loading_a_model(tmp_path):

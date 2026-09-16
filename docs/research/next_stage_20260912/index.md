@@ -11,6 +11,9 @@ BM、YaRN、旧mix075和Native-Z探索各保留其证据角色。
 模型前向只用于验证已经冻结的规则，不用于从权重、激活、Q/K/V、梯度或校准分数中拟合
 通用TailSpline构造。Native-Z5是单独标记的checkpoint-calibrated反事实，不改变这一边界。
 
+最新服务器回查：OLMo clean 16K、OLMo Natural-QA、Llama clean Native 8K、LongBench v2及clean X4均已完成。
+[论文价值与推荐改稿](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)汇总新增结论；主稿已吸收本批结果，NCP进入正文原生窗口性能小节。
+
 ## 唯一读取顺序
 
 **2026-09-15：clean Llama 32K Full RULER-13×200确认完成。** TailSpline/MrPro为

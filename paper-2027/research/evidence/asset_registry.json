@@ -156,8 +156,9 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "tracked",
-          "sha256": "addbf2083377161ebf1df42667a37ddb5b21d3b33404207294f066585beb7b9c",
-          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
+          "sha256": "94283e743afbcd7100102d58dfb5dbe8f66f99bec18d44af318200aea12c066c",
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices",
+          "snapshot_note": "Existing construction and data retained; updated cross-references for new clean and NCP evidence."
         }
       ]
     },
@@ -858,9 +859,10 @@
         {
           "path": "paper-2027/appendix/a10_tailspline.tex",
           "availability": "tracked",
-          "sha256": "46b039757b735c1b708ff84902a396fb47ad4518abf64d141559b9a1edc5ca39",
+          "sha256": "27c891534bf777e7f524a06fa3fae8acb6740b40edd59f42f1d7c7c6a3d56f23",
           "role": "Exact matched-displacement T-C identity and centroid equivalence; mathematical verification only, no E1 task scores.",
-          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices"
+          "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices",
+          "snapshot_note": "Existing construction and data retained; updated cross-references for new clean and NCP evidence."
         },
         {
           "path": "paper-2027/figs/allocation_design.py",
@@ -903,8 +905,9 @@
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
           "availability": "tracked",
-          "sha256": "4537069cfcd8e5db9aa954350ae0556b293b6cd15e628b31ccf71099b403f0dc",
-          "revision_note": "2026-09-15: append completed clean X4 and raw-score reaggregation; manuscript unchanged"
+          "sha256": "38ebf9b5481a708ffde6135ce4a84224e25e4d4b4b9c5410fb4d5fdbf9961368",
+          "revision_note": "2026-09-15: append completed clean X4 and raw-score reaggregation; manuscript unchanged",
+          "snapshot_note": "Appended completed clean and natural-task results; original classic evidence retained."
         },
         {
           "path": "experiments/iclr2027_three_track_sprint_20260915/reports/clean_ruler200_tailspline_vs_mrpro.json",
@@ -947,7 +950,8 @@
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
           "availability": "tracked",
-          "sha256": "c2ab489e921dea8e3a5b605a2130123fe32ff8ae813325eadaf0051cf0dea042"
+          "sha256": "3afd3fad685c57bc011e706e2aaa6ad0cf58c29cb450ed785f0c4b846355840f",
+          "snapshot_note": "Appended completed clean and natural-task results; original classic evidence retained."
         }
       ]
     },
@@ -1125,6 +1129,214 @@
           "path": "paper-2027/figs/allocation_response_verification.json",
           "availability": "tracked",
           "sha256": "363b1dcb2f352d1d6ad752b202c2e73278079f267e8044cf05b1a0721f7da08b"
+        }
+      ]
+    },
+    {
+      "id": "A49",
+      "name": "OLMo clean 16K Full-13 confirmation",
+      "priority": "P0",
+      "question": "Complete allocation gains on a second model family under clean inputs",
+      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
+      "manuscript_location": "Section6.1 / Table1 / AppendixL.1 / Table47",
+      "interpretation": "+41.4192pp [39.9865,42.8090]; all thirteen task means positive",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_clean16k_ruler200.json",
+          "availability": "tracked",
+          "sha256": "7bf2f56b03d5b1cf9fe9e11867b5e550ed391be76e8038c8ce2cedc9c6d3f91e"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+          "availability": "tracked",
+          "sha256": "556042efcb482e7319d7bb87672561801dda2f31e088a6084aa819ef0a68c6a9"
+        },
+        {
+          "path": "paper-2027/figs/completed_evidence_inputs.json",
+          "availability": "tracked",
+          "sha256": "b95bf9311f6a69ce27ae011fdd1d635816c88850d55f4744f78802e14be168f4",
+          "role": "portable manuscript input or CPU reproduction"
+        },
+        {
+          "path": "paper-2027/figs/verify_completed_evidence.py",
+          "availability": "tracked",
+          "sha256": "7f189e78b7112a6f63ebb5fe1a477b7ff2ea7321e101ef0ab520744450d96063",
+          "role": "portable manuscript input or CPU reproduction"
+        }
+      ]
+    },
+    {
+      "id": "A50",
+      "name": "OLMo TailSpline Natural-QA631",
+      "priority": "P0",
+      "question": "Do frozen allocation gains extend to natural question answering?",
+      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
+      "manuscript_location": "Section6.1 / Table2 / AppendixL.4 / Table50",
+      "interpretation": "Five-task macro F1 +3.2994pp [0.3359,6.4028], 524 document clusters; all five task point differences positive",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_naturalqa631.json",
+          "availability": "tracked",
+          "sha256": "683a8cff1495338e711b57af2a1bc09418eb8f463e1f307e09891d22022e77a0"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+          "availability": "tracked",
+          "sha256": "556042efcb482e7319d7bb87672561801dda2f31e088a6084aa819ef0a68c6a9"
+        },
+        {
+          "path": "paper-2027/figs/completed_evidence_inputs.json",
+          "availability": "tracked",
+          "sha256": "b95bf9311f6a69ce27ae011fdd1d635816c88850d55f4744f78802e14be168f4",
+          "role": "portable manuscript input or CPU reproduction"
+        },
+        {
+          "path": "paper-2027/figs/verify_completed_evidence.py",
+          "availability": "tracked",
+          "sha256": "7f189e78b7112a6f63ebb5fe1a477b7ff2ea7321e101ef0ab520744450d96063",
+          "role": "portable manuscript input or CPU reproduction"
+        }
+      ]
+    },
+    {
+      "id": "A51",
+      "name": "Llama clean matched-displacement C",
+      "priority": "P0",
+      "question": "Does internal placement matter at fixed total log-frequency displacement?",
+      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
+      "manuscript_location": "Sections3.2,6.1 / AppendixL.3 / Table49",
+      "interpretation": "T-C +2.0962pp [1.1134,3.0769] at32K; -0.2513pp [-1.4051,0.8949] at16K; same support and gain",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_matched_dose_c.json",
+          "availability": "tracked",
+          "sha256": "8d7517dc76efc7bc95ba3d61d79f0f249e55d142a93e1f102d519ec23b30f7a8"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_control_vs_mrpro.json",
+          "availability": "tracked",
+          "sha256": "186a8eedd1017c27ed8891d8526da1180b250d07fbad6db89cd2c58992e24ce8"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+          "availability": "tracked",
+          "sha256": "556042efcb482e7319d7bb87672561801dda2f31e088a6084aa819ef0a68c6a9"
+        },
+        {
+          "path": "paper-2027/figs/completed_evidence_inputs.json",
+          "availability": "tracked",
+          "sha256": "b95bf9311f6a69ce27ae011fdd1d635816c88850d55f4744f78802e14be168f4",
+          "role": "portable manuscript input or CPU reproduction"
+        },
+        {
+          "path": "paper-2027/figs/verify_completed_evidence.py",
+          "availability": "tracked",
+          "sha256": "7f189e78b7112a6f63ebb5fe1a477b7ff2ea7321e101ef0ab520744450d96063",
+          "role": "portable manuscript input or CPU reproduction"
+        }
+      ]
+    },
+    {
+      "id": "A52",
+      "name": "Llama clean Native8K three-arm comparison",
+      "priority": "P1",
+      "question": "Quality and native-window cost under one static extension table",
+      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
+      "manuscript_location": "Section6.1 / Table1 / Figure4 / AppendixL.2 / Table48",
+      "interpretation": "T/P/Native 85.1564/82.3923/90.0256%; T-P +2.7641pp; T-N -4.8692pp; native cost concentrated in FWE",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_native8k.json",
+          "availability": "tracked",
+          "sha256": "6bd279395880d2dfc844b299afb01a7f592fa235243e490ca97716e1136b3547"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+          "availability": "tracked",
+          "sha256": "556042efcb482e7319d7bb87672561801dda2f31e088a6084aa819ef0a68c6a9"
+        },
+        {
+          "path": "paper-2027/figs/completed_evidence_inputs.json",
+          "availability": "tracked",
+          "sha256": "b95bf9311f6a69ce27ae011fdd1d635816c88850d55f4744f78802e14be168f4",
+          "role": "portable manuscript input or CPU reproduction"
+        },
+        {
+          "path": "paper-2027/figs/verify_completed_evidence.py",
+          "availability": "tracked",
+          "sha256": "7f189e78b7112a6f63ebb5fe1a477b7ff2ea7321e101ef0ab520744450d96063",
+          "role": "portable manuscript input or CPU reproduction"
+        }
+      ]
+    },
+    {
+      "id": "A53",
+      "name": "Llama LongBench-v2 actual8K-32K subset",
+      "priority": "P1",
+      "question": "Natural input coverage beyond the earlier QA pool",
+      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
+      "manuscript_location": "Section6.1 / Table2 / AppendixL.4 / Table51",
+      "interpretation": "117 paired inputs; T/P 35.0427/30.7692%; +4.2735pp with interval crossing zero",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json",
+          "availability": "tracked",
+          "sha256": "37c020271cdf10636cfe691e813c2bb0a10e429d74c822b313d69e102bf93f88"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+          "availability": "tracked",
+          "sha256": "556042efcb482e7319d7bb87672561801dda2f31e088a6084aa819ef0a68c6a9"
+        },
+        {
+          "path": "paper-2027/figs/completed_evidence_inputs.json",
+          "availability": "tracked",
+          "sha256": "b95bf9311f6a69ce27ae011fdd1d635816c88850d55f4744f78802e14be168f4",
+          "role": "portable manuscript input or CPU reproduction"
+        },
+        {
+          "path": "paper-2027/figs/verify_completed_evidence.py",
+          "availability": "tracked",
+          "sha256": "7f189e78b7112a6f63ebb5fe1a477b7ff2ea7321e101ef0ab520744450d96063",
+          "role": "portable manuscript input or CPU reproduction"
+        }
+      ]
+    },
+    {
+      "id": "A54",
+      "name": "OLMo native allocation exploration",
+      "priority": "P2",
+      "question": "Can changing z improve task quality without extending the context window?",
+      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
+      "manuscript_location": "Section6.2 / Eq.10 / AppendixL.5-L.6 / Table52",
+      "interpretation": "NCP +1.4081pp [0.2009,2.5833] on existing 780-row development panel; gain1 and public-parameter construction. Separate calibrated V1 +3.0107pp; not a TailSpline native claim",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json",
+          "availability": "tracked",
+          "sha256": "00a293a0eb035a58f605c0a31113a2e5b2f7a8fb43f374eaba53de561b4414d6"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_halfturn_four_arm.json",
+          "availability": "tracked",
+          "sha256": "6d8a09e6839aa796b5e423656f7c1659648d041f8a89408b553e0dc33aeabb3e"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+          "availability": "tracked",
+          "sha256": "556042efcb482e7319d7bb87672561801dda2f31e088a6084aa819ef0a68c6a9"
+        },
+        {
+          "path": "paper-2027/figs/completed_evidence_inputs.json",
+          "availability": "tracked",
+          "sha256": "b95bf9311f6a69ce27ae011fdd1d635816c88850d55f4744f78802e14be168f4",
+          "role": "portable manuscript input or CPU reproduction"
+        },
+        {
+          "path": "paper-2027/figs/verify_completed_evidence.py",
+          "availability": "tracked",
+          "sha256": "7f189e78b7112a6f63ebb5fe1a477b7ff2ea7321e101ef0ab520744450d96063",
+          "role": "portable manuscript input or CPU reproduction"
         }
       ]
     }

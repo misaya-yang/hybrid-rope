@@ -202,3 +202,25 @@ Potential S1/native improvements and S16/128K evaluation remain future work.
 [便携raw复算与原区间](../../../experiments/native_enhancement_oral_20260915/reports/existing_evidence_review.json)
 的`verified_reports.x4_clean`保存源文件、表/gain身份、逐任务得失及原报告contrast。
 这次登记更新结果owner，未修改论文主张或主稿。
+
+## 11. Clean Native 8K与LongBench v2完成：最新服务器回查
+
+clean 8K Full-13×50共650对/臂：T/P/Native为85.1564/82.3923/90.0256%。
+T−P +2.7641pp，[1.2923,4.2538]pp；T−Native −4.8692pp，
+[−6.5718,−3.1462]pp，相对Native差5.4087%。新结果与旧classic 130条协议分开。
+同一S4表现在在clean L、2L、4L三个已测点均胜MrPro。
+正式报告：[clean Native 8K三臂](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_native8k.json)。
+
+Native代价集中在FWE：T/P/Native为9.33/4.00/87.33%；T/P的45/48条空回答
+全部在这一任务，Native无空回答。其余十二项T−Native描述性均值+1.225pp，
+不替换Full-13主指标。相对MrPro，TailSpline缩减约36.21%的原生分数差距。
+
+Llama LongBench v2实际8K–32K范围117输入：T/P为41/117与36/117，
+35.0427/30.7692%，差+4.2735pp，总体文档簇区间[−3.3906,+11.9658]pp。
+89条实际超过16K，点差+4.4944pp。它是声明长度范围的完整子集，不称完整LongBench v2。
+正式报告：[LongBench v2](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json)。
+
+本次检查两组raw配对身份，重聚合8K存储官方分数，重新评分全部234个LongBench v2输出，
+与正式报告一致。新X4的完整报告也已便携保存：
+[clean T/C/P](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_matched_dose_c.json)。
+写作建议与完整核验入口见[论文价值分析](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)。

@@ -1,46 +1,34 @@
 # Beyond the Base：当前论证与证据安放表
 
-## Current field-gap revision (2026-09-15; supersedes older section/figure locations)
+## Current completed-evidence revision (2026-09-15)
 
-The authorized theory integration adds A48: distance-response allocation and a
-full-pair-rank / task-quality comparison. The rank observation supports Section
-4.3 and is not the abstract's organizing claim. Section 5.1 explains wavelength
-growth and formulates the discrete tail-connection problem. Appendix K contains
-the new proofs and numerical details; the full integer-kernel corollary is in A.6.
+The manuscript studies frequency allocation within and beyond the native context.
+The abstract has no digits. TailSpline supplies the main closed-form extension;
+NCP now has a main-text subsection establishing task improvement within RoPE's
+native context; Cosh supplies complementary learning/extrapolation evidence.
+Native TailSpline performance is described as a slight reduction, with original
+RoPE retained as a reference. It is not called native enhancement.
 
-The abstract contains no numerical results, per the author. The contribution is
-frequency allocation beyond the chosen range: controlled interventions establish
-its value, positional geometry explains the structural change, and TailSpline provides the main frozen extension, while Cosh is a supporting
-frequency transport for extrapolation. Clean RULER-200 is the main frozen result,
-with the observed native trade-off adjacent. The detailed T/C identities are in
-Appendix H.2; the main method preserves their purpose and measured comparison.
-Figure2 presents finite-window geometry; Figure3 presents TailSpline. Figure4 focuses on clean16K/32K; classic
-curves remain in the TailSpline appendix.
-
-| Claim | Evidence and source | Boundary / location |
+| Claim | Evidence | Current location |
 |---|---|---|
-| Interior placement matters at fixed support | A01, A08; three paired training seeds and frozen controls | §3.1–3.2; Fig. 1; native cost retained |
-| Spectrum and coordinate assignment differ | A05, A06; two-seed 151.9M crossed weights/tables in Fig. 1c; same-spectrum slot intervention remains secondary | Main identification + discrete criterion; crossing details in Appendix B.2 and slot protocol in Appendix I.4 |
-| Integer kernel equivalence | CPU checker and proof, no-alias (0,pi), full Q/K bilinear kernel | Standard similarity corollary, not a task predictor |
-| Allocation changes distance response while preserving content coordinates | A48; slow-block proposition, fixed-grid scale response and T/P wavelength ordering | Section 4.3 / 5.1; Appendix K.1, K.3-K.4; conditional mathematics, no identified task mediation |
-| Task gains can accompany lower full-pair positional rank | A48 geometry combined with existing clean16K/32K reports | Section 4.3; Appendix K.2 / Table 46; rank is a structural measure, not a reversed task-ranking rule |
-| Cosh / TailSpline are explicit constructors | A07, A37; existing density and boundary objectives; T/C zero-sum exchange | §5.1–5.2; Fig. 3 shows TailSpline; distinct objectives and appendix proofs |
-| Cosh improves learning | Three-seed shared-cache MLA, unanchored midpoint endpoints | Supporting Cosh + Fig. 5; common evaluation chunks and aggregation in appendix. No finding of absent historical records or contamination is established |
-| Clean16K TailSpline > MrPro | A46;650 pairs: +3.39pp [1.53,5.34], QA +8pp [1,15] | Main Table2 / Fig4; at2L using the S4 table |
-| Clean32K TailSpline > MrPro | 2600 complete pairs: +11.72pp [10.32,13.11], 12/13 positive tasks | Main frozen result + Fig. 4; source-order 32K, not classic AUC or YaRN comparison |
-| Classic transfer remains valid | Llama +3.20pp, OLMo +49.23pp under their recorded contracts | Separate appendix curve panels; no clean/classic curve splice |
-| Native cost | Original Native table/gain; LM +0.01936 PPL; task T-Native -2.14pp [-6.14,1.92] | LM cost; no lossless/noninferiority claim |
-| Residual T/C effect unresolved | E1 raw audit V2: -0.41pp [-2.63,1.82], cross-batch | QUALIFIED_ONLY; E0 zero score drift with six changed sequences cannot promote it |
-| TailSpline natural QA | Complete 631 paired questions / 524 source contexts: T/P 41.08/40.88% F1, +0.20pp [−1.53,+1.89]; >8K −0.94pp [−4.15,+1.95] | Main natural-QA paragraph and full task appendix; ranking unresolved, BM remains separate |
+| Fixed-support allocation changes performance | A01, A08, paired training and frozen controls | Section 3; Figure 1; Appendix B |
+| Positional structure differs from learned use | A03-A06, A48; complete-pair geometry, coordinate interventions and rank/quality observations | Section 4; Figure 2; Appendices A, K |
+| TailSpline has an exact finite-grid construction | A37; constrained discrete objective and closed form | Section 5.1; Figure 3; Appendix H.1 |
+| TailSpline quality across L/2L/4L | A46, existing clean32K, A52 clean8K | Section 6.1; Table 1; Figure 4; Appendices H.7, H.10, L.2 |
+| Cross-model clean confirmation | A49; OLMo2600 paired inputs, +41.42pp | Section 6.1; Table 1; Appendix L.1 |
+| Natural-QA gains on OLMo | A50;631 pairs/524 clusters, +3.30pp; all five task point differences positive | Section 6.1; Table 2; Appendix L.4; Llama's close observed scores retained |
+| Internal shape matters at equal displacement | A51;clean T-C +2.10pp at32K;16K near tie | Sections 3.2,6.1; Appendix L.3; previous classic cross-batch diagnostic stays in H.8 |
+| Longer real-input evaluation | A53;LongBench-v2 complete-input8K-32K subset117 pairs, +4.27pp with interval spanning zero | Section 6.1; Table 2; Appendix L.4 |
+| In-window task quality improves at native support | A54;public-parameter NCP, gain1,780-row OLMo development panel,+1.41pp | Section 6.2; Eq.10; Appendix L.5-L.6; distinct from TailSpline and calibrated V1 |
+| Cosh supports learned extrapolation | A09,A10;432M three-seed and750M shared-start continuation | Section 6.3; Figure 5; Appendices D,E |
+| Integer kernel equivalence and allocation-response identities | A44,A48;conditional mathematics and CPU checks | Sections 4-5; Appendices A.6,K |
 
-Sources: [current Llama result owner](../../docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md),
-[portable scored pairs and controls](../figs/field_gap_inputs.json),
-[decisions and experiment arrangements](COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md),
-[asset registry](evidence/asset_registry.json).
-
-No proposed A1 or M1 outcome is used as manuscript evidence. Completed Native-Z5
-exploration remains in its separate research owner and has not been promoted into this manuscript.
-Legacy source paths and result roles below remain historical provenance.
+[Completed-result interpretation](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md),
+[portable inputs](../figs/completed_evidence_inputs.json),
+[CPU verifier](../figs/verify_completed_evidence.py), and
+[asset registry](evidence/asset_registry.json) preserve the evidence mapping.
+No pending128K result is used. The main text retains the existing title and
+nine-page format; the latest validation records the final compiled artifact.
 
 ## Historical placement map (2026-09-14; superseded by the current table above)
 

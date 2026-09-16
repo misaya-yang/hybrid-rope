@@ -1,0 +1,188 @@
+\section{Clean Transfer, Natural Tasks and Native Allocation}
+\label{sec:completed-evidence}
+This section gives the complete new task comparisons and the NCP construction.
+Clean RULER panels retain source order without content padding or depth
+selection. All reported T/P comparisons use frozen weights and the same inputs,
+gain, decoding and scorer within each panel. The public RoPE grid determines
+the TailSpline band. Source-order generation and official scoring follow the
+RULER implementation revision stated in Appendix~\ref{sec:clean-confirmation}.
+The bundled numerical inputs retain per-row scores, report identities and the
+native/NCP frequency arrays; the verification script performs no model execution.
+
+\subsection{Cross-model clean confirmation on OLMo}
+\label{sec:olmo-clean-new}
+OLMo-$2$-$1$B-Instruct uses native length $4096$, $64$ rotary pairs, base
+$500000$, $s=4$, band $[14,32]$ and gain $1+0.1\ln4$. The clean $16$K panel
+contains $200$ inputs per task ($2{,}600$ paired prompts). Both arms use BF16,
+Flash-SDPA, batch $1$, greedy decoding and $8192$-token chunked prefill.
+Inputs are generated with seed $20261101$ and QA source offset $5600$.
+The primary endpoint is the single-length task-equal mean. With $20{,}000$
+paired within-task bootstrap draws (seed $20260923$), T/P score
+$50.6506/9.2314\%$, giving $+41.4192$ points and interval
+$[39.9865,42.8090]$. All thirteen task means increase.
+\input{tables/table_olmo_clean_new}
+The family differences and intervals are retrieval $+60.19$ $[58.30,62.03]$,
+tracking $+9.70$ $[7.00,12.60]$, aggregation $+16.13$ $[13.86,18.42]$ and
+QA $+7.50$ $[2.75,12.25]$ points. T/P have $1{,}251/1{,}392$ EOS-terminated
+outputs, $1{,}349/1{,}208$ cap hits and no empty outputs. Official task scoring
+uses the retained full responses. FWE and multikey-2 improve by $28.0$ and
+$42.5$ points while both arms terminate with EOS on at least $99\%$ of inputs
+in those tasks. These clean scores are separate from the classic length curves.
+\FloatBarrier
+
+\subsection{Clean native-window reference on Llama}
+\label{sec:clean-native-new}
+The $8$K source-order panel uses $50$ inputs per task, $650$ total. Original
+RoPE installs its native table and unit gain; T/P retain their unchanged $s=4$
+tables and common gain. All arms use batch $1$, BF16, Flash-SDPA and the same
+inputs and decoder. T/P/original RoPE score $85.1564/82.3923/90.0256\%$.
+T--P is $+2.7641$ points, interval $[1.2923,4.2538]$; T--original RoPE is
+$-4.8692$ points, interval $[-6.5718,-3.1462]$ ($20{,}000$ paired within-task
+draws). The latter is a $5.41\%$ relative reduction. The classic $130$-input
+reference in Appendix~\ref{sec:current-controls} retains its own protocol.
+\input{tables/table_native_clean_new}
+The task difference is concentrated in frequent-word extraction (FWE):
+T/P/original RoPE score $9.33/4.00/87.33\%$. T/P have $45/48$ empty responses,
+all on FWE; original RoPE has none. T/P/original RoPE end with EOS on
+$648/644/645$ inputs and hit the cap on $2/6/5$. The other twelve task
+means have a descriptive T--original RoPE average of $+1.225$ points.
+The Full-13 primary score retains every task.
+\FloatBarrier
+
+\subsection{Clean comparison at equal total displacement}
+\label{sec:clean-shape-new}
+Control C is the analytic equal-displacement construction in
+Appendix~\ref{sec:tailspline-dose-control}. It preserves the same outer bands,
+endpoints, gain and total log-frequency displacement as T. In the deployed
+FP32 tables, the difference in $\sum m_k$ is below $10^{-8}$.
+We reuse all completed clean T/P generations and generate C on exactly those
+inputs, with batch $1$ and $8192$-token prefill chunks: $650$ rows at $16$K
+and $2{,}600$ at $32$K. This is a separate clean comparison from the older
+classic cross-batch diagnostic in Appendix~\ref{sec:current-controls}.
+
+At $16$K, T/C/P score $86.0949/86.3462/82.7051\%$; T--C is $-0.2513$
+points with interval $[-1.4051,0.8949]$. At $32$K, they score
+$68.2660/66.1699/56.5436\%$; T--C is $+2.0962$ points with interval
+$[1.1134,3.0769]$. Intervals use $20{,}000$ paired draws within task and
+length. C--P at $32$K is $+9.6263$ points. The three contrasts compare the
+specified allocations; they are not a unique decomposition of mechanism.
+\input{tables/table_clean_c_new}
+At $32$K, C ends with EOS on $98.96\%$ of inputs and reaches the cap on
+$1.04\%$, matching T's aggregate rates. The complete-pair positional ranks
+are C $10.0926$, T $10.0773$ and P $10.2149$
+(Appendix~\ref{sec:allocation-rank-quality}). The equal-displacement comparison
+therefore also separates positional-rank ordering from task-quality ordering.
+\FloatBarrier
+
+\subsection{Natural question answering and longer real inputs}
+\label{sec:natural-transfer-new}
+\paragraph{OLMo Natural-QA.}
+The frozen source pool has $631$ questions from $524$ source-context clusters
+across five tasks. OLMo retokenization gives $4110$--$16319$ input tokens,
+all beyond the native $4096$ window. T/P install the same respective $s=4$
+tables used in the clean experiment, with batch $1$, direct prefill and
+matched generation caps. The primary score averages whole-response
+LongBench-normalized token F1 within each task and then equally across tasks.
+Source-context clusters are resampled within task ($20{,}000$ draws, seed
+$20260930$); repeated questions sharing a context remain in the same cluster.
+This preserves the source pool used in the earlier natural-QA studies.
+\input{tables/table_olmo_qa_new}
+T/P task-macro F1 is $24.9237/21.6243\%$, a $+3.2994$-point difference with
+interval $[0.3359,6.4028]$. A question-equal sensitivity analysis gives
+$+3.9194$ points, interval $[1.1977,6.6794]$. The $4$K--$8$K and
+$8$K--$16$K strata contain $316/315$ questions and give task-macro
+differences $+6.3989$ $[1.8747,10.8706]$ and $+1.5095$
+$[-4.9432,7.6943]$ points. T/P have $567/581$ EOS terminations,
+$64/50$ cap hits and no empty outputs. Llama's evaluation of the source pool
+is detailed in Appendix~\ref{sec:tailspline-natural-qa}.
+
+\paragraph{LongBench v2.}
+We evaluate the $117$ complete inputs within the Llama-tokenized $8$K--$32$K
+range, using the direct-answer multiple-choice protocol
+\citep{bai2025longbenchv2}. T/P use batch $1$, the same static $s=4$ tables,
+prompts and generation caps, and $8192$-token prefill chunks.
+The declared official answer-extraction adapter scores correct options as one
+and unparseable or incorrect answers as zero. T/P answer $41/36$ questions
+correctly, giving $35.0427/30.7692\%$ and $+4.2735$ points with a
+source-context clustered interval $[-3.3906,11.9658]$. T alone succeeds on
+$13$ inputs, P alone on $8$; the remaining $96$ have equal scores.
+\input{tables/table_longbench_new}
+The $28$ inputs at $8$K--$16$K give T/P $39.29/35.71\%$; the $89$ inputs
+above $16$K give $33.71/29.21\%$. Overall T/P have $88/91$ EOS terminations,
+$29/26$ cap hits and no empty outputs. These accuracy values remain separate
+from the Natural-QA token-F1 aggregates.
+\FloatBarrier
+
+\subsection{Native Contrastive Proximal allocation}
+\label{sec:ncp-construction-new}
+NCP improves task performance within the native context by reallocating the
+interior frequencies while fixing both sampled endpoints. Let
+$\phi_k=(L-1)\omega_k$ and $\omega'_k=\omega_ke^{-u_k}$.
+The reference problem is a binary target--distractor comparison with unit
+amplitudes, aligned target phase and uniformly random distractor phase:
+\begin{align}
+r(\theta)&=\frac{1}{2\pi}\int_0^{2\pi}
+ \log\!\left(1+\exp(\cos\psi-\cos\theta)\right)d\psi,\\
+\mathcal R(\phi)&=2\int_0^1(1-t)r(\phi t)dt.
+\label{eq:ncp-reference-risk}
+\end{align}
+The triangular distance weight is the distribution of absolute separation
+between two uniform positions on a continuous unit interval. The aligned
+reference comparison supplies a public design objective. The Transformer task
+scores below evaluate the resulting fixed construction.
+
+We minimize the objective in Eq.~\eqref{eq:ncp-main}, with fixed
+$\lambda=9/4$ (quadratic coefficient $\lambda/2=9/8$), subject to
+\begin{equation}
+u_0=u_{K-1}=0,\quad 0\le u_k\le 2/9,\qquad
+\log\frac{\omega'_k}{\omega'_{k+1}}
+ \ge\frac12\log\frac{\omega_k}{\omega_{k+1}}.
+\label{eq:ncp-constraints}
+\end{equation}
+The endpoint constraints keep support fixed; the gap condition preserves
+ordering and at least half each original adjacent log gap.
+Writing $r(\theta)=a_0+\sum_{j\ge1}a_j\cos(j\theta)$ gives
+\begin{equation}
+\mathcal R(\phi)=a_0+\sum_{j\ge1}a_j
+ \operatorname{sinc}^2(j\phi/2),\qquad
+\operatorname{sinc}(x)=\frac{\sin x}{x},\quad\operatorname{sinc}(0)=1.
+\label{eq:ncp-fourier}
+\end{equation}
+This follows by integrating each cosine against $2(1-t)$.
+With $q(\phi)=d\mathcal R/d\log\phi$, an interior scalar solution satisfies
+$\lambda u=q(\phi e^{-u})$. We compute $r$ on a $1024$-point angular grid,
+retain $32$ Fourier modes and solve the scalar stationary equations by
+bisection, using zero shift when the native gradient is nonpositive. The two
+endpoint shifts are reset to zero. On the deployed OLMo grid all resulting
+log-gap constraints are inactive, so the scalar solutions are feasible jointly.
+
+The deployed grid has $64$ pairs, base $500000$ and native length $4096$.
+It changes $46$ FP32 entries, reaches maximum relative slowdown $16.7164\%$
+and retains a minimum log-gap ratio of $0.7681$. The maximum scalar stationarity
+residual is below $10^{-11}$. The mean reference risk decreases from
+$0.614082$ to $0.609641$; the penalized objective is $0.611853$.
+These are reference-model quantities, separate from model task scores.
+The table and unit gain are fixed across layers and inputs; construction reads
+no checkpoint weights, activations or evaluation outputs. The source archive
+includes the original constructor and an exact FP32 table reproduction check.
+
+\subsection{Native-context task results and companion controls}
+\label{sec:ncp-results-new}
+The OLMo native $4$K development panel contains $60$ source-order inputs per
+RULER task, $780$ total, without content padding. It is the same frozen panel
+used for the companion allocation studies. NCP and original RoPE share the
+checkpoint, unit gain, inputs, BF16 precision, greedy decoder, batch $1$ and
+$4096$-token prefill chunks. Their scores are $70.7821/69.3739\%$;
+the paired task-equal difference is $+1.4081$ points, interval
+$[0.2009,2.5833]$. NCP has higher per-input scores on $62$ inputs,
+original RoPE on $31$, with $687$ ties. Every task remains in the aggregate.
+\input{tables/table_ncp_tasks_new}
+Companion half-turn contraction and its reverse score $69.5085/67.8974\%$.
+Their exact mean contrast is $+1.6111$ points with paired interval
+$[0.2713,2.9722]$; contraction relative to original RoPE is $+0.1346$
+points with interval $[-0.6603,0.9445]$. A separate historical
+checkpoint-calibrated V1 table scores $72.3846\%$, a $+3.0107$-point
+contrast with interval $[1.2949,4.7052]$. V1's calibration distinguishes it
+from NCP's public-parameter construction. Point differences here are computed
+from arm means; the companion report's bootstrap intervals are retained.
+\FloatBarrier
