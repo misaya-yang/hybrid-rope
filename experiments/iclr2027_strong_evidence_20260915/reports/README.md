@@ -38,6 +38,12 @@ contains the proposed manuscript integration. [Execution entry points](../README
 - [Qwen Full-13×10 three-arm completion](pro6000_qwen_s4_128k_full13x10_triarm.json)
 - [GLM Full-13×10 three-arm completion](pro6000_glm_s4_128k_full13x10_triarm.json)
 - [GLM independent second-book three-arm QA](pro6000_glm_s4_128k_naturalqa_second_books_triarm.json)
+- [Llama NIAH-8×200 and PPL46 three-arm](rtx4080_llama_s4_32k_yarn_niah200_ppl46.json)
+- [OLMo NIAH-8×200 and PPL46 three-arm](rtx4080_olmo_s4_16k_yarn_niah200_ppl46.json)
+- [Llama Natural-QA631 three-arm](rtx4080_llama_s4_naturalqa631_triarm.json)
+- [OLMo Natural-QA631 three-arm](rtx4080_olmo_s4_naturalqa631_triarm.json)
+- [Llama Full-13×10 three-arm](rtx4080_llama_s4_32k_full13x10_triarm.json)
+- [OLMo Full-13×10 three-arm](rtx4080_olmo_s4_16k_full13x10_triarm.json)
 
 These are exact report copies. Their row-level score or aggregate arithmetic
 was checked as recorded; importing does not imply raw-text rescoring or a new

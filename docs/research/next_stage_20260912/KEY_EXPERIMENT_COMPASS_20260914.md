@@ -33,6 +33,7 @@ NCP已有原生窗口总体增益，Cosh提供配对学习与外推支持。
 | Llama S16/128K Full-13 gate、PPL10、En.QA/En.Dia | 任务类型相关的高倍率表现，正负结果均保留 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | Qwen/GLM S4 Full-13×10三臂 | 两个32K-native模型在128K对MrPro与官方静态YaRN的直接比较 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | GLM独立第二书池En.QA | 77题、15个新来源簇；换书后TailSpline仍为三臂第一 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| Llama/OLMo大样本官方静态YaRN | NIAH-8×200、PPL46、Natural-QA631及Full-13×10三臂；Llama QA保留YaRN小幅领先，其余读数TailSpline第一 | [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md) |
 | Llama既有2600条的抽样稳定性分析 | 描述当前固定总体中小样本的变化，非新模型实验 | [抽样报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json) |
 
 [Base综合分析](../reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md)已包含新Qwen结果与独立公共几何复算。
@@ -63,8 +64,8 @@ Qwen不同面板的单针/八任务/Full-13不能混为同一条曲线。
 ## 五、执行与准备分开
 
 易变状态只认[带时间戳执行owner](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
-2026-09-16 Pro6000队列已完成并归档：Qwen/GLM S4 Full-13三臂、自然QA三臂、
-GLM第二独立书池均有正式报告。Llama/OLMo的大样本YaRN任务仍属于32GB队列。
+2026-09-16 Pro6000与32GB队列均已完成并归档：Qwen/GLM S4 Full-13三臂、自然QA三臂、
+GLM第二独立书池，以及Llama/OLMo大样本YaRN任务均有正式报告。
 
 NCP新来源确认、Llama clean32K YaRN和288题反事实面板是[下一版准备项](PAPER_NEXT_REVISION_PREPARATION_20260916.md)，
 不是本轮已启动任务。当前不因计划文件、公开建议或旧launcher存在自动运行。

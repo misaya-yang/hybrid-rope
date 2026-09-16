@@ -53,7 +53,9 @@ GLM和直接基线报告，准备NCP独立确认及必要的YaRN单臂，机制�
 
 - Llama NIAH Full20正式报告已完成，见[720条每臂配对报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)；后续执行以服务器任务分层为准。
 - Llama S16 128K gate、自然长文压力测试、Qwen 256K健康检查与Qwen S4/128K En.QA均已完成，见[结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)。
-- Qwen与GLM的128K三臂Full-13和长书QA已完成；Llama/OLMo大样本YaRN仍是单独的32GB任务。
+- Qwen与GLM的128K三臂Full-13和长书QA已完成；Llama/OLMo的NIAH-8×200、
+  PPL46、Natural-QA631与Full-13×10官方静态YaRN三臂也已完成，见
+  [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)。
 - Native-Z5的V1、consensus和all-50 refit均已结束；现有结果不支持继续复用同一确认集调表。
 - fixed-u、proxy选表、曲线系数/band/gain追调及旧队列均已退出当前路线。
 

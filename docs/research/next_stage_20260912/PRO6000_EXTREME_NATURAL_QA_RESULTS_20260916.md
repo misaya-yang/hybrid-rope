@@ -66,5 +66,6 @@ Llama S4/32K已完成200条/task总体中，完整差值为`+11.72pp`；source-o
 - [RULER抽样稳定性](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json)
 
 原始逐行生成保留在实验数据盘。confirm40、256K Natural-QA和Llama32K截断控制
-没有作为本轮完成结果；Llama/OLMo的大样本YaRN与自然QA仍留给32GB队列，不与本批
-Qwen/GLM 128K结果混写。下一版取舍见[准备清单](PAPER_NEXT_REVISION_PREPARATION_20260916.md)。
+没有作为本轮完成结果。后续32GB队列的Llama/OLMo大样本YaRN与Natural-QA已经完成，
+单独登记在[便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)，
+不与本批Qwen/GLM 128K结果混写。下一版取舍见[准备清单](PAPER_NEXT_REVISION_PREPARATION_20260916.md)。

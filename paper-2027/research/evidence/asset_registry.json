@@ -1645,6 +1645,47 @@
           "sha256": "4e8abbe666ac6255781a4f5eac563b4939b63913a428153477dad3a8dd0bfc7b"
         }
       ]
+    },
+    {
+      "id": "A60",
+      "name": "Llama and OLMo large-sample official static YaRN comparison",
+      "priority": "P0",
+      "question": "How do fixed TailSpline, MrRoPE-Pro and official static YaRN compare on large NIAH, natural-text PPL, Natural-QA and complete RULER task coverage",
+      "evidence_grade": "Per model: NIAH-8 x 200 paired rows, PPL46 matched documents, Natural-QA631 paired prompts, and Full-13 x 10 paired rows; aggregate arithmetic and completion receipts verified",
+      "manuscript_location": "next revision; current manuscript unchanged",
+      "interpretation": "Llama Natural-QA631 is YaRN/TailSpline/MrPro 41.75/41.08/40.88%; OLMo is 22.27/24.92/21.62%. TailSpline leads both models on NIAH, PPL and Full-13, while the Llama natural-QA panel preserves the small YaRN win.",
+      "sources": [
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_yarn_niah200_ppl46.json",
+          "availability": "tracked",
+          "sha256": "a3b2215ca69dc02070590d5c18cfd177133e7baf23ca64b9d1594657f075a028"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_yarn_niah200_ppl46.json",
+          "availability": "tracked",
+          "sha256": "0ded9e9fbf5d520112cc0367b34951cf460f88683ad5b1814826c915c1932b56"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_naturalqa631_triarm.json",
+          "availability": "tracked",
+          "sha256": "98a068525a2d33068e4252138132c4100cee13cc2345b49d5504f09e57e7a18e"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_naturalqa631_triarm.json",
+          "availability": "tracked",
+          "sha256": "694ad6198f8b5fa5fd744d75ed6e153ec3572f5beb7a42eb8db283823727cb28"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_full13x10_triarm.json",
+          "availability": "tracked",
+          "sha256": "b223a458fb6efc14c9d3dd01b06439d25236cd76e6754d355751688685f6548c"
+        },
+        {
+          "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_full13x10_triarm.json",
+          "availability": "tracked",
+          "sha256": "ca33aec018e7f0a7ecf34650be6deb093d06192c6e108f2a9b3aad7a5ff72bf0"
+        }
+      ]
     }
   ]
 }
