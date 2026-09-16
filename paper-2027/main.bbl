@@ -1,4 +1,4 @@
-\begin{thebibliography}{35}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -73,23 +73,6 @@ Sidney Black, Stella Biderman, Eric Hallahan, Quentin Anthony, Leo Gao,
   2022.
 \newblock \doi{10.18653/v1/2022.bigscience-1.9}.
 \newblock URL \url{https://aclanthology.org/2022.bigscience-1.9/}.
-
-\bibitem[{bloc97}(2023)]{bloc972023ntk}
-{bloc97}.
-\newblock {NTK}-aware scaled {RoPE} allows {LLaMA} models to have extended
-  (8k+) context size without any fine-tuning and minimal perplexity
-  degradation.
-\newblock Reddit, r/LocalLLaMA, 2023.
-\newblock URL
-  \url{https://www.reddit.com/r/LocalLLaMA/comments/14lz7j5/ntkaware_scaled_rope_allows_llama_models_to_have/}.
-
-\bibitem[Chen et~al.(2023)Chen, Wong, Chen, and Tian]{chen2024position}
-Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuandong Tian.
-\newblock Extending context window of large language models via positional
-  interpolation.
-\newblock \emph{arXiv preprint arXiv:2306.15595}, 2023.
-\newblock \doi{10.48550/arXiv.2306.15595}.
-\newblock URL \url{https://arxiv.org/abs/2306.15595}.
 
 \bibitem[Chen et~al.(2025)Chen, Lv, Luan, Wang, and Liu]{chen2025hope}
 Yuhan Chen, Ang Lv, Jian Luan, Bin Wang, and Wei Liu.
@@ -167,20 +150,6 @@ Huayang Li, Tianyu Zhao, Deng Cai, and Richard Sproat.
 \newblock URL \url{https://icml.cc/virtual/2026/poster/64002}.
 \newblock arXiv:2512.14391.
 
-\bibitem[Li et~al.(2025)Li, Yi, Liu, Gao, Ma, and Kanazawa]{li2025cameras}
-Ruilong Li, Brent Yi, Junchen Liu, Hang Gao, Yi~Ma, and Angjoo Kanazawa.
-\newblock Cameras as relative positional encoding.
-\newblock \emph{arXiv preprint arXiv:2507.10496}, 2025.
-\newblock URL \url{https://arxiv.org/abs/2507.10496}.
-
-\bibitem[Liu et~al.(2024)Liu, Yan, An, Qiu, and Lin]{liu2024scaling}
-Xiaoran Liu, Hang Yan, Chenxin An, Xipeng Qiu, and Dahua Lin.
-\newblock Scaling laws of {RoPE}-based extrapolation.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2024.
-\newblock URL \url{https://openreview.net/forum?id=JO7k0SJ5V6}.
-\newblock arXiv:2310.05209.
-
 \bibitem[Movahedi et~al.(2026)Movahedi, Carstensen, Afzal, Hutter, Orvieto, and
   Cevher]{movahedi2026selectiverope}
 Sajad Movahedi, Timur Carstensen, Arshia Afzal, Frank Hutter, Antonio Orvieto,
@@ -189,14 +158,6 @@ Sajad Movahedi, Timur Carstensen, Arshia Afzal, Frank Hutter, Antonio Orvieto,
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2026.
 \newblock URL \url{https://openreview.net/forum?id=AQo1SEElNb}.
-
-\bibitem[Oka et~al.(2026)Oka, Saito, Nishida, and Saito]{oka2026fmrope}
-Yui Oka, Itsumi Saito, Kyosuke Nishida, and Kuniko Saito.
-\newblock Frequency bands in {RoPE}: Base frequency and context length shape
-  the interpolation--extrapolation trade-off.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2026.
-\newblock URL \url{https://openreview.net/forum?id=PR1PPxvG9Q}.
 
 \bibitem[Penedo et~al.(2024)Penedo, Kydl{\'i}{\v c}ek, Ben~Allal, Lozhkov,
   Mitchell, Raffel, von Werra, and Wolf]{penedo2024fineweb}
@@ -248,25 +209,6 @@ Qingyuan Tian, Wenhong Zhu, Xiaoran Liu, Xiaofeng Wang, and Rui Wang.
   (ICLR)}, 2026.
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2026/hash/69413f87e5a34897cd010ca698097d0a-Abstract-Conference.html}.
-
-\bibitem[Wang et~al.(2024)Wang, Zhang, Li, Huang, Han, Ji, Kakade, Peng, and
-  Ji]{wang2024pine}
-Ziqi Wang, Hanlin Zhang, Xiner Li, Kuan-Hao Huang, Chi Han, Shuiwang Ji,
-  Sham~M. Kakade, Hao Peng, and Heng Ji.
-\newblock Eliminating position bias of language models: A mechanistic approach.
-\newblock \emph{arXiv preprint arXiv:2407.01100}, 2024.
-\newblock URL \url{https://arxiv.org/abs/2407.01100}.
-
-\bibitem[Xu et~al.(2024)Xu, Men, Wang, Zhang, Lin, Lu, Han, and
-  Chen]{xu2024base}
-Mingyu Xu, Xin Men, Bingning Wang, Qingyu Zhang, Hongyu Lin, Yaojie Lu, Xianpei
-  Han, and Weipeng Chen.
-\newblock Base of {RoPE} bounds context length.
-\newblock In \emph{Advances in Neural Information Processing Systems},
-  volume~37, 2024.
-\newblock \doi{10.52202/079017-2773}.
-\newblock URL
-  \url{https://proceedings.neurips.cc/paper_files/paper/2024/hash/9f12dd32d552f3ad9eaa0e9dfec291be-Abstract-Conference.html}.
 
 \bibitem[Yang et~al.(2024)Yang, Yang, Zhang, Hui, Zheng, Yu, Li, Liu, Huang,
   et~al.]{qwen2024qwen25}

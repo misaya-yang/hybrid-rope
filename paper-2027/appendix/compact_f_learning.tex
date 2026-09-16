@@ -55,13 +55,7 @@ $+0.9\%$. All three training seeds favour \evq{} at 16K. The \evq{} plus MLA wav
 row has the lowest mean PPL at 16K and beyond, showing that the allocation
 also composes with this wavelength-dependent extension.
 
-\begin{figure}[ht]
-\centering\includegraphics[width=.70\linewidth]{fig_allocation_learning.pdf}
-\caption{\textbf{Cosh improves extrapolation across training seeds.} Three-seed
-mean and range for the $432$M MLA model; dashed curves use the common wavelength
-blend ($s=4$). Evaluation uses common text chunks.}
-\label{fig:allocation-learning}
-\end{figure}
+
 
 \FloatBarrier
 
@@ -83,6 +77,52 @@ $2\%$ linear warmup and cosine decay to $0.1$ of peak. Batch sizes are $6$
 (MLA) and $14$ (continuation: microbatch $7$, accumulation $2$). Text packing
 is contiguous without cross-document masking. MLA uses unanchored midpoint
 Cosh; the continuation fixes sampled endpoints.
+
+
+\paragraph{Larger-scale training and mature-model adaptation.}
+\label{sec:cosh-scale-adaptation}
+The $1.485$B OLMo pair uses the same public step-zero initialization,
+scientific recipe and reconstructed seed-$6198$ data prefix: $1000$ updates,
+global batch $512$, context $4096$, and $2{,}097{,}152{,}000$ counted tokens.
+It has $128$-dimensional heads and base $500000$. Cosh uses $\tau=2$,
+$K=64$, native nodes $u_k=k/K$, and $\omega'_k=b^{-Q_2(u_k)}$;
+there is no affine endpoint anchoring in this study. The released geometric
+checkpoint uses the upstream distributed trainer; Cosh uses a single-GPU
+implementation of the same recipe. Evaluation pairs $128$ held-out PG-19
+book prefixes. At $4/8/16$K, Cosh-minus-Geo NLL differences are
+$+0.0381/-0.0437/-0.1351$, with document-paired intervals
+$[0.0332,0.0428]/[-0.0494,-0.0380]/[-0.1420,-0.1281]$.
+
+The Llama-$3$-$8$B-Instruct comparison instead applies matched rank-$64$,
+alpha-$128$ Q/K/V/O LoRA for $300$ steps, seed $42$, learning rate $10^{-4}$,
+BF16 and $8192$-token sequences. Native-LoRA uses the original frequency grid;
+Cosh-LoRA uses midpoint Cosh at $\tau=1.414$. Rows, order, optimizer, schedule,
+adapter capacity and evaluator match. Adaptation uses $7476$ length-filtered
+LongAlpaca training rows and $152$ validation rows, with effective batch $8$.
+Evaluation uses $24$ frozen temporal
+packs from arXiv, the Federal Register and Stack Overflow; losses are pooled
+within domain and averaged equally across domains before exponentiation.
+All $24$ packs favor Cosh at both extended lengths. Table~\ref{tab:cosh-mature-ppl}
+keeps these two protocols distinct.
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Cosh extrapolation across scale and adaptation.} PPL within
+matched comparisons; each study retains its own training and evaluation recipe.}
+\label{tab:cosh-mature-ppl}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Study & Length & Geometric/Native & Cosh \\
+\midrule
+OLMo $1.485$B training & $2$K & 177.99 & 191.36 \\
+ & $4$K & 161.19 & 167.45 \\
+ & $8$K & 163.88 & 156.87 \\
+ & $16$K & 182.73 & 159.64 \\
+Llama $8$B matched LoRA & $8$K & 6.817 & 10.068 \\
+ & $16$K & 108.958 & 24.068 \\
+ & $32$K & 991.475 & 127.911 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{Matched OLMo routing continuation.}\label{sec:olmo2-1b}
 OLMo-2-0425-1B-Instruct uses fixed standard-grid Cosh with $\tau=2$,
@@ -131,3 +171,18 @@ $18/100$ versus $98/100$ at $8$K, and $0/100$ versus $60/100$ at $16$K.
 All outputs terminate with EOS. The Cosh long-gap subsets score $48/50$
 at $8$K and $31/66$ at $16$K. This is matched learned adaptation, with
 explicit long-phase exposure, distinct from the frozen allocations.
+
+\paragraph{Separate selective-Q/K task continuation.}
+A second matched OLMo study continues the Q/K components of rank-$64$,
+alpha-$128$ Stage-A Q/K/V/O adapters while retaining inherited V/O adapters.
+It uses $300$ updates, batch $8$, LR $5\times10^{-5}$, $20$ warmup steps,
+BF16 and a phase/phase/natural schedule, with explicit $4/8/16$K position
+exposure in ratio $1:1:2$ and answer-plus-EOS supervision. Physical sequences
+remain at most $4$K. The $1536$ training and $128$ validation examples have
+no QA-identity overlap with the $200$ held-out 2WikiMultiHopQA rows per length.
+Greedy generation uses a $32$-token cap. Inputs retain the official prompt
+and add answer-filtered distractor contexts to reach approximately $4/8/16$K;
+this is a task-family length-transfer evaluation. Native/Cosh F1 is
+$25.99/24.84$, $0.07/21.48$ and $0/8.57\%$, respectively; exact match is
+$22/21.5$, $0/17.5$ and $0/4\%$. These separately trained task adapters
+provide generation evidence alongside the Llama language-modeling result.

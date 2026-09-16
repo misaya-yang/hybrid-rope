@@ -1,14 +1,36 @@
 \section{Related Work}
 \label{sec:related}
-\paragraph{Frequency scaling and frozen deployment.}
-RoPE \citep{su2024roformer}, base analyses and FMRoPE connect frequency range with extrapolation \citep{liu2024scaling,xu2024base,oka2026fmrope}. Position interpolation, NTK scaling, YaRN and MrRoPE provide established rescaling policies \citep{chen2024position,bloc972023ntk,peng2024yarn,tian2026mrrope}. MrRoPE's mixed-radix products and cumulative log displacement are equivalent coordinates for the same static frequency transform. TailSpline retains its outer bands and changes the transition objective. Our controlled interventions identify the value of the internal allocation, and our discrete objective yields an explicit tail-connection rule. LongRoPE and LongRoPE2 combine search and learning, the latter using mixed-context training \citep{ding2024longrope,shang2025longrope2}. Their deployment results have different training budgets from a frozen table swap.
+\paragraph{Nonuniform scaling and frozen extension.}
+YaRN blends interpolation and extrapolation across frequency bands
+\citep{peng2024yarn}. MrRoPE organizes scaling through mixed-radix conversion
+and designs the intermediate allocation, with MrRoPE-Pro progressively
+redistributing its increments \citep{tian2026mrrope}. These are the closest
+frozen-extension references. TailSpline retains MrPro's outer bands and derives
+a different transition from a discrete tail-connection objective; matched
+support and total-displacement controls identify allocation and residual shape
+effects. LongRoPE and LongRoPE2 combine nonuniform scaling with search and
+learning \citep{ding2024longrope,shang2025longrope2}; our main deployment
+comparisons install fixed rules without weight updates.
 
-\paragraph{Frequency function and learning.}
-Round and Round studies positional and semantic frequency use; its $p$-RoPE gains include Gemma training from scratch \citep{barbero2025round}. HoPE studies high-frequency positional encoding \citep{chen2025hope}; Massive Values studies large Q/K components \citep{jin2025massive}. FoPE changes Fourier components, while LeRoPE learns frequencies and derives their attention/value gradients \citep{hua2025fope,karypis2026lerope}. We build on frequency design by isolating the value of interior placement and connecting positional structure to explicit constructions for learning, frozen extension and native-window tasks.
+\paragraph{Learnable frequencies.}
+LeRoPE learns per-frequency log scales jointly with model weights and analyzes
+their attention gradients \citep{karypis2026lerope}. Its fixed-frequency
+transfer experiment also separates the learned table from joint learning
+dynamics. Our work complements this direction with controlled interior-placement
+interventions and public-parameter constructions for frozen extension and
+native-window quality. All three constructions use public RoPE parameters: Cosh studies learning
+and adaptation, while TailSpline and NCP target frozen deployment.
 
-\paragraph{Group structure and changes of basis.}
-STRING characterizes differentiable matrix encodings satisfying an identity and a group-like relative-translation law, and relates them to RoPE through an orthogonal basis \citep{schenck2025string}. GRAPE connects group generators, learned frequencies and frequency--norm coupling \citep{zhang2026grape}. Our integer-position criterion uses rotation spectra to separate a frequency change from a fixed change of basis (Appendix~\ref{sec:discrete-kernel-proof}).
+\paragraph{Positional structure and learned frequency use.}
+Round and Round, HoPE and Massive Values investigate frequency roles and
+content use \citep{barbero2025round,chen2025hope,jin2025massive}; FoPE changes
+Fourier components \citep{hua2025fope}. STRING characterizes relative-translation
+encodings, while GRAPE connects group generators, frequencies and norms
+\citep{schenck2025string,zhang2026grape}. Our complete-pair analysis and
+integer-position criterion distinguish positional overlap, coordinate assignment
+and a changed spectrum. Selective RoPE and RePo instead learn input-dependent
+rotations or positions \citep{movahedi2026selectiverope,li2026repo}.
 
-\paragraph{Task structure and positional dependence.}
-PINE changes inter-document masks and ordering to target document-level invariance \citep{wang2024pine}; PRoPE encodes relative camera geometry \citep{li2025cameras}. Selective RoPE and RePo learn input-dependent rotations or positions \citep{movahedi2026selectiverope,li2026repo}. These modify different objects from a static frequency allocation. HELMET separates application categories whose behavior synthetic retrieval alone does not predict \citep{yen2024helmet}, motivating distinct retrieval, natural-QA and native-window evidence rather than a single pooled score.
-
+HELMET distinguishes application behavior beyond synthetic retrieval
+\citep{yen2024helmet}, motivating separate retrieval, natural-QA and native-window
+results.

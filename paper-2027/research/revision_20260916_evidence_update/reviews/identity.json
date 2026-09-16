@@ -1,0 +1,23 @@
+{
+  "A": {
+    "role": "revised",
+    "sha256": "7c8689a57df97f9e84076ec887df3a9d20bf714ff34592703e604d1b34e93703"
+  },
+  "B": {
+    "role": "pre-edit v1",
+    "sha256": "4fe12297f45ec2646286122162883b938faff1c4523154c576daea92c9a4acac"
+  },
+  "source_restriction": "Only these two PDFs; no repository, memory, prior reviews, or author preferences.",
+  "C": {
+    "role": "final candidate with restored core figures, uncertainty, focused related work and Cosh lineage",
+    "sha256": "2bf4d38d8e2e712390864a0fc45ca2c8fea0dba957b489232ded5225eed9ed5e"
+  },
+  "D": {
+    "role": "current introduction refinement candidate",
+    "sha256": "96fd444686da79d24dd2976db9e56a9a4ca8cfc4dfb9c1be978d7bb16e8a5482"
+  },
+  "E": {
+    "role": "final introduction integrated after independent Astra and Sol analyses",
+    "sha256": "f5534a4091ae298dc6a659e3de2f91d4fd498bf57963c27b739d0c19555e40fb"
+  }
+}

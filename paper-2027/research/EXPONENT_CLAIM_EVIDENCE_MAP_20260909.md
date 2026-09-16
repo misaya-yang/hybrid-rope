@@ -2,9 +2,16 @@
 
 ## Current compact manuscript (2026-09-16)
 
+Current evidence update: [revision and regression checks](revision_20260916_evidence_update/README.md).
+The 151.9M fixed-endpoint experiment is part of the 50.9M–750M Cosh training
+series, not a separate FMRoPE comparison. The full task chart and 432M curve
+remain in the main paper. The pre-edit PDF is [v1](../history/v1.pdf).
+
+
+
 The manuscript studies frequency allocation within and beyond the native context.
 The abstract has no digits. TailSpline supplies the main closed-form extension;
-NCP now has a main-text subsection establishing task improvement within RoPE's
+NCP has a main-text subsection establishing task improvement within RoPE's
 native context; Cosh supplies complementary learning/extrapolation evidence.
 Native TailSpline performance is described as a slight reduction, with original
 RoPE retained as a reference. It is not called native enhancement.
@@ -15,12 +22,14 @@ RoPE retained as a reference. It is not called native enhancement.
 | Positional structure differs from learned use | A03-A06, A48; complete-pair geometry, coordinate interventions and rank/quality observations | Section 4; Figure 2; Appendices A, B |
 | TailSpline has an exact finite-grid construction | A37; constrained discrete objective and closed form | Section 5.1; Figure 3; Appendix B.1 |
 | TailSpline quality across L/2L/4L | A46, existing clean32K, A52 clean8K | Section 6.1; Table 1; Figure 4; Appendix D.2 |
-| Cross-model clean confirmation | A49; OLMo2600 paired inputs, +41.42pp | Section 6.1; Table 1; Appendix D.2 |
-| Natural-QA gains on OLMo | A50;631 pairs/524 clusters, +3.30pp; all five task point differences positive | Section 6.1; Table 2; Appendix D.4; Llama's close observed scores retained |
+| Cross-model clean confirmation | A49 OLMo2600 pairs,+41.42pp; A56 GLM65 pairs,+12.79pp | Section 6.1; Table 1; Appendix D.2 |
+| Natural-task quality | A50 OLMo631 pairs/524 clusters,+3.30pp; A57 Qwen/GLM35 questions/7 books each, three-arm official F1 | Section 6.1; Table 2; Appendices D.4,D.7; main intervals retained |
 | Internal shape matters at equal displacement | A51;clean T-C +2.10pp at32K;16K near tie | Sections 3.2,6.1; Appendix D.3; previous classic cross-batch diagnostic stays in D.5 |
 | Longer real-input evaluation | A53;LongBench-v2 complete-input8K-32K subset117 pairs, +4.27pp with interval spanning zero | Section 6.1; Table 2; Appendix D.4 |
 | In-window task quality improves at native support | A54;public-parameter NCP, gain1,780-row OLMo development panel,+1.41pp | Section 6.2; Eq.10; Appendix E; distinct from TailSpline and calibrated V1 |
-| Cosh supports learned extrapolation | A09,A10;432M three-seed and750M shared-start continuation | Section 6.3; Figure 5; Appendix F |
+| Cosh supports trained and adapted extrapolation | A09,A10 432M/750M; A19 1.485B recipe-matched training; A11 Llama LoRA; matched OLMo task adaptation | Section 6.3; Figure 5; Appendix F |
+| Direct public-method comparison | A55 four models, NIAH8×5/PPL5, T/P/official static YaRN; overlapping T/P rows reused | Section 6.1; Appendix D.6; complete-method comparison distinct from matched T/P allocation control |
+| Higher extension factors | A58 LlamaS16/QwenS8, full task profiles including mixed outcomes | Appendix D.8 |
 | Integer kernel equivalence and allocation-response identities | A44,A48;conditional mathematics and CPU checks | Sections 4-5; Appendices A.4,B.4-B.5 |
 
 [Completed-result interpretation](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md),

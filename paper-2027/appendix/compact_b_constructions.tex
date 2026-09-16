@@ -60,6 +60,10 @@ Cosh transport minimizes
 \frac\beta2\int_0^1 S_\rho^2,\qquad \rho\ge0,\quad\int_0^1\rho=1.
 \label{eq:Capp}
 \end{equation}
+The first term penalizes concentrated log-frequency density. By Fubini,
+$\int_0^1S_\rho(t)^2dt=\mathbb E[\min(\Phi_1,\Phi_2)]$ for independent
+$\Phi_i\sim\rho$, so the second penalizes joint occupancy toward the slow
+end. These declared structural preferences define the transport objective.
 Coercivity and weak lower semicontinuity on the closed convex constraint set
 give existence; the first term makes the objective strictly convex. For
 $g(\phi)=\int_0^1\min(\phi,\psi)\rho(\psi)d\psi$, stationarity is
@@ -196,7 +200,7 @@ $\rho_H(\delta)=((H-1)(2H-1)/6)\delta^2+O(H^4\delta^4)$.
 The small parameter is therefore distance times frequency difference;
 matching total displacement alone does not supply it.
 
-\subsection{Turn boundaries across native bases}
+\paragraph{Turn boundaries across native bases.}
 \label{sec:turn-normalization}
 The $32/1$-turn rule places the transition in a comparable native phase range.
 For a geometric grid with $c=\log b/K$, assume both boundaries lie inside the

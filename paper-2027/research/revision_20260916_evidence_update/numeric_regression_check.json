@@ -1,0 +1,72 @@
+{
+  "baseline_sha256": "4fe12297f45ec2646286122162883b938faff1c4523154c576daea92c9a4acac",
+  "shared_result_anchors": {
+    "151.9": {
+      "baseline": true,
+      "current": true
+    },
+    "499,974,144": {
+      "baseline": true,
+      "current": true
+    },
+    "138.8": {
+      "baseline": true,
+      "current": true
+    },
+    "95.6": {
+      "baseline": true,
+      "current": true
+    },
+    "45.1": {
+      "baseline": true,
+      "current": true
+    },
+    "24.4": {
+      "baseline": true,
+      "current": true
+    },
+    "31/40": {
+      "baseline": true,
+      "current": true
+    },
+    "68.27": {
+      "baseline": true,
+      "current": true
+    },
+    "56.54": {
+      "baseline": true,
+      "current": true
+    },
+    "50.65": {
+      "baseline": true,
+      "current": true
+    },
+    "9.23": {
+      "baseline": true,
+      "current": true
+    },
+    "86.09": {
+      "baseline": true,
+      "current": true
+    },
+    "82.71": {
+      "baseline": true,
+      "current": true
+    },
+    "69.37": {
+      "baseline": true,
+      "current": true
+    },
+    "70.78": {
+      "baseline": true,
+      "current": true
+    },
+    "66.17": {
+      "baseline": true,
+      "current": true
+    }
+  },
+  "abstract_no_digits": true,
+  "first_page_no_figure_caption": true,
+  "scope": "text-level anchor preservation, not a complete semantic audit"
+}

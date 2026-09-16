@@ -26,3 +26,16 @@ aggregation, and full-output rescoring.
 
 [Paper interpretation](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)
 contains the proposed manuscript integration. [Execution entry points](../README.md).
+
+## 2026-09-16 completed reports imported for the manuscript
+
+- [Llama three-method quick](pro6000_llama_s4_32k_yarn_quick.json)
+- [OLMo three-method quick](pro6000_olmo_s4_16k_yarn_quick.json)
+- [GLM three-method quick](pro6000_glm_s4_128k_yarn_quick.json)
+- [GLM Full-13](pro6000_glm_s4_128k_full13.json)
+- [Qwen three-arm complete-book QA](pro6000_qwen_s4_128k_naturalqa_triarm.json)
+- [GLM three-arm complete-book QA](pro6000_glm_s4_128k_naturalqa_triarm.json)
+
+These are exact report copies. Their row-level score or aggregate arithmetic
+was checked as recorded; importing does not imply raw-text rescoring or a new
+model evaluation. The manuscript keeps benchmark and sample identities distinct.

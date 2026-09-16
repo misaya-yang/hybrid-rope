@@ -1,35 +1,35 @@
 \section{Introduction}
 \label{sec:intro}
-For a model trained to length $L$, reaching $sL$ is useful only if it can use
-information throughout that window. RoPE's base chooses a geometric frequency
-table, but its endpoints leave many possible interior placements. We study
-this allocation, $z$, as a design variable for extension and native-window quality.
+As native context windows grow, the largest extension ratio is only one aspect
+of positional-encoding quality. For a model with native length $L$ deployed up
+to $sL$, we seek useful task quality across the intended range and ask whether
+performance within $L$ can improve over its native encoding. We study frequency
+allocation $z$: the placement of rotary frequencies within a chosen log-frequency range.
 
-YaRN and MrRoPE redistribute frequency scaling for frozen extension;
-LeRoPE learns frequencies
+RoPE's base selects a geometric table. YaRN and MrRoPE redistribute scaling
+for extension, while LeRoPE learns frequencies
 \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}.
-These methods motivate a sharper question: what does internal placement
-contribute beyond the chosen frequency range? Our matched interventions isolate
-this effect, then distinguish total displacement, internal shape and learned
-coordinate use.
+What does internal placement contribute beyond choosing the range? Matched
+interventions show that it can improve quality even at fixed endpoints and
+equal total log-frequency displacement. Its value depends on the chosen range
+and the model's learned use of frequencies.
 
-We turn this design freedom into explicit constructions. TailSpline connects
-the transition to the extended low-frequency tail, improving long-context tasks
-across model families, including partial RoPE, and on natural question answering.
-Direct comparisons also evaluate the installed rule against static YaRN.
-Native Contrastive
-Proximal allocation (NCP) improves task performance within the original window.
-Cosh supplies complementary evidence through paired learning and extrapolation.
+We use this freedom in complementary settings. TailSpline solves a discrete
+gap-smoothing problem connecting the transition to the fully interpolated
+low-frequency tail, yielding a closed-form rule for frozen extension. Native
+Contrastive Proximal allocation (NCP) improves native-window tasks at unchanged
+endpoints. Cosh supplies an analytic frequency transport studied through
+training and adaptation.
 
 Our contributions are:
 \begin{itemize}
-\item \textbf{Range and allocation have distinct, interacting effects.}
-At fixed endpoints, internal placement improves performance; changing the
-range can reverse the preferred allocation.
-\item \textbf{Positional structure and learned use are distinct.}
-Complete rotary pairs characterize positional overlap; coordinate interventions
-and rank--quality comparisons distinguish it from learned frequency use.
-\item \textbf{Explicit allocations improve extension and in-window quality.}
-TailSpline provides a closed-form extension with cross-model and natural-QA
-gains; NCP improves native-window tasks at unchanged endpoints.
+\item \textbf{Allocation matters beyond frequency range.}
+Fixed-support and equal-displacement controls identify placement effects;
+changing the range can reverse the preferred allocation.
+\item \textbf{Learned frequency use affects allocation quality.}
+Complete sine--cosine pairs characterize positional overlap; reassigning the
+same spectrum across learned coordinates changes task performance.
+\item \textbf{Explicit allocations improve practical quality.}
+Public-parameter constructions improve extension and native-window tasks,
+with cross-model and natural-QA gains and complementary Cosh training evidence.
 \end{itemize}

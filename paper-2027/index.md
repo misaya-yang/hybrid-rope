@@ -1,29 +1,23 @@
 # Beyond the Base：当前论文索引
 
-## 下一版准备，暂不改稿
+## 当前证据增量版
 
-当前等待GLM及本批后续实验结果后统一整合。已更新
-[准备清单](../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)、
-[Pro取舍](../docs/research/reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md)及
-[十篇审稿经验](../docs/research/reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)。
-Qwen等新完成结果尚未自动写入当前PDF；下方是已交付稿件状态。
+标题保持 **Beyond the Base: Frequency Allocation in RoPE**，原章节结构保持。
+主文9页、全稿33页；摘要163词且无数字，第一页无图。
+新增四模型静态YaRN直接对照、GLM Full-13、Qwen/GLM完整长书QA及高倍率完整结果。
+432M曲线、逐任务主图和自然QA主表区间继续保留在正文。
 
+- [本轮修改、Pro取舍和审稿经验回查](research/revision_20260916_evidence_update/README.md)。
+- [修改前基线v1](history/v1.pdf)：本轮修改前的main.pdf原样快照，history只保存PDF。
+  每轮开始先将当前未改稿存为最大历史版本加一，再作新旧稿双模型PDF对读。
+- [投稿标题与摘要](title_abstract.txt)。
+- [此前附录整理记录](research/appendix_restructure_20260916/README.md)：对应9/29页旧版，关键材料延续。
+- [后续实验准备](../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)：
+  已完成部分已入本版，在跑实验待下一增量。
 
-当前标题：**Beyond the Base: Frequency Allocation in RoPE**。
-
-[投稿标题与摘要纯文本](title_abstract.txt)。
-
-最新已完成[附录整理与完整性检查](research/appendix_restructure_20260916/README.md)：
-主文9页、总计29页（此前69页），摘要158词且无数字，第一页无图。
-六个主题附录保留当前主张所需证明、实验协议和分任务结果；历史旁支保留源码归档。
-总页数目标不超过35页、硬上限40页；这是作者的编辑约束，ICLR 2027附录本身无页数上限。
-[本轮验证](research/appendix_restructure_20260916/validation.json)记录编译、数值和源码包检查。
-上一轮[新落盘结果与NCP正文整合](research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)的结果全部延续。
-
-研究对象为z：受控干预识别其作用，完整旋转对理论区分位置结构与模型使用；TailSpline改善
-外推质量，NCP展示in-window性能增益，Cosh提供学习与外推辅助证据。
-[R08独立PDF审稿](research/pdf-review-rounds/20260915_theory_integration_r08/README.md)对应此前65页版本，
-本次未启动额外审稿轮次。
+总页数目标不超过35页、硬上限40页，是作者的编辑约束。
+研究对象为z；151.9M固定端点属于50.9M–750M Cosh训练证据链，
+TailSpline与NCP分别提供冻结外推和原生窗口增强证据。
 
 - [论文PDF](main.pdf)、[源码包](exponent-allocation-source.zip)、[主源文件](main.tex)。
 - [本轮决策与实验安排](research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md)：完整主张、结果身份、A1准备及M1条件。
