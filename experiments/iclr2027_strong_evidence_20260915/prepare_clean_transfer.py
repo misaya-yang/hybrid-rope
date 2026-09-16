@@ -185,13 +185,19 @@ def _freeze_panel_manifest(
     core = json.loads(core_manifest_path.read_text())
     sources = {}
     for task, records in core.get("sources", {}).items():
-        sources[task] = [
-            {
-                "artifact": _portable_relative(Path(record["path"]), out),
-                "sha256": record["sha256"],
-            }
-            for record in records
-        ]
+        normalized = []
+        for record in records:
+            if record.get("artifact"):
+                artifact = Path(str(record["artifact"]))
+                if artifact.is_absolute():
+                    raise ValueError("frozen source artifact must remain relative to --out")
+                artifact_value = artifact.as_posix()
+            elif record.get("path"):
+                artifact_value = _portable_relative(Path(record["path"]), out)
+            else:
+                raise ValueError("source record lacks path or portable artifact")
+            normalized.append({"artifact": artifact_value, "sha256": record["sha256"]})
+        sources[task] = normalized
     contract = (
         f"strong_clean_{model_id}_s{_scale_label(scale)}_{length}_"
         f"ruler13_{rows_per_task}_source_order_unpadded_v1"

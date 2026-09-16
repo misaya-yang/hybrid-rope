@@ -14,6 +14,8 @@ from experiments.iclr2027_strong_evidence_20260915 import run_clean_matrix
 
 TABLE_VALUES = np.geomspace(1.0, 1e-6, 64).astype(np.float32)
 TABLE_GAIN = 1.138629436111989
+LLAMA_VALUES = np.geomspace(1.0, 1e-5, 64).astype(np.float32)
+LLAMA_GAIN = 1.2772588722239782
 
 
 def write_json(path: Path, value: dict) -> None:
@@ -97,7 +99,13 @@ def qwen_fixture(tmp_path: Path) -> tuple[Path, Path]:
     return root, model
 
 
-def llama_fixture(tmp_path: Path) -> Path:
+def llama_fixture(tmp_path: Path) -> tuple[Path, Path]:
+    model = tmp_path / "llama"
+    write_json(model / "config.json", {
+        "model_type": "llama", "hidden_size": 4096, "num_hidden_layers": 32,
+        "num_attention_heads": 32, "num_key_value_heads": 8,
+        "rope_theta": 500000.0, "max_position_embeddings": 8192,
+    })
     root = tmp_path / "llama_root"
     panel = root / "assets" / "full13" / "inputs.jsonl"
     panel.parent.mkdir(parents=True, exist_ok=True)
@@ -114,15 +122,19 @@ def llama_fixture(tmp_path: Path) -> Path:
     })
     lm = root / "assets" / "ppl10" / "lm.npy"
     lm.parent.mkdir(parents=True, exist_ok=True)
-    np.save(lm, np.zeros((1, 2), dtype=np.int64), allow_pickle=False)
+    np.save(lm, np.zeros((10, 131073), dtype=np.int64), allow_pickle=False)
     write_json(root / "assets" / "ppl10" / "manifest.json", {
-        "documents": 10, "lengths": [131072], "lm_array_sha256": sha(lm),
+        "documents": 10, "lengths": [131072], "array_shape": [10, 131073],
+        "lm_array_sha256": sha(lm),
     })
     table_hashes = {}
     for arm in ("tailspline", "mrpro"):
-        table_hashes[arm] = f"hash-{arm}"
+        table_hashes[arm] = tables.tensor_sha256(LLAMA_VALUES)
         write_json(root / "tables" / f"{arm}.json", {
+            "candidate_id": f"llama3_8b_s16_128k_{arm}",
+            "scale": 16.0, "band_envelope": [18, 35],
             "table_sha256_float32": table_hashes[arm],
+            "table": {"values_float32": LLAMA_VALUES.tolist(), "gain": LLAMA_GAIN},
         })
     write_json(root / "assets" / "ready.json", {
         "status": "TAILSPLINE_LLAMA_S16_128K_ASSETS_READY_V1",
@@ -131,7 +143,7 @@ def llama_fixture(tmp_path: Path) -> Path:
         "inputs_sha256": sha(panel), "lm_array_sha256": sha(lm),
         "table_sha256": table_hashes,
     })
-    return root
+    return root, model
 
 
 def install_expected_tables(monkeypatch) -> None:
@@ -139,14 +151,18 @@ def install_expected_tables(monkeypatch) -> None:
         run_clean_matrix, "expected_table",
         lambda args, arm: (TABLE_VALUES.copy(), TABLE_GAIN, {}),
     )
+    monkeypatch.setattr(
+        subject, "expected_analytic_table",
+        lambda config, method, scale: (LLAMA_VALUES.copy(), LLAMA_GAIN, {}),
+    )
 
 
 def test_cpu_preflight_accepts_exact_frozen_assets(tmp_path, monkeypatch):
     install_expected_tables(monkeypatch)
     qwen_root, model = qwen_fixture(tmp_path)
-    llama_root = llama_fixture(tmp_path)
+    llama_root, llama_model = llama_fixture(tmp_path)
     qwen = subject.validate_qwen_assets(qwen_root, model)
-    llama = subject.validate_llama_assets(llama_root)
+    llama = subject.validate_llama_assets(llama_root, llama_model)
     assert qwen["rows_per_arm"] == 1300
     assert qwen["panels"]["131072"]["rows"] == 650
     assert llama["rows_per_arm"] == 130 and llama["lm_documents_per_arm"] == 10
@@ -171,6 +187,32 @@ def test_cpu_preflight_rejects_padding_and_table_drift(tmp_path, monkeypatch):
     write_json(table, value)
     with pytest.raises(ValueError, match="table drift"):
         subject.validate_qwen_assets(qwen_root, model)
+
+
+def test_llama_preflight_rejects_fake_128k_array_and_table(tmp_path, monkeypatch):
+    install_expected_tables(monkeypatch)
+    root, model = llama_fixture(tmp_path)
+    lm = root / "assets" / "ppl10" / "lm.npy"
+    np.save(lm, np.zeros((1, 2), dtype=np.int64), allow_pickle=False)
+    manifest = json.loads((root / "assets" / "ppl10" / "manifest.json").read_text())
+    manifest["lm_array_sha256"] = sha(lm)
+    write_json(root / "assets" / "ppl10" / "manifest.json", manifest)
+    ready = json.loads((root / "assets" / "ready.json").read_text())
+    ready["lm_array_sha256"] = sha(lm)
+    write_json(root / "assets" / "ready.json", ready)
+    with pytest.raises(ValueError, match="shape or dtype"):
+        subject.validate_llama_assets(root, model)
+
+    root, model = llama_fixture(tmp_path / "table")
+    receipt = json.loads((root / "tables" / "tailspline.json").read_text())
+    receipt["table"]["values_float32"][3] *= 0.9
+    receipt["table_sha256_float32"] = "mutated-but-self-consistent-claim"
+    write_json(root / "tables" / "tailspline.json", receipt)
+    ready = json.loads((root / "assets" / "ready.json").read_text())
+    ready["table_sha256"]["tailspline"] = "mutated-but-self-consistent-claim"
+    write_json(root / "assets" / "ready.json", ready)
+    with pytest.raises(ValueError, match="analytic table drift"):
+        subject.validate_llama_assets(root, model)
 
 
 def test_version_parsing_matches_blackwell_floor():

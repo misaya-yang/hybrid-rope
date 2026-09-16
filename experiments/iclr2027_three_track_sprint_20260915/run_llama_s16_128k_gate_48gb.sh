@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo=/root/autodl-tmp/hybrid-rope
-plan=/root/autodl-tmp/today_rope_plan_20260914
+repo=${HYBRID_ROPE_REPO:-/root/autodl-tmp/hybrid-rope}
+plan=${HYBRID_ROPE_PLAN_ROOT:-/root/autodl-tmp/today_rope_plan_20260914}
 root=${plan}/tailspline_llama_s16_128k_gate
-model=/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct
-python_bin=/root/miniconda3/bin/python
+model=${LLAMA_MODEL:-/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct}
+python_bin=${PYTHON_BIN:-/root/miniconda3/bin/python}
+gpu_lock=${GPU_LOCK_PATH:-/tmp/hybrid-rope-gpu0.lock}
+
+if [[ "${HYBRID_ROPE_GPU_LOCK_HELD:-0}" != 1 ]]; then
+  exec 8>"${gpu_lock}"
+  if ! flock -n 8; then
+    printf 'REFUSE: another process owns %s\n' "${gpu_lock}" >&2
+    exit 73
+  fi
+fi
 
 mkdir -p "${root}/runs" "${root}/logs" "${root}/reports"
 cd "${repo}"
@@ -63,13 +72,14 @@ if [[ "${total_mib}" -ge 90000 && "${generation_prefill_chunk_size}" -eq 0 ]]; t
     "${python_bin}" -m experiments.iclr2027_three_track_sprint_20260915.benchmark_generation_batch \
       --model "${model}" --table "${root}/tables/tailspline.json" \
       --panel "${root}/assets/full13/inputs.jsonl" --length 131072 \
+      --batch-sizes 2,4 \
       --minimum-free-fraction 0.06 --minimum-speedup 1.05 --out "${batch_report}" \
       >"${root}/logs/batch_benchmark.log" 2>&1
   fi
   generation_batch_size=$("${python_bin}" - "${batch_report}" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]));value=int(x.get('recommended_batch_size',1))
-if x.get('status')!='GENERATION_BATCH_BENCHMARK_COMPLETE_V1' or value not in (1,2):
+if x.get('status')!='GENERATION_BATCH_BENCHMARK_COMPLETE_V2' or value not in (1,2,4):
     raise SystemExit('invalid generation batch benchmark')
 print(value)
 PY

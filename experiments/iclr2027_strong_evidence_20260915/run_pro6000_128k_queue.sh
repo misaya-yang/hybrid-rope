@@ -26,7 +26,7 @@ if ! flock -n 9; then
 fi
 
 "${python_bin}" -m experiments.iclr2027_strong_evidence_20260915.pro6000_128k_preflight \
-  --plan-root "${plan}" --qwen-model "${qwen_model}" --check-gpu \
+  --plan-root "${plan}" --qwen-model "${qwen_model}" --llama-model "${llama_model}" --check-gpu \
   --minimum-vram-mib 80000 --out "${queue_root}/pro6000_preflight.json"
 
 device_uuid=$(nvidia-smi --query-gpu=uuid --format=csv,noheader,nounits | head -1 | tr -cd 'A-Za-z0-9_-')
@@ -56,6 +56,8 @@ trap 'exit 143' TERM
 
 # Phase 1 is the cheap, decisive Llama S=16 gate.  Its own canary independently
 # chooses generation and LM prefill strategies on this exact GPU.
+HYBRID_ROPE_GPU_LOCK_HELD=1 HYBRID_ROPE_REPO="${repo}" \
+HYBRID_ROPE_PLAN_ROOT="${plan}" LLAMA_MODEL="${llama_model}" PYTHON_BIN="${python_bin}" \
 bash experiments/iclr2027_three_track_sprint_20260915/run_llama_s16_128k_gate_48gb.sh \
   >"${queue_root}/logs/llama_s16_128k.log" 2>&1
 
@@ -86,13 +88,14 @@ if [[ "${qwen_chunk}" -eq 0 ]]; then
     "${python_bin}" -m experiments.iclr2027_three_track_sprint_20260915.benchmark_generation_batch \
       --model "${qwen_model}" --table "${qwen_root}/tables/tailspline.json" \
       --panel "${qwen_root}/assets/panels/131072/inputs.jsonl" --length 131072 \
+      --batch-sizes 2,4,8 \
       --minimum-free-fraction 0.06 --minimum-speedup 1.05 --out "${qwen_batch_report}" \
       >"${queue_root}/logs/qwen_batch_benchmark.log" 2>&1
   fi
   qwen_batch_size=$("${python_bin}" - "${qwen_batch_report}" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]));value=int(x.get('recommended_batch_size',1))
-if x.get('status')!='GENERATION_BATCH_BENCHMARK_COMPLETE_V1' or value not in (1,2):
+if x.get('status')!='GENERATION_BATCH_BENCHMARK_COMPLETE_V2' or value not in (1,2,4,8):
     raise SystemExit('invalid Qwen generation batch benchmark')
 print(value)
 PY

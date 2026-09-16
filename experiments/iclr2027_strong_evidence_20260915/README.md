@@ -44,6 +44,10 @@ bash experiments/iclr2027_strong_evidence_20260915/prepare_pro6000_128k_queue.sh
 bash experiments/iclr2027_strong_evidence_20260915/validate_pro6000_queue_on_4080.sh
 ```
 
+The validation entry targets the existing 32GB 4080 vGPU and refuses a
+standard 16GB physical RTX 4080; it is not a claim that every 4080 can host the
+Llama BF16 32K canary.
+
 On the RTX PRO 6000 Blackwell machine, the only formal command is:
 
 ```bash
@@ -57,9 +61,11 @@ actual GPU; generation and LM choose independently. A 96GB card may peak near
 90GB (6% free-memory floor), but selection is by end-to-end time rather than by
 allocated bytes. Hardware utilization, memory, clocks, power and temperature
 are sampled every two seconds. When direct prefill wins, a second canary compares
-two sequential batch-1 generations with an unpadded, exactly equal-length
-batch-2 pair. Batch 2 is used only if generated token IDs are identical, speedup
-is at least 5%, and the same memory floor holds; chunked prefill remains batch 1.
+sequential batch-1 generations with unpadded, exactly equal-length groups:
+Llama tests batches 2/4 and Qwen tests 2/4/8, each on its own longest eligible
+128K shape. A larger batch is used only if generated token IDs are identical,
+speedup is at least 5%, and the same memory floor holds; chunked prefill remains
+batch 1. Missing groups and OOMs fall back safely rather than stopping the queue.
 
 NVFP4/MXFP8, quantized KV, TensorRT-LLM, FlexAttention/FA4 rewrites and
 multi-prompt padding are not part of this BF16 comparison: they change numerical

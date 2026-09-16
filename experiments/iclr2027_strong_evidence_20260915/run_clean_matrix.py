@@ -220,15 +220,30 @@ def eval_id(panel_path: Path, row: dict) -> str:
     return f"extra_{panel_path.parent.name}:{row['row_id']}"
 
 
-def expected_eval_rows(panel_paths: list[Path]) -> list[tuple[Path, dict]]:
-    return [(path, row) for path in panel_paths for row in read_jsonl(path)]
+def generation_order(args: argparse.Namespace) -> str:
+    if args.batch_size > 1:
+        return "longest_first_shape_sorted_v1" if args.longest_first else "ascending_shape_sorted_v1"
+    return "panel_order_v1"
+
+
+def expected_eval_rows(
+    args: argparse.Namespace, panel_paths: list[Path],
+) -> list[tuple[Path, dict]]:
+    pairs = [(path, row) for path in panel_paths for row in read_jsonl(path)]
+    if args.batch_size > 1:
+        pairs.sort(key=lambda pair: (
+            -int(pair[1]["length_cap"]) if args.longest_first else int(pair[1]["length_cap"]),
+            int(pair[1]["max_new_tokens"]), len(pair[1]["prompt_ids"]),
+            str(pair[1]["task"]), eval_id(pair[0], pair[1]),
+        ))
+    return pairs
 
 
 def launch_contract(
     args: argparse.Namespace, arm: str, table_path: Path,
     panel_paths: list[Path], rows: list[dict],
 ) -> dict:
-    return {
+    contract = {
         "status": LAUNCH_STATUS,
         "arm": arm,
         "model": str(args.model),
@@ -254,6 +269,9 @@ def launch_contract(
         "prefill_chunk_size": args.prefill_chunk_size,
         "lm_enabled": False,
     }
+    if args.batch_size > 1 or args.longest_first:
+        contract["generation_order"] = generation_order(args)
+    return contract
 
 
 def evaluation_command(
@@ -270,6 +288,8 @@ def evaluation_command(
     command.extend(("--only-extra-panels", "--skip-lm"))
     for length in args.lengths:
         command.extend(("--length-cap", str(length)))
+    if args.longest_first:
+        command.append("--longest-first")
     command.extend((
         "--prefill-chunk-size", str(args.prefill_chunk_size),
         "--batch-size", str(args.batch_size), "--static-table-json", str(table_path),
@@ -283,7 +303,12 @@ def validate_kernel_contract(
     panel_paths: list[Path], path: Path,
 ) -> dict:
     contract = read_json(path)
-    expected_ids = [eval_id(panel, row) for panel, row in expected_eval_rows(panel_paths)]
+    expected_ids = [eval_id(panel, row) for panel, row in expected_eval_rows(args, panel_paths)]
+    observed_order = contract.get("generation_order")
+    order_matches = (
+        observed_order == generation_order(args)
+        or (observed_order is None and generation_order(args) == "panel_order_v1")
+    )
     if (
         contract.get("arm") != candidate_id(args.model_id, args.scale, arm)
         or contract.get("base_arm") != "Native"
@@ -292,6 +317,7 @@ def validate_kernel_contract(
         or contract.get("generation_length_caps") != sorted(args.lengths)
         or contract.get("lm_enabled") is not False
         or int(contract.get("batch_size", -1)) != args.batch_size
+        or not order_matches
         or int(contract.get("prefill_chunk_size", -1)) != args.prefill_chunk_size
         or contract.get("static_table") != receipt["table"]
     ):
@@ -304,7 +330,7 @@ def validate_generation_prefix(
     *, require_complete: bool,
 ) -> list[dict]:
     saved = read_jsonl(path) if path.is_file() else []
-    expected = expected_eval_rows(panel_paths)
+    expected = expected_eval_rows(args, panel_paths)
     if len(saved) > len(expected) or (require_complete and len(saved) != len(expected)):
         raise ValueError(f"generation row count drift: {path}")
     label = candidate_id(args.model_id, args.scale, arm)
@@ -524,10 +550,10 @@ def build_plan(args: argparse.Namespace) -> tuple[dict, list[Path], list[dict]]:
     args.lengths = tuple(args.lengths)
     if (
         args.rows_per_task <= 0 or args.scale <= 1 or not float(args.scale).is_integer()
-        or int(args.scale) not in {2, 4, 16} or args.batch_size not in {1, 2}
+        or int(args.scale) not in {2, 4, 16} or args.batch_size not in {1, 2, 4, 8}
         or args.prefill_chunk_size < 0 or not _SLUG.fullmatch(args.model_id)
     ):
-        raise ValueError("rows/scale/prefill are invalid; clean confirmation supports batch-size 1 or 2")
+        raise ValueError("rows/scale/prefill are invalid; clean confirmation supports batch-size 1, 2, 4 or 8")
     if args.batch_size > 1 and args.prefill_chunk_size != 0:
         raise ValueError("exact-length batch=2 is supported only with direct prefill")
     for path in (args.model / "config.json", args.data_manifest, args.python):
@@ -545,7 +571,7 @@ def build_plan(args: argparse.Namespace) -> tuple[dict, list[Path], list[dict]]:
     )
     if args.longest_first:
         panels = list(reversed(panels))
-        rows = [row for panel in panels for row in read_jsonl(panel)]
+    rows = [row for _, row in expected_eval_rows(args, panels)]
     arms = ["tailspline", "mrpro"] + (["native"] if args.include_native else [])
     table_paths = {arm: args.out / "tables" / f"{arm}.json" for arm in arms}
     eval_commands = {

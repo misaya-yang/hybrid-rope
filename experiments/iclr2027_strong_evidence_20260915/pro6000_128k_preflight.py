@@ -15,6 +15,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 
 TASKS = (
     "niah_single_1", "niah_single_2", "niah_single_3",
@@ -48,7 +50,14 @@ def _require_file(path: Path) -> Path:
     return path
 
 
-def validate_llama_assets(root: Path) -> dict[str, Any]:
+def expected_analytic_table(config: dict, *, method: str, scale: float):
+    from experiments.fixed_rope_three_interfaces_20260913 import tables
+    return tables.build_analytic(
+        config, method=method, scale=scale, low=None, high=None, depth=1.0, gain=None,
+    )
+
+
+def validate_llama_assets(root: Path, model: Path) -> dict[str, Any]:
     ready_path = _require_file(root / "assets" / "ready.json")
     ready = read_json(ready_path)
     expected = {
@@ -66,6 +75,8 @@ def validate_llama_assets(root: Path) -> dict[str, Any]:
     panel_manifest = read_json(_require_file(root / "assets" / "full13" / "manifest.json"))
     lm_array = _require_file(root / "assets" / "ppl10" / "lm.npy")
     lm_manifest = read_json(_require_file(root / "assets" / "ppl10" / "manifest.json"))
+    config_path = _require_file(model / "config.json")
+    config = read_json(config_path)
     counts: Counter[str] = Counter()
     rows = 0
     with panel.open() as stream:
@@ -90,14 +101,33 @@ def validate_llama_assets(root: Path) -> dict[str, Any]:
         or sha256(panel) != ready.get("inputs_sha256")
         or lm_manifest.get("documents") != 10
         or lm_manifest.get("lengths") != [131072]
+        or lm_manifest.get("array_shape") != [10, 131073]
         or lm_manifest.get("lm_array_sha256") != ready.get("lm_array_sha256")
         or sha256(lm_array) != ready.get("lm_array_sha256")
     ):
         raise ValueError("Llama S16 128K panel or LM asset drift")
+    array = np.load(lm_array, mmap_mode="r", allow_pickle=False)
+    if array.shape != (10, 131073) or array.dtype != np.int64:
+        raise ValueError("Llama S16 LM array shape or dtype drift")
 
     table_hashes = {}
+    from experiments.fixed_rope_three_interfaces_20260913 import tables as table_tools
     for arm in ("tailspline", "mrpro"):
         receipt = read_json(_require_file(root / "tables" / f"{arm}.json"))
+        expected_values, expected_gain, _ = expected_analytic_table(
+            config, method=arm, scale=16.0,
+        )
+        table = receipt.get("table", receipt)
+        actual_values = np.asarray(table.get("values_float32"), dtype=np.float32)
+        if (
+            receipt.get("candidate_id") != f"llama3_8b_s16_128k_{arm}"
+            or receipt.get("scale") != 16.0
+            or receipt.get("band_envelope") != [18, 35]
+            or not np.array_equal(actual_values, expected_values)
+            or float(table.get("gain", float("nan"))) != float(expected_gain)
+            or receipt.get("table_sha256_float32") != table_tools.tensor_sha256(actual_values)
+        ):
+            raise ValueError(f"Llama S16 analytic table drift: {arm}")
         table_hashes[arm] = receipt.get("table_sha256_float32")
     if table_hashes != ready.get("table_sha256"):
         raise ValueError("Llama S16 table receipt drift")
@@ -271,6 +301,8 @@ def main() -> None:
     parser.add_argument("--plan-root", type=Path, default=Path("/root/autodl-tmp/today_rope_plan_20260914"))
     parser.add_argument("--qwen-model", type=Path,
                         default=Path("/root/autodl-tmp/rope_qwen_baseline_20260907/model"))
+    parser.add_argument("--llama-model", type=Path,
+                        default=Path("/root/autodl-tmp/models/Meta-Llama-3-8B-Instruct"))
     parser.add_argument("--check-gpu", action="store_true")
     parser.add_argument("--minimum-vram-mib", type=int, default=80000)
     parser.add_argument("--allow-non-blackwell", action="store_true")
@@ -281,7 +313,9 @@ def main() -> None:
     payload: dict[str, Any] = {
         "status": "PRO6000_128K_PREFLIGHT_COMPLETE_V1",
         "gpu_execution": False,
-        "llama_s16_128k": validate_llama_assets(args.plan_root / "tailspline_llama_s16_128k_gate"),
+        "llama_s16_128k": validate_llama_assets(
+            args.plan_root / "tailspline_llama_s16_128k_gate", args.llama_model,
+        ),
         "qwen_s4_64k128k": validate_qwen_assets(
             args.plan_root / "tailspline_qwen25_s4_64k128k_clean", args.qwen_model,
         ),
