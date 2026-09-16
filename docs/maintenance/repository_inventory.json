@@ -5039,12 +5039,32 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/extreme_condition_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/matched_olmo_naturalqa_report.py",
       "area": "experiments",
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_128k_ppl.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/prepare_clean_transfer.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_four_model_extreme_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_infinitebench_100k128k.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -5059,12 +5079,92 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/prepare_pro6000_128k_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/pro6000_128k_preflight.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_derived_findings.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_raw_verification.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/completed_results_snapshot_20260915.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_control_vs_mrpro.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_matched_dose_c.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_native8k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_clean16k_ruler200.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_halfturn_four_arm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_naturalqa631.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_clean_c.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/run_clean_matrix.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_four_model_extreme_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_infinitebench_100k128k.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -5084,7 +5184,27 @@
       "category": "code"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_pro6000_128k_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/run_pro6000_followup_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/summarize_matrix.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/validate_extreme_condition.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/validate_pro6000_queue_on_4080.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -5105,6 +5225,11 @@
     },
     {
       "path": "experiments/iclr2027_three_track_sprint_20260915/analyze_midband_scale_response.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/iclr2027_three_track_sprint_20260915/benchmark_generation_batch.py",
       "area": "experiments",
       "category": "code"
     },
@@ -8269,6 +8394,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/appendix/a12_completed_evidence.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/appendix/a1_proofs.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -8709,6 +8839,16 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/completed_evidence_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/completed_evidence_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/explicit_geometry_examples.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
@@ -9109,6 +9249,11 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/verify_completed_evidence.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/verify_explicit_geometry.py",
       "area": "paper-2027",
       "category": "code"
@@ -9195,6 +9340,16 @@
     },
     {
       "path": "paper-2027/research/COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/COMPLETED_EVIDENCE_REVISION_VALIDATION_20260915.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md",
       "area": "paper-2027",
       "category": "document"
     },
@@ -11124,6 +11279,11 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_clean_c_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_clean_full13.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -11164,12 +11324,42 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_longbench_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_m4.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_native_clean_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_natural_transfer_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_ncp_tasks_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_olmo_clean_new.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_olmo_qa.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_olmo_qa_new.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -14279,6 +14469,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_pro6000_128k_preflight.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_psr_groups.py",
       "area": "tests",
       "category": "code"
@@ -14345,6 +14540,11 @@
     },
     {
       "path": "tests/test_range_table_solver.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_recovery_v2_identity_compat.py",
       "area": "tests",
       "category": "code"
     },

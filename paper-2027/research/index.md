@@ -2,6 +2,7 @@
 
 | 任务 | 入口 |
 |---|---|
+| 新落盘结果整合（已应用，含NCP正文） | [跨模型、自然QA、等位移与原生窗口分析](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |
 | 本轮理论整合与精确修改（已应用） | [修改记录](theory_revision_proposal_20260915/README.md) · [R08独立PDF审稿](pdf-review-rounds/20260915_theory_integration_r08/README.md) |
 | 判断现稿是否还需要修改、查看本轮文档修正 | [现状与修改必要性审计](audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md) |
 | 查看Oral建议及作者纠正 | [Oral研究策略](ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md)：顶部已撤回TailSpline中心定位，具体构造实验建议保留 |

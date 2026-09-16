@@ -1,0 +1,72 @@
+{
+  "arm_macro_scores": {
+    "native": 0.6937393162393162,
+    "ncp": 0.707820512820513
+  },
+  "arm_task_scores": {
+    "native": {
+      "cwe": 0.07833333333333334,
+      "fwe": 0.5777777777777777,
+      "niah_multikey_1": 0.8166666666666667,
+      "niah_multikey_2": 0.9166666666666666,
+      "niah_multikey_3": 0.5833333333333334,
+      "niah_multiquery": 0.8916666666666667,
+      "niah_multivalue": 0.9541666666666667,
+      "niah_single_1": 1.0,
+      "niah_single_2": 1.0,
+      "niah_single_3": 0.9833333333333333,
+      "qa_1": 0.6833333333333333,
+      "qa_2": 0.35,
+      "vt": 0.18333333333333332
+    },
+    "ncp": {
+      "cwe": 0.04666666666666666,
+      "fwe": 0.5999999999999999,
+      "niah_multikey_1": 0.7833333333333333,
+      "niah_multikey_2": 0.95,
+      "niah_multikey_3": 0.6166666666666667,
+      "niah_multiquery": 0.9083333333333333,
+      "niah_multivalue": 0.9833333333333333,
+      "niah_single_1": 1.0,
+      "niah_single_2": 1.0,
+      "niah_single_3": 0.9833333333333333,
+      "qa_1": 0.6166666666666667,
+      "qa_2": 0.3,
+      "vt": 0.41333333333333333
+    }
+  },
+  "claim_boundary": "Fresh model execution for one public-parameter NCP table on the previously frozen OLMo Native-window RULER development panel. It tests for a task signal but is not an independent confirmation or a cross-checkpoint universal claim.",
+  "comparison": {
+    "ncp_minus_native": {
+      "candidate_only_wins": 62,
+      "delta": 0.014081196581196574,
+      "native_only_wins": 31,
+      "paired_task_equal_bootstrap_ci95": [
+        0.0020085470085470076,
+        0.025833333333333326
+      ],
+      "probability_delta_gt_zero": 0.9888,
+      "ties": 687
+    }
+  },
+  "decision": {
+    "paired_ci_above_zero": true,
+    "point_estimate_positive": true
+  },
+  "model_id": "olmo2_1b",
+  "panel": {
+    "content_padding": false,
+    "inputs_sha256": "49fdd6ecb376beab1480266d4ce2e305610126c679b327202e1764185857910e",
+    "reused_asset_contract": "native-halfturn-ruler4k-source-order-v1",
+    "rows": 780,
+    "rows_per_task": 60,
+    "selection_mode": "source-order",
+    "tasks": 13
+  },
+  "status": "OLMO_NATIVE_NCP_RULER4K_PAIRED_REPORT_V1",
+  "table": {
+    "candidate_table_sha256_float32": "54b9dd1f73aafc69f7bb5ed1b7b49d49128002371cb378d03ca1fd1d108e0cb7",
+    "gain": 1.0,
+    "model_outputs_used_to_build_table": false
+  }
+}

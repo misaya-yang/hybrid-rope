@@ -1,0 +1,55 @@
+{
+  "checked_at_utc": "2026-09-16T03:20:30.876890+00:00",
+  "remote_operations": "read only; no GPU tasks or remote files modified",
+  "reports": {
+    "olmo_clean": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_clean16k_ruler200.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_olmo_s4_16k_ruler200_clean/reports/tailspline_vs_mrpro_16384.json",
+      "sha256": "7bf2f56b03d5b1cf9fe9e11867b5e550ed391be76e8038c8ce2cedc9c6d3f91e"
+    },
+    "olmo_qa": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_naturalqa631.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_olmo_s4_naturalqa631/reports/tailspline_vs_mrpro_naturalqa631.json",
+      "sha256": "683a8cff1495338e711b57af2a1bc09418eb8f463e1f307e09891d22022e77a0"
+    },
+    "longbench": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_longbench_v2_8k32k/report.json",
+      "sha256": "37c020271cdf10636cfe691e813c2bb0a10e429d74c822b313d69e102bf93f88"
+    },
+    "x4": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_matched_dose_c.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/strong_evidence/llama_s4_clean_matched_dose_c/reports/tailspline_vs_control_and_mrpro.json",
+      "sha256": "8d7517dc76efc7bc95ba3d61d79f0f249e55d142a93e1f102d519ec23b30f7a8"
+    },
+    "x4_cp": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_control_vs_mrpro.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/strong_evidence/llama_s4_clean_matched_dose_c/reports/control_vs_mrpro.json",
+      "sha256": "186a8eedd1017c27ed8891d8526da1180b250d07fbad6db89cd2c58992e24ce8"
+    },
+    "x5": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/llama_clean_native8k.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/strong_evidence/llama_s4_clean_native_x5/reports/tailspline_vs_mrpro_native_8192.json",
+      "sha256": "6bd279395880d2dfc844b299afb01a7f592fa235243e490ca97716e1136b3547"
+    },
+    "halfturn": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_halfturn_four_arm.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/olmo_native_halfturn_phase/reports/ruler4k_four_arm.json",
+      "sha256": "6d8a09e6839aa796b5e423656f7c1659648d041f8a89408b553e0dc33aeabb3e"
+    },
+    "ncp": {
+      "local_path": "experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json",
+      "remote_path": "/root/autodl-tmp/today_rope_plan_20260914/olmo_native_contrastive_proximal/reports/ncp_vs_native_ruler4k.json",
+      "sha256": "00a293a0eb035a58f605c0a31113a2e5b2f7a8fb43f374eaba53de561b4414d6"
+    }
+  },
+  "verification": {
+    "raw_rows_read": 22296,
+    "pairing": "row IDs, prompt hashes, task and input length checked for all selected arms",
+    "ruler": "stored official scores reaggregated; no text rescore claimed",
+    "olmo_qa": "all 1262 full responses rescored with existing QA F1 adapter",
+    "longbench_v2": "all 234 full responses rescored with declared multiple-choice adapter",
+    "intervals": "original paired bootstrap intervals retained",
+    "raw_archive": "unchanged remote paths; compact local temporary extraction is not the original raw archive"
+  }
+}

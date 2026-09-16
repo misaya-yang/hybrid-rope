@@ -53,6 +53,8 @@ class PrepareConfig:
     lengths: tuple[int, ...]
     native_length: int
     rows_per_task: int = 0
+    tasks: tuple[str, ...] = ()
+    minimum_input_tokens: int = 0
 
     def validate(self) -> None:
         if self.benchmark not in {LONGBENCH_V2, INFINITEBENCH}:
@@ -65,6 +67,12 @@ class PrepareConfig:
             raise ValueError("LongBench-v2 requires --rows-per-task 0 for the complete eligible pool")
         if self.benchmark == INFINITEBENCH and self.rows_per_task <= 0:
             raise ValueError("InfiniteBench requires a positive --rows-per-task source-order cap")
+        if self.benchmark == INFINITEBENCH:
+            selected = self.tasks or INFINITE_TASKS
+            if len(selected) != len(set(selected)) or not set(selected).issubset(INFINITE_TASKS):
+                raise ValueError("InfiniteBench tasks must be a unique supported subset")
+        elif self.tasks:
+            raise ValueError("task selection is only supported for InfiniteBench")
         if not self.lengths or any(value <= 0 for value in self.lengths):
             raise ValueError("--lengths must contain positive caps")
         if tuple(sorted(set(self.lengths))) != self.lengths:
@@ -73,6 +81,8 @@ class PrepareConfig:
             raise ValueError("--lengths must contain at least one cap above the native length")
         if self.lengths[-1] > self.native_length * self.scale:
             raise ValueError("largest requested length exceeds native_length * scale")
+        if self.minimum_input_tokens < 0 or self.minimum_input_tokens > self.lengths[-1]:
+            raise ValueError("minimum input tokens must be between zero and the largest cap")
 
 
 def sha256_text(value: str) -> str:
@@ -118,7 +128,9 @@ def _find_unique(root: Path, names: set[str], description: str) -> Path:
     return matches[0]
 
 
-def locate_sources(benchmark: str, data_root: Path) -> dict[str, Path]:
+def locate_sources(
+    benchmark: str, data_root: Path, tasks: Sequence[str] = (),
+) -> dict[str, Path]:
     """Locate already-present official files without network access."""
     data_root = Path(data_root)
     if benchmark == LONGBENCH_V2:
@@ -163,7 +175,10 @@ def locate_sources(benchmark: str, data_root: Path) -> dict[str, Path]:
             raise DataRootError("InfiniteBench requires a directory containing both official task files")
         sources: dict[str, Path] = {}
         missing: list[str] = []
-        for task in INFINITE_TASKS:
+        selected_tasks = tasks or INFINITE_TASKS
+        if len(selected_tasks) != len(set(selected_tasks)) or not set(selected_tasks).issubset(INFINITE_TASKS):
+            raise ValueError("InfiniteBench tasks must be a unique supported subset")
+        for task in selected_tasks:
             matches = sorted({path.resolve() for path in data_root.rglob(f"{task}.jsonl") if path.is_file()}) if data_root.exists() else []
             if not matches:
                 missing.append(f"{task}.jsonl")
@@ -367,6 +382,9 @@ def _adapt_row(
     if input_tokens <= config.native_length:
         candidate["reason"] = "within_native"
         return candidate, None
+    if config.minimum_input_tokens and input_tokens < config.minimum_input_tokens:
+        candidate["reason"] = "below_minimum_input_tokens"
+        return candidate, None
     cap = _execution_cap(input_tokens, budget, config.lengths)
     if cap is None:
         candidate["reason"] = "exceeds_max_complete_budget"
@@ -375,14 +393,16 @@ def _adapt_row(
     return candidate, prompt_ids
 
 
-def _iter_benchmark_rows(sources: Mapping[str, Path], benchmark: str) -> Iterator[tuple[str, int, dict[str, Any]]]:
+def _iter_benchmark_rows(
+    sources: Mapping[str, Path], benchmark: str, tasks: Sequence[str] = (),
+) -> Iterator[tuple[str, int, dict[str, Any]]]:
     if benchmark == LONGBENCH_V2:
         indexed_rows = list(enumerate(_iter_json(sources[LONGBENCH_V2])))
         indexed_rows.sort(key=lambda item: str(item[1].get("_id") or canonical_row_sha256(item[1])))
         for source_index, row in indexed_rows:
             yield str(row.get("domain") or "unknown"), source_index, row
         return
-    for task in INFINITE_TASKS:
+    for task in (tasks or INFINITE_TASKS):
         for index, row in enumerate(_iter_json(sources[task])):
             yield task, index, row
 
@@ -445,7 +465,10 @@ def prepare_dataset(
     prompt_ids_by_row: dict[str, list[int]] = {}
     seen_ids: set[str] = set()
     selected_per_task: Counter[str] = Counter()
-    for task, source_index, source in _iter_benchmark_rows(sources, config.benchmark):
+    selected_tasks = config.tasks or (INFINITE_TASKS if config.benchmark == INFINITEBENCH else ())
+    for task, source_index, source in _iter_benchmark_rows(
+        sources, config.benchmark, selected_tasks,
+    ):
         candidate, prompt_ids = _adapt_row(source, source_index, task, config, tokenizer)
         row_id = str(candidate["row_id"])
         if row_id in seen_ids:
@@ -508,10 +531,12 @@ def prepare_dataset(
         "native_length": config.native_length,
         "lengths": list(config.lengths),
         "rows_per_task": config.rows_per_task,
+        "tasks": list(selected_tasks),
+        "minimum_input_tokens": config.minimum_input_tokens,
         "selection": (
             "all complete LongBench-v2 rows with native_length < actual full prompt tokens and prompt+128 within a requested cap, sorted by _id"
             if config.benchmark == LONGBENCH_V2 else
-            "source-order first rows-per-task among complete eligible official rows; no truncation or replacement"
+            "source-order first rows-per-task among complete eligible official rows at or above minimum_input_tokens; no truncation or replacement"
         ),
         "prompt_contract": (
             "official LongBench-v2 prompts/0shot.txt wrapped once in the target model chat template"
@@ -540,6 +565,8 @@ def _missing_manifest(args: argparse.Namespace, message: str) -> dict[str, Any]:
         "model_id": args.model_id,
         "scale": args.scale,
         "lengths": list(args.lengths),
+        "tasks": list(args.task or []),
+        "minimum_input_tokens": args.minimum_input_tokens,
         "downloads_attempted": False,
         "error": message,
         "resolution": "place the official dataset files under --data-root, then run again with a new empty --out",
@@ -568,6 +595,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--lengths", type=int, nargs="+", required=True)
     parser.add_argument("--rows-per-task", type=int, default=0,
                         help="0 for all eligible LongBench-v2 rows; positive InfiniteBench source-order cap")
+    parser.add_argument("--task", action="append", choices=INFINITE_TASKS,
+                        help="prepare only this InfiniteBench task; repeat to include more")
+    parser.add_argument("--minimum-input-tokens", type=int, default=0,
+                        help="exclude otherwise eligible prompts shorter than this")
     return parser.parse_args(argv)
 
 
@@ -578,7 +609,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     if args.out.exists():
         raise FileExistsError(f"refuse to overwrite output: {args.out}")
     try:
-        sources = locate_sources(args.benchmark, args.data_root)
+        sources = locate_sources(args.benchmark, args.data_root, tuple(args.task or ()))
     except DataRootError as exc:
         args.out.mkdir(parents=True)
         manifest = _missing_manifest(args, str(exc))
@@ -598,6 +629,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         lengths=args.lengths,
         native_length=_native_length(args.model),
         rows_per_task=args.rows_per_task,
+        tasks=tuple(args.task or ()),
+        minimum_input_tokens=args.minimum_input_tokens,
     )
     manifest = prepare_dataset(config, tokenizer, sources)
     print(json.dumps(manifest, ensure_ascii=False, sort_keys=True), flush=True)

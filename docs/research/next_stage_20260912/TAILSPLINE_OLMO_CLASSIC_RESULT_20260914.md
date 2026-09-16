@@ -85,3 +85,22 @@ OLMo并非严格未接触的模型族：历史BM/front-loaded结果已经提供�
 更重要的是，OLMo上TailSpline与MrPro的`sum(m)`分别约`42.5676/37.6667`。当前结果
 证明完整方法胜负，但不能区分总减速量、early transport和one-sided tail landing。
 不得由巨大差值倒推roughness机制已经成立，也不得据此自动启动YaRN四格、调参或新曲线。
+
+## 6. Clean 16K与Natural-QA完成：最新服务器回查
+
+新clean 16K Full-13为13×200=2600对，TailSpline/MrPro 50.6506/9.2314%，
+差+41.4192pp，95%配对区间[39.9865,42.8090]pp；13项任务及四family均为正。
+这是一项单长度得分，不称多长度AUC。两臂batch1、BF16、8K chunked prefill，
+实际prompt逐行配对，表与gain合同相同（频率配置为比较变量）。
+正式报告：[clean16K RULER200](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_clean16k_ruler200.json)。
+
+同一静态表的Natural-QA631为T/P 24.9237/21.6243% F1，
+差+3.2994pp，524个源文档簇配对区间[0.3359,6.4028]pp；五项任务点差均为正。
+输入4110–16319 tokens，全部超过Native 4096；五任务等权、整段回答F1。
+问题等权敏感性为+3.9194pp，[1.1977,6.6794]pp。
+正式报告：[Natural-QA631](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_naturalqa631.json)。
+
+本次读取全部对应raw，重聚合clean官方存储分数，并重新评分QA的1262个完整输出；
+均与报告相符，区间沿用原报告。逐任务、终止行为及论文落点见
+[本批结果论文价值](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)。
+旧classic结果及其合同保持不变；这两项新结果是独立列出的clean和自然任务协议。

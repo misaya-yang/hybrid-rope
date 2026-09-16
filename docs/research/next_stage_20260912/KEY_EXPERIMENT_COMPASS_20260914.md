@@ -10,8 +10,21 @@
 Cosh保留辅助外推及配对学习证据。
 
 已经成立的最强方法结论是：TailSpline在匹配的Llama-3-8B S4合同下，于16K和32K均
-显著胜MrPro；相同构造方向也在OLMo-2-1B S4经典合同上成立。尚未成立的是：TailSpline
-自然QA优势、稳健的Native任务增强、one-sided边界机制、TailSpline–YaRN胜负和128K外推。
+显著胜MrPro；相同构造方向也在OLMo-2-1B S4经典合同上成立。新增clean确认和自然QA结果见下。one-sided边界机制、TailSpline–YaRN胜负和128K外推仍分别按各自证据判断。
+
+## 最新落盘增量（先读）
+
+- OLMo clean16K、2600对：T/P 50.65/9.23%，+41.42pp，[39.99,42.81]；13项任务均为正。
+- OLMo Natural-QA631：24.92/21.62% F1，+3.30pp，[0.34,6.40]；五项点差为正。
+- Llama clean8K、650对：T/P/Native 85.16/82.39/90.03%；T-P +2.76pp，T-N -4.87pp。
+- Llama LongBench-v2实际8K–32K子集117对：35.04/30.77%，+4.27pp，区间跨零。
+- Native探索：公共参数NCP在既有780条面板上相对Native +1.41pp，[0.20,2.58]；
+  历史calibrated V1为+3.01pp，角色与TailSpline区分。
+
+[论文采用分析与报告入口](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)；
+数值owner已更新到[Llama §11](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md)和
+[OLMo §6](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md)。下文classic与早期Native估计保留原协议，
+不替代新增clean结果；早期“自然任务未确认”的判断只对应当时Llama面板。
 
 ## 一、主要冻结方法结果
 

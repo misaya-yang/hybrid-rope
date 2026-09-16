@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering\small
+\caption{\textbf{Natural-task evaluation.} Natural-QA reports five-task macro F1; LongBench v2 reports accuracy on complete inputs in the stated token range. Scores are percentages, with source-context clustered intervals.}
+\label{tab:natural-transfer-main}
+\begin{tabular}{@{}llrrrrl@{}}
+\toprule
+Model & Benchmark & $N$ & T & P & $\Delta$ (pp) & $95\%$ interval \\
+\midrule
+Llama & Natural-QA & 631 & 41.08 & 40.88 & +0.20 & [$-1.53$, 1.89] \\
+OLMo & Natural-QA & 631 & 24.92 & 21.62 & +3.30 & [0.34, 6.40] \\
+Llama & LongBench v2 & 117 & 35.04 & 30.77 & +4.27 & [$-3.39$, 11.97] \\
+\bottomrule
+\end{tabular}
+\end{table}

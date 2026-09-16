@@ -1,6 +1,6 @@
 \section*{Guide to the Supplementary Material}
 The supplementary material follows the argument from the independent value of $z$ to positional structure, explicit constructions and task validation. Table~\ref{tab:argument-guide} maps claims to their supporting material; Table~\ref{tab:protocol-glossary} distinguishes the experimental contracts.
-The core reading path is fixed-range identification (Appendix~\ref{sec:exact-range-control}), complete-pair geometry and its ordering counterexample (Appendices~\ref{sec:geometry-proofs} and~\ref{sec:static-counterexamples}), then TailSpline construction and clean task gains (Appendices~\ref{sec:tailspline-details},~\ref{sec:clean-confirmation},~\ref{sec:clean16k-confirmation}). Allocation response and the rank--quality comparison are developed in Appendix~\ref{sec:allocation-response}. Cosh extrapolation, native-window and natural-QA evaluations provide complementary results under their stated protocols.
+The core reading path is fixed-range identification (Appendix~\ref{sec:exact-range-control}), complete-pair geometry and its ordering counterexample (Appendices~\ref{sec:geometry-proofs} and~\ref{sec:static-counterexamples}), then TailSpline construction and clean task gains (Appendices~\ref{sec:tailspline-details},~\ref{sec:clean-confirmation},~\ref{sec:clean16k-confirmation}). Allocation response and the rank--quality comparison are developed in Appendix~\ref{sec:allocation-response}. New clean transfer and natural-task results, together with the NCP native-window construction and task gains, are in Appendix~\ref{sec:completed-evidence}. Cosh supplies complementary learning and extrapolation evidence.
 \begin{table}[ht]
 \centering\small
 \caption{\textbf{Where each part of the argument is developed.}}
@@ -29,6 +29,7 @@ Protocol & Weight state & Table and matched control & Evidence role \\
 \midrule
 Fixed-support identification & Paired scratch training or frozen intervention & Same endpoints, different interior $z$; shared training or evaluation settings & Independent contribution of $z$; Apps.~\ref{sec:exact-range-control},~\ref{sec:frozen-fixed-support} \\
 Cosh learning & Scratch or shared-start continuation & Analytic allocation versus Geo under a matched recipe; grid/endpoint treatment stated per experiment & Learned extrapolation; Apps.~\ref{sec:mla-results},~\ref{sec:larger-scale-supporting} \\
+NCP native allocation & Frozen; zero training & Public-parameter interior update; native endpoints and unit gain & In-window tasks; App.~\ref{sec:ncp-results-new} \\
 TailSpline deployment & Frozen; zero training & Static closed-form table versus MrPro; shared band, endpoints, gain and inputs & Two-model method results; App.~\ref{sec:tailspline-details} \\
 BM natural QA & Frozen; zero training & Symmetric boundary construction versus matched MrPro & Natural-response F1; App.~\ref{sec:bm-natural} \\
 Matched adaptation & Explicit adapter continuation & Paired table/adapter recipes with declared long-phase exposure & Learned complete-answer readout; App.~\ref{sec:olmo2-1b} \\

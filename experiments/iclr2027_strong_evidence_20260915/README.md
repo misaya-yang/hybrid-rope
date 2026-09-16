@@ -5,6 +5,13 @@ This directory implements the thin execution layer specified by
 It reuses the existing table, RULER, generation and report kernels. Code or data
 being ready is not a completed model experiment.
 
+## Completed report snapshot
+
+[Portable reports](reports/README.md) preserve the completed OLMo clean and natural-QA,
+Llama matched-dose/native/LongBench-v2, and Native exploration results.
+[Paper-value analysis](../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)
+records the applied manuscript changes, including the main-text NCP subsection.
+
 ## Entry points
 
 | Entry | Plan items | State | GPU behavior |

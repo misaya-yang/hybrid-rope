@@ -83,6 +83,20 @@ if value.get('status')!='PREFILL_CHUNK_BENCHMARK_COMPLETE_V2' or chunk is None:
 print(int(chunk))
 PY
 )
+# Prefer the direct path on this large-memory machine when chunking wins by less
+# than 2%; direct prefill can then compete with true batch 2/4/8 throughput.
+qwen_chunk=$("${python_bin}" - "${qwen_runtime}" "${qwen_chunk}" <<'PY'
+import json,sys
+x=json.load(open(sys.argv[1]));selected=int(sys.argv[2])
+results={int(item['chunk']):item for item in x.get('results',[])}
+direct=results.get(0,{}).get('generation',{})
+chosen=results.get(selected,{}).get('generation',{})
+if (selected and direct.get('stable') and chosen.get('stable')
+        and float(chosen['seconds']) >= 0.98*float(direct['seconds'])):
+    selected=0
+print(selected)
+PY
+)
 qwen_batch_size=1
 qwen_batch_report=${qwen_root}/runtime/batch_128k_${device_uuid}.json
 if [[ "${qwen_chunk}" -eq 0 ]]; then
@@ -107,7 +121,7 @@ fi
 "${python_bin}" -m experiments.iclr2027_strong_evidence_20260915.run_clean_matrix \
   --model "${qwen_model}" --model-id qwen25_3b \
   --data-root "${qwen_root}/assets" --out "${qwen_root}" --scale 4 \
-  --lengths 65536 131072 --rows-per-task 50 \
+  --lengths 65536 131072 --rows-per-task 10 \
   --data-manifest "${plan}/tailspline_llama_s4_classic/assets/ppl46/manifest.json" \
   --python "${python_bin}" --batch-size "${qwen_batch_size}" \
   --prefill-chunk-size "${qwen_chunk}" \
@@ -128,7 +142,7 @@ for arm in ('tailspline','mrpro'):
     qs=json.loads((qwen/f'runs/{arm}/status.json').read_text())
     if ls!={'status':'COMPLETE','rows':130,'lm_rows':10}:
         raise ValueError(f'incomplete Llama arm: {arm}: {ls}')
-    if qs!={'status':'COMPLETE','rows':1300,'lm_rows':0}:
+    if qs!={'status':'COMPLETE','rows':260,'lm_rows':0}:
         raise ValueError(f'incomplete Qwen arm: {arm}: {qs}')
 for path in (llama_report,qwen_report):
     if not path.is_file(): raise FileNotFoundError(path)
@@ -142,7 +156,7 @@ receipt={
         'report_sha256':hashlib.sha256(llama_report.read_bytes()).hexdigest(),
     },
     'qwen':{
-        'scale':4,'lengths':[65536,131072],'rows_per_arm':1300,
+        'scale':4,'lengths':[65536,131072],'rows_per_arm':260,
         'report_sha256':hashlib.sha256(qwen_report.read_bytes()).hexdigest(),
     },
     'conditional_followups_started':False,

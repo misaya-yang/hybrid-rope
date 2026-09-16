@@ -67,9 +67,27 @@ PY
 )
 generation_prefill_chunk_size=${GENERATION_PREFILL_CHUNK_SIZE:-${selected_generation_chunk}}
 lm_prefill_chunk_size=${LM_PREFILL_CHUNK_SIZE:-${selected_lm_chunk}}
-generation_batch_size=1
+# On a >=90 GB GPU, a sub-2% chunking win is timing noise compared with the
+# opportunity to test direct-prefill batching.  Chunked generation remains the
+# choice when it produces a material win or direct prefill is not stable.
+if [[ "${total_mib}" -ge 90000 && -z "${GENERATION_PREFILL_CHUNK_SIZE+x}" ]]; then
+  generation_prefill_chunk_size=$("${python_bin}" - "${runtime_report}" "${generation_prefill_chunk_size}" <<'PY'
+import json,sys
+x=json.load(open(sys.argv[1]));selected=int(sys.argv[2])
+results={int(item['chunk']):item for item in x.get('results',[])}
+direct=results.get(0,{}).get('generation',{})
+chosen=results.get(selected,{}).get('generation',{})
+if (selected and direct.get('stable') and chosen.get('stable')
+        and float(chosen['seconds']) >= 0.98*float(direct['seconds'])):
+    selected=0
+print(selected)
+PY
+  )
+fi
+generation_batch_size=${GENERATION_BATCH_SIZE:-1}
 batch_report=${root}/runtime/batch_128k_${device_uuid}.json
-if [[ "${total_mib}" -ge 90000 && "${generation_prefill_chunk_size}" -eq 0 ]]; then
+if [[ "${total_mib}" -ge 90000 && "${generation_prefill_chunk_size}" -eq 0 \
+      && -z "${GENERATION_BATCH_SIZE+x}" ]]; then
   if [[ ! -f "${batch_report}" ]]; then
     "${python_bin}" -m experiments.iclr2027_three_track_sprint_20260915.benchmark_generation_batch \
       --model "${model}" --table "${root}/tables/tailspline.json" \

@@ -1,0 +1,113 @@
+{
+  "arm_macro_scores": {
+    "contract": 0.69508547008547,
+    "native": 0.6937393162393162,
+    "reverse": 0.678974358974359,
+    "v1": 0.723846153846154
+  },
+  "arm_task_scores": {
+    "contract": {
+      "cwe": 0.06333333333333334,
+      "fwe": 0.5944444444444444,
+      "niah_multikey_1": 0.85,
+      "niah_multikey_2": 0.95,
+      "niah_multikey_3": 0.6,
+      "niah_multiquery": 0.8916666666666667,
+      "niah_multivalue": 0.95,
+      "niah_single_1": 1.0,
+      "niah_single_2": 1.0,
+      "niah_single_3": 0.9833333333333333,
+      "qa_1": 0.6333333333333333,
+      "qa_2": 0.35,
+      "vt": 0.16999999999999998
+    },
+    "native": {
+      "cwe": 0.07833333333333334,
+      "fwe": 0.5777777777777777,
+      "niah_multikey_1": 0.8166666666666667,
+      "niah_multikey_2": 0.9166666666666666,
+      "niah_multikey_3": 0.5833333333333334,
+      "niah_multiquery": 0.8916666666666667,
+      "niah_multivalue": 0.9541666666666667,
+      "niah_single_1": 1.0,
+      "niah_single_2": 1.0,
+      "niah_single_3": 0.9833333333333333,
+      "qa_1": 0.6833333333333333,
+      "qa_2": 0.35,
+      "vt": 0.18333333333333332
+    },
+    "reverse": {
+      "cwe": 0.08333333333333333,
+      "fwe": 0.55,
+      "niah_multikey_1": 0.7666666666666667,
+      "niah_multikey_2": 0.8833333333333333,
+      "niah_multikey_3": 0.55,
+      "niah_multiquery": 0.8916666666666667,
+      "niah_multivalue": 0.9583333333333334,
+      "niah_single_1": 1.0,
+      "niah_single_2": 1.0,
+      "niah_single_3": 0.9833333333333333,
+      "qa_1": 0.6833333333333333,
+      "qa_2": 0.2833333333333333,
+      "vt": 0.19333333333333336
+    },
+    "v1": {
+      "cwe": 0.030000000000000002,
+      "fwe": 0.6166666666666668,
+      "niah_multikey_1": 0.8,
+      "niah_multikey_2": 0.9333333333333333,
+      "niah_multikey_3": 0.6833333333333333,
+      "niah_multiquery": 0.9166666666666666,
+      "niah_multivalue": 0.9833333333333333,
+      "niah_single_1": 1.0,
+      "niah_single_2": 1.0,
+      "niah_single_3": 0.9833333333333333,
+      "qa_1": 0.6166666666666667,
+      "qa_2": 0.36666666666666664,
+      "vt": 0.48000000000000004
+    }
+  },
+  "claim_boundary": "Frozen single-checkpoint Native-window RULER result. The final Native-enhancement claim also requires the separately frozen language-model health endpoint; V1 is a historical checkpoint-calibrated reference, not an equal-dose direction control.",
+  "comparisons": {
+    "contract_minus_native": {
+      "delta": 0.0013133119658119662,
+      "paired_task_equal_bootstrap_ci95": [
+        -0.00660309829059829,
+        0.009444978632478587
+      ],
+      "probability_delta_gt_zero": 0.62205
+    },
+    "contract_minus_reverse": {
+      "delta": 0.01608388782051282,
+      "paired_task_equal_bootstrap_ci95": [
+        0.0027131410256410232,
+        0.029722222222222223
+      ],
+      "probability_delta_gt_zero": 0.9912
+    },
+    "v1_minus_native": {
+      "delta": 0.03001703311965812,
+      "paired_task_equal_bootstrap_ci95": [
+        0.012948717948717953,
+        0.0470518162393162
+      ],
+      "probability_delta_gt_zero": 0.99975
+    }
+  },
+  "decision": {
+    "direction_contract_vs_reverse_ci_above_zero": true,
+    "primary_contract_vs_native_ci_above_zero": false,
+    "primary_contract_vs_native_point_at_least_3pp": false,
+    "ruler_directional_gate_pass": false
+  },
+  "model_id": "olmo2_1b",
+  "panel": {
+    "content_padding": false,
+    "inputs_sha256": "49fdd6ecb376beab1480266d4ce2e305610126c679b327202e1764185857910e",
+    "rows": 780,
+    "rows_per_task": 60,
+    "selection_mode": "source-order",
+    "tasks": 13
+  },
+  "status": "OLMO_NATIVE_HALFTURN_RULER4K_FOUR_ARM_REPORT_V1"
+}

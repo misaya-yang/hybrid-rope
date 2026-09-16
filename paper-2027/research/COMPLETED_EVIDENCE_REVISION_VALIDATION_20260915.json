@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "manuscript_revision": "completed clean transfer and natural tasks; NCP main-text integration",
+  "model_execution": false,
+  "remote_mutation": false,
+  "main_pages": 9,
+  "total_pages": 69,
+  "abstract_words": 158,
+  "abstract_has_digits": false,
+  "first_page_has_figure": false,
+  "undefined_references_or_citations": 0,
+  "overfull_hboxes": 0,
+  "pdf_sha256": "6c4f6f38c5beec0ab8c2bedbd7eee8e622a9b22c6af6e2185648349c1ecc22ef",
+  "source_zip_sha256": "e406efd3c184c401e7d37ed92309d98c67ae7a58b91939b5f8dc2f0a832fa6fb",
+  "source_manifest_files": 162,
+  "source_manifest_verified": true,
+  "isolated_source_compile": "PASS",
+  "isolated_pdf_text_identical": true,
+  "portable_cpu_verification": {
+    "status": "PASS",
+    "model_execution": false,
+    "stored_score_rows_checked": 19722,
+    "ncp_exact_fp32_sha256": "54b9dd1f73aafc69f7bb5ed1b7b49d49128002371cb378d03ca1fd1d108e0cb7",
+    "ncp_checks": {
+      "native_positive_strictly_decreasing": true,
+      "candidate_positive_strictly_decreasing": true,
+      "endpoints_bit_exact": true,
+      "one_sided_slowdown": true,
+      "maximum_log_shift_within_bound": true,
+      "minimum_log_gap_preserved": true,
+      "stationary_equations_solved": true,
+      "reference_risk_decreased": true,
+      "proximal_objective_decreased": true
+    },
+    "ncp_changed_pairs": 46,
+    "ncp_stationarity_residual": 9.976665760885739e-15,
+    "fourier_risk_integration_max_error": 1.7763568394002505e-15,
+    "means": {
+      "olmo_clean": {
+        "tailspline": {
+          "16384": 0.5065064102564103
+        },
+        "mrpro": {
+          "16384": 0.09231410256410257
+        }
+      },
+      "olmo_qa": {
+        "tailspline": {
+          "16384": 0.24923718650935464
+        },
+        "mrpro": {
+          "16384": 0.21624300089580487
+        }
+      },
+      "x4": {
+        "dose_control_c": {
+          "16384": 0.8634615384615386,
+          "32768": 0.6616987179487179
+        },
+        "mrpro": {
+          "16384": 0.827051282051282,
+          "32768": 0.5654358974358974
+        },
+        "tailspline": {
+          "16384": 0.8609487179487179,
+          "32768": 0.6826602564102563
+        }
+      },
+      "x5": {
+        "tailspline": {
+          "8192": 0.8515641025641026
+        },
+        "mrpro": {
+          "8192": 0.8239230769230768
+        },
+        "native": {
+          "8192": 0.9002564102564101
+        }
+      },
+      "ncp": {
+        "ncp": {
+          "4096": 0.707820512820513
+        }
+      },
+      "native": {
+        "native": {
+          "4096": 0.6937393162393162
+        }
+      }
+    },
+    "intervals": "Retained from paired reports; not re-estimated by this check."
+  },
+  "visual_review": "Main pages1-9 and new appendix pages65-69 rendered and inspected",
+  "review_agents": "No new review round requested or launched; R08 scores apply to earlier manuscript"
+}

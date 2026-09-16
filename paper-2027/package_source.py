@@ -16,6 +16,8 @@ def runtime_sources() -> dict[str, bytes]:
     """Bundle existing frozen-evaluation entrypoints and their local imports."""
     repo = PAPER / 'runtime' if (PAPER / 'runtime/experiments').is_dir() else PAPER.parent
     roots = [
+        "experiments/native_contrastive_proximal_20260915/tables.py",
+        "experiments/native_contrastive_proximal_20260915/report_ruler.py",
         "experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py",
         "experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py",
         "experiments/fixed_rope_three_interfaces_20260913/matched_naturalqa_report.py",
@@ -96,6 +98,8 @@ def source_files() -> set[Path]:
                  "figs/verify_explicit_geometry.py", "figs/explicit_geometry_examples.json",
                  "figs/verify_allocation_response.py", "figs/allocation_response_inputs.json",
                  "figs/allocation_response_verification.json",
+                 "figs/completed_evidence_inputs.json", "figs/verify_completed_evidence.py",
+                 "figs/completed_evidence_verification.json",
                  "figs/make_exponent_revision_figures.py", "figs/figure_inputs.json",
                  "figs/profile_diagnostic_inputs.json", "figs/verify_profile_diagnostics.py",
                  "figs/make_story_figures.py", "figs/story_figure_inputs.json",
@@ -146,6 +150,7 @@ def main() -> None:
             "  python3 figs/verify_field_gap.py\n"
             "  python3 figs/verify_explicit_geometry.py\n"
             "  python3 figs/verify_allocation_response.py\n"
+            "  python3 figs/verify_completed_evidence.py\n"
             "  python3 figs/verify_interval_design.py\n"
             "  python3 figs/verify_profile_diagnostics.py\n"
             "  python3 figs/verify_recovered_assets.py\n"

@@ -148,12 +148,15 @@ def _sanitize_source_manifest(path: Path, *, model_id: str, model_name: str) -> 
     _atomic_json(path, manifest)
 
 
-def _validate_panel_rows(path: Path, *, length: int, rows_per_task: int) -> list[dict]:
+def _validate_panel_rows(
+    path: Path, *, length: int, rows_per_task: int, tasks: Sequence[str] = TASKS,
+) -> list[dict]:
     rows = _read_jsonl(path)
-    expected = len(TASKS) * rows_per_task
+    expected = len(tasks) * rows_per_task
     counts = Counter(row.get("task") for row in rows)
-    if len(rows) != expected or counts != Counter({task: rows_per_task for task in TASKS}):
-        raise ValueError(f"panel must contain Full-13 x {rows_per_task}; observed {len(rows)} rows")
+    if len(rows) != expected or counts != Counter({task: rows_per_task for task in tasks}):
+        label = "Full-13" if tuple(tasks) == TASKS else f"requested {len(tasks)} tasks"
+        raise ValueError(f"panel must contain {label} x {rows_per_task}; observed {len(rows)} rows")
     if len({row.get("row_id") for row in rows}) != expected:
         raise ValueError("panel row IDs are not unique")
     if len({row.get("prompt_sha256") for row in rows}) != expected:
@@ -177,11 +180,13 @@ def _validate_panel_rows(path: Path, *, length: int, rows_per_task: int) -> list
 
 def _freeze_panel_manifest(
     *, panel_dir: Path, out: Path, model_id: str, identity: dict,
-    scale: float, length: int, rows_per_task: int,
+    scale: float, length: int, rows_per_task: int, tasks: Sequence[str] = TASKS,
 ) -> dict:
     inputs_path = panel_dir / "inputs.jsonl"
     core_manifest_path = panel_dir / "manifest.json"
-    rows = _validate_panel_rows(inputs_path, length=length, rows_per_task=rows_per_task)
+    rows = _validate_panel_rows(
+        inputs_path, length=length, rows_per_task=rows_per_task, tasks=tasks,
+    )
     core = json.loads(core_manifest_path.read_text())
     sources = {}
     for task, records in core.get("sources", {}).items():
@@ -200,7 +205,7 @@ def _freeze_panel_manifest(
         sources[task] = normalized
     contract = (
         f"strong_clean_{model_id}_s{_scale_label(scale)}_{length}_"
-        f"ruler13_{rows_per_task}_source_order_unpadded_v1"
+        f"ruler{len(tasks)}_{rows_per_task}_source_order_unpadded_v1"
     )
     manifest = {
         "status": "COMPLETE",
@@ -212,7 +217,7 @@ def _freeze_panel_manifest(
         "scale": scale,
         "rows": len(rows),
         "rows_per_task": rows_per_task,
-        "tasks": list(TASKS),
+        "tasks": list(tasks),
         "length_cap": length,
         "selection_mode": "source-order",
         "selection_uses_model_outputs": False,
@@ -226,7 +231,7 @@ def _freeze_panel_manifest(
         "inputs_artifact": _portable_relative(inputs_path, out),
         "sources": sources,
         "scope": (
-            f"RULER Full-13 source-order sample, {rows_per_task}/task at the "
+            f"RULER source-order sample over {len(tasks)} tasks, {rows_per_task}/task at the "
             f"{length}-token cap; no model-output selection and no content padding."
         ),
         "portable_paths": True,
@@ -271,6 +276,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rows-per-task", type=int, required=True)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--qa-offset", "--qa-base-offset", dest="qa_offset", type=int, required=True)
+    parser.add_argument("--tasks", default=",".join(TASKS),
+                        help="comma-separated unique subset of RULER-13 tasks")
     return parser
 
 
@@ -283,6 +290,9 @@ def prepare(
     args = build_parser().parse_args(argv)
     model_id = _validate_model_id(args.model_id)
     lengths = _parse_lengths(args.lengths)
+    selected_tasks = tuple(value.strip() for value in args.tasks.split(",") if value.strip())
+    if not selected_tasks or len(selected_tasks) != len(set(selected_tasks)) or not set(selected_tasks).issubset(TASKS):
+        raise ValueError("--tasks must be a unique non-empty subset of RULER-13")
     if not math.isfinite(args.scale) or args.scale <= 1.0:
         raise ValueError("--scale must be finite and greater than one")
     if args.rows_per_task <= 0 or args.seed < 0 or args.qa_offset < 0:
@@ -303,7 +313,7 @@ def prepare(
         "seed": args.seed,
         "qa_offset": args.qa_offset,
         "upstream_revision": RULER_REVISION,
-        "tasks": list(TASKS),
+        "tasks": list(selected_tasks),
     }
     existing = _validate_complete_root(out / "manifest.json", request)
     if existing is not None:
@@ -315,7 +325,7 @@ def prepare(
     convert = converter_main or _default_converter_main
     caps = ",".join(str(length) for length in lengths)
     counts = ",".join(f"{length}:{args.rows_per_task}" for length in lengths)
-    for task_index, task in enumerate(TASKS):
+    for task_index, task in enumerate(selected_tasks):
         source_part = out / "source_parts" / task
         result = planb([
             "--model", str(model),
@@ -347,13 +357,14 @@ def prepare(
             "--out", str(panel_dir),
             "--length", str(length),
             "--rows-per-task", str(args.rows_per_task),
-            "--tasks", ",".join(TASKS),
+            "--tasks", ",".join(selected_tasks),
         ])
         if result not in (None, 0):
             raise RuntimeError(f"clean converter failed for {length}: {result}")
         panel_manifest = _freeze_panel_manifest(
             panel_dir=panel_dir, out=out, model_id=model_id, identity=identity,
             scale=args.scale, length=length, rows_per_task=args.rows_per_task,
+            tasks=selected_tasks,
         )
         panels[str(length)] = {
             "inputs": _portable_relative(panel_dir / "inputs.jsonl", out),
@@ -366,7 +377,7 @@ def prepare(
     manifest = {
         "status": "COMPLETE",
         **request,
-        "rows": len(TASKS) * args.rows_per_task * len(lengths),
+        "rows": len(selected_tasks) * args.rows_per_task * len(lengths),
         "selection_mode": "source-order",
         "selection_uses_model_outputs": False,
         "content_padding": False,

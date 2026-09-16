@@ -175,22 +175,25 @@ def learning():
 def tailspline():
     data=json.loads((HERE/'field_gap_inputs.json').read_text())
     clean=data['clean'];mid=data['clean16k']
+    new=json.loads((HERE/'completed_evidence_inputs.json').read_text())['reports']['llama_clean_native8k']
     fig,axes=plt.subplots(1,2,figsize=(7.25,2.7),gridspec_kw={'width_ratios':[1,1.55]})
     ax=axes[0]
-    points=[mid['contrasts']['mrpro']['delta_by_length']['16384'],clean['point']['tailspline']-clean['point']['mrpro']]
-    intervals=[mid['contrasts']['mrpro']['bootstrap']['delta_by_length_interval95']['16384'],clean['contrast']['bootstrap']['delta_log_auc']['interval95']]
-    for y,(point,interval,color) in enumerate(zip(points,intervals,[BLUE,ORANGE])):
+    points=[new['contrasts']['mrpro']['delta_by_length']['8192'],mid['contrasts']['mrpro']['delta_by_length']['16384'],clean['point']['tailspline']-clean['point']['mrpro']]
+    intervals=[new['contrasts']['mrpro']['bootstrap']['delta_by_length_interval95']['8192'],mid['contrasts']['mrpro']['bootstrap']['delta_by_length_interval95']['16384'],clean['contrast']['bootstrap']['delta_log_auc']['interval95']]
+    for y,(point,interval,color) in enumerate(zip(points,intervals,['#387c66',BLUE,ORANGE])):
         lo,hi=np.array(interval)*100;point*=100
         ax.errorbar(point,y,xerr=[[point-lo],[hi-point]],fmt='o',color=color,capsize=3,ms=5)
         ax.text(point,y+.19,f'{point:+.2f} pp',ha='center',va='top',fontsize=9,color=color)
-    ax.axvline(0,color=INK,lw=.7);ax.set(yticks=[0,1],yticklabels=['16K (2L)','32K (4L)'],ylim=(-.45,1.5),xlim=(-.5,14.5),xticks=[0,5,10],xlabel='Full-13 gain (pp)')
-    ax.invert_yaxis();ax.set_title('(a) Quality at both lengths',loc='left',fontsize=9);axis_style(ax)
+    ax.axvline(0,color=INK,lw=.7);ax.set(yticks=[0,1,2],yticklabels=['8K (L)','16K (2L)','32K (4L)'],ylim=(-.45,2.5),xlim=(-.5,14.5),xticks=[0,5,10],xlabel='Full-13 gain (pp)')
+    ax.invert_yaxis();ax.set_title('(a) Quality across lengths',loc='left',fontsize=9);axis_style(ax)
     ax=axes[1];keys=list(clean['task_deltas']);ys=np.arange(len(keys))
     v32=np.array([clean['task_deltas'][t]for t in keys])*100
     v16=np.array([mid['summaries']['tailspline']['by_length']['16384']['tasks'][t]['official']-mid['summaries']['mrpro']['by_length']['16384']['tasks'][t]['official']for t in keys])*100
     names=[k.replace('niah_','').replace('multikey','MK').replace('single','S').replace('multiquery','MQ').replace('multivalue','MV')for k in keys]
-    ax.barh(ys-.18,v16,height=.34,color=BLUE,label='16K: 50/task')
-    ax.barh(ys+.18,v32,height=.34,color=ORANGE,label='32K: 200/task')
+    v8=np.array([new['summaries']['tailspline']['by_length']['8192']['tasks'][t]['official']-new['summaries']['mrpro']['by_length']['8192']['tasks'][t]['official']for t in keys])*100
+    ax.barh(ys-.25,v8,height=.23,color='#387c66',label='8K: 50/task')
+    ax.barh(ys,v16,height=.23,color=BLUE,label='16K: 50/task')
+    ax.barh(ys+.25,v32,height=.23,color=ORANGE,label='32K: 200/task')
     ax.axvline(0,color=INK,lw=.7);ax.invert_yaxis();ax.set(yticks=ys,yticklabels=names,xlim=(-11,42),xticks=[0,20,40],xlabel='Task gain over MrPro (pp)')
     ax.tick_params(axis='y',labelsize=7.5);ax.set_title('(b) All task means',loc='left',fontsize=9)
     ax.legend(frameon=False,fontsize=7,loc='lower right');axis_style(ax)

@@ -358,8 +358,8 @@ def main():
               'row_split':args.row_split,'static_table':static_table}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
     if contract.exists():
-        existing=json.loads(contract.read_text());normalized=normalize_existing_identity(existing)
-        if normalized!=identity:raise ValueError('output contains a different evaluation')
+        existing=json.loads(contract.read_text());existing_identity=normalize_existing_identity(existing)
+        if existing_identity!=identity:raise ValueError('output contains a different evaluation')
     write(contract,identity)
     model,wrapper,table=load_model(args.model,args.arm,checkpoint=args.checkpoint,training=False)
     if static_table:
