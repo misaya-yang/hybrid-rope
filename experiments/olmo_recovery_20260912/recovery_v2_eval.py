@@ -41,6 +41,28 @@ def normalize_existing_identity(value):
     return normalized
 
 
+def checkpoint_precision_identity(model_path):
+    """Describe checkpoint storage/compute precision before the expensive load."""
+    config_path = Path(model_path) / 'config.json'
+    config = json.loads(config_path.read_text())
+    quantization = config.get('quantization_config') or {}
+    if quantization.get('load_in_4bit'):
+        quant_type = str(quantization.get('bnb_4bit_quant_type') or 'unknown')
+        compute = str(quantization.get('bnb_4bit_compute_dtype') or 'unknown')
+        return {
+            'model_dtype': f'bitsandbytes_4bit_{quant_type}_compute_{compute}',
+            'checkpoint_quantization': {
+                'load_in_4bit': True,
+                'bnb_4bit_quant_type': quant_type,
+                'bnb_4bit_compute_dtype': compute,
+                'bnb_4bit_use_double_quant': bool(
+                    quantization.get('bnb_4bit_use_double_quant', False)
+                ),
+            },
+        }
+    return {'model_dtype': 'bfloat16', 'checkpoint_quantization': None}
+
+
 def collect_rows(args,manifest):
     panels=[]
     if not args.only_extra_panels:
@@ -331,6 +353,7 @@ def main():
                       'construction':static_table.get('construction',{})}
     result_arm=args.table_label or args.arm
     if state and state.get('arm')!=checkpoint_arm:raise ValueError('checkpoint belongs to another arm')
+    precision_identity=checkpoint_precision_identity(args.model)
     identity={'arm':result_arm,'base_arm':args.arm,'checkpoint_arm':checkpoint_arm if args.checkpoint else None,
               'split':args.split,'seed':state.get('seed'),'input_tokens':state.get('input_tokens'),
               'unadapted':args.checkpoint is None,'row_ids':[r['eval_id'] for r in rows],
@@ -349,7 +372,7 @@ def main():
                   else 'panel_order_v1'),
               'runtime_versions':{
                   'torch':torch.__version__,'transformers':transformers.__version__,
-                  'model_dtype':'bfloat16','loss_logits_dtype':'float32',
+                  **precision_identity,'loss_logits_dtype':'float32',
                   'attention_backend':'torch_sdpa_flash_only',
                   'cache_type':'DynamicCache' if (args.prefill_chunk_size or args.lm_prefill_chunk_size) else None,
                   'allow_tf32':bool(torch.backends.cuda.matmul.allow_tf32),
