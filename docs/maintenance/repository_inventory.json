@@ -2434,6 +2434,11 @@
       "category": "navigation"
     },
     {
+      "path": "docs/research/reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/reviews/PC2_FAILURE_AND_CLAIM_AUDIT_20260910.md",
       "area": "docs",
       "category": "document"
@@ -5774,6 +5779,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/evidence_review.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/index.md",
       "area": "experiments",
       "category": "navigation"
@@ -5809,12 +5819,22 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/prepare_native_factorial.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/report.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/native_enhancement_oral_20260915/reports/cpu_validation.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/existing_evidence_review.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
@@ -5845,6 +5865,16 @@
     },
     {
       "path": "experiments/native_enhancement_oral_20260915/reports/ncp_phase_reflection.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/qwen15_native_factorial_cpu_audit.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/qwen15_native_factorial_manifest.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
@@ -14080,6 +14110,11 @@
     },
     {
       "path": "tests/test_native_contrastive_proximal_report.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_enhancement_evidence_review.py",
       "area": "tests",
       "category": "code"
     },

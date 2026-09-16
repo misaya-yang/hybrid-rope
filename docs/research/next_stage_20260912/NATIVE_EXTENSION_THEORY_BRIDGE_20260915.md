@@ -3,6 +3,11 @@
 Date: 2026-09-15. Status: mathematical derivation and local CPU verification;
 no model forward pass, GPU execution, or new model-performance result.
 
+**Subsequent evidence review:** the [method-lineage and native-benefit audit](../reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)
+supersedes this note's proposed NCP-first research priority. Its mathematics remains valid for the stated reference objects;
+the (+,+,-) reference-risk pattern is not adopted as a default model-accuracy prediction. Existing gain, formation/readout,
+KV-factorial and positive native results must constrain the next design. This note does not establish a universal native method.
+
 ## 1. First principles: the contribution to pursue
 
 The paper can make a stronger statement than “a better frequency curve improves

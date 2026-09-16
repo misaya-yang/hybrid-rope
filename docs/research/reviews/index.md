@@ -1,5 +1,7 @@
 # 复盘与审查
 
+- [Native正收益与方法谱系审查](NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md) — 先复核YaRN/MrPro及既有原生正负结果，再定义LeRoPE启发与新PE研究；含当前服务器raw复算。
+
 上级：[research/index.md](../index.md)。受代码/回执/历史hash引用的来源保持原路径；本目录index完成主题分类。普通独立叙述文档已移入对应目录。文件中的“当前”以原记录日期解释。
 
 - [COSH_REDESIGN_EVIDENCE_REVIEW.md](../COSH_REDESIGN_EVIDENCE_REVIEW.md) — Cosh 改版：代理目标、非几何网格与适配范式的证据复核（来源路径保留）

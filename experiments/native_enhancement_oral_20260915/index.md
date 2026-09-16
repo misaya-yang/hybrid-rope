@@ -1,6 +1,9 @@
 # Native增强：实验准备入口
 
 本包只新增CPU准备与分析路径，复用现有NCP构造和冻结模型评估器。
+
+最新优先级见[native定义、旧方法谱系与LeRoPE审查](../../docs/research/reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)。
+NCP和reference_predictions保留为候选/参考模型资产，不再默认决定下一项方法或accuracy预测。
 当前研究规格见[准备计划](../../docs/research/next_stage_20260912/NATIVE_ORAL_PREPARATION_PLAN_20260915.md)。
 
 ## 已完成的CPU回执
@@ -15,6 +18,10 @@
 可用prepare.py和原有tokenizer按冻结seed重建。
 
 ## 代码
+
+- [既有报告与27个方法的raw复算](evidence_review.py)：配对真实prompt身份，保留不完整开发面板。
+- [旧原生正结果的缺失gain对照准备](prepare_native_factorial.py)：Qwen1.5B两新臂，各108条；不构造新频率曲线。
+- [本轮实际证据回执](reports/existing_evidence_review.json)。
 
 | 需要做的事 | 入口 |
 |---|---|

@@ -33,6 +33,10 @@ BM、YaRN、旧mix075和Native-Z探索各保留其证据角色。
 
 ## 下一轮强实验计划（尚未执行）
 
+**最新研究纠正：**[native正收益定义、既有方法谱系与LeRoPE审查](../reviews/NATIVE_BENEFIT_AND_METHOD_LINEAGE_REVIEW_20260915.md)
+从服务器实际结果出发修订原NCP优先方案，包含新完成X4、旧Qwen原生正结果及可复用机制干预；
+只新增旧正结果缺失对照的CPU准备，不改当前GPU队列。
+
 [Native增强与oral补强准备计划](NATIVE_ORAL_PREPARATION_PLAN_20260915.md)是本轮理论、实验、行为
 三条线的协调owner：含[成果与缺口分析](ORAL_EVIDENCE_GAP_REVIEW_20260915.md)、
 [native/外推理论桥接](NATIVE_EXTENSION_THEORY_BRIDGE_20260915.md)、
