@@ -144,6 +144,28 @@ def test_default_is_read_only_plan_with_explicit_portable_contract(tmp_path, cap
                for command in plan["evaluations"].values())
 
 
+def test_longest_first_changes_execution_order_not_declared_lengths(tmp_path):
+    args = fixture(tmp_path)
+    args.longest_first = True
+    plan, panels, rows = runner.build_plan(args)
+    assert plan["lengths"] == [8192, 16384]
+    assert plan["execution_length_order"] == [16384, 8192]
+    assert [int(path.parent.name) for path in panels] == [16384, 8192]
+    assert rows[0]["length_cap"] == 16384 and rows[-1]["length_cap"] == 8192
+
+
+def test_exact_length_batch2_requires_direct_prefill(tmp_path):
+    args = fixture(tmp_path)
+    args.batch_size = 2
+    args.prefill_chunk_size = 0
+    plan, _, _ = runner.build_plan(args)
+    assert plan["batch_size"] == 2 and plan["prefill_chunk_size"] == 0
+
+    args.prefill_chunk_size = 8192
+    with pytest.raises(ValueError, match="direct prefill"):
+        runner.build_plan(args)
+
+
 def test_complete_arms_are_strictly_validated_and_not_repeated(tmp_path, monkeypatch):
     args = fixture(tmp_path, include_native=True)
     plan, panels, rows = runner.build_plan(args)
@@ -261,8 +283,8 @@ def test_incomplete_arms_never_form_a_matched_report(tmp_path):
 
 def test_batching_and_manifest_identity_fail_closed(tmp_path):
     args = fixture(tmp_path)
-    args.batch_size = 2
-    with pytest.raises(ValueError, match="batch-size 1"):
+    args.batch_size = 3
+    with pytest.raises(ValueError, match="batch-size 1 or 2"):
         runner.build_plan(args)
     args = fixture(tmp_path / "second")
     manifest = runner.read_json(args.data_root / "manifest.json")
