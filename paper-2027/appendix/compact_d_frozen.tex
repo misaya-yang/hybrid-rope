@@ -32,6 +32,14 @@ inputs span $28270$--$32606$ tokens; the fixed QA-1 supplement completes
 $200$ source-order records without output-based selection. OLMo's clean
 panel uses generation seed $20261101$ and QA source offset $5600$.
 \input{tables/table_compact_clean}
+\begin{figure}[ht]
+\centering\includegraphics[width=\linewidth]{fig_tailspline_complete.pdf}
+\caption{\textbf{Complete clean Llama length comparison.} Full-13 means and
+all task differences relative to MrPro. The $8/16$K panels contain $50$ inputs
+per task and $32$K contains $200$.}
+\label{fig:tailspline-complete}
+\end{figure}
+
 
 Llama $32$K T--P is $+11.72$ points, interval $[10.32,13.11]$.
 Family differences (retrieval/tracking/aggregation/QA) are
