@@ -10,4 +10,15 @@ while [[ -d "/proc/${upstream_pid}" ]]; do
   sleep 30
 done
 test -f "${plan}/official_yarn_quick/complete.json" || { echo "REFUSE: quick YaRN incomplete" >&2; exit 1; }
-cd "${repo}"; bash experiments/iclr2027_strong_evidence_20260915/run_four_model_yarn_full13.sh
+cd "${repo}"
+
+# Natural QA has the highest post-quick information value: it reuses completed
+# T/P rows and adds only the official-static-YaRN arm.  Keep it ahead of the
+# larger Full-13 completion queue.
+bash experiments/iclr2027_strong_evidence_20260915/run_four_model_naturalqa_yarn.sh --execute
+test -f "${plan}/official_yarn_naturalqa_four_model_complete.json" || {
+  echo "REFUSE: four-model YaRN natural QA incomplete" >&2
+  exit 1
+}
+
+bash experiments/iclr2027_strong_evidence_20260915/run_four_model_yarn_full13.sh
