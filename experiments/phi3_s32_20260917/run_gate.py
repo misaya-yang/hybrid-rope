@@ -117,6 +117,7 @@ def run_length(
         "--model", str(args.model), "--arm", "Native",
         "--extra-panel", str(panel), "--only-extra-panels", "--skip-lm",
         "--length-cap", str(length), "--batch-size", "1",
+        "--unmasked-unpadded-generate",
         "--static-table-json", str(table),
         "--table-label", f"phi3mini4k_tailspline_s32_{length}",
         "--out", str(out), "--execute",

@@ -98,9 +98,13 @@ def normalized(text):
     return text.strip().lower().strip(' .,!;:\"\'`\n\t')
 
 
-def greedy_tokens(model, ids, *, max_new_tokens, eos_ids, pad_token_id, prefill_chunk_size=0):
+def greedy_tokens(
+    model, ids, *, max_new_tokens, eos_ids, pad_token_id,
+    prefill_chunk_size=0, unmasked_unpadded=False,
+):
     if not prefill_chunk_size or ids.shape[1] <= prefill_chunk_size:
-        return model.generate(ids, attention_mask=ids.new_ones(ids.shape), do_sample=False, num_beams=1,
+        attention_mask = None if unmasked_unpadded else ids.new_ones(ids.shape)
+        return model.generate(ids, attention_mask=attention_mask, do_sample=False, num_beams=1,
                               repetition_penalty=1., no_repeat_ngram_size=0, max_new_tokens=max_new_tokens,
                               eos_token_id=list(eos_ids), pad_token_id=pad_token_id,
                               use_cache=True)[0, ids.shape[1]:].tolist()
@@ -299,6 +303,8 @@ def main():
                         help='contiguous exact-length generation batch using Flash SDPA')
     parser.add_argument('--left-pad-batches',action='store_true',
                         help='batch variable prompt lengths using masked left pad tokens; prompt content and position ids are unchanged')
+    parser.add_argument('--unmasked-unpadded-generate',action='store_true',
+                        help='omit the redundant all-ones mask for exact batch-1 unpadded generation')
     parser.add_argument('--longest-first',action='store_true',
                         help='when batching, sort physical length caps descending before shape grouping')
     parser.add_argument('--static-table-json',type=Path,
@@ -369,6 +375,8 @@ def main():
         raise ValueError('Native follow-up method and candidate table must be provided together')
     if args.native_followup_method and (args.static_table_json or args.ca_ncp_alignment_npz or args.layer_override_table_json):
         raise ValueError('Native follow-up operator cannot be combined with another runtime intervention')
+    if args.unmasked_unpadded_generate and (args.batch_size != 1 or args.left_pad_batches):
+        raise ValueError('unmasked unpadded generation requires batch=1 without left padding')
     if bool(args.layer_override_table_json) != bool(args.layer_override_range):
         raise ValueError('layer override table and range must be provided together')
     if bool(args.layer_override_table_json) != bool(args.layer_override_label):
@@ -424,6 +432,7 @@ def main():
               'lm_prefill_chunk_size':args.lm_prefill_chunk_size,
               'lm_execution_strategy':('direct_no_cache_v1' if args.lm_prefill_chunk_size==0 else 'dynamic_cache_exact_nll_v1'),
               'batch_size':args.batch_size,
+              'unmasked_unpadded_generate':bool(args.unmasked_unpadded_generate),
               'generation_order':(
                   'longest_first_shape_sorted_v1' if args.batch_size>1 and args.longest_first
                   else 'ascending_shape_sorted_v1' if args.batch_size>1
@@ -524,6 +533,7 @@ def main():
         'left_pad_batches':bool(args.left_pad_batches),
         'pad_token_id':int(pad_token_id),
         'pad_tokens_attention_masked':bool(args.left_pad_batches),
+        'unmasked_unpadded_generate':bool(args.unmasked_unpadded_generate),
     })
     path=args.out/'generations.jsonl';saved=read_rows(path) if path.exists() else []
     if len(saved)>len(rows) or any(row['eval_id']!=rows[i]['eval_id'] for i,row in enumerate(saved)):
@@ -544,6 +554,7 @@ def main():
                 token_batches=[greedy_tokens(
                     model,ids,max_new_tokens=first['max_new_tokens'],eos_ids=eos,
                     pad_token_id=pad_token_id,prefill_chunk_size=args.prefill_chunk_size,
+                    unmasked_unpadded=args.unmasked_unpadded_generate,
                 )]
             else:
                 token_batches=batched_greedy_tokens(
