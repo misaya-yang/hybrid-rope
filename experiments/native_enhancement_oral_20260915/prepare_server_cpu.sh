@@ -107,7 +107,7 @@ required={
  "existing_reanalysis":root/'reports/existing_five_arm_reanalysis.json',
  "mechanism":root/'assets/mechanism_v2/manifest.json',
  "capture":root/'assets/capture96/manifest.json',
- "ruler":root/'assets/ruler_confirm_13x100/manifest.json',
+ "ruler":root/'assets/ruler_confirm_13x10/manifest.json',
  "naturalqa":root/'assets/naturalqa_3x80/manifest.json',
  "lm":root/'assets/lm128/manifest.json',
 }
