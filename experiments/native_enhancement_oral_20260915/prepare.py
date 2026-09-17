@@ -92,12 +92,19 @@ def render(world: dict, count: int, condition: str, query: int) -> dict:
     for edge in records:
         record = line(edge)
         if edge in target:
+            source_offset = record.index(edge[0])
+            destination_offset = record.rindex(edge[1])
             spans.append({"source": edge[0], "destination": edge[1],
-                          "char_start": cursor, "char_end": cursor + len(record)})
+                          "char_start": cursor, "char_end": cursor + len(record),
+                          "source_char_start": cursor + source_offset,
+                          "source_char_end": cursor + source_offset + len(edge[0]),
+                          "destination_char_start": cursor + destination_offset,
+                          "destination_char_end": cursor + destination_offset + len(edge[1])})
         cursor += len(record)
     return {"text": context + question, "context": context, "answer": answer,
             "records": records, "evidence_char_spans": spans,
-            "query_char_start": len(context), "distractor_records": count}
+            "query_char_start": len(context), "query_char_end": len(context + question),
+            "distractor_records": count}
 
 
 def variants(world: dict, count: int) -> list[tuple[str, int, dict]]:
@@ -131,8 +138,22 @@ def prepare_group(tokenizer, task: str, length: int, world_index: int) -> list[d
         for span in item["evidence_char_spans"]:
             tokens = [i for i, (a, b) in enumerate(offsets)
                       if b > span["char_start"] and a < span["char_end"]]
+            source_tokens = [i for i, (a, b) in enumerate(offsets)
+                             if b > span["source_char_start"] and a < span["source_char_end"]]
+            destination_tokens = [i for i, (a, b) in enumerate(offsets)
+                                  if b > span["destination_char_start"] and a < span["destination_char_end"]]
+            if not tokens or not source_tokens or not destination_tokens:
+                raise ValueError("tokenizer offsets do not cover a declared evidence field")
             positions.append({**span, "token_start": min(tokens), "token_end": max(tokens) + 1,
+                              "source_token_start": min(source_tokens),
+                              "source_token_end": max(source_tokens) + 1,
+                              "destination_token_start": min(destination_tokens),
+                              "destination_token_end": max(destination_tokens) + 1,
                               "distance_to_last_prompt_token": len(ids) - 1 - max(tokens)})
+        question_tokens = [i for i, (a, b) in enumerate(offsets)
+                           if b > item["query_char_start"] and a < item["query_char_end"]]
+        if not question_tokens or max(question_tokens) != len(ids) - 1:
+            raise ValueError("final question must include the last prompt token")
         intervention = {"layout" if task == "native_binding" else "graph": condition,
                         "query": "ab"[query]}
         rows.append({"row_id": f"{group}:{condition}:{query}", "group_id": group,
@@ -143,6 +164,8 @@ def prepare_group(tokenizer, task: str, length: int, world_index: int) -> list[d
                      "references": [item["answer"]], "max_new_tokens": BUDGET,
                      "intervention": intervention, "context_id": digest(item["context"]),
                      "evidence_positions": positions, "source_seed": seed,
+                     "final_query_token_start": min(question_tokens),
+                     "final_query_token_end": max(question_tokens) + 1,
                      "source_records": item["records"], "query_node": world["queries"][query],
                      "distractor_records": low, "selection_uses_model_outputs": False})
     audit_group(rows)
@@ -199,12 +222,14 @@ def main() -> None:
             for index in range(WORLDS):
                 rows.extend(prepare_group(tokenizer, task, length, index))
     args.out.mkdir(parents=True)
-    with (args.out / "inputs.jsonl").open("w") as stream:
+    inputs_path = args.out / "inputs.jsonl"
+    with inputs_path.open("w") as stream:
         for row in rows:
             stream.write(json.dumps(row) + "\n")
     manifest = {"status": "CPU_PREPARED", "contract": CONTRACT, "rows": len(rows),
                 "groups": len(rows) // 4, "worlds_per_task_length": WORLDS,
                 "lengths": list(LENGTHS), "seed": SEED, "model": str(args.model),
+                "inputs_sha256": hashlib.sha256(inputs_path.read_bytes()).hexdigest(),
                 "tokenizer_class": type(tokenizer).__name__, "model_weights_loaded": False,
                 "gpu_execution": False, "model_output_selection": False,
                 "synthetic_distractor_load": True, "content_truncation": False,

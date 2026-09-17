@@ -6,6 +6,19 @@
 下一步由[统一准备清单](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)安排；
 参考风险符号不自动升级为模型准确率预测。
 
+## 2026-09-16 Native相位研究代码
+
+新方案不再继续搜索Z5，而是分开检验行为、局部相位响应和独立确认。当前仅代码完成，尚无本轮GPU结果：
+
+- `prepare_server_cpu.sh`准备既有五臂输出重分析、更新后的288题四臂面板、96题Q/K/V捕获清单、
+  Full-13×100新世界、Natural-QA 3×80及128个同目标NLL窗口。
+- `run_server_gpu.sh`默认只打印计划；显式`--execute`才运行Native/H/NCP/V1反事实、固定四层Q/K/V、
+  末四层双向相位干预及独立Full-13/Natural-QA/NLL确认。
+- Q/K/V只用于解释冻结表，不用于拟合新表。固定干预块为OLMo零起始层12–15；64题在模型输出前冻结。
+
+当前4080是无卡实例，新数据尚未物化且没有启动模型作业。恢复有卡实例后先完成CPU准备并生成
+`cpu_ready.json`，随后才能运行GPU队列；旧288题和合成Q/K测试不能冒充本轮结果。
+
 
 本包只新增CPU准备与分析路径，复用现有NCP构造和冻结模型评估器。
 
@@ -37,9 +50,14 @@ NCP和reference_predictions保留为候选/参考模型资产，不再默认决�
 | 从公开Native表适配不同模型几何 | [multimodel.py](multimodel.py) |
 | 逐槽等相位位移的反向控制 | [phase_control.py](phase_control.py) |
 | 准备288条查询/重连反事实 | [prepare.py](prepare.py) |
+| 冻结96条Q/K/V与64条层块干预输入 | [prepare_capture.py](prepare_capture.py) |
 | 在任何输出前冻结真实距离的参考风险预测 | [predictions.py](predictions.py) |
 | 查看未来生成命令（默认不加载模型） | [run.py](run.py) |
 | 已完成生成的完整输出配对分析 | [report.py](report.py) |
+| 既有Native/H/B/V1/NCP五臂CPU重分析 | [reanalyze_existing.py](reanalyze_existing.py) |
+| 固定层块相位覆盖与报告 | [layer_phase_override.py](layer_phase_override.py) · [report_intervention.py](report_intervention.py) |
+| 新Natural-QA与同目标NLL准备/执行 | [prepare_native_naturalqa.py](prepare_native_naturalqa.py) · [prepare_native_lm.py](prepare_native_lm.py) · [run_native_lm.py](run_native_lm.py) |
+| 新Full-13/Natural-QA确认报告 | [report_confirmation.py](report_confirmation.py) |
 | 相位与内容margin界CPU复算 | [theory.py](theory.py) |
 | 同目标full/recent NLL合同 | [lm_context.py](lm_context.py) |
 | 真实评测成本剖析、CPU batch计划 | [throughput.py](throughput.py) |
