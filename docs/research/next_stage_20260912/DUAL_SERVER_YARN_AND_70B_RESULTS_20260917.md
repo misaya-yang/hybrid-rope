@@ -62,6 +62,28 @@ Full-13×10的TailSpline/MrPro行来自既有大面板的相同前10条/task，Y
 表中八个读数也不是八次独立实验：NIAH是RULER检索族，Full-13×10还与大样本NIAH
 共享前10条/task。正确概括是各合同分别比较，不把“七项第一”写成独立胜率。
 
+### NIAH优势来自哪里
+
+| 模型 | 任务族 | TailSpline | MrPro | YaRN |
+|---|---|---:|---:|---:|
+| Llama-3-8B | single-needle三项均值 | 99.83% | 96.67% | 97.50% |
+| Llama-3-8B | multikey三项均值 | 51.83% | 24.67% | 27.00% |
+| Llama-3-8B | multivalue/multiquery均值 | 94.19% | 96.25% | 97.13% |
+| OLMo-2-1B | single-needle三项均值 | 87.17% | 9.83% | 9.83% |
+| OLMo-2-1B | multikey三项均值 | 37.50% | 2.33% | 3.17% |
+| OLMo-2-1B | multivalue/multiquery均值 | 75.19% | 3.19% | 5.56% |
+| Llama-3-70B NF4 | single-needle三项均值 | 100.00% | 83.33% | — |
+| Llama-3-70B NF4 | multikey三项均值 | 66.67% | 43.33% | — |
+| Llama-3-70B NF4 | multivalue/multiquery均值 | 95.00% | 92.50% | — |
+
+Llama-8B相对MrPro和YaRN的NIAH净领先中，multikey三项分别贡献约`93.8%`和
+`98.5%`；最大单格是multikey-2的`+38pp/+30pp`。70B相对MrPro的净领先中，
+multikey贡献`56%`，其中multikey-2为`+70pp`，但multikey-1反而`−10pp`。
+因此可写的结论是：**Llama上的收益高度集中于multikey绑定，尤其较难的multikey-2/3；
+不是所有多证据任务都改善。** OLMo的优势则覆盖single、multikey和multivalue/query，
+属于整体检索能力恢复，不能用来支持“只强在多针”的解释。这一分解是任务结果，不单独证明
+频率分配为何改善multikey。
+
 ## 对下一版论文的直接修改建议
 
 1. 在跨尺度结果表加入一行“Llama-3-70B-Instruct NF4，8K→32K”，并同时列
