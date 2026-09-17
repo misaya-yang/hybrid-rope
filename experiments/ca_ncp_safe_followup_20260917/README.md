@@ -1,5 +1,9 @@
 # CA-NCP safety follow-up
 
+The three-arm run is complete. See the [formal result and evidence links](RESULT.md).
+No arm exceeded the frozen NCP control, so this route is closed rather than
+promoted.
+
 The completed OLMo five-arm pilot rejected full-strength CA-NCP: `P1-P0` is
 `-11.35pp`, while carrier-only `P0-C0` is only `-0.77pp`. The runtime was
 correct; the median rank-2 plane angle was about 86 degrees. This directory

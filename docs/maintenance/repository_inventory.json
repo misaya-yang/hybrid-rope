@@ -4664,6 +4664,11 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/ca_ncp_safe_followup_20260917/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
       "path": "experiments/ca_ncp_safe_followup_20260917/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -4677,6 +4682,26 @@
       "path": "experiments/ca_ncp_safe_followup_20260917/report.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/paired_report.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/N_operator_cap.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_axis_consensus.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_operator_cap.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
     },
     {
       "path": "experiments/ca_ncp_safe_followup_20260917/run.py",

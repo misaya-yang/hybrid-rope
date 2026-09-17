@@ -1799,6 +1799,37 @@
           "sha256": "5eb443875306a0cba1b1b1536d7714f183045e29a1195082ce9ece67f842eca6"
         }
       ]
+    },
+    {
+      "id": "A64",
+      "name": "OLMo CA-NCP safety-constrained coordinate follow-up",
+      "priority": "P1",
+      "question": "Can task-blind operator caps or source-consensus coordinate maps retain the NCP Native-window gain while avoiding the full-strength CA-NCP failure",
+      "evidence_grade": "Frozen OLMo-2-0425-1B-Instruct; exact same Full-13 x 10 development panel and frozen N0/C0/P0 controls; three candidate raw files contain 130 rows and match the formal report hashes",
+      "manuscript_location": "negative evidence owner; current manuscript unchanged",
+      "interpretation": "The safest arm, P_operator_cap, reaches 75.09%, recovering much of the full-strength failure but remaining 1.69pp below C0 and 0.92pp below P0. N_operator_cap is Native-level and P_axis_consensus is worse. The activation-driven coordinate-reassignment route is closed rather than promoted.",
+      "sources": [
+        {
+          "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/paired_report.json",
+          "availability": "tracked",
+          "sha256": "fac674bcec7d28c22874829a6583addf6609cb16ffb6d5cf2d9982954b2dcbbc"
+        },
+        {
+          "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/N_operator_cap.jsonl",
+          "availability": "tracked",
+          "sha256": "f54abbe22e43de285f2911dbae9ac93c9f2be189667a9c25c829343f02e88dfe"
+        },
+        {
+          "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_operator_cap.jsonl",
+          "availability": "tracked",
+          "sha256": "5de7b0491139805ea85fc862bbbc53ca9028a7b95fca6612ff04904a7843464f"
+        },
+        {
+          "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_axis_consensus.jsonl",
+          "availability": "tracked",
+          "sha256": "c89a385b29a8349fc7e7eaa0d28b72940c7071f4059c883231c82a7ec6c1deb7"
+        }
+      ]
     }
   ]
 }

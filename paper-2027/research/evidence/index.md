@@ -157,5 +157,6 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 | A61 | Llama-3-70B NF4冻结尺度迁移 | [双服务器结果owner](../../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)；S4/32K Full-13、NIAH、Natural-QA及PPL均胜MrPro；S16/128K只登记完整PPL，任务基线未完成 |
 | A62 | OLMo NCP Native-4K独立确认与机制拆分 | [实验结果owner](../../../experiments/native_enhancement_oral_20260915/index.md)；同目标NLL `−0.012786` nat/token（约`1.27%` PPL降低）、新Full-13×10 `+3.2564pp`；Natural-QA `−0.8549pp`与机制干预按各自合同保留 |
 | A63 | OLMo CA-NCP五臂坐标对齐否证 | [结果owner](../../../experiments/ca_ncp_native_20260917/RESULT.md)；Full-13×10同面板五臂，`N1−N0 −13.13pp`、`P1−P0 −11.35pp`，对应配对稳定区间均完全为负；carrier-only近中性；不迁移原方法到Llama |
+| A64 | OLMo CA-NCP安全约束后续诊断 | [结果owner](../../../experiments/ca_ncp_safe_followup_20260917/RESULT.md)；三臂同一Full-13×10面板，最佳`P_operator_cap`为`75.09%`，仍低于原NCP `76.78%`；关闭激活驱动坐标重分配路线 |
 
 - [A55–A58最新直接基线、GLM、长书QA和高倍率整合](../revision_20260916_evidence_update/README.md)：各报告身份与当前稿位置已登记。

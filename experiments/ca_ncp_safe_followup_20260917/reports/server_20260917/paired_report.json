@@ -1,0 +1,968 @@
+{
+  "by_task": {
+    "C0": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 106.5,
+        "hit_cap": 0.8,
+        "official": 0.01,
+        "reference_set_recall": 0.01,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.1,
+        "hit_cap": 0.0,
+        "official": 0.5666666666666667,
+        "reference_set_recall": 0.5666666666666667,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 14.3,
+        "hit_cap": 0.0,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.4,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 58.0,
+        "hit_cap": 0.1,
+        "official": 0.8,
+        "reference_set_recall": 0.8,
+        "typed_set_precision": 0.65
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 119.5,
+        "hit_cap": 0.7,
+        "official": 0.925,
+        "reference_set_recall": 0.925,
+        "typed_set_precision": 1.0
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.6,
+        "generated_tokens": 109.9,
+        "hit_cap": 0.4,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 21.3,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 0.7,
+        "generated_tokens": 81.6,
+        "hit_cap": 0.3,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.6,
+        "generated_tokens": 95.6,
+        "hit_cap": 0.4,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 10.7,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 12.1,
+        "hit_cap": 0.1,
+        "official": 0.6,
+        "reference_set_recall": 0.6,
+        "typed_set_precision": 1.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.0,
+        "generated_tokens": 30.0,
+        "hit_cap": 1.0,
+        "official": 0.48,
+        "reference_set_recall": 0.48,
+        "typed_set_precision": 0.0
+      }
+    },
+    "N0": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.1,
+        "generated_tokens": 115.5,
+        "hit_cap": 0.9,
+        "official": 0.02,
+        "reference_set_recall": 0.02,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.1,
+        "hit_cap": 0.0,
+        "official": 0.5333333333333333,
+        "reference_set_recall": 0.5333333333333333,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 11.3,
+        "hit_cap": 0.0,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.4,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 56.1,
+        "hit_cap": 0.2,
+        "official": 0.8,
+        "reference_set_recall": 0.8,
+        "typed_set_precision": 0.6833333333333333
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 121.5,
+        "hit_cap": 0.8,
+        "official": 0.85,
+        "reference_set_recall": 0.85,
+        "typed_set_precision": 1.0
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 119.8,
+        "hit_cap": 0.7,
+        "official": 0.975,
+        "reference_set_recall": 0.975,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 21.3,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 65.1,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.7,
+        "generated_tokens": 86.2,
+        "hit_cap": 0.3,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 10.8,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 10.1,
+        "hit_cap": 0.0,
+        "official": 0.5,
+        "reference_set_recall": 0.5,
+        "typed_set_precision": 0.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 28.1,
+        "hit_cap": 0.8,
+        "official": 0.27999999999999997,
+        "reference_set_recall": 0.27999999999999997,
+        "typed_set_precision": 0.0
+      }
+    },
+    "N_operator_cap": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 111.8,
+        "hit_cap": 0.8,
+        "official": 0.02,
+        "reference_set_recall": 0.02,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.1,
+        "hit_cap": 0.0,
+        "official": 0.5333333333333333,
+        "reference_set_recall": 0.5333333333333333,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 11.3,
+        "hit_cap": 0.0,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.4,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 50.0,
+        "hit_cap": 0.1,
+        "official": 0.7,
+        "reference_set_recall": 0.7,
+        "typed_set_precision": 0.5833333333333334
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 120.5,
+        "hit_cap": 0.7,
+        "official": 0.925,
+        "reference_set_recall": 0.925,
+        "typed_set_precision": 1.0
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 116.1,
+        "hit_cap": 0.7,
+        "official": 0.95,
+        "reference_set_recall": 0.95,
+        "typed_set_precision": 0.9800000000000001
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 21.3,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 60.3,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 80.8,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 10.8,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 10.2,
+        "hit_cap": 0.1,
+        "official": 0.5,
+        "reference_set_recall": 0.5,
+        "typed_set_precision": 0.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 27.0,
+        "hit_cap": 0.7,
+        "official": 0.36,
+        "reference_set_recall": 0.36,
+        "typed_set_precision": 0.0
+      }
+    },
+    "P0": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 109.0,
+        "hit_cap": 0.8,
+        "official": 0.01,
+        "reference_set_recall": 0.01,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.1,
+        "hit_cap": 0.0,
+        "official": 0.5666666666666667,
+        "reference_set_recall": 0.5666666666666667,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.0,
+        "hit_cap": 0.0,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.3,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 55.9,
+        "hit_cap": 0.1,
+        "official": 0.8,
+        "reference_set_recall": 0.8,
+        "typed_set_precision": 0.7
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.4,
+        "generated_tokens": 113.1,
+        "hit_cap": 0.6,
+        "official": 0.925,
+        "reference_set_recall": 0.925,
+        "typed_set_precision": 1.0
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.6,
+        "generated_tokens": 110.2,
+        "hit_cap": 0.4,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 0.96
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 21.3,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 60.8,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.5,
+        "generated_tokens": 93.6,
+        "hit_cap": 0.5,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 10.7,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 10.8,
+        "hit_cap": 0.1,
+        "official": 0.5,
+        "reference_set_recall": 0.5,
+        "typed_set_precision": 0.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.1,
+        "generated_tokens": 29.6,
+        "hit_cap": 0.9,
+        "official": 0.4800000000000001,
+        "reference_set_recall": 0.4800000000000001,
+        "typed_set_precision": 0.0
+      }
+    },
+    "P1": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.7,
+        "generated_tokens": 70.9,
+        "hit_cap": 0.3,
+        "official": 0.030000000000000006,
+        "reference_set_recall": 0.030000000000000006,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 17.5,
+        "hit_cap": 0.0,
+        "official": 0.4666666666666666,
+        "reference_set_recall": 0.4666666666666666,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 52.6,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.7,
+        "typed_set_precision": 0.7
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.7,
+        "hit_cap": 0.0,
+        "official": 0.6,
+        "reference_set_recall": 0.6,
+        "typed_set_precision": 0.6
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 30.4,
+        "hit_cap": 0.0,
+        "official": 0.3,
+        "reference_set_recall": 0.3,
+        "typed_set_precision": 0.25
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.4,
+        "generated_tokens": 117.0,
+        "hit_cap": 0.6,
+        "official": 0.85,
+        "reference_set_recall": 0.85,
+        "typed_set_precision": 0.96
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 118.1,
+        "hit_cap": 0.8,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 0.9371428571428572
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 20.9,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 89.5,
+        "hit_cap": 0.2,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.5,
+        "generated_tokens": 109.5,
+        "hit_cap": 0.5,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 13.2,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 11.5,
+        "hit_cap": 0.1,
+        "official": 0.6,
+        "reference_set_recall": 0.6,
+        "typed_set_precision": 1.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 27.2,
+        "hit_cap": 0.7,
+        "official": 0.26000000000000006,
+        "reference_set_recall": 0.26000000000000006,
+        "typed_set_precision": 0.0
+      }
+    },
+    "P_axis_consensus": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.1,
+        "generated_tokens": 116.3,
+        "hit_cap": 0.9,
+        "official": 0.01,
+        "reference_set_recall": 0.01,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.0,
+        "hit_cap": 0.0,
+        "official": 0.5666666666666667,
+        "reference_set_recall": 0.5666666666666667,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 24.0,
+        "hit_cap": 0.0,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.3,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 47.3,
+        "hit_cap": 0.1,
+        "official": 0.5,
+        "reference_set_recall": 0.5,
+        "typed_set_precision": 0.4
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.4,
+        "generated_tokens": 113.8,
+        "hit_cap": 0.6,
+        "official": 0.875,
+        "reference_set_recall": 0.875,
+        "typed_set_precision": 1.0
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 119.3,
+        "hit_cap": 0.7,
+        "official": 0.975,
+        "reference_set_recall": 0.975,
+        "typed_set_precision": 0.9800000000000001
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 0.7,
+        "generated_tokens": 43.3,
+        "hit_cap": 0.3,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 50.0,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.7,
+        "generated_tokens": 89.2,
+        "hit_cap": 0.3,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 11.1,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 9.1,
+        "hit_cap": 0.0,
+        "official": 0.6,
+        "reference_set_recall": 0.6,
+        "typed_set_precision": 1.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.2,
+        "generated_tokens": 27.4,
+        "hit_cap": 0.8,
+        "official": 0.44000000000000006,
+        "reference_set_recall": 0.44000000000000006,
+        "typed_set_precision": 0.0
+      }
+    },
+    "P_operator_cap": {
+      "cwe": {
+        "empty": 0.0,
+        "ended_eos": 0.0,
+        "generated_tokens": 120.0,
+        "hit_cap": 1.0,
+        "official": 0.02,
+        "reference_set_recall": 0.02,
+        "typed_set_precision": null
+      },
+      "fwe": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 15.1,
+        "hit_cap": 0.0,
+        "official": 0.5666666666666667,
+        "reference_set_recall": 0.5666666666666667,
+        "typed_set_precision": null
+      },
+      "niah_multikey_1": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 14.3,
+        "hit_cap": 0.0,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9
+      },
+      "niah_multikey_2": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 6.3,
+        "hit_cap": 0.0,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_multikey_3": {
+        "empty": 0.0,
+        "ended_eos": 1.0,
+        "generated_tokens": 46.8,
+        "hit_cap": 0.0,
+        "official": 0.6,
+        "reference_set_recall": 0.6,
+        "typed_set_precision": 0.5
+      },
+      "niah_multiquery": {
+        "empty": 0.0,
+        "ended_eos": 0.3,
+        "generated_tokens": 120.0,
+        "hit_cap": 0.7,
+        "official": 0.9,
+        "reference_set_recall": 0.9,
+        "typed_set_precision": 0.9800000000000001
+      },
+      "niah_multivalue": {
+        "empty": 0.0,
+        "ended_eos": 0.5,
+        "generated_tokens": 113.7,
+        "hit_cap": 0.5,
+        "official": 0.975,
+        "reference_set_recall": 0.975,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_1": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 21.3,
+        "hit_cap": 0.1,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_2": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 78.0,
+        "hit_cap": 0.2,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "niah_single_3": {
+        "empty": 0.0,
+        "ended_eos": 0.6,
+        "generated_tokens": 92.7,
+        "hit_cap": 0.4,
+        "official": 1.0,
+        "reference_set_recall": 1.0,
+        "typed_set_precision": 1.0
+      },
+      "qa_1": {
+        "empty": 0.0,
+        "ended_eos": 0.8,
+        "generated_tokens": 10.7,
+        "hit_cap": 0.2,
+        "official": 0.7,
+        "reference_set_recall": 0.5166666666666666,
+        "typed_set_precision": null
+      },
+      "qa_2": {
+        "empty": 0.0,
+        "ended_eos": 0.9,
+        "generated_tokens": 10.9,
+        "hit_cap": 0.1,
+        "official": 0.6,
+        "reference_set_recall": 0.6,
+        "typed_set_precision": 1.0
+      },
+      "vt": {
+        "empty": 0.0,
+        "ended_eos": 0.0,
+        "generated_tokens": 30.0,
+        "hit_cap": 1.0,
+        "official": 0.5,
+        "reference_set_recall": 0.5,
+        "typed_set_precision": 0.0
+      }
+    }
+  },
+  "decision_contract": {
+    "close_route": "if all new arms are <= their N0/P0 control, stop activation-driven coordinate reassignment",
+    "mechanism_only": "P0 < P arm <= C0 identifies a safer mechanism but is not a new best method",
+    "new_candidate": "a P arm must exceed frozen C0 point score; freeze it before independent confirmation",
+    "no_posthoc_combination": true
+  },
+  "evaluation_role": "post-failure development diagnostic on the same fixed Full-13x10 panel",
+  "formal_contrasts": {
+    "N_operator_cap_minus_C0": -0.030256410256410238,
+    "N_operator_cap_minus_N0": 0.002307692307692233,
+    "P_axis_consensus_minus_C0": -0.03192307692307694,
+    "P_axis_consensus_minus_P0": -0.024230769230769278,
+    "P_operator_cap_minus_C0": -0.01692307692307704,
+    "P_operator_cap_minus_P0": -0.009230769230769376
+  },
+  "formal_fixed_panel_scores": {
+    "C0": 0.7678205128205128,
+    "N0": 0.7352564102564103,
+    "N_operator_cap": 0.7375641025641025,
+    "P0": 0.7601282051282051,
+    "P1": 0.6466666666666666,
+    "P_axis_consensus": 0.7358974358974358,
+    "P_operator_cap": 0.7508974358974357
+  },
+  "method_receipt_sha256": "48f2b90c0d18a0b4190f29f8b74de48d085290aa28364511db12dd5ed7a851b4",
+  "output_health": {
+    "C0": {
+      "empty": 0.0,
+      "ended_eos": 0.6846153846153846,
+      "generated_tokens": 52.38461538461539,
+      "hit_cap": 0.3153846153846154,
+      "official": 0.7678205128205128,
+      "reference_set_recall": 0.7537179487179487,
+      "typed_set_precision": 0.8406593406593407
+    },
+    "N0": {
+      "empty": 0.0,
+      "ended_eos": 0.6923076923076923,
+      "generated_tokens": 51.33076923076923,
+      "hit_cap": 0.3076923076923077,
+      "official": 0.7352564102564102,
+      "reference_set_recall": 0.7211538461538461,
+      "typed_set_precision": 0.8333333333333333
+    },
+    "N_operator_cap": {
+      "empty": 0.0,
+      "ended_eos": 0.7307692307692307,
+      "generated_tokens": 49.353846153846156,
+      "hit_cap": 0.2692307692307692,
+      "official": 0.7375641025641025,
+      "reference_set_recall": 0.7234615384615385,
+      "typed_set_precision": 0.82014652014652
+    },
+    "P0": {
+      "empty": 0.0,
+      "ended_eos": 0.7076923076923077,
+      "generated_tokens": 50.10769230769231,
+      "hit_cap": 0.2923076923076923,
+      "official": 0.7601282051282051,
+      "reference_set_recall": 0.7460256410256411,
+      "typed_set_precision": 0.8307692307692307
+    },
+    "P1": {
+      "empty": 0.0,
+      "ended_eos": 0.7230769230769231,
+      "generated_tokens": 52.69230769230769,
+      "hit_cap": 0.27692307692307694,
+      "official": 0.6466666666666666,
+      "reference_set_recall": 0.6325641025641026,
+      "typed_set_precision": 0.7084772370486655
+    },
+    "P_axis_consensus": {
+      "empty": 0.0,
+      "ended_eos": 0.6923076923076923,
+      "generated_tokens": 51.7,
+      "hit_cap": 0.3076923076923077,
+      "official": 0.735897435897436,
+      "reference_set_recall": 0.7217948717948718,
+      "typed_set_precision": 0.810989010989011
+    },
+    "P_operator_cap": {
+      "empty": 0.0,
+      "ended_eos": 0.676923076923077,
+      "generated_tokens": 52.292307692307695,
+      "hit_cap": 0.3230769230769231,
+      "official": 0.750897435897436,
+      "reference_set_recall": 0.7367948717948718,
+      "typed_set_precision": 0.8219780219780219
+    }
+  },
+  "paired_stability": {
+    "N_operator_cap_minus_N0": {
+      "estimate": 0.002307692307692233,
+      "fraction_gt_zero": 0.6156,
+      "paired_task_equal_bootstrap_ci95": [
+        -0.017692307692307674,
+        0.018855769230768496
+      ]
+    },
+    "P_axis_consensus_minus_P0": {
+      "estimate": -0.024230769230769278,
+      "fraction_gt_zero": 0.0491,
+      "paired_task_equal_bootstrap_ci95": [
+        -0.05346153846153845,
+        0.004615384615384577
+      ]
+    },
+    "P_operator_cap_minus_P0": {
+      "estimate": -0.009230769230769376,
+      "fraction_gt_zero": 0.22375,
+      "paired_task_equal_bootstrap_ci95": [
+        -0.034230769230769176,
+        0.01538461538461533
+      ]
+    }
+  },
+  "raw_sha256": {
+    "C0": "59a458e65b689bef3f13c627ecd59fa613d91e1af680517d794bec4280386ec4",
+    "N0": "d5407aeb99a98837e883316a6ec8774f2c15f76b0b3afda1e3088d8c9b13a1e7",
+    "N_operator_cap": "f54abbe22e43de285f2911dbae9ac93c9f2be189667a9c25c829343f02e88dfe",
+    "P0": "aa750a60b6926f3cef99b560cb3c822920c6af31434d48ca47439358591dae1d",
+    "P1": "646269e760398ff91b23bf379374614cc98863e2fb247b77e4300975a1ee9367",
+    "P_axis_consensus": "c89a385b29a8349fc7e7eaa0d28b72940c7071f4059c883231c82a7ec6c1deb7",
+    "P_operator_cap": "5de7b0491139805ea85fc862bbbc53ca9028a7b95fca6612ff04904a7843464f"
+  },
+  "statistics": {
+    "draws": 20000,
+    "point_score_authority": "fixed-panel point scores; bootstrap is stability analysis",
+    "seed": 20261218
+  },
+  "status": "CA_NCP_SAFE_FOLLOWUP_FULL13_X10_COMPLETE_V1"
+}
