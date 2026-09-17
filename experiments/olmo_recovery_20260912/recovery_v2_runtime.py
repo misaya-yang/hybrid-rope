@@ -42,8 +42,10 @@ def table_for_config(config, arm: str) -> dict:
     base = getattr(config, "rope_theta", None) or getattr(config, "rope_parameters", {}).get("rope_theta")
     if config.model_type == "olmo2" and dim == 128 and config.num_hidden_layers == 16 and base == 500000:
         reference_length = 4096
-    elif (config.model_type == "llama" and dim == 128 and config.num_hidden_layers == 32
-          and config.num_attention_heads == 32 and config.num_key_value_heads == 8
+    elif (config.model_type == "llama" and dim == 128
+          and config.num_hidden_layers in (32, 80)
+          and config.num_attention_heads in (32, 64)
+          and config.num_key_value_heads == 8
           and config.max_position_embeddings == 8192 and base == 500000):
         reference_length = 8192
         if arm not in ("Native", "BM_g4", "BM_g8", "MrPro_g4", "MrPro_g8", "BetaSym_gamma3_g8", "RangeBridge50_g8", "BM_g8_RangeGain"):

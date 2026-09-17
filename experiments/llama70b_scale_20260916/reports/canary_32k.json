@@ -1,0 +1,74 @@
+{
+  "environment": {
+    "architectures": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ],
+    "capability": [
+      12,
+      0
+    ],
+    "cuda": "12.8",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "torch": "2.8.0+cu128"
+  },
+  "generation_failures": [],
+  "hf_device_map": {},
+  "linear4bit_modules": 560,
+  "load_seconds": 82.67923655360937,
+  "model": "/root/autodl-tmp/models/llama-3-70b-Instruct-bnb-4bit",
+  "native": {
+    "1024": {
+      "nll": 1.2389536648988724,
+      "peak_reserved_bytes": 40225472512,
+      "seconds": 0.8783389180898666
+    },
+    "8192": {
+      "nll": 1.3443746669217944,
+      "peak_reserved_bytes": 41630564352,
+      "seconds": 3.7065102830529213
+    }
+  },
+  "ppl_failures": [],
+  "quantization_config": {
+    "_load_in_4bit": true,
+    "_load_in_8bit": false,
+    "bnb_4bit_compute_dtype": "bfloat16",
+    "bnb_4bit_quant_storage": "uint8",
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": true,
+    "llm_int8_enable_fp32_cpu_offload": false,
+    "llm_int8_has_fp16_weight": false,
+    "llm_int8_skip_modules": null,
+    "llm_int8_threshold": 6.0,
+    "load_in_4bit": true,
+    "load_in_8bit": false,
+    "quant_method": "bitsandbytes"
+  },
+  "scope": "engineering compatibility canary only; not model-quality evidence",
+  "selected_generation_prefill_chunk": 0,
+  "selected_lm_prefill_chunk": 0,
+  "status": "LLAMA3_70B_NF4_CANARY_COMPLETE_V1",
+  "tailspline_32k_generation": {
+    "chunk": 0,
+    "generated_ids": [
+      220,
+      19869,
+      17824,
+      15
+    ],
+    "peak_reserved_bytes": 58703478784,
+    "seconds": 17.25920819491148
+  },
+  "tailspline_32k_ppl": {
+    "chunk": 0,
+    "nll": 0.8564007178792963,
+    "peak_reserved_bytes": 47901048832,
+    "seconds": 17.642030354589224
+  }
+}
