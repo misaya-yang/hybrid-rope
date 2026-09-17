@@ -59,6 +59,8 @@ MultiFieldQA，MrPro胜NarrativeQA并在Qasper近乎持平。固定面板正式�
 Full-13×10的TailSpline/MrPro行来自既有大面板的相同前10条/task，YaRN只生成缺失臂；
 它是严格配对三方法比较，但不替换Llama/OLMo已有200条/task的TailSpline–MrPro主结果。
 “官方静态YaRN”指零训练安装，不等于用YaRN训练或微调过的公开checkpoint。
+表中八个读数也不是八次独立实验：NIAH是RULER检索族，Full-13×10还与大样本NIAH
+共享前10条/task。正确概括是各合同分别比较，不把“七项第一”写成独立胜率。
 
 ## 对下一版论文的直接修改建议
 
