@@ -15,6 +15,8 @@ from scripts.experiments.cross_audit.training import causal_loss, native_kl
 MODULES=('q_proj','k_proj','v_proj','o_proj','gate_proj','up_proj','down_proj')
 BLACKWELL_CAUSAL_ATTENTION='blackwell_causal_flash'
 BLACKWELL_CHUNKED_CAUSAL_ATTENTION='blackwell_chunked_causal_flash'
+PHI3_SLIDING_FLEX_ATTENTION='phi3_sliding_flex_v1'
+_phi3_flex=None
 
 def set_static_in_place(model,values,gain):
     """Update the default RoPE buffers without changing their tensor identity."""
@@ -77,6 +79,52 @@ def register_blackwell_chunked_attention(model):
     from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
     ALL_ATTENTION_FUNCTIONS.register(BLACKWELL_CHUNKED_CAUSAL_ATTENTION,blackwell_chunked_causal_flash)
     model.config._attn_implementation=BLACKWELL_CHUNKED_CAUSAL_ATTENTION
+
+def phi3_sliding_visibility(q_len,key_len,window,device=None):
+    """Exact Phi-3 causal window: key > query-window, lower-right aligned."""
+    if q_len<=0 or key_len<q_len or window<=0:raise ValueError('invalid Phi sliding geometry')
+    offset=key_len-q_len
+    q=torch.arange(offset,key_len,device=device)[:,None]
+    k=torch.arange(key_len,device=device)[None,:]
+    return (k<=q)&(k>q-window)
+
+def phi3_sliding_flex(module,query,key,value,attention_mask,dropout=0.0,scaling=None,
+                      sliding_window=None,**kwargs):
+    """Preserve Phi-3's configured local causal operator with sparse FlexAttention."""
+    del attention_mask,kwargs
+    global _phi3_flex
+    if query.shape[0]!=1 or key.shape[0]!=1 or value.shape[0]!=1:
+        raise RuntimeError('Phi sliding FlexAttention requires unpadded batch one')
+    if dropout:
+        raise RuntimeError('Phi sliding FlexAttention is frozen-inference only')
+    window=int(getattr(module,'_phi3_sliding_window',0) or sliding_window or 0)
+    if window<=0:raise RuntimeError('Phi sliding window is missing')
+    if key.shape!=value.shape or query.shape[-1]!=key.shape[-1]:
+        raise RuntimeError('Phi sliding FlexAttention received incompatible Q/K/V')
+    groups=query.shape[1]//key.shape[1]
+    if groups<1 or query.shape[1]!=key.shape[1]*groups:
+        raise RuntimeError('Phi sliding FlexAttention received invalid head mapping')
+    from torch.nn.attention.flex_attention import flex_attention
+    from experiments.nongeometric_screen.distance_operator import masks
+    if _phi3_flex is None:_phi3_flex=torch.compile(flex_attention,dynamic=True)
+    q_len,key_len=query.shape[-2],key.shape[-2]
+    local_mask,_=masks(q_len,key_len,window-1,query.device)
+    output=_phi3_flex(
+        query,key,value,block_mask=local_mask,scale=scaling,enable_gqa=groups>1,
+        kernel_options={'FORCE_USE_FLEX_ATTENTION':q_len>1},
+    )
+    return output.transpose(1,2).contiguous(),None
+
+def register_phi3_sliding_flex_attention(model):
+    from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
+    if getattr(model.config,'model_type',None)!='phi3':
+        raise ValueError('Phi sliding FlexAttention requires a Phi-3 model')
+    window=int(getattr(model.config,'sliding_window',0) or 0)
+    if window<=0:raise ValueError('Phi-3 checkpoint lacks a sliding window')
+    for layer in model.model.layers:
+        layer.self_attn._phi3_sliding_window=window
+    ALL_ATTENTION_FUNCTIONS.register(PHI3_SLIDING_FLEX_ATTENTION,phi3_sliding_flex)
+    model.config._attn_implementation=PHI3_SLIDING_FLEX_ATTENTION
 
 def seed_all(seed):
  random.seed(int(seed));np.random.seed(int(seed));torch.manual_seed(int(seed))

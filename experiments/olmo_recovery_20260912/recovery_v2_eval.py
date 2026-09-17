@@ -305,6 +305,8 @@ def main():
                         help='batch variable prompt lengths using masked left pad tokens; prompt content and position ids are unchanged')
     parser.add_argument('--unmasked-unpadded-generate',action='store_true',
                         help='omit the redundant all-ones mask for exact batch-1 unpadded generation')
+    parser.add_argument('--phi3-sliding-flex',action='store_true',
+                        help='preserve Phi-3 local causal attention with sparse FlexAttention')
     parser.add_argument('--longest-first',action='store_true',
                         help='when batching, sort physical length caps descending before shape grouping')
     parser.add_argument('--static-table-json',type=Path,
@@ -377,6 +379,8 @@ def main():
         raise ValueError('Native follow-up operator cannot be combined with another runtime intervention')
     if args.unmasked_unpadded_generate and (args.batch_size != 1 or args.left_pad_batches):
         raise ValueError('unmasked unpadded generation requires batch=1 without left padding')
+    if args.phi3_sliding_flex and not args.unmasked_unpadded_generate:
+        raise ValueError('Phi sliding FlexAttention requires the unpadded batch-one path')
     if bool(args.layer_override_table_json) != bool(args.layer_override_range):
         raise ValueError('layer override table and range must be provided together')
     if bool(args.layer_override_table_json) != bool(args.layer_override_label):
@@ -433,6 +437,7 @@ def main():
               'lm_execution_strategy':('direct_no_cache_v1' if args.lm_prefill_chunk_size==0 else 'dynamic_cache_exact_nll_v1'),
               'batch_size':args.batch_size,
               'unmasked_unpadded_generate':bool(args.unmasked_unpadded_generate),
+              'phi3_sliding_flex':bool(args.phi3_sliding_flex),
               'generation_order':(
                   'longest_first_shape_sorted_v1' if args.batch_size>1 and args.longest_first
                   else 'ascending_shape_sorted_v1' if args.batch_size>1
@@ -440,7 +445,9 @@ def main():
               'runtime_versions':{
                   'torch':torch.__version__,'transformers':transformers.__version__,
                   **precision_identity,'loss_logits_dtype':'float32',
-                  'attention_backend':'torch_sdpa_flash_only',
+                  'attention_backend':(
+                      'phi3_sliding_flex_v1' if args.phi3_sliding_flex
+                      else 'torch_sdpa_flash_only'),
                   'cache_type':'DynamicCache' if (args.prefill_chunk_size or args.lm_prefill_chunk_size) else None,
                   'allow_tf32':bool(torch.backends.cuda.matmul.allow_tf32),
               },
@@ -471,7 +478,10 @@ def main():
         if not np.array_equal(actual,np.asarray(static_table['values_float32'],dtype=np.float32)):
             raise RuntimeError('installed solver table differs from the frozen receipt')
         table=static_table
-    if args.unmasked_unpadded_generate:
+    if args.phi3_sliding_flex:
+        from .runtime import register_phi3_sliding_flex_attention
+        register_phi3_sliding_flex_attention(model)
+    elif args.unmasked_unpadded_generate:
         # Transformers may still materialize an additive causal mask internally
         # even when callers omit an all-ones padding mask.  Use the existing
         # lower-right Flash-SDPA interface so both prefill and cached decoding
@@ -541,6 +551,7 @@ def main():
         'pad_token_id':int(pad_token_id),
         'pad_tokens_attention_masked':bool(args.left_pad_batches),
         'unmasked_unpadded_generate':bool(args.unmasked_unpadded_generate),
+        'phi3_sliding_flex':bool(args.phi3_sliding_flex),
     })
     path=args.out/'generations.jsonl';saved=read_rows(path) if path.exists() else []
     if len(saved)>len(rows) or any(row['eval_id']!=rows[i]['eval_id'] for i,row in enumerate(saved)):
