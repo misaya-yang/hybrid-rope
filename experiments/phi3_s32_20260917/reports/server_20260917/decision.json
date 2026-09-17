@@ -1,0 +1,7 @@
+{
+  "reports_preserved": true,
+  "score": 0.028461538461538465,
+  "status": "SHUTDOWN_AUTHORIZED_BELOW_THRESHOLD",
+  "threshold": 0.8,
+  "trigger_length": 16384
+}

@@ -1,0 +1,28 @@
+{
+  "by_task": {
+    "cwe": 0.030000000000000006,
+    "fwe": 0.0,
+    "niah_multikey_1": 0.0,
+    "niah_multikey_2": 0.0,
+    "niah_multikey_3": 0.0,
+    "niah_multiquery": 0.0,
+    "niah_multivalue": 0.0,
+    "niah_single_1": 0.1,
+    "niah_single_2": 0.0,
+    "niah_single_3": 0.0,
+    "qa_1": 0.0,
+    "qa_2": 0.1,
+    "vt": 0.14
+  },
+  "generations_sha256": "735e6f136f2aff7c2622f08647feccf5d2ea12ad2b2b772d1414512f2922f51e",
+  "length": 16384,
+  "method": "TailSpline exact finite-grid",
+  "model": "microsoft/Phi-3-mini-4k-instruct",
+  "panel_sha256": "00b1f01420ce8f9f069509716b67c03c3b4414ff535a4c2ca9757676290f105e",
+  "passes_threshold": false,
+  "rows": 130,
+  "scale": 32.0,
+  "status": "PHI3_S32_RULER_GATE_COMPLETE_V1",
+  "task_equal_official_score": 0.028461538461538465,
+  "threshold": 0.8
+}

@@ -19,7 +19,7 @@ TASKS = (
     "niah_multikey_1", "niah_multikey_2", "niah_multikey_3",
     "niah_multivalue", "niah_multiquery", "vt", "cwe", "fwe", "qa_1", "qa_2",
 )
-SCALE = 32.0
+DEFAULT_SCALE = 32.0
 THRESHOLD = 0.80
 
 
@@ -52,16 +52,16 @@ def task_equal_score(rows: list[dict]) -> tuple[float, dict[str, float]]:
     return sum(by_task.values()) / len(TASKS), by_task
 
 
-def freeze_table(model: Path, path: Path) -> dict:
+def freeze_table(model: Path, path: Path, *, scale: float) -> dict:
     config = json.loads((model / "config.json").read_text())
     geometry = tables.model_geometry(config)
     values, gain, construction = tables.build_analytic(
-        config, method="tailspline", scale=SCALE,
+        config, method="tailspline", scale=scale,
         low=None, high=None, depth=1.0, gain=None,
     )
     receipt = tables.make_receipt(
-        candidate_id="phi3mini4k_tailspline_s32",
-        model_id="phi3mini4k", role="candidate", scale=SCALE,
+        candidate_id=f"phi3mini4k_tailspline_s{int(scale)}",
+        model_id="phi3mini4k", role="candidate", scale=scale,
         geometry=geometry, values=values, gain=gain,
         construction=construction, source="analytic:tailspline",
         changed_variables=["internal_frequency_allocation"],
@@ -97,9 +97,9 @@ def prepare_32k(args: argparse.Namespace) -> Path:
     command = [
         str(args.python), "-m",
         "experiments.iclr2027_strong_evidence_20260915.prepare_clean_transfer",
-        "--model", str(args.model), "--model-id", "phi3mini4k_s32_32k",
+        "--model", str(args.model), "--model-id", f"phi3mini4k_s{int(args.scale)}_32k",
         "--data-root", str(args.ruler), "--out", str(root),
-        "--scale", "32", "--lengths", "32768", "--rows-per-task", "10",
+        "--scale", str(int(args.scale)), "--lengths", "32768", "--rows-per-task", "10",
         "--seed", "20261101", "--qa-offset", "5600",
     ]
     subprocess.run(command, cwd=args.repo, check=True)
@@ -107,10 +107,10 @@ def prepare_32k(args: argparse.Namespace) -> Path:
 
 
 def run_length(
-    args: argparse.Namespace, *, length: int, panel: Path, table: Path,
+    args: argparse.Namespace, *, length: int, panel: Path, table: Path, scale: float,
 ) -> dict:
     panel_sha = validate_panel(panel, length=length)
-    out = args.root / "runs" / f"tailspline_s32_{length}"
+    out = args.root / "runs" / f"tailspline_s{int(scale)}_{length}"
     command = [
         str(args.python), "-m", "experiments.olmo_recovery_20260912.recovery_v2_eval",
         "--data", str(args.root / "minimal_eval_manifest.json"),
@@ -119,7 +119,7 @@ def run_length(
         "--length-cap", str(length), "--batch-size", "1",
         "--unmasked-unpadded-generate",
         "--static-table-json", str(table),
-        "--table-label", f"phi3mini4k_tailspline_s32_{length}",
+        "--table-label", f"phi3mini4k_tailspline_s{int(scale)}_{length}",
         "--out", str(out), "--execute",
     ]
     status = out / "status.json"
@@ -130,10 +130,10 @@ def run_length(
     rows = read_rows(out / "generations.jsonl")
     score, by_task = task_equal_score(rows)
     report = {
-        "status": "PHI3_S32_RULER_GATE_COMPLETE_V1",
+        "status": "PHI3_TAILSPLINE_RULER_GATE_COMPLETE_V1",
         "model": "microsoft/Phi-3-mini-4k-instruct",
         "method": "TailSpline exact finite-grid",
-        "scale": SCALE,
+        "scale": scale,
         "length": length,
         "rows": len(rows),
         "panel_sha256": panel_sha,
@@ -143,7 +143,7 @@ def run_length(
         "passes_threshold": score >= THRESHOLD,
         "by_task": by_task,
     }
-    atomic_json(args.root / "reports" / f"tailspline_s32_{length}.json", report)
+    atomic_json(args.root / "reports" / f"tailspline_s{int(scale)}_{length}.json", report)
     return report
 
 
@@ -156,7 +156,7 @@ def shutdown_after_report(args: argparse.Namespace, report: dict) -> None:
         "reports_preserved": True,
     })
     subprocess.run(["sync"], check=True)
-    subprocess.run(["shutdown", "-h", "now"], check=True)
+    subprocess.run(["bash", "/usr/bin/shutdown"], check=True)
 
 
 def main() -> None:
@@ -167,12 +167,14 @@ def main() -> None:
     parser.add_argument("--panel16", type=Path, required=True)
     parser.add_argument("--ruler", type=Path, required=True)
     parser.add_argument("--python", type=Path, required=True)
+    parser.add_argument("--scale", type=float, choices=(4.0, 32.0), default=DEFAULT_SCALE)
+    parser.add_argument("--stop-after-16k", action="store_true")
     parser.add_argument("--shutdown-below-threshold", action="store_true")
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     plan = {
         "status": "PLAN_ONLY" if not args.execute else "EXECUTING",
-        "model": str(args.model), "scale": SCALE,
+        "model": str(args.model), "scale": args.scale,
         "first_length": 16384, "conditional_second_length": 32768,
         "threshold": THRESHOLD,
         "shutdown_below_threshold": bool(args.shutdown_below_threshold),
@@ -182,15 +184,27 @@ def main() -> None:
         return
     args.root.mkdir(parents=True, exist_ok=True)
     atomic_json(args.root / "minimal_eval_manifest.json", {"evaluation_panels": {}, "lengths": []})
-    table_path = args.root / "tables" / "tailspline_s32.json"
-    freeze_table(args.model, table_path)
-    first = run_length(args, length=16384, panel=args.panel16, table=table_path)
+    table_path = args.root / "tables" / f"tailspline_s{int(args.scale)}.json"
+    freeze_table(args.model, table_path, scale=args.scale)
+    first = run_length(
+        args, length=16384, panel=args.panel16, table=table_path, scale=args.scale,
+    )
+    if args.stop_after_16k:
+        atomic_json(args.root / "decision.json", {
+            "status": "STOP_AFTER_16K_NO_SHUTDOWN",
+            "score": first["task_equal_official_score"],
+            "threshold": THRESHOLD,
+            "scale": args.scale,
+        })
+        return
     if not first["passes_threshold"]:
         if args.shutdown_below_threshold:
             shutdown_after_report(args, first)
         return
     panel32 = prepare_32k(args)
-    second = run_length(args, length=32768, panel=panel32, table=table_path)
+    second = run_length(
+        args, length=32768, panel=panel32, table=table_path, scale=args.scale,
+    )
     if not second["passes_threshold"] and args.shutdown_below_threshold:
         shutdown_after_report(args, second)
     elif second["passes_threshold"]:
