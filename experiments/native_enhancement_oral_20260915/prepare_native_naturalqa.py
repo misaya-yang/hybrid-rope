@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from collections.abc import Mapping
 import hashlib
 import json
 from pathlib import Path
@@ -55,6 +56,8 @@ def _ids(tokenizer, content: str) -> list[int]:
         [{"role": "user", "content": content}],
         add_generation_prompt=True, tokenize=True,
     )
+    if isinstance(value, Mapping):
+        value = value["input_ids"]
     if value and isinstance(value[0], list):
         value = value[0]
     return [int(token) for token in value]
