@@ -1,6 +1,6 @@
 # Hybrid-RoPE关键实验罗盘
 
-更新：2026-09-16。本文区分已入稿、完成待整合、运行中与仅准备。
+更新：2026-09-17。本文区分已入稿、完成待整合、运行中与仅准备。
 具体数值、任务分解和原始身份由链接的结果owner维护，不另复制一套完整报告。
 下一轮编辑与实验取舍见[统一准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md)。
 
@@ -34,6 +34,7 @@ NCP已有原生窗口总体增益，Cosh提供配对学习与外推支持。
 | Qwen/GLM S4 Full-13×10三臂 | 两个32K-native模型在128K对MrPro与官方静态YaRN的直接比较 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | GLM独立第二书池En.QA | 77题、15个新来源簇；换书后TailSpline仍为三臂第一 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | Llama/OLMo大样本官方静态YaRN | NIAH-8×200、PPL46、Natural-QA631及Full-13×10三臂；Llama QA保留YaRN小幅领先，其余读数TailSpline第一 | [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md) |
+| Llama-3-70B NF4尺度迁移 | 冻结8B表直接迁移；S4/32K的Full-13、NIAH、PPL与Natural-QA均胜MrPro；S16/128K仅PPL完成，多针单臂已失效，约3 GPU小时的基线补齐后置 | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
 | Llama既有2600条的抽样稳定性分析 | 描述当前固定总体中小样本的变化，非新模型实验 | [抽样报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json) |
 
 [Base综合分析](../reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md)已包含新Qwen结果与独立公共几何复算。
@@ -64,8 +65,8 @@ Qwen不同面板的单针/八任务/Full-13不能混为同一条曲线。
 ## 五、执行与准备分开
 
 易变状态只认[带时间戳执行owner](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
-2026-09-16 Pro6000与32GB队列均已完成并归档：Qwen/GLM S4 Full-13三臂、自然QA三臂、
-GLM第二独立书池，以及Llama/OLMo大样本YaRN任务均有正式报告。
+2026-09-16至17日，Pro6000与32GB队列的Qwen/GLM、Llama/OLMo YaRN及70B S4结果
+均已归档；70B S16/128K任务对照仍是明确未完成项，不混入完成表。
 
 NCP新来源确认、Llama clean32K YaRN和288题反事实面板是[下一版准备项](PAPER_NEXT_REVISION_PREPARATION_20260916.md)，
 不是本轮已启动任务。当前不因计划文件、公开建议或旧launcher存在自动运行。

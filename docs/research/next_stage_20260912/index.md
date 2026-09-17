@@ -12,6 +12,8 @@ TailSpline、NCP、Cosh分别承担冻结扩展、原生增强和学习/外推�
 已入稿的Llama/OLMo、等位移、NCP和学习证据见[论文索引](../../../paper-2027/index.md)。
 新完成的Qwen/GLM S4三臂Full-13、自然QA、Qwen S8单针及Llama S16结果见
 [本批结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)，尚待统一入稿。
+[双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)汇总Llama/OLMo大样本
+官方静态YaRN及Llama-3-70B NF4尺度迁移，供下一版论文直接取数。
 执行完成状态见[带时间戳执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
 
 ## 唯一读取顺序
@@ -36,6 +38,7 @@ TailSpline主线优先级。
 | Native-Z5结果支持到哪一步？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md)；[预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md) |
 | Qwen 32K/64K、NIAH小样本和ProofPile-only PPL说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
 | Pro6000上的128K/256K与自然长文结果是什么？ | [极限长度与自然长文结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| 4080 YaRN与Pro6000 70B结果怎样合并进下一版？ | [双服务器结果更新](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
 | Native-Z5究竟成立了什么？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md) |
 | 如何重新研究native增强？ | [给Web Pro的自包含分析提示词](WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md) |
 | 原生四臂完成后，如何设计零训练增强方法？ | [完整Web Pro提示词：证据与方法交付](WEB_PRO_NATIVE_ZERO_TRAIN_NEXT_STEP_20260915.md) · [接续迁移回复的纠偏提示词](WEB_PRO_NATIVE_METHOD_DELIVERY_CORRECTION_20260915.md) |
@@ -70,6 +73,8 @@ GLM和直接基线报告，准备NCP独立确认及必要的YaRN单臂，机制�
 - Qwen与GLM的128K三臂Full-13和长书QA已完成；Llama/OLMo的NIAH-8×200、
   PPL46、Natural-QA631与Full-13×10官方静态YaRN三臂也已完成，见
   [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)。
+- Llama-3-70B NF4的S4/32K Full-13、Natural-QA631与PPL已完成；S16/128K只完成
+  PPL，NIAH基线仍不完整，见[双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)。
 - Native-Z5的V1、consensus和all-50 refit均已结束；现有结果不支持继续复用同一确认集调表。
 - fixed-u、proxy选表、曲线系数/band/gain追调及旧队列均已退出当前路线。
 

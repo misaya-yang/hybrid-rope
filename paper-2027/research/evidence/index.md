@@ -139,7 +139,7 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 
 - [TailSpline Natural-QA631 V2](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json): complete, independently rescored 631-pair result with source-context intervals; §6.1 paragraph and Appendix H.9 / Table 41.
 
-## 新落盘结果（已核验并进入主稿）
+## 新落盘结果（已核验；是否进入主稿以结果owner为准）
 
 [采用建议与论文落点](../COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md)。
 
@@ -154,5 +154,6 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 | A55 | Pro6000极限长度与自然长文配对包 | [结果owner](../../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)；Qwen S4/128K En.QA `+3.24pp`，Qwen S8/256K single-NIAH `+53.33pp`，Llama S16自然QA仅作压力边界 |
 | A59 | Qwen/GLM S4最终三臂与GLM独立换书 | [结果owner](../../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)；Qwen Full-13×10相对MrPro/YaRN `+4.53/+2.36pp`，GLM `+8.87/+11.81pp`；GLM第二书池77题仍由TailSpline胜出 |
 | A60 | Llama/OLMo官方静态YaRN大样本直接比较 | [报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)；NIAH-8×200、PPL46、Natural-QA631与Full-13×10三臂完成；Llama QA由YaRN小幅第一，其他五个模型×指标读数均为TailSpline第一 |
+| A61 | Llama-3-70B NF4冻结尺度迁移 | [双服务器结果owner](../../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)；S4/32K Full-13、NIAH、Natural-QA及PPL均胜MrPro；S16/128K只登记完整PPL，任务基线未完成 |
 
 - [A55–A58最新直接基线、GLM、长书QA和高倍率整合](../revision_20260916_evidence_update/README.md)：各报告身份与当前稿位置已登记。

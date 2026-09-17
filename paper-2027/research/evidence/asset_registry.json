@@ -1,6 +1,6 @@
 {
   "schema": "paper_asset_registry_v1",
-  "as_of": "2026-09-16",
+  "as_of": "2026-09-17",
   "scope": "current manuscript assets; local availability snapshot, no model execution",
   "assets": [
     {
@@ -1684,6 +1684,57 @@
           "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_full13x10_triarm.json",
           "availability": "tracked",
           "sha256": "ca33aec018e7f0a7ecf34650be6deb093d06192c6e108f2a9b3aad7a5ff72bf0"
+        }
+      ]
+    },
+    {
+      "id": "A61",
+      "name": "Llama-3-70B NF4 frozen scale transfer",
+      "priority": "P0",
+      "question": "Does the frozen Llama-3 TailSpline construction transfer from 8B to a 70B-class checkpoint without model-specific table tuning",
+      "evidence_grade": "Llama-3-70B-Instruct NF4/BF16-compute checkpoint; S4/32K Full-13 x 10, Natural-QA631 and PPL5 paired against MrPro; S16/128K PPL10 paired; exact server/local report hashes verified",
+      "manuscript_location": "next revision; current manuscript unchanged",
+      "interpretation": "At S4/32K, TailSpline/MrPro are 78.67/60.95% Full-13, 86.25/70.63% NIAH-8, 49.28/48.39% Natural-QA631, and 2.4954/2.5075 PPL5. At S16/128K, PPL10 is 2.2449/2.3129. No 70B YaRN arm exists. The 128K task baseline is incomplete and is not evidence; the completed TailSpline arm already scores 40/0/0% on multikey-1/2/3.",
+      "sources": [
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/canary_32k.json",
+          "availability": "tracked",
+          "sha256": "643a9761883fed00de018c2231e78f3f607a80804ffff6dd5f96205ad9ce9b18"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/ruler13x10.json",
+          "availability": "tracked",
+          "sha256": "d89265d66bcf43414593e6a83e28c2d39fa346150660412790c51c4f03b9f60e"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/naturalqa631.json",
+          "availability": "tracked",
+          "sha256": "95f75ccf5481626c2064d8f9fb4535ecc852b16c8924920b7cf1a08fac0bb16d"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/ppl5_32k.json",
+          "availability": "tracked",
+          "sha256": "67f8fb114c318db69a991da6678a0d0c21bf915090d2181c53ecde826a57234c"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/ppl10_128k.json",
+          "availability": "tracked",
+          "sha256": "f5e665745bb25451c7d304d9dbddb09feee2f4435023761567b9bb6153abdd72"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/prefill_128k.json",
+          "availability": "tracked",
+          "sha256": "6c5a7cb56a404e4b810c775f9b961b5d086b535857020585e6f26c2bbd5785b7"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/niah128k_tailspline_summary.json",
+          "availability": "tracked",
+          "sha256": "cb8befeeb445f761067157f1b3ffa72ea82a6098308fca70a6299e3df2858f93"
+        },
+        {
+          "path": "experiments/llama70b_scale_20260916/reports/niah128k_mrpro_partial_live.json",
+          "availability": "tracked",
+          "sha256": "a77907f6fba07aab7ff82b829042203d1d25102a6d023665632f5c4f5c49f086"
         }
       ]
     }

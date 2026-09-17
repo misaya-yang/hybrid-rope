@@ -2139,6 +2139,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/EVQ_LORA_PRO_GUIDANCE_20260912.md",
       "area": "docs",
       "category": "document"
@@ -5319,6 +5324,16 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_second_books_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_triarm.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -5369,12 +5384,47 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_naturalqa_triarm.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_yarn_niah200_ppl46.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_naturalqa631_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_yarn_niah200_ppl46.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_naturalqa631_triarm.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
@@ -6185,6 +6235,76 @@
     },
     {
       "path": "experiments/llama3_60m/test_adapter_integration.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/canary.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/canary_32k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/naturalqa631.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/niah128k_mrpro_partial_live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/niah128k_tailspline_summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/ppl10_128k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/ppl5_32k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/prefill_128k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/ruler13x10.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/run_128k_direct_reuse_suite.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/run_128k_single1_mrpro.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/run_direct_reuse_suite.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -15020,6 +15140,11 @@
     },
     {
       "path": "tests/test_length_conditioned_budgeted_rope.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_llama70b_runtime_support.py",
       "area": "tests",
       "category": "code"
     },

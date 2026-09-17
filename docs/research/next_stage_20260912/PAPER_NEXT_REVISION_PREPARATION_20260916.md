@@ -2,7 +2,8 @@
 
 更新：2026-09-16。**作者已授权并实施一版已完成证据增量；本文件下方保留此前准备记录。**
 当前状态见[论文修改记录](../../../paper-2027/research/revision_20260916_evidence_update/README.md)。
-已纳入四模型quick、GLM65对Full-13与Qwen/GLM35题三臂QA；在跑的大样本及新书池留待后续。
+现稿已纳入四模型quick、GLM65对Full-13与Qwen/GLM35题三臂QA；其后的大样本YaRN、
+GLM新书池及Llama-3-70B NF4结果现已完成并登记，下一版统一替换或追加。
 本文件负责下一次论文整合取舍，不替代实验执行owner，不授权新GPU任务。
 现稿保持主文9页、全稿29页；下一版目标总页数≤35，硬上限40。
 
@@ -27,12 +28,13 @@
 | 已入现稿 | Llama clean8/16/32K、OLMo clean16K及自然QA、clean T/C、NCP、学习支持 | [现稿索引](../../../paper-2027/index.md)、[当前主张表](../../../paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
 | 已完成，待下一版统一整合 | Qwen S4/128K En.QA、S8/256K单针；Llama S16 RULER/PPL/自然任务；抽样稳定性 | [Pro6000正式结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | 已完成，待下一版统一整合 | Qwen S4官方静态YaRN quick三方法：NIAH T/P/Y为72.50/73.125/76.25%，PPL接近；T−Y区间跨零 | [配对报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_yarn.json) |
-| 已完成，远端正式报告已核对 | Llama与OLMo官方静态YaRN quick三方法，NIAH及PPL结果见下节 | 远端报告owner及核对范围见§2.1 |
-| 在执行，未计结果 | GLM S4/128K：当前脚本Full-13×5/臂、PPL5、En.QA | [GLM队列](../../../experiments/iclr2027_strong_evidence_20260915/run_glm4_9b_s4_128k_queue.sh) |
-| 用户已交给其他实验agent，完成状态待owner报告 | 另一组10/task RULER | 不根据口头启动推定模型、独立样本身份或已完成数量 |
-| 仅建议/准备 | NCP新来源确认、Llama clean32K YaRN、原生反事实机制 | 本文§4；不自动入队 |
+| 已完成，待下一版统一整合 | Llama与OLMo官方静态YaRN大样本三方法：NIAH-8×200、PPL46、Natural-QA631、Full-13×10 | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| 已完成，待下一版统一整合 | Qwen/GLM Full-13×10三臂、GLM独立第二书池 | [Pro6000结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| 已完成，待下一版统一整合 | Llama-3-70B NF4 S4/32K Full-13、Natural-QA与PPL；S16/128K PPL | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| 后置，不是当前论文缺口 | 70B S16/128K任务侧：TailSpline多针已失效、MrPro仅3/80；补齐约3 GPU小时 | [70B执行入口](../../../experiments/llama70b_scale_20260916/README.md) |
+| 仅建议/准备 | NCP新来源确认、原生反事实机制 | 本文§4；不自动入队 |
 
-当前GLM脚本的5/task规格不同于此前讨论中的10/task建议，文档按实际合同记录，不改队列。
+GLM及Qwen现已有10/task严格配对三臂报告；早期5/task报告保留为开发历史，不替换正式结果。
 已完成报告、输入预算与实际长度、单针与Full-13、官方F1与accuracy分别维护。
 
 ### 2.1 新增三方法直接比较：Llama与OLMo
@@ -61,8 +63,8 @@ Llama两项指标方向一致，检索quick区间仍跨零。已有大样本T/P�
 quick补充直接YaRN基线，不视为独立复现已复用的T/P样本，也不以NIAH替代Full-13或自然QA。
 这批结果强化配置设计的实际价值，不单独证明尾部平滑性是收益的唯一机制。
 
-后续按用户已确定的四模型计划完成GLM、三方法quick、Full-13与QA直接对照。
-以下NCP等建议是该队列之后的研究候选，不取代当前执行优先级；本记录不改变GPU队列。
+上述quick已由大样本NIAH/PPL、Natural-QA631和Full-13×10正式报告补齐；下一版直接使用
+[双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)中的最终读数，quick只保留溯源。
 
 ## 3. 已确定的概念纠正
 
@@ -82,11 +84,10 @@ quick补充直接YaRN基线，不视为独立复现已复用的T/P样本，也�
 
 ## 4. 结果回收之后的实验准备
 
-### A. 当前队列优先完成
+### A. 已完成的当前队列
 
-接收GLM和Qwen YaRN正式报告，保留全部预定任务、正负结果和运行身份。
-此时做“多种公开规则在不同原生谱/旋转预算上怎样工作”的比较，不把GLM得分当作base因果证据。
-不因某一先出任务的方向调整band、gain、表或后续任务集合。
+GLM、Qwen、Llama和OLMo的YaRN正式报告均已接收；70B冻结尺度迁移也已完成S4主套件。
+下一版保留全部预定任务、正负结果和运行身份，不把GLM或70B得分当作单变量base/规模因果证据。
 
 ### B. 原生主张最直接的新增确认
 
@@ -98,10 +99,10 @@ Full-13为主要终点；VT、QA族及全部任务分解为预设次要终点。
 这项确认服务“原生窗口总体收益及任务轮廓是否复现”，不会把已经得到的+1.41pp降格为不存在。
 本轮仅规格建议，未冻结新样本、未执行。
 
-### C. 官方静态YaRN的直接方法定位
+### C. 官方静态YaRN的直接方法定位：已完成
 
-Qwen的YaRN生成已经完成，先读它的同协议结果。
-若仍需补主结果基线，建议Llama S4 clean32K既有2600条只加YaRN一臂，复用T/P。
+Qwen、GLM、Llama和OLMo的同协议结果均已完成。Llama/OLMo复用既有T/P并只生成缺失YaRN臂；
+Full-13×10、Natural-QA631、NIAH-8×200和PPL46均有正式报告。
 官方默认band/rounding/gain的实用比较和人为匹配band的控制比较分别标记，不能冒充彼此。
 不通过“前人胜过Y、我们胜过前人”传递得出T优于Y。
 
@@ -114,19 +115,19 @@ Qwen的YaRN生成已经完成，先读它的同协议结果。
 
 ### 优先级如何选择
 
-GLM/直接基线回收 → NCP来源确认（强化双场景研究） → 需要时的Llama YaRN单臂 → 反事实行为。
-若直接方法基线成为整合的唯一剩余缺口，Llama YaRN可前移；这只是研究优先级，不是新执行指令。
+GLM/直接基线和70B尺度迁移已经回收；后续优先级变为NCP来源确认（强化双场景研究）→反事实行为。
+70B 128K任务基线仅在预算允许时补，不是论文提交前的默认前置条件。
 既有T/C、151.9M与432M不重跑；极限倍率扩样与更多单针热图按明确问题再决定。
 
 ## 5. 下一版改稿增量清单：尚未应用
 
 | 位置 | 准备好的修改方向 | 等待什么 |
 |---|---|---|
-| 标题/摘要/引言 | 保持Beyond the Base与z中心；自然任务概括吸收Qwen；不写数字进摘要 | 本批GLM/基线结果统一评估后确定准确概括 |
+| 标题/摘要/引言 | 保持Beyond the Base与z中心；自然任务概括吸收Qwen及70B尺度迁移；不写数字进摘要 | 双服务器结果owner已给出准确边界 |
 | §2–3 | 明确控制变量与训练/冻结干预；突出已有等位移证据 | 无需新实验；与全稿一次修改 |
 | 理论段 | 用目标/干扰竞争短解释接现有结构；充分条件就地注明 | 取舍清单已完成；不增造主定理 |
 | 方法段 | TailSpline→NCP→Cosh候选顺序；Cosh两项含义清楚 | 九页正文整体排版与作者审核 |
-| 实验主表 | 跨模型RULER与自然QA并列，保留指标和任务覆盖；NCP单独Native对照 | GLM、直接基线及新确认实际报告 |
+| 实验主表 | 跨模型RULER与自然QA并列，保留指标和任务覆盖；NCP单独Native对照 | 使用A59–A61正式报告；不使用70B 128K partial任务行 |
 | 极限结果 | Llama S16与Qwen S8明确各自方法/任务画像 | 当前报告已可用，后续RULER块按身份追加 |
 | 学习支持 | 151.9M识别保留；432M完整曲线可进附录，正文紧凑展示 | 仅叙事/排版，不动已有数据 |
 | 附录 | 在现有A–F放置短推导/协议/任务表，历史旁支继续归档 | 完整新结果；不恢复大乱炖 |
