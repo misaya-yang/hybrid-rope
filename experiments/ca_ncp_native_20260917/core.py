@@ -301,8 +301,15 @@ def apply_group_planes_torch(
         raise ValueError("head map or active set differs")
     a_t = torch.as_tensor(a, dtype=torch.float32, device=x.device)
     b_t = torch.as_tensor(b, dtype=torch.float32, device=x.device)
-    vr_t = torch.as_tensor(np.asarray(vr), dtype=torch.float32, device=x.device)
-    vi_t = torch.as_tensor(np.asarray(vi), dtype=torch.float32, device=x.device)
+    # Runtime alignment buffers already live on the model device.  Converting a
+    # CUDA tensor through NumPy is invalid, so keep tensors on-device and only
+    # use ``as_tensor`` for the CPU/NumPy reference path.
+    vr_t = vr.to(device=x.device, dtype=torch.float32) if torch.is_tensor(vr) else torch.as_tensor(
+        vr, dtype=torch.float32, device=x.device,
+    )
+    vi_t = vi.to(device=x.device, dtype=torch.float32) if torch.is_tensor(vi) else torch.as_tensor(
+        vi, dtype=torch.float32, device=x.device,
+    )
     if vr_t.shape != vi_t.shape or vr_t.shape != (a_t.numel(), active_t.numel()):
         raise ValueError("plane arrays differ")
     if not 0 <= int(carrier_local) < active_t.numel():
