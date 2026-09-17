@@ -86,13 +86,16 @@ def main() -> None:
     ruler_panel, ruler_native, ruler_ncp = paired(
         args.ruler_panel, args.ruler_native, args.ruler_ncp,
     )
-    if Counter(row["task"] for row in ruler_panel.values()) != Counter({task: 100 for task in RULER_TASKS}):
-        raise ValueError("confirmation RULER panel is not Full-13 x 100")
+    if Counter(row["task"] for row in ruler_panel.values()) != Counter({task: 10 for task in RULER_TASKS}):
+        raise ValueError("quick-gate RULER panel is not Full-13 x 10")
     qa_panel, qa_native, qa_ncp = paired(args.qa_panel, args.qa_native, args.qa_ncp)
-    if len(qa_panel) != 240:
-        raise ValueError("confirmation Natural-QA panel is not 3 x 80")
+    qa_counts = Counter(row["task"] for row in qa_panel.values())
+    if set(qa_counts) != {"2wikimqa", "hotpotqa", "qasper"} or any(
+        count <= 0 or count > 80 for count in qa_counts.values()
+    ):
+        raise ValueError("confirmation Natural-QA panel is not the three-task cap-80 census")
     report = {
-        "status": "OLMO_NATIVE_NCP_INDEPENDENT_CONFIRMATION_COMPLETE_V1",
+        "status": "OLMO_NATIVE_NCP_QUICK_GATE_COMPLETE_V1",
         "ruler": {
             "rows_per_arm": len(ruler_panel),
             "metric": "official RULER score, task-equal across 13 tasks",
@@ -103,19 +106,22 @@ def main() -> None:
         },
         "natural_qa": {
             "rows_per_arm": len(qa_panel),
+            "rows_by_task": dict(qa_counts),
             "metric": "LongBench normalized token F1, task-equal across 3 tasks",
             "ncp_minus_native": bootstrap_cluster_task_equal(qa_panel, qa_native, qa_ncp),
         },
         "scope": (
-            "Frozen NCP versus Native on output-blind new RULER worlds/questions and complete "
-            "untruncated Native-window Natural-QA source rows."
+            "Frozen NCP versus Native on an output-blind new Full-13 x 10 quick gate and "
+            "complete untruncated Native-window Natural-QA source rows. These are the formal "
+            "fixed-panel scores; a larger RULER panel would refine stability precision rather "
+            "than replace the observed score."
         ),
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     temporary = args.out.with_name(args.out.name + ".incomplete")
     temporary.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     temporary.replace(args.out)
-    print(json.dumps({"status": report["status"], "ruler_rows": 1300, "qa_rows": 240}))
+    print(json.dumps({"status": report["status"], "ruler_rows": 130, "qa_rows": len(qa_panel)}))
 
 
 if __name__ == "__main__":

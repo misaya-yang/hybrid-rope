@@ -1,4 +1,4 @@
-# Llama-3-70B NF4 S4/32K scale-transfer suite
+# Llama-3-70B NF4 scale-transfer suite
 
 This thin wrapper reuses the frozen Llama-3-8B prompts, tables, evaluator and
 scorers with the prequantized `unsloth/llama-3-70b-Instruct-bnb-4bit`
@@ -30,3 +30,15 @@ PPL summary.  The archived 8B reports remain the exact-asset reference; the
 browser-side GPU allocation are orchestration responsibilities outside this
 runner.
 
+## Completed evidence
+
+The S4/32K suite is complete. TailSpline/MrPro are `78.67/60.95%` on
+Full-13×10, `86.25/70.63%` on its NIAH-8 view, `49.28/48.39%` on
+Natural-QA631, and `2.4954/2.5075` on PPL5. The S16/128K PPL10 comparison is
+also complete at `2.2449/2.3129`; its NIAH comparison is not complete because
+TailSpline has 80 rows and MrPro has only 3. TailSpline's multikey-1/2/3 scores
+are already `40/0/0%`; completing the baseline costs about three GPU hours and
+is deferred until budget permits. Do not report a 128K comparative task score.
+
+The canonical cross-server interpretation and paper-update guidance are in
+[the result owner](../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md).

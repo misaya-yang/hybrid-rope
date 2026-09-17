@@ -2139,6 +2139,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/EVQ_LORA_PRO_GUIDANCE_20260912.md",
       "area": "docs",
       "category": "document"
@@ -2215,6 +2220,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/NATIVE_ORAL_PREPARATION_PLAN_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md",
       "area": "docs",
       "category": "document"
     },
@@ -2300,6 +2310,16 @@
     },
     {
       "path": "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/SERVER_4080_STORAGE_CLEANUP_20260917.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/next_stage_20260912/SERVER_PRO6000_STORAGE_CLEANUP_20260917.md",
       "area": "docs",
       "category": "document"
     },
@@ -4534,6 +4554,161 @@
       "category": "code"
     },
     {
+      "path": "experiments/ca_ncp_llama_native_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/ca_ncp_llama_native_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_llama_native_20260917/prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_llama_native_20260917/prepare_server_cpu.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/benchmark_runtime.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/build_alignment.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/capture_statistics.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/core.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/io_utils.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/parity.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/prepare_pilot.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/prepare_server_cpu.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/prepare_statistics.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/reports/server_20260917/paired_report.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/reuse_baselines.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_native_20260917/runtime.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/build_alignments.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/paired_report.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/N_operator_cap.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_axis_consensus.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_operator_cap.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/checkpoint_attention_replay_20260913/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -4560,6 +4735,11 @@
     },
     {
       "path": "experiments/checkpoint_attention_replay_20260913/rank_tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/checkpoint_attention_replay_20260913/signed_phase_response.py",
       "area": "experiments",
       "category": "code"
     },
@@ -5314,6 +5494,16 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_second_books_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_triarm.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -5364,12 +5554,47 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_naturalqa_triarm.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
     {
       "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_yarn_niah200_ppl46.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_naturalqa631_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_full13x10_triarm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_yarn_niah200_ppl46.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_naturalqa631_triarm.json",
       "area": "experiments",
       "category": "data-or-receipt"
     },
@@ -6184,6 +6409,76 @@
       "category": "code"
     },
     {
+      "path": "experiments/llama70b_scale_20260916/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/canary.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/canary_32k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/naturalqa631.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/niah128k_mrpro_partial_live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/niah128k_tailspline_summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/ppl10_128k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/ppl5_32k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/prefill_128k.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/reports/ruler13x10.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/run_128k_direct_reuse_suite.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/run_128k_single1_mrpro.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/llama70b_scale_20260916/run_direct_reuse_suite.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/mla_yarn_short_s42/evaluate.py",
       "area": "experiments",
       "category": "code"
@@ -6229,6 +6524,11 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/layer_phase_override.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/lm_context.py",
       "area": "experiments",
       "category": "code"
@@ -6259,12 +6559,52 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/prepare_capture.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/prepare_native_factorial.py",
       "area": "experiments",
       "category": "code"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/prepare_native_lm.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/prepare_native_naturalqa.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/prepare_server_cpu.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reanalyze_existing.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/report_confirmation.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/report_intervention.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/report_native_lm.py",
       "area": "experiments",
       "category": "code"
     },
@@ -6334,6 +6674,41 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/existing_five_arm_reanalysis.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/final_quarter_intervention.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/mechanism_halfturn_vs_native.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/mechanism_ncp_vs_native.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/mechanism_v1_vs_native.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/native_lm128_parallel.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/native_quick_gate_x10_and_qa.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/reports/theory_audit.json",
       "area": "experiments",
       "category": "data-or-receipt"
@@ -6354,12 +6729,62 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_enhancement_oral_20260915/run_native_lm.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/run_server_gpu.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_enhancement_oral_20260915/start_server_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_enhancement_oral_20260915/theory.py",
       "area": "experiments",
       "category": "code"
     },
     {
       "path": "experiments/native_enhancement_oral_20260915/throughput.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/contract.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/mass_projection.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/parity_attention.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/rank_assignment.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/run.py",
       "area": "experiments",
       "category": "code"
     },
@@ -6670,6 +7095,11 @@
     },
     {
       "path": "experiments/native_z_enhancement_20260914/consensus_report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_z_enhancement_20260914/followup_chain.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -7445,6 +7875,26 @@
     },
     {
       "path": "experiments/olmo_recovery_20260912/winding_matched_table.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/queue.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/run_gate.py",
       "area": "experiments",
       "category": "code"
     },
@@ -14844,6 +15294,26 @@
       "category": "code"
     },
     {
+      "path": "tests/test_ca_ncp_core.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_ca_ncp_pipeline.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_ca_ncp_runtime.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_ca_ncp_safe_followup.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_causal_flash.py",
       "area": "tests",
       "category": "code"
@@ -15014,6 +15484,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_llama70b_runtime_support.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_llama_runner_static_table.py",
       "area": "tests",
       "category": "code"
@@ -15094,6 +15569,11 @@
       "category": "code"
     },
     {
+      "path": "tests/test_native_enhancement_capture_prepare.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_native_enhancement_evidence_review.py",
       "area": "tests",
       "category": "code"
@@ -15154,12 +15634,32 @@
       "category": "code"
     },
     {
+      "path": "tests/test_native_followup_mass.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_followup_parity.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_followup_rank.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
       "path": "tests/test_native_halfturn_phase.py",
       "area": "tests",
       "category": "code"
     },
     {
       "path": "tests/test_native_halfturn_report.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_layer_phase_override.py",
       "area": "tests",
       "category": "code"
     },
@@ -15230,6 +15730,16 @@
     },
     {
       "path": "tests/test_permanent_mini_pipeline.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_phi3_runtime_support.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_phi3_s32_gate.py",
       "area": "tests",
       "category": "code"
     },

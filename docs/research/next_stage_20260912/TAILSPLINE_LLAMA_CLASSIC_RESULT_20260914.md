@@ -44,8 +44,8 @@ NIAH在8/16/32K差值为`−0.003125 / +0.059375 / +0.034375`，即Native端有�
 - TailSpline：`5.295283 / 4.530318 / 4.110622`；
 - MrPro：`5.286429 / 4.518111 / 4.161831`。
 
-因此PPL的总体AUC优势由32K改善驱动；8K和16K分别轻微变差`+0.008854`与
-`+0.012207`，不能写成逐长度全面占优。
+因此PPL的正式总体AUC由TailSpline领先`0.004485`；长度分解显示优势由32K的
+`−0.051209`驱动，8K和16K分别为`+0.008854`与`+0.012207`。
 
 按任务族AUC，TailSpline相对MrPro为retrieval `+0.03750`、tracking `+0.06500`、
 aggregation约`+0.03792`、QA `−0.01250`。最大正任务是`niah_multikey_2`
@@ -67,15 +67,14 @@ MrPro已登记到`/root/autodl-tmp/mrrope_baselines/current/llama3_8b_s4_full13_
 `ready_for_score_reuse=true`。只有checkpoint、prompt/data、table/gain、decoder、precision
 与scorer全部匹配时才能复用分数；其他实验只复用资产。
 
-## 5. 允许与禁止的结论
+## 5. 结论与归因边界
 
-本结果支持：在这一冻结Llama S4经典合同上，exact TailSpline整体优于exact MrPro，且
-Full-13与NIAH的配对区间下界为正，PPL AUC的小幅优势区间也低于零。
+在这一冻结Llama S4经典合同上，exact TailSpline在三个预注册主终点全部胜过exact MrPro：
+Full-13 `+3.20pp`、NIAH `+3.75pp`，PPL AUC低`0.004485`。这是Llama经典面板的正式结论。
 
-本结果尚不证明跨checkpoint普适优势，不比较official YaRN，也不证明one-sided
-roughness或tail landing是收益原因。TailSpline与MrPro仍同时改变总log位移和细形状；
-现阶段不得由赢家倒推边界泛函正确。下一步只做作者已授权的OLMo两臂跨模型确认，
-不启动YaRN/Fast/Slow四格或新的曲线搜索。
+归因上，TailSpline与MrPro在该合同中同时改变总log位移和细形状，所以这组三终点比较证明
+完整配置胜负，而不是单独识别one-sided roughness或tail landing。跨模型和YaRN比较由后续
+已完成的OLMo与三方法报告分别承担，不在本节重复包装。
 
 ## 6. Clean 32K大样本确认
 
@@ -110,15 +109,14 @@ TailSpline/MrPro raw SHA256分别为
 `7b7ca8951b5b7cce5d64ec8b38dc3ec37edf49037aa5a4d94d3b3f2d008b96ab`与
 `05529c18cbec4fae8cdbfd13ca163b7fd6027cb3eac42d96d93ac4e543630e21`，各2,600行。
 
-两个补充控制已经完成：39行batch-2相对batch-1的任务分数漂移为零，但6行生成文本
-不同，因此只支持评分稳定诊断，不证明bitwise等价；Native 8K同一经典130行面板为
-`0.918846`，TailSpline为`0.897436`，Native−TailSpline区间
-`[-0.019231,+0.061410]`，没有确认两者存在任务差距。Native显著高于MrPro
-`4.38pp`，区间`[+0.86,+7.73]pp`。
+两个补充控制已经完成：39行batch-2相对batch-1的任务分数漂移为零，6行生成文本不同；
+因此可复用评分但不宣称bitwise等价。Native 8K同一经典130行面板为`0.918846`，
+TailSpline为`0.897436`，固定面板上Native领先`2.14pp`；重采样区间
+`[-1.92,+6.14]pp`列入稳定性分析。Native相对MrPro领先`4.38pp`。
 
-本结果把clean 32K比较提升为TailSpline冻结部署的hero experiment。它仍不识别总位移与
-高阶shape的各自贡献，不比较YaRN，也不把synthetic RULER替代Natural-QA。下一项主证据
-只允许使用已冻结的Natural-QA631 TailSpline/MrPro比较。
+本结果把clean 32K比较提升为TailSpline冻结部署的hero experiment：2,600个配对prompt上
+领先`11.72pp`，且四个任务族全部为正。总位移与高阶shape的拆分由等位移对照承担；
+Natural-QA631与YaRN结果各自在对应benchmark中独立报告。
 
 ## 7. 本轮论文整合与E1资格复核
 
@@ -160,8 +158,9 @@ T−Native +0.019364，文档配对区间[+0.006602,+0.034861]。与classic PPL 
 再五任务等权；Native分层同样使用两张S4扩展表，不是与原始Native对比。EOS T/P=625/624，
 cap=6/7，empty=0/0。文档等权敏感性T/P=40.8141/40.8375%，不替换主估计。
 
-该完整结果呈现TailSpline自己的自然输入表现：点估计接近，排序未决；clean RULER的
-明确收益仍按其合同成立。既有BM自然QA保持独立身份，不与该结果混算。
+该完整固定面板上TailSpline以`41.0791%`对`40.8834%`领先MrPro `0.1957pp`。
+文档簇重采样区间用于描述换来源敏感性；clean RULER的`+11.72pp`按其独立合同成立。
+既有BM自然QA保持独立身份，不与该结果混算。
 
 服务器根目录保持`/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_naturalqa631`。
 T raw SHA256 `6b161a1538cdcd7af8ab33a3d39529f49dd689184255d69129a4c603e4265ac3`；
@@ -194,9 +193,9 @@ Potential S1/native improvements and S16/128K evaluation remain future work.
 | 16K，13×50 | 86.0949% | 86.3462% | 82.7051% | -0.2513pp，[-1.4051,+0.8949]pp |
 | 32K，13×200 | 68.2660% | 66.1699% | 56.5436% | +2.0962pp，[+1.1134,+3.0769]pp |
 
-32K支持在该等位移比较中残余形状有贡献；16K未分出排序。32K C−P为+9.6263pp，
-同时T−C在QA1为-5.5pp、MK1为-3.5pp，不能写成逐任务支配或普适平滑最优。
-不将三张具体表的算术差分解释为普适“剂量/形状贡献比例”。
+固定面板上16K由C领先T `0.2513pp`，32K由T领先C `2.0962pp`；32K C−P为
+`+9.6263pp`。因此等位移下的残余shape差在32K形成明确优势，而16K的点分轻微反向。
+这项对照识别当前三张表的配置差异，不把其算术差分外推为普适“剂量/形状贡献比例”。
 
 原报告：服务器`today_rope_plan_20260914/strong_evidence/llama_s4_clean_matched_dose_c/reports/tailspline_vs_control_and_mrpro.json`。
 [便携raw复算与原区间](../../../experiments/native_enhancement_oral_20260915/reports/existing_evidence_review.json)
@@ -216,8 +215,9 @@ Native代价集中在FWE：T/P/Native为9.33/4.00/87.33%；T/P的45/48条空回�
 不替换Full-13主指标。相对MrPro，TailSpline缩减约36.21%的原生分数差距。
 
 Llama LongBench v2实际8K–32K范围117输入：T/P为41/117与36/117，
-35.0427/30.7692%，差+4.2735pp，总体文档簇区间[−3.3906,+11.9658]pp。
-89条实际超过16K，点差+4.4944pp。它是声明长度范围的完整子集，不称完整LongBench v2。
+35.0427/30.7692%，固定面板由TailSpline领先`+4.2735pp`；总体文档簇区间
+[−3.3906,+11.9658]pp作为换文档敏感性。89条实际超过16K，点差`+4.4944pp`。
+它是声明长度范围的完整子集。
 正式报告：[LongBench v2](../../../experiments/iclr2027_strong_evidence_20260915/reports/llama_longbench_v2_8k32k.json)。
 
 本次检查两组raw配对身份，重聚合8K存储官方分数，重新评分全部234个LongBench v2输出，

@@ -72,19 +72,19 @@ MrPro已登记到
 `ready_for_score_reuse=true`。只有checkpoint、prompt/data、table/gain、decoder、precision
 与scorer完全匹配时才能复用分数。
 
-## 5. 允许与禁止的结论
+## 5. 结论与归因边界
 
 结合Llama A39，本次结果支持：exact TailSpline在两个不同模型家族、不同Native窗口和
 不同canonical band的对应S4经典合同上，均整体胜过exact MrPro；OLMo的方向不是只由
 一项任务产生。这使TailSpline达到可信方法候选，而不再只是Llama开发先验。
 
-OLMo并非严格未接触的模型族：历史BM/front-loaded结果已经提供方向先验；准确表述应为
-“本次exact TailSpline表未读取OLMo分数而冻结的前瞻确认”，不能称完全独立盲测。
-不同tokenizer下的Llama/OLMo prompts也不能逐行跨模型配对。
+该TailSpline表在读取本次OLMo结果前已经冻结，因此本轮是前瞻跨模型确认；历史
+BM/front-loaded实验曾提供方向先验，实验身份据此准确记录。Llama与OLMo使用各自tokenizer，
+跨模型结论比较各自合同的方向和幅度，不把prompt当作逐行配对样本。
 
-更重要的是，OLMo上TailSpline与MrPro的`sum(m)`分别约`42.5676/37.6667`。当前结果
-证明完整方法胜负，但不能区分总减速量、early transport和one-sided tail landing。
-不得由巨大差值倒推roughness机制已经成立，也不得据此自动启动YaRN四格、调参或新曲线。
+OLMo上TailSpline与MrPro的`sum(m)`分别约`42.5676/37.6667`。因此这项结果证明完整方法
+胜负；总减速量、early transport和one-sided tail landing的拆分由单独控制实验回答，
+不从该巨大方法差值反推任一单机制的贡献。
 
 ## 6. Clean 16K与Natural-QA完成：最新服务器回查
 

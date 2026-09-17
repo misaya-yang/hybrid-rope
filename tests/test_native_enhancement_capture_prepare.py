@@ -7,6 +7,7 @@ from experiments.native_enhancement_oral_20260915.prepare_capture import (
     intervention_subset,
     layer_quartiles,
 )
+from experiments.native_enhancement_oral_20260915.prepare_native_naturalqa import _ids
 
 
 def _row(task, length, world, condition, query):
@@ -97,3 +98,11 @@ def test_binding_and_chain_queries_have_causal_evidence():
 
 def test_quartile_layers_use_one_based_quarters_then_zero_based_indices():
     assert layer_quartiles(16) == [3, 7, 11, 15]
+
+
+def test_naturalqa_ids_accepts_transformers_batch_encoding_shape():
+    class Tokenizer:
+        def apply_chat_template(self, *_args, **_kwargs):
+            return {"input_ids": [[7, 8, 9]]}
+
+    assert _ids(Tokenizer(), "prompt") == [7, 8, 9]

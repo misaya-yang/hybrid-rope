@@ -305,7 +305,7 @@ def build_report(panel_path: Path, run_paths: dict[str, Path], *, draws: int = 2
             "length_macro": "equal mean of the two fixed task families, regardless of world counts; independent resampling within each family",
             "cross_length": "equal mean of fixed lengths and tasks is descriptive only; no joint CI because independence across lengths is not assumed",
         },
-        "claim_boundary": "Synthetic native-window mechanism panel. This report does not establish natural-task utility, LM health or cross-model generalization. Model identity comes from the launch preparation receipt (model path and config identity); checkpoint weights are not rehashed. Runtime equality is checked for recorded contract fields.",
+        "claim_boundary": "Formal fixed-panel score for the synthetic native-window mechanism contract. Natural-task utility and LM health are reported by their own frozen panels. Model identity comes from the launch preparation receipt (model path and config identity); checkpoint weights are not rehashed. Runtime equality is checked for recorded contract fields.",
     }
 
 

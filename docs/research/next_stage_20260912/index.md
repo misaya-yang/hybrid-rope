@@ -12,19 +12,34 @@ TailSpline、NCP、Cosh分别承担冻结扩展、原生增强和学习/外推�
 已入稿的Llama/OLMo、等位移、NCP和学习证据见[论文索引](../../../paper-2027/index.md)。
 新完成的Qwen/GLM S4三臂Full-13、自然QA、Qwen S8单针及Llama S16结果见
 [本批结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)，尚待统一入稿。
+[双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)汇总Llama/OLMo大样本
+官方静态YaRN及Llama-3-70B NF4尺度迁移，供下一版论文直接取数。
 执行完成状态见[带时间戳执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
 
 ## 唯一读取顺序
+
+**2026-09-15：clean Llama 32K Full RULER-13×200确认完成。** TailSpline/MrPro为
+`68.27/56.54%`，差`+11.72pp`，95%区间`[+10.32,+13.11]pp`；12/13任务与四个
+family为正，输出健康更好。Natural-QA631用于真实输出迁移，Cosh保留学习期证据。
+具体协议、局部反转与分数边界以结果owner为准。
+
+Native窗口探索是单独的checkpoint-calibrated反事实：冻结成熟OLMo-2-1B权重与Native频率
+support，仅用五个有效自由度校准interior `z`，不作为目标无关的解析曲线，也不改变
+TailSpline主线优先级。
 
 | 需要回答的问题 | Canonical owner |
 |---|---|
 | 下一版怎样吸收Pro、新结果和审稿经验？ | [下一版准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
 | 当前有哪些成立、失败、运行中或仅准备好的实验？ | [关键实验罗盘](KEY_EXPERIMENT_COMPASS_20260914.md) |
-| TailSpline的定义、控制变量和统一评测合同是什么？ | [方法与评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
-| Llama classic、clean 16K/32K、Native与Natural-QA的完整结果是什么？ | [Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
+| TailSpline定义、控制变量和统一评测合同是什么？ | [方法与评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
+| Llama classic、clean 16K/32K与Natural-QA的完整结果是什么？ | [Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
 | OLMo跨模型确认是什么？ | [OLMo结果owner](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md) |
+| Qwen、NIAH小样本与PPL补充结果说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
+| Native-Z5结果支持到哪一步？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md)；[预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md) |
+| NCP是否真正增强冻结模型的Native能力？ | [NCP Native实验与结果](../../../experiments/native_enhancement_oral_20260915/index.md)：Native-4K NLL、Full-13、Natural-QA与机制拆分 |
 | Qwen 32K/64K、NIAH小样本和ProofPile-only PPL说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
 | Pro6000上的128K/256K与自然长文结果是什么？ | [极限长度与自然长文结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| 4080 YaRN与Pro6000 70B结果怎样合并进下一版？ | [双服务器结果更新](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
 | Native-Z5究竟成立了什么？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md) |
 | 如何重新研究native增强？ | [给Web Pro的自包含分析提示词](WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md) |
 | 原生四臂完成后，如何设计零训练增强方法？ | [完整Web Pro提示词：证据与方法交付](WEB_PRO_NATIVE_ZERO_TRAIN_NEXT_STEP_20260915.md) · [接续迁移回复的纠偏提示词](WEB_PRO_NATIVE_METHOD_DELIVERY_CORRECTION_20260915.md) |
@@ -34,8 +49,11 @@ TailSpline、NCP、Cosh分别承担冻结扩展、原生增强和学习/外推�
 | 三段式改进做过什么，怎样向Pro追问下一步？ | [详细研究总结](THREE_BAND_RESEARCH_SYNTHESIS_FOR_PRO_20260915.md) · [可直接发送的提示词](WEB_PRO_THREE_BAND_FOLLOWUP_PROMPT_20260915.md) |
 | YaRN→MrPro→TailSpline的中频变化有什么可验证的解释？ | [独立理论分析、CPU图表与Pro对比](INDEPENDENT_MIDBAND_THEORY_ANALYSIS_20260915.md) |
 | 本轮理论如何形成论文修改？ | [已应用的理论整合与精确增量](../../../paper-2027/research/theory_revision_proposal_20260915/README.md) · [R08审稿](../../../paper-2027/research/pdf-review-rounds/20260915_theory_integration_r08/README.md) |
-| 论文已登记证据及来源在哪里？ | [论文证据索引](../../../paper-2027/research/evidence/index.md) |
 | 服务器上哪些任务在跑、能跑或需要48GB以上？ | [服务器任务分层](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md) |
+| 论文已登记证据及来源在哪里？ | [论文证据索引](../../../paper-2027/research/evidence/index.md) |
+| YaRN–MrPro理论对照的决定是什么？ | [等剂量单交叉审计](MRROPE_YARN_EQUAL_DOSE_PRINCIPLE_AUDIT_20260914.md) |
+| 外部AI分析或公司PC交接材料在哪里？ | [独立问题清单](OPEN_QUESTIONS_FOR_EXTERNAL_AI_AND_PC_20260914.md) |
+| 当前实现与Llama资产定位在哪里？ | [实验流水线](../../../experiments/fixed_rope_three_interfaces_20260913/index.md)；[资产审计](LLAMA_CLASSIC_ASSET_AUDIT_20260914.md) |
 
 ## 准备材料与历史规格
 
@@ -56,6 +74,8 @@ GLM和直接基线报告，准备NCP独立确认及必要的YaRN单臂，机制�
 - Qwen与GLM的128K三臂Full-13和长书QA已完成；Llama/OLMo的NIAH-8×200、
   PPL46、Natural-QA631与Full-13×10官方静态YaRN三臂也已完成，见
   [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)。
+- Llama-3-70B NF4的S4/32K Full-13、Natural-QA631与PPL已完成；S16/128K只完成
+  PPL，NIAH基线仍不完整，见[双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)。
 - Native-Z5的V1、consensus和all-50 refit均已结束；现有结果不支持继续复用同一确认集调表。
 - fixed-u、proxy选表、曲线系数/band/gain追调及旧队列均已退出当前路线。
 

@@ -41,8 +41,8 @@ records the applied manuscript changes, including the main-text NCP subsection.
 | `prepare_olmo_naturalqa631.py` | OLMo QA transfer | implemented; server assets frozen | CPU-only; preserves the historical 631-row source pool |
 | `run_olmo_naturalqa631.sh` | OLMo QA transfer | implemented and dry-run guarded | `--execute` required; TailSpline then canonical MrPro |
 | `run_olmo_qa_then_ruler200.sh` | requested OLMo order | implemented and dry-run guarded | QA first; clean 16K RULER-13×200 last |
-| `prepare_pro6000_128k_queue.sh` | X2, X6 | implemented; GPU assets not yet prepared | CPU-only Qwen asset/table freeze plus both-model validation |
-| `validate_pro6000_queue_on_4080.sh` | X2, X6 engineering | implemented; pending 4080 execution | disposable integration canaries; never writes formal generations |
+| `prepare_pro6000_128k_queue.sh` | X2, X6 | server assets frozen and validated | CPU-only Qwen asset/table freeze plus both-model validation |
+| `validate_pro6000_queue_on_4080.sh` | X2, X6 engineering | completed on the 32GB vGPU | disposable integration canaries; never writes formal generations |
 | `run_pro6000_128k_queue.sh` | X6 then X2 | implemented; pending Pro 6000 | requires sm_120 and >=80,000 MiB; formal 128K queue |
 
 The existing 48GB+ X6 entry remains
@@ -70,6 +70,15 @@ bash experiments/iclr2027_strong_evidence_20260915/validate_pro6000_queue_on_408
 The validation entry targets the existing 32GB 4080 vGPU and refuses a
 standard 16GB physical RTX 4080; it is not a claim that every 4080 can host the
 Llama BF16 32K canary.
+
+The completed engineering receipt is
+`/root/autodl-tmp/today_rope_plan_20260914/pro6000_128k_queue/4080_validation/complete.json`
+with status `PRO6000_QUEUE_32GB_CODEPATH_VALIDATED_V2`. Both Qwen tables match
+between direct and 8K-chunk generation and select the chunked path. Both Llama
+tables also match for generation and select 8K chunks; their LM selector keeps
+direct scoring because the chunked NLL path executes finitely but exceeds the
+frozen numerical tolerance. This receipt validates integration only, not 128K
+capacity, Blackwell kernels or model quality.
 
 On the RTX PRO 6000 Blackwell machine, the only formal command is:
 

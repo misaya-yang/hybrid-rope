@@ -7,6 +7,7 @@ optimize a table, update model weights, or infer full-model answer quality.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import hashlib
 import json
 from pathlib import Path
@@ -219,17 +220,27 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _analyze_capture_path(item: dict, tables: dict[str, tuple[list[float], float]]) -> dict:
+    capture = load_capture(Path(item["path"]), mmap_mode="r")
+    return {
+        name: analyze_capture(capture, np.asarray(values, dtype=np.float64), gain=gain)
+        for name, (values, gain) in tables.items()
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--capture-index", type=Path, required=True)
     parser.add_argument("--table", action="append", required=True, help="NAME=TABLE_JSON")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--workers", type=int, default=1)
     args = parser.parse_args()
     index = json.loads(args.capture_index.read_text())
-    captures = [(item, load_capture(Path(item["path"]), mmap_mode="r"))
-                for item in index.get("captures", [])]
-    if not captures:
+    capture_items = list(index.get("captures", []))
+    if not capture_items:
         raise ValueError("capture index is empty")
+    if args.workers < 1 or args.workers > 32:
+        raise ValueError("--workers must be in [1,32]")
     tables = {}
     for spec in args.table:
         name, separator, raw_path = spec.partition("=")
@@ -239,10 +250,25 @@ def main() -> None:
         values, gain, payload = _table(path)
         tables[name] = (path, values, gain, payload)
     args.out.mkdir(parents=True, exist_ok=True)
+    worker_tables = {
+        name: (values.tolist(), gain)
+        for name, (_path, values, gain, _payload) in tables.items()
+    }
+    if args.workers == 1:
+        combined = [_analyze_capture_path(item, worker_tables) for item in capture_items]
+    else:
+        with ProcessPoolExecutor(max_workers=args.workers) as pool:
+            combined = list(pool.map(
+                _analyze_capture_path,
+                capture_items,
+                [worker_tables] * len(capture_items),
+                chunksize=1,
+            ))
     report = {
         "status": STATUS,
         "capture_index_sha256": _sha256(args.capture_index),
-        "capture_count": len(captures),
+        "capture_count": len(capture_items),
+        "workers": args.workers,
         "tables": {},
         "scope": (
             "Detached current-trajectory Q/K/V response for fixed tables. Local margin, value "
@@ -250,7 +276,7 @@ def main() -> None:
         ),
     }
     for name, (path, values, gain, _payload) in tables.items():
-        analyses = [analyze_capture(capture, values, gain=gain) for _, capture in captures]
+        analyses = [result[name] for result in combined]
         b = np.stack([item.pop("b_mean") for item in analyses])
         h = np.stack([item.pop("h_mean") for item in analyses])
         fmr = np.stack([item.pop("fmr_linear_contrast_mean") for item in analyses])
@@ -291,7 +317,8 @@ def main() -> None:
     temporary = args.out / "report.json.incomplete"
     temporary.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     temporary.replace(args.out / "report.json")
-    print(json.dumps({"status": STATUS, "tables": sorted(tables), "captures": len(captures)}))
+    print(json.dumps({"status": STATUS, "tables": sorted(tables), "captures": len(capture_items),
+                      "workers": args.workers}))
 
 
 if __name__ == "__main__":

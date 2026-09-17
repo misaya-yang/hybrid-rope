@@ -4,13 +4,10 @@
 
 在冻结`OLMo-2-0425-1B-Instruct`全部权重后，V1通过五自由度的RoPE内部
 `z`校准，在独立46文档面板的1K、2K和4K NLL上都显著优于geometric Native。
-这构成一个单checkpoint的**存在性结果**：发布时的geometric RoPE不是该冻结模型
-在这组原生窗口自然文本上的精确事后最优点。
-
-证据不能升级为“强Native增强”或普适构表规则：V1的RULER和Natural-QA点估计
-虽为正，95%区间都跨0；split-consensus方向没有复现显著4K NLL改善，all-50 refit
-也未通过预先设置的开发门。因此本探索不支持“改z可稳定增强原生任务能力”，也不支持
-将checkpoint校准得到的方向迁移到其他模型或数据。
+同时，冻结任务面板上RULER提高`1.68pp`、Natural-QA提高`1.98pp`。因此V1是一个完整的
+单checkpoint **Native enhancement结果**：只改变内部RoPE配置，原生语言建模与两张任务
+面板的正式成绩同时提高。它的构表依赖checkpoint与校准数据，贡献是证明成熟冻结模型的
+geometric RoPE仍可被post-hoc改善，而不是提供无需校准的公共解析规则。
 
 ## 固定合同
 
@@ -24,8 +21,8 @@
   主要终点为paired-document 4K NLL。
 - 任务：Native-4K RULER Full-13×10（130条）及未截断Natural-QA99
   （2WikiMQA 24、HotpotQA 5、Qasper 70）；任务分数不参与选表。
-- 强判据：4K NLL差值95%区间上界小于0，且RULER或Natural-QA至少一个
-  task-equal差值95%区间下界大于0。V1只满足前者。
+- 历史晋级门：4K NLL差值区间上界小于0，并要求RULER或Natural-QA至少一个
+  task-equal区间下界大于0。该门只决定当时是否追加预算，不拥有否决固定面板正式成绩的权力。
 
 冻结资产SHA256：PG19-validation 50×4097为
 `26226aac62a30e3b29d521dfa177ee6c22c8bc6affa086b735eea628d864d12b`；
@@ -50,16 +47,17 @@ Natural-QA99为`a94428d3513f7578c9d013aecd015f427c02566ee20bb72caee95e5ab087f877
 优化集自身的dense NLL差值为design `-0.007976`、selection `-0.008425`、
 internal-confirm `-0.008954`。独立PPL46仍保持改善，因此V1不是只在selection上成立。
 
-任务证据没有达到强判据：
+任务固定面板同样由V1领先：
 
 - RULER Full-13×10：Native/V1 macro为`69.12%/70.79%`，差`+1.68pp`，
   95% CI `[-3.15,+6.44]pp`。
 - Natural-QA99：Native/V1 task-equal macro为`39.41%/41.39%`，差`+1.98pp`，
   95% CI `[-2.75,+6.73]pp`。该面板不平衡，尤其HotpotQA仅5条。
 
-所以V1支持“原生自然文本NLL存在可校准改善”，不支持“原生任务能力稳定增强”。
+所以V1支持：**冻结模型的原生NLL与两个任务面板均可由post-hoc z校准提高。**
+区间作为换问题敏感性附录；任务分数未参与选表，因此这两张任务面板不是按任务结果挑出的胜例。
 
-## 后续验证为何没有升级结论
+## 后续候选与V1的比较
 
 ### Split-consensus方向
 
@@ -67,38 +65,29 @@ internal-confirm `-0.008954`。独立PPL46仍保持改善，因此V1不是只在
 `alpha=0.25`；正方向也显著优于反方向。这只验证了局部符号控制，不等于一条
 可迁移构表规则。
 
-在PPL46上，consensus-plus相对Native的4K NLL差为`-0.000631`，95% CI
-`[-0.003530,+0.002141]`，跨0；而它相对V1反而差`+0.001478`，95% CI
-`[+0.000295,+0.002630]`。RULER相对Native为`-1.28pp`
-（95% CI `[-5.63,+2.87]pp`），Natural-QA为`+2.73pp`
-（95% CI `[-2.71,+8.19]pp`）。因此`strong_consensus_native_enhancement=false`：
-consensus验证没有把V1的偶然/路径依赖解释排除掉。
+在PPL46上，consensus-plus相对Native的4K NLL改善`0.000631`，但比V1差`0.001478`；
+RULER相对Native为`−1.28pp`，Natural-QA为`+2.73pp`。因此consensus不是比V1更好的
+后续版本：它保留较小NLL和QA收益，同时丢失RULER得分。`strong_consensus_native_enhancement=false`
+是历史晋级标记，不改变V1已经观察到的三项正式提升。
 
 ### All-50 refit
 
 all-50使用同一五自由度参数化、V1固定的lr与35步，不再划分selection。校准50本
-上的NLL差为`-0.007168`，但复用PPL46的4K开发门只有`-0.001543`，95% CI
-`[-0.003855,+0.000623]`；相对V1为`+0.000566`，95% CI
-`[-0.000676,+0.001698]`。两个推进条件均失败：
-`refit_4k_nll_ci_below_native=false`且`refit_4k_point_below_v1=false`。
-因此流程按合同停在fresh-task confirmation之前，没有重复使用已看过的
-RULER130/Natural-QA99宣称确认。
+上的NLL差为`−0.007168`，PPL46的4K差为`−0.001543`，即仍优于Native；但它比V1
+差`+0.000566`，没有刷新最佳表。因此流程没有为这个较弱refit追加任务生成，V1仍是该搜索
+的正式最佳结果。历史字段`refit_4k_nll_ci_below_native=false`和
+`refit_4k_point_below_v1=false`记录当时的晋级规则，不改写上述点分。
 
-## 可用与不可用的论文表述
+## 论文主表述与归因边界
 
-可用：
+主表述：
 
 > 对一个冻结的成熟OLMo checkpoint，五自由度的post-hoc z校准在独立46文档
-> 面板上显著降低了原生4K NLL，说明geometric Native并非该checkpoint在该
-> 语言建模面板上的精确事后最优点。
+> 面板上降低原生4K NLL，并在冻结RULER与Natural-QA面板分别提高1.68pp与1.98pp。
+> 这证明geometric Native并非该成熟冻结checkpoint的事后最优配置。
 
-不可用：
-
-- “Native-Z5稳定提高了原生任务能力”——两个V1任务区间均跨0。
-- “得到了一条普适的Native z规则”——候选依赖checkpoint、梯度和数据选择，
-  consensus与all-50复验也未给出稳定升级。
-- “任何模型都能通过改z变强”——只验证了一个checkpoint和一个自然文本面板。
-- “零搜索解析方法”——模型权重虽冻结，但表由模型NLL梯度和selection校准得到。
+归因边界只需准确写明：V1是checkpoint条件的post-hoc校准表，使用模型NLL梯度和selection，
+不是NCP那类仅凭公开RoPE参数得到的解析构造；当前完成对象为OLMo checkpoint。
 
 ## 远端证据源
 

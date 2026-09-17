@@ -4,12 +4,11 @@ This file is the execution handoff for the current experiment server. It routes
 operators to runnable work; it is not another experiment plan or result
 narrative.
 
-## Current observed snapshot: 2026-09-16T14:43:18Z
+## Current observed snapshot: 2026-09-17T01:29:38Z
 
-The PRO6000 endpoint was `ssh -p 51638 root@connect.westd.seetacloud.com`.
-After all listed completion receipts, portable-report hashes and the absence of
-queue processes were verified, the host was shut down at this timestamp.
-The old32GB endpoint and its shutdown instructions below are historical.
+The PRO6000 endpoint is `ssh -p 51638 root@connect.westd.seetacloud.com`; it is
+reachable in no-GPU mode and has no evaluator process. The 32GB endpoint was
+shut down after its complete YaRN receipt. Older instructions below are historical.
 
 | Work | Observed state | Interpretation |
 |---|---|---|
@@ -19,11 +18,15 @@ The old32GB endpoint and its shutdown instructions below are historical.
 | GLM S4/128K Full-13 | 130 rows/arm and strict three-arm report complete | TailSpline/MrPro/YaRN `39.65/30.78/27.85%` |
 | GLM independent second-book En.QA | 77 rows/arm, 15 source contexts, no overlap with original seven books | TailSpline/MrPro/YaRN `26.87/22.86/23.50%` |
 | Llama S16 gate and natural tasks; Qwen S8 health and S4 QA | Completed portable reports | [Result owner](../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| Pro6000 GPU queue | No evaluator or queue process; all authorized Pro receipts above complete | Results copied to portable reports; host shut down |
+| Llama/OLMo official static YaRN | 4080 queue completion receipt has five verified owners; host shut down | [Cross-server result owner](../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| Llama-3-70B NF4 S4/32K | Full-13×10, Natural-QA631 and PPL5 complete | TailSpline wins all completed TailSpline/MrPro endpoints |
+| Llama-3-70B NF4 S16/128K | PPL10 complete; TailSpline NIAH 80/80, MrPro 3/80 | No task comparison; multikey TailSpline is 40/0/0%, and the approximately three-GPU-hour baseline completion is deferred |
+| Pro6000 current state | No GPU device and no evaluator process | Completed reports are Git-mirrored; do not infer that the incomplete 128K task queue is active |
 
 The final GLM Full-13 merged the original five rows/task with the five-row
-completion block; it did not rerun the original half. Partial RoPE handling and
-all table/gain identities remain recorded in the strict report.
+completion block; it did not rerun the original half. The 70B S4 reports and
+S16 PPL report have exact server/local SHA256 parity. Partial 128K NIAH rows
+remain on the data disk but are not a completed result.
 [Next manuscript preparation](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)
 contains proposed follow-ups only. Read fresh completion receipts before treating
 this timestamped snapshot as current execution state.

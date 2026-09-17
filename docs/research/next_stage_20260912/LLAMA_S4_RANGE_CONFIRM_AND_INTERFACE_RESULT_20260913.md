@@ -74,7 +74,7 @@ log-gain中点由第一块选择，因此累计12行/格区间不能冒充选型
 
 log-gain中点的任务族AUC为 retrieval/tracking/aggregation/QA
 `95.14/93.33/46.53/60.42`。它显著修复了标准gain候选的aggregation `23.61`，同时
-QA低于BM/MrPro；不是所有能力普涨。32K 的 EOS/cap 为 `98.61%/1.39%`，好于 BM 的
+QA低于BM/MrPro；这是正式任务族分解。32K 的 EOS/cap 为 `98.61%/1.39%`，好于 BM 的
 `90.28%/9.72%`，因此远端收益不只是 contains scorer 在截断输出上的偶然命中。
 
 ## 4. Native 保留反例

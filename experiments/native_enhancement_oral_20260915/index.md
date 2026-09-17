@@ -1,23 +1,54 @@
-# Native增强：实验准备入口
+# Native增强：实验与结果入口
 
-## 2026-09-16状态澄清
+## 2026-09-17正式结果
 
-既有NCP在OLMo原生Full-13上的总体收益已完成并入稿；本目录的288题及其他新增GPU比较仍未据此完成。
-下一步由[统一准备清单](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)安排；
+冻结`OLMo-2-0425-1B-Instruct`后，公开参数构造的NCP相对geometric Native得到两个正式正结果：
+
+- 同目标Native-4K语言建模：103个源文档、128个窗口上，full-context NLL从`2.915269`
+  降至`2.902483`，差`−0.012786` nat/token，约等于PPL降低`1.27%`；NCP从额外早期上下文
+  获得的NLL收益比Native多`0.007941`。
+- 新Full-13×10：130条/臂，NCP比Native高`+3.2564pp`。正式点分按固定13任务等权；
+  配对bootstrap区间`[+0.8077,+5.9231]pp`作为稳定性分析。
+
+同一轮的完整Native-window Natural-QA普查为99条/臂，NCP比Native`−0.8549pp`；这是该
+自然任务面板的正式结果，与上述NLL和Full-13分别报告，不拥有相互否决权。三个主要结果见
+[Full-13与Natural-QA](reports/server_20260917/native_quick_gate_x10_and_qa.json)和
+[同目标NLL](reports/server_20260917/native_lm128_parallel.json)。
+
+机制拆分给出更具体的边界，而不反向抹掉正式性能结果：
+
+- 既有780行开发面板重聚合：H/NCP/V1相对Native分别`+0.1346/+1.4081/+3.0107pp`，
+  reverse为`−1.4765pp`；见[五臂重分析](reports/server_20260917/existing_five_arm_reanalysis.json)。
+- 新288行反事实面板中，NCP在1K为`+2.083pp`、2K持平、4K为`−11.458pp`；
+  这说明该合成binding/chain面板不是NCP正式收益的中介解释；见
+  [NCP机制报告](reports/server_20260917/mechanism_ncp_vs_native.json)。
+- 固定末四层相位块干预使Native从`9.375%`降到`6.25%`，反向干预净效应为0；
+  因而这一个固定层块不解释NCP收益；见
+  [末四层干预](reports/server_20260917/final_quarter_intervention.json)。
+
+结论按结果优先表述：**NCP在冻结OLMo的Native-4K NLL/PPL和新Full-13面板上增强原生能力；
+Natural-QA与两组机制面板完整保留其各自分数，用于任务分解和机制排除。**
+
+## 2026-09-16准备记录
+
+既有NCP在OLMo原生Full-13上的总体收益已完成并入稿；本目录随后新增的288题、独立确认与
+同目标NLL已于上节登记。执行优先级由
+[统一准备清单](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)安排；
 参考风险符号不自动升级为模型准确率预测。
 
 ## 2026-09-16 Native相位研究代码
 
-新方案不再继续搜索Z5，而是分开检验行为、局部相位响应和独立确认。当前仅代码完成，尚无本轮GPU结果：
+新方案不再继续搜索Z5，而是分开检验行为、局部相位响应和独立确认。以下记录当时的执行合同；
+对应GPU结果现已在本页首节完成登记：
 
 - `prepare_server_cpu.sh`准备既有五臂输出重分析、更新后的288题四臂面板、96题Q/K/V捕获清单、
-  Full-13×100新世界、Natural-QA 3×80及128个同目标NLL窗口。
+  Full-13×10新世界快速门、Natural-QA三任务完整4K普查（每任务最多80）及128个同目标NLL窗口。
 - `run_server_gpu.sh`默认只打印计划；显式`--execute`才运行Native/H/NCP/V1反事实、固定四层Q/K/V、
   末四层双向相位干预及独立Full-13/Natural-QA/NLL确认。
 - Q/K/V只用于解释冻结表，不用于拟合新表。固定干预块为OLMo零起始层12–15；64题在模型输出前冻结。
 
-当前4080是无卡实例，新数据尚未物化且没有启动模型作业。恢复有卡实例后先完成CPU准备并生成
-`cpu_ready.json`，随后才能运行GPU队列；旧288题和合成Q/K测试不能冒充本轮结果。
+当时的无卡准备、`cpu_ready.json`与显式`--execute`边界均已按合同使用；服务器当前已关机，
+本地只保留紧凑正式报告，完整raw仍在服务器数据盘。
 
 
 本包只新增CPU准备与分析路径，复用现有NCP构造和冻结模型评估器。

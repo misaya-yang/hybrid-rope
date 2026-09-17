@@ -60,12 +60,18 @@ capture_run=${root}/runs/qkv_capture96
   --queries-per-row 4 --query-mode annotated --max-input-tokens 4096 --execute \
   >"${root}/logs/qkv_capture96.log" 2>&1
 
+signed_pid=''
 if [[ ! -f "${root}/reports/signed_phase_response/report.json" ]]; then
-  "${python_bin}" -m experiments.checkpoint_attention_replay_20260913.signed_phase_response \
-    --capture-index "${capture_run}/index.json" \
-    --table halfturn="${halfturn}" --table ncp="${ncp}" --table v1="${v1}" \
-    --out "${root}/reports/signed_phase_response" \
-    >"${root}/logs/signed_phase_response.log" 2>&1
+  if pgrep -f "signed_phase_response --capture-index ${capture_run}/index.json" >/dev/null; then
+    printf '%s\n' 'REUSE_RUNNING signed_phase_response'
+  else
+    "${python_bin}" -m experiments.checkpoint_attention_replay_20260913.signed_phase_response \
+      --capture-index "${capture_run}/index.json" \
+      --table halfturn="${halfturn}" --table ncp="${ncp}" --table v1="${v1}" \
+      --out "${root}/reports/signed_phase_response" \
+      >"${root}/logs/signed_phase_response.log" 2>&1 &
+    signed_pid=$!
+  fi
 fi
 
 intervention_panel=${capture}/intervention_inputs.jsonl
@@ -130,7 +136,7 @@ while [[ ! -f "${root}/cpu_ready.json" ]]; do
   fi
   sleep 5
 done
-ruler=${root}/assets/ruler_confirm_13x100/panels/4096/inputs.jsonl
+ruler=${root}/assets/ruler_confirm_13x10/panels/4096/inputs.jsonl
 qa=${root}/assets/naturalqa_3x80/inputs.jsonl
 for suite in ruler qa; do
   panel_var=${suite}
@@ -162,6 +168,23 @@ fi
   --tokens "${root}/assets/lm128/tokens_128x4097.npy" --ncp-table "${ncp}" \
   --out "${root}/runs/confirm/lm" --execute \
   >"${root}/logs/confirm_lm.log" 2>&1
+
+if [[ -n "${signed_pid}" ]]; then
+  wait "${signed_pid}"
+else
+  signed_deadline=$((SECONDS + 1800))
+  while [[ ! -f "${root}/reports/signed_phase_response/report.json" ]]; do
+    if ! pgrep -f "signed_phase_response --capture-index ${capture_run}/index.json" >/dev/null; then
+      printf '%s\n' 'REFUSE: signed phase response ended without a complete report.' >&2
+      exit 1
+    fi
+    if (( SECONDS >= signed_deadline )); then
+      printf '%s\n' 'REFUSE: signed phase response exceeded 30 minutes.' >&2
+      exit 1
+    fi
+    sleep 5
+  done
+fi
 
 "${python_bin}" - "${root}" <<'PY'
 import hashlib,json,sys

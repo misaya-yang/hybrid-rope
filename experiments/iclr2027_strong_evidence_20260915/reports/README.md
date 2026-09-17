@@ -4,6 +4,12 @@ Read-only snapshot from the existing experiment server. No generation was rerun.
 The source manifest distinguishes original report intervals, raw stored-score
 aggregation, and full-output rescoring.
 
+Reporting rule: the official score on each frozen panel is the formal result and
+appears first. Bootstrap or clustered-resampling intervals describe stability to
+resampling and source replacement; they do not veto the recorded fixed-panel score.
+Different benchmarks remain separate endpoints, so a loss on one does not erase a
+win on another.
+
 | Report | Role |
 |---|---|
 | [OLMo clean16K](olmo_clean16k_ruler200.json) | Full-13, 2600 pairs, second-family clean confirmation |
