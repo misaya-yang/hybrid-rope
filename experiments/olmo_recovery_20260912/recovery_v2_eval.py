@@ -397,7 +397,7 @@ def main():
             'label':args.ca_ncp_alignment_label,
             'path':str(args.ca_ncp_alignment_npz.resolve()),
             'sha256':file_sha256(args.ca_ncp_alignment_npz),
-            'hook_location':'q_norm/k_norm output before RoPE',
+            'hook_location':'model-specific Q/K projection-or-norm output before RoPE; exact site recorded at runtime',
         }
     if state and state.get('arm')!=checkpoint_arm:raise ValueError('checkpoint belongs to another arm')
     precision_identity=checkpoint_precision_identity(args.model)

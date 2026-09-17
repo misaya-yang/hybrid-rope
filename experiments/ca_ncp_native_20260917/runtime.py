@@ -1,4 +1,4 @@
-"""Install frozen CA-NCP rank-2 planes after Q/K norm and before RoPE."""
+"""Install frozen CA-NCP rank-2 planes at the model's pre-RoPE Q/K output."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -94,6 +94,7 @@ def install_alignment(model, alignment_path: Path) -> tuple[list, dict]:
     carrier_local = int(data["carrier_local"])
     handles = []
     nonidentity = 0
+    hook_locations = set()
 
     class FrozenPlanes(nn.Module):
         def __init__(self, layer: int):
@@ -123,8 +124,16 @@ def install_alignment(model, alignment_path: Path) -> tuple[list, dict]:
         attention = block.self_attn
         if hasattr(attention, "ca_ncp_alignment"):
             raise RuntimeError("CA-NCP alignment is already installed")
-        if not hasattr(attention, "q_norm") or not hasattr(attention, "k_norm"):
-            raise RuntimeError("model lacks post-norm/pre-RoPE Q/K hook points")
+        q_module = getattr(attention, "q_norm", None) or getattr(attention, "q_proj", None)
+        k_module = getattr(attention, "k_norm", None) or getattr(attention, "k_proj", None)
+        if q_module is None or k_module is None:
+            raise RuntimeError("model lacks q_norm/k_norm or q_proj/k_proj pre-RoPE hook points")
+        hook_location = (
+            "q_norm/k_norm output before RoPE"
+            if hasattr(attention, "q_norm") and hasattr(attention, "k_norm")
+            else "q_proj/k_proj output before reshape and RoPE"
+        )
+        hook_locations.add(hook_location)
         planes = FrozenPlanes(layer_index).to(device=next(attention.parameters()).device)
         attention.add_module("ca_ncp_alignment", planes)
         q_map = np.repeat(np.arange(kv_heads, dtype=np.int64), query_heads // kv_heads)
@@ -136,8 +145,8 @@ def install_alignment(model, alignment_path: Path) -> tuple[list, dict]:
         def k_hook(_module, _inputs, output, *, p=planes, mapping=k_map):
             return p.apply(output, heads=kv_heads, head_to_group=mapping)
 
-        handles.append(attention.q_norm.register_forward_hook(q_hook))
-        handles.append(attention.k_norm.register_forward_hook(k_hook))
+        handles.append(q_module.register_forward_hook(q_hook))
+        handles.append(k_module.register_forward_hook(k_hook))
         nonidentity += int(np.sum((np.abs(data["b"][layer_index]) > 0) | (np.abs(data["a"][layer_index] - 1) > 0)))
     if any(parameter.requires_grad for block in layers for parameter in block.self_attn.ca_ncp_alignment.parameters()):
         raise AssertionError("alignment unexpectedly has trainable parameters")
@@ -154,7 +163,7 @@ def install_alignment(model, alignment_path: Path) -> tuple[list, dict]:
         "nonidentity_planes": nonidentity,
         "runtime_plane_dtype": "float32",
         "output_dtype": "original Q/K dtype",
-        "hook_location": "q_norm/k_norm forward output before view and RoPE",
+        "hook_location": next(iter(hook_locations)) if len(hook_locations) == 1 else sorted(hook_locations),
         "method_receipt_sha256": str(data["method_receipt_sha256"]),
         "statistics_receipt_sha256": str(data["statistics_receipt_sha256"]),
     }

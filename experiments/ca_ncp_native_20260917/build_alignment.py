@@ -149,7 +149,7 @@ def _mean_moments(rows: list[dict], root: Path, role: str) -> tuple[np.ndarray, 
 def solve(statistics: Path, construction: Path, out: Path) -> dict:
     method = json.loads((construction / "METHOD_RECEIPT.json").read_text())
     stats = json.loads((statistics / "STATISTICS_RECEIPT.json").read_text())
-    if method.get("method_id") != METHOD_ID or stats.get("method_id") != METHOD_ID:
+    if not method.get("method_id") or stats.get("method_id") != method.get("method_id"):
         raise ValueError("method/statistics contract mismatch")
     if stats["method_receipt_sha256"] != file_sha256(construction / "METHOD_RECEIPT.json"):
         raise ValueError("statistics were captured for another method receipt")
@@ -232,7 +232,7 @@ def solve(statistics: Path, construction: Path, out: Path) -> dict:
     (out / "identity_alignment.incomplete.npz").replace(identity_path)
     receipt = {
         "status": "ALIGNMENT_COMPLETE",
-        "method_id": METHOD_ID,
+        "method_id": method["method_id"],
         "layers": layers,
         "kv_groups": groups,
         "active_dimensions": active_size,

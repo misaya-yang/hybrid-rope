@@ -64,6 +64,29 @@ class FakeModel(torch.nn.Module):
         )
 
 
+class ProjectionAttention(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.q_proj = torch.nn.Identity()
+        self.k_proj = torch.nn.Identity()
+        self.anchor = torch.nn.Parameter(torch.zeros(()), requires_grad=False)
+
+
+class ProjectionBlock(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.self_attn = ProjectionAttention()
+
+
+class ProjectionModel(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = SimpleNamespace(layers=torch.nn.ModuleList([ProjectionBlock(), ProjectionBlock()]))
+        self.config = SimpleNamespace(
+            num_attention_heads=4, num_key_value_heads=2, hidden_size=48, head_dim=12,
+        )
+
+
 def test_load_alignment_validates_shapes(tmp_path):
     path = alignment_file(tmp_path / "a.npz")
     data = load_alignment(path)
@@ -113,6 +136,19 @@ def test_install_alignment_adds_buffers_and_shared_group_hooks(tmp_path):
     k_out = model.model.layers[0].self_attn.k_norm(k)
     assert not torch.equal(q_out, q)
     assert not torch.equal(k_out, k)
+    for handle in handles:
+        handle.remove()
+
+
+def test_install_alignment_falls_back_to_projection_outputs(tmp_path):
+    model = ProjectionModel()
+    path = alignment_file(tmp_path / "projection.npz")
+    handles, receipt = install_alignment(model, path)
+    q = torch.randn(1, 3, 48)
+    k = torch.randn(1, 3, 24)
+    assert not torch.equal(model.model.layers[0].self_attn.q_proj(q), q)
+    assert not torch.equal(model.model.layers[0].self_attn.k_proj(k), k)
+    assert receipt["hook_location"] == "q_proj/k_proj output before reshape and RoPE"
     for handle in handles:
         handle.remove()
 

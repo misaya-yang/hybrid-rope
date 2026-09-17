@@ -4554,6 +4554,26 @@
       "category": "code"
     },
     {
+      "path": "experiments/ca_ncp_llama_native_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/ca_ncp_llama_native_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_llama_native_20260917/prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_llama_native_20260917/prepare_server_cpu.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/ca_ncp_native_20260917/README.md",
       "area": "experiments",
       "category": "navigation"

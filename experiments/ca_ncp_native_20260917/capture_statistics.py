@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Capture unlabeled Native post-norm/pre-RoPE Q/K signed moments.
+"""Capture unlabeled Native pre-RoPE Q/K signed moments.
+
+Models with Q/K normalization are captured after that normalization; vanilla
+Llama is captured at q_proj/k_proj output before reshape and RoPE.
 
 Without ``--execute`` this command is PLAN_ONLY and does not import torch or
 load a checkpoint. GPU execution is a separate explicit action.
@@ -15,16 +18,17 @@ import time
 
 import numpy as np
 
-from . import METHOD_ID, NATIVE_LENGTH, PAIRS_PER_DOCUMENT
 from .core import signed_moment, split_half_to_complex, tensor_sha256
 from .io_utils import atomic_json, file_sha256
 
 
-DISTANCE_EDGES = (0, 256, 512, 1024, 2048, 4096)
-DISTANCE_LABELS = tuple(
-    f"{DISTANCE_EDGES[i] + (1 if i == 0 else 0)}..{DISTANCE_EDGES[i + 1]}"
-    for i in range(len(DISTANCE_EDGES) - 1)
-)
+def distance_bins(native_length: int) -> tuple[tuple[int, ...], tuple[str, ...]]:
+    edges = (0, native_length // 16, native_length // 8, native_length // 4, native_length // 2, native_length)
+    labels = tuple(
+        f"{edges[i] + (1 if i == 0 else 0)}..{edges[i + 1]}"
+        for i in range(len(edges) - 1)
+    )
+    return edges, labels
 
 
 def _head_layout(value, *, tokens: int, heads: int, head_dim: int):
@@ -59,21 +63,27 @@ def main() -> None:
     args = parser.parse_args()
     asset_manifest = json.loads((args.assets / "manifest.json").read_text())
     method = json.loads((args.construction / "METHOD_RECEIPT.json").read_text())
+    request = asset_manifest.get("request") or {}
+    method_id = str(method.get("method_id", ""))
+    native_length = int(request.get("native_length", method.get("construction", {}).get("native_length", 0)))
+    pairs_per_document = int(request.get("pairs_per_document", 0))
     if not args.execute:
         print(json.dumps({
             "status": "PLAN_ONLY",
             "model_loaded": False,
             "gpu_execution": False,
             "documents": len(asset_manifest.get("documents", [])),
-            "pairs_per_document": PAIRS_PER_DOCUMENT,
-            "expected_native_tokens": len(asset_manifest.get("documents", [])) * NATIVE_LENGTH,
+            "pairs_per_document": pairs_per_document,
+            "expected_native_tokens": len(asset_manifest.get("documents", [])) * native_length,
             "out": str(args.out),
         }, indent=2))
         return
     if asset_manifest.get("status") != "CPU_PREPARED" or len(asset_manifest.get("documents", [])) != 40:
         raise ValueError("statistics assets must contain the frozen 32 fit plus 8 report documents")
-    if method.get("method_id") != METHOD_ID:
-        raise ValueError("construction method differs")
+    if not method_id or request.get("method_id") != method_id:
+        raise ValueError("construction and statistics method identities differ")
+    if native_length < 2 or pairs_per_document < 1:
+        raise ValueError("statistics request lacks Native length or causal-pair count")
     if asset_manifest["model_identity"]["config_sha256"] != method["model_identity"]["config_sha256"]:
         raise ValueError("statistics tokenizer/checkpoint differs from the construction")
 
@@ -106,6 +116,7 @@ def main() -> None:
     if query_heads % kv_heads or head_dim % 2:
         raise ValueError("unsupported GQA layout")
     groups_per_kv = query_heads // kv_heads
+    distance_edges, distance_labels = distance_bins(native_length)
     active = np.asarray(method["construction"]["active_indices_zero_based"], dtype=np.int64)
     wc = float(method["construction"]["carrier_frequency_float32"])
     active_size = int(active.size)
@@ -137,25 +148,27 @@ def main() -> None:
         with np.load(pair_path, allow_pickle=False) as pairs:
             query_pos = pairs["query_pos"].astype(np.int64)
             key_pos = pairs["key_pos"].astype(np.int64)
-        if tokens.shape != (NATIVE_LENGTH,) or query_pos.shape != (PAIRS_PER_DOCUMENT,) or np.any(query_pos <= key_pos):
+        if tokens.shape != (native_length,) or query_pos.shape != (pairs_per_document,) or np.any(query_pos <= key_pos):
             raise ValueError("statistics document shape or causal pairs differ")
         captured: dict[int, dict[str, np.ndarray]] = {layer: {} for layer in range(layers)}
         handles = []
         for layer_index, block in enumerate(model.model.layers):
             attention = block.self_attn
-            if not hasattr(attention, "q_norm") or not hasattr(attention, "k_norm"):
-                raise RuntimeError("CA-NCP requires post-norm/pre-RoPE Q/K hook points")
+            q_module = getattr(attention, "q_norm", None) or getattr(attention, "q_proj", None)
+            k_module = getattr(attention, "k_norm", None) or getattr(attention, "k_proj", None)
+            if q_module is None or k_module is None:
+                raise RuntimeError("CA-NCP requires q_norm/k_norm or q_proj/k_proj pre-RoPE hook points")
 
             def q_hook(_module, _inputs, output, *, layer=layer_index, sink=captured, positions=query_pos):
-                layout = _head_layout(output, tokens=NATIVE_LENGTH, heads=query_heads, head_dim=head_dim)
+                layout = _head_layout(output, tokens=native_length, heads=query_heads, head_dim=head_dim)
                 sink[layer]["q"] = layout[torch.as_tensor(positions, device=layout.device)].float().cpu().numpy()
 
             def k_hook(_module, _inputs, output, *, layer=layer_index, sink=captured, positions=key_pos):
-                layout = _head_layout(output, tokens=NATIVE_LENGTH, heads=kv_heads, head_dim=head_dim)
+                layout = _head_layout(output, tokens=native_length, heads=kv_heads, head_dim=head_dim)
                 sink[layer]["k"] = layout[torch.as_tensor(positions, device=layout.device)].float().cpu().numpy()
 
-            handles.append(attention.q_norm.register_forward_hook(q_hook))
-            handles.append(attention.k_norm.register_forward_hook(k_hook))
+            handles.append(q_module.register_forward_hook(q_hook))
+            handles.append(k_module.register_forward_hook(k_hook))
         try:
             ids = torch.as_tensor(tokens, dtype=torch.long, device="cuda").unsqueeze(0)
             torch.cuda.synchronize()
@@ -172,10 +185,10 @@ def main() -> None:
         moment_start = time.perf_counter()
         lags = query_pos - key_pos
         moment = np.empty((layers, kv_heads, active_size, active_size), dtype=np.complex128)
-        bin_moment = np.zeros((layers, kv_heads, len(DISTANCE_LABELS), active_size, active_size), dtype=np.complex128)
+        bin_moment = np.zeros((layers, kv_heads, len(distance_labels), active_size, active_size), dtype=np.complex128)
         bin_counts = np.asarray([
-            int(np.sum((lags > DISTANCE_EDGES[index]) & (lags <= DISTANCE_EDGES[index + 1])))
-            for index in range(len(DISTANCE_LABELS))
+            int(np.sum((lags > distance_edges[index]) & (lags <= distance_edges[index + 1])))
+            for index in range(len(distance_labels))
         ], dtype=np.int64)
         for layer_index, block in enumerate(model.model.layers):
             q = captured[layer_index]["q"]
@@ -187,8 +200,8 @@ def main() -> None:
                 q_complex = split_half_to_complex(q_group)[:, active]
                 k_complex = split_half_to_complex(k[:, group])[:, active]
                 moment[layer_index, group] = signed_moment(q_complex, k_complex, lags, wc, scale=scale)
-                for bin_index in range(len(DISTANCE_LABELS)):
-                    mask = (lags > DISTANCE_EDGES[bin_index]) & (lags <= DISTANCE_EDGES[bin_index + 1])
+                for bin_index in range(len(distance_labels)):
+                    mask = (lags > distance_edges[bin_index]) & (lags <= distance_edges[bin_index + 1])
                     if np.any(mask):
                         bin_moment[layer_index, group, bin_index] = signed_moment(
                             q_complex[mask], k_complex[mask], lags[mask], wc, scale=scale,
@@ -220,7 +233,7 @@ def main() -> None:
         raise RuntimeError("model parameter object/version changed during statistics capture")
     receipt = {
         "status": "STATISTICS_COMPLETE",
-        "method_id": METHOD_ID,
+        "method_id": method_id,
         "method_receipt_sha256": file_sha256(args.construction / "METHOD_RECEIPT.json"),
         "asset_manifest_sha256": file_sha256(args.assets / "manifest.json"),
         "model_identity": method["model_identity"],
@@ -237,9 +250,16 @@ def main() -> None:
         "kv_groups": kv_heads,
         "query_heads_per_group": groups_per_kv,
         "head_dim": head_dim,
+        "native_length": native_length,
+        "pairs_per_document": pairs_per_document,
+        "qk_hook_location": (
+            "q_norm/k_norm output before RoPE"
+            if all(hasattr(block.self_attn, "q_norm") and hasattr(block.self_attn, "k_norm") for block in model.model.layers)
+            else "q_proj/k_proj output before reshape and RoPE"
+        ),
         "active_indices_zero_based": active.tolist(),
         "carrier_frequency_float32": wc,
-        "distance_bins": list(DISTANCE_LABELS),
+        "distance_bins": list(distance_labels),
         "documents": completed,
         "timing_by_document": timing_rows,
         "timing_totals": {

@@ -64,15 +64,17 @@ def _load_tokens(row: dict, *, tokenizer, base: Path) -> tuple[np.ndarray, str, 
     return np.asarray(tokens, dtype=np.int64), source_hash, None
 
 
-def _window(tokens: np.ndarray, *, doc_id: str, source_hash: str) -> tuple[np.ndarray, int]:
-    if tokens.size < NATIVE_LENGTH:
+def _window(
+    tokens: np.ndarray, *, doc_id: str, source_hash: str, native_length: int,
+) -> tuple[np.ndarray, int]:
+    if tokens.size < native_length:
         raise ValueError("document is shorter than the Native window")
     digest = hashlib.sha256(
         f"CA_NCP_WINDOW_V1.1|{doc_id}|{source_hash}".encode()
     ).digest()
-    choices = tokens.size - NATIVE_LENGTH + 1
+    choices = tokens.size - native_length + 1
     offset = int.from_bytes(digest[:8], "little") % choices
-    return np.ascontiguousarray(tokens[offset : offset + NATIVE_LENGTH], dtype=np.int64), offset
+    return np.ascontiguousarray(tokens[offset : offset + native_length], dtype=np.int64), offset
 
 
 def _pair_seed(doc_id: str, token_sha256: str) -> int:
@@ -104,6 +106,9 @@ def main() -> None:
     parser.add_argument("--fit-documents", type=int, default=32)
     parser.add_argument("--report-documents", type=int, default=8)
     parser.add_argument("--pairs-per-document", type=int, default=PAIRS_PER_DOCUMENT)
+    parser.add_argument("--native-length", type=int, default=NATIVE_LENGTH)
+    parser.add_argument("--rotary-pairs", type=int, default=64)
+    parser.add_argument("--method-id", default=METHOD_ID)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.fit_documents != 2 * FIT_DOCUMENTS_PER_SOURCE or args.report_documents != 2 * REPORT_DOCUMENTS_PER_SOURCE:
@@ -111,17 +116,19 @@ def main() -> None:
     if args.pairs_per_document != PAIRS_PER_DOCUMENT:
         raise ValueError("v1.1 freezes 512 causal pairs per document")
     identity = model_identity(args.model, include_checkpoint_files=False)
-    if identity["native_length"] != NATIVE_LENGTH or identity["rotary_pairs"] != 64:
-        raise ValueError("CA-NCP v1.1 is frozen to OLMo Native-4096 with 64 rotary pairs")
+    if identity["native_length"] != args.native_length or identity["rotary_pairs"] != args.rotary_pairs:
+        raise ValueError("CA-NCP model geometry differs from the requested Native length or rotary pairs")
     corpus_path = args.corpus_manifest.resolve()
     request = {
         "contract": CONTRACT,
-        "method_id": METHOD_ID,
+        "method_id": args.method_id,
         "model_config_sha256": identity["config_sha256"],
         "corpus_manifest_sha256": file_sha256(corpus_path),
         "fit_documents": args.fit_documents,
         "report_documents": args.report_documents,
         "pairs_per_document": args.pairs_per_document,
+        "native_length": args.native_length,
+        "rotary_pairs": args.rotary_pairs,
         "selection": "first eligible documents by SHA256(doc_id) within each source; deterministic hash window",
     }
     existing = _verify_complete(args.out, request)
@@ -152,7 +159,10 @@ def main() -> None:
         for row in ordered:
             try:
                 tokens, raw_hash, token_source = _load_tokens(row, tokenizer=tokenizer, base=corpus_path.parent)
-                window, offset = _window(tokens, doc_id=row["doc_id"], source_hash=raw_hash)
+                window, offset = _window(
+                    tokens, doc_id=row["doc_id"], source_hash=raw_hash,
+                    native_length=args.native_length,
+                )
             except ValueError as error:
                 if "shorter than" in str(error):
                     continue
@@ -175,7 +185,7 @@ def main() -> None:
             pair_rel = Path("pairs") / f"{source}_{safe}.npz"
             pair_path = args.out / pair_rel
             pair_path.parent.mkdir(parents=True, exist_ok=True)
-            if token_source is not None and source_token_count == NATIVE_LENGTH and offset == 0:
+            if token_source is not None and source_token_count == args.native_length and offset == 0:
                 token_path = token_source
                 token_value = str(token_path)
                 token_external = True
