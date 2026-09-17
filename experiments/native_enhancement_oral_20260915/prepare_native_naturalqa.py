@@ -74,8 +74,12 @@ def main() -> None:
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--exclude-panel", type=Path)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--native-length", type=int, default=NATIVE_LENGTH)
+    parser.add_argument("--rows-per-task", type=int, default=ROWS_PER_TASK)
     parser.add_argument("--download-config", action="store_true")
     args = parser.parse_args()
+    if args.native_length <= 0 or args.rows_per_task <= 0:
+        raise ValueError("native length and rows per task must be positive")
     if args.out.exists():
         raise ValueError("Natural-QA confirmation assets are immutable; use a new --out")
     ensure_config(args.config_root, download=args.download_config)
@@ -105,18 +109,18 @@ def main() -> None:
                 )
                 prompt_ids = _ids(tokenizer, content)
                 budget = int(budgets[task])
-                if len(prompt_ids) + budget > NATIVE_LENGTH:
+                if len(prompt_ids) + budget > args.native_length:
                     continue
                 eligible.append((source_hash, source_index, item, prompt_ids, budget))
             eligible.sort(key=lambda item: (item[0], item[1]))
-            for source_hash, source_index, item, prompt_ids, budget in eligible[:ROWS_PER_TASK]:
+            for source_hash, source_index, item, prompt_ids, budget in eligible[:args.rows_per_task]:
                 references = [str(value) for value in item["answers"]]
                 context_hash = hashlib.sha256(item["context"].encode()).hexdigest()
                 rows.append({
                     "row_id": f"nativeqa_{task}_{source_index:04d}",
                     "task": task,
                     "family": "longbench_natural_qa_native_confirm",
-                    "length_cap": NATIVE_LENGTH,
+                    "length_cap": args.native_length,
                     "prompt_ids": prompt_ids,
                     "prompt_sha256": canonical_sha256(prompt_ids),
                     "input_tokens": len(prompt_ids),
@@ -132,7 +136,7 @@ def main() -> None:
                     "content_truncation": False,
                 })
     counts = Counter(row["task"] for row in rows)
-    if set(counts) != set(TASKS) or any(count <= 0 or count > ROWS_PER_TASK for count in counts.values()):
+    if set(counts) != set(TASKS) or any(count <= 0 or count > args.rows_per_task for count in counts.values()):
         raise AssertionError("Natural-QA census task counts drifted")
     args.out.mkdir(parents=True)
     inputs = args.out / "inputs.jsonl"
@@ -141,9 +145,9 @@ def main() -> None:
             stream.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
     manifest = {
         "status": "CPU_PREPARED",
-        "contract": "olmo_native4k_longbench_naturalqa_complete_census_cap80_v1",
+        "contract": f"native{args.native_length}_longbench_naturalqa_hash_order_cap{args.rows_per_task}_v1",
         "rows": len(rows), "rows_by_task": dict(counts),
-        "native_length": NATIVE_LENGTH,
+        "native_length": args.native_length,
         "minimum_input_tokens": min(row["input_tokens"] for row in rows),
         "maximum_input_tokens": max(row["input_tokens"] for row in rows),
         "inputs_sha256": sha256(inputs),
@@ -151,11 +155,13 @@ def main() -> None:
         "official_config_revision": REVISION,
         "official_config_sha256": {name: sha256(args.config_root / name) for name in CONFIG_FILES},
         "excluded_source_rows": len(excluded),
-        "selection": "complete untruncated source census fitting prompt plus official output budget in 4096 tokens, capped at 80/task after hash order",
+        "selection": (
+            "complete untruncated source rows fitting prompt plus official output budget in "
+            f"{args.native_length} tokens, capped at {args.rows_per_task}/task after hash order"
+        ),
         "selection_uses_model_outputs": False,
         "scope": (
-            "New Native-window source questions; complete eligible three-task Natural-QA census, "
-            "not 80 guaranteed rows/task and not full LongBench."
+            "Output-blind Native-window three-task Natural-QA hash-order sample; not full LongBench."
         ),
         "gpu_execution": False,
     }
