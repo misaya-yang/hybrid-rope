@@ -7,9 +7,17 @@
 ## 当前认识
 
 内部配置z在实际范围与旋转预算给定后仍影响质量。TailSpline提供零训练扩展构造，
-NCP已有原生窗口总体增益，Cosh提供配对学习与外推支持。
+NCP已同时取得Native-4K语言建模和新Full-13正结果，Cosh提供配对学习与外推支持。
 已完成的模型/任务证据覆盖Llama、OLMo、Qwen与GLM。
 几何秩、相位幅度、总位移和参考风险各描述不同对象，不充当任务优劣的通用排序。
+
+## 报告口径
+
+- 冻结面板上的官方点分数是该实验的正式成绩，结论先写候选、基线和差值。
+- bootstrap、重采样区间和换来源分析回答稳定性，放在主成绩之后；它们不否决已经观察到的正式成绩。
+- 主终点的胜利不因另一个任务、长度或模型没有获胜而降格。各benchmark分别报告，只有论文主动提出联合终点时才联合判决。
+- 后续候选、复验或晋级门失败，只约束该后续对象或是否追加预算，不反向抹掉先前冻结实验的成绩。
+- 运行身份、样本规模和比较变量必须准确；边界说明用于防止错归因，不主动添加“并非所有任务/模型都保证”等无人主张的免责声明。
 
 ## 一、已进入当前9/29页论文
 
@@ -35,6 +43,7 @@ NCP已有原生窗口总体增益，Cosh提供配对学习与外推支持。
 | GLM独立第二书池En.QA | 77题、15个新来源簇；换书后TailSpline仍为三臂第一 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | Llama/OLMo大样本官方静态YaRN | NIAH-8×200、PPL46、Natural-QA631及Full-13×10三臂；Llama QA保留YaRN小幅领先，其余读数TailSpline第一 | [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md) |
 | Llama-3-70B NF4尺度迁移 | 冻结8B表直接迁移；S4/32K的Full-13、NIAH、PPL与Natural-QA均胜MrPro；S16/128K仅PPL完成，多针单臂已失效，约3 GPU小时的基线补齐后置 | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| OLMo NCP Native-4K独立确认与机制拆分 | 同目标NLL降低`0.012786` nat/token（约`1.27%` PPL），新Full-13×10提高`3.2564pp`；Natural-QA与机制干预按独立合同保留 | [NCP Native结果owner](../../../experiments/native_enhancement_oral_20260915/index.md) |
 | Llama既有2600条的抽样稳定性分析 | 描述当前固定总体中小样本的变化，非新模型实验 | [抽样报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json) |
 
 [Base综合分析](../reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md)已包含新Qwen结果与独立公共几何复算。
@@ -50,8 +59,8 @@ Qwen不同面板的单针/八任务/Full-13不能混为同一条曲线。
 | C42/C42V24 | 等位移形状开发证据；重心是同一总位移约束的结果，不另算一项控制 | [原始判决](../../../ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md) |
 | C2、fixed-u、proxy选表 | 保留实际失效与反例，不重启曲线搜索挽救旧候选 | [证据索引](../../../paper-2027/research/evidence/index.md)、[fixed-u](OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md) |
 
-“尚未确认/接近/负向”必须带模型、任务、倍率和协议，不能扩大为整条配置轴失效。
-同样，多个正结果不升级为所有模型/任务/长度的保证。
+“尚未确认/接近/负向”必须带模型、任务、倍率和协议，不能扩大为整条配置轴失效；
+正式正结果同样直接按其合同陈述，不用额外的普适性稻草人削弱。
 
 ## 四、数学与CPU证据
 
@@ -68,5 +77,6 @@ Qwen不同面板的单针/八任务/Full-13不能混为同一条曲线。
 2026-09-16至17日，Pro6000与32GB队列的Qwen/GLM、Llama/OLMo YaRN及70B S4结果
 均已归档；70B S16/128K任务对照仍是明确未完成项，不混入完成表。
 
-NCP新来源确认、Llama clean32K YaRN和288题反事实面板是[下一版准备项](PAPER_NEXT_REVISION_PREPARATION_20260916.md)，
-不是本轮已启动任务。当前不因计划文件、公开建议或旧launcher存在自动运行。
+NCP新Full-13/Natural-QA、同目标NLL、288题反事实和固定末四层干预均已完成并登记；
+Llama/OLMo的YaRN直接比较也已归档。剩余未完成的Q/K/V signed-response分析只影响更细机制归因，
+不改变这些正式任务与NLL结果，也不因旧launcher存在自动运行。

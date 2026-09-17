@@ -726,7 +726,7 @@
         {
           "path": "docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md",
           "availability": "tracked",
-          "sha256": "ef13698f4264d890327176686cdfd09364020298073109984c107ade7c99a27b"
+          "sha256": "f73e28761554baae6e8304c9ab509b2f9f60d82802507494e0d934152f986e74"
         },
         {
           "path": "artifacts/fixed_rope_tail_20260913/reports/llama_s4_mix075_loggain_mid_vs_bm_mrpro_c42_core6_balanced12.json",
@@ -818,7 +818,7 @@
         {
           "path": "docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md",
           "availability": "tracked",
-          "sha256": "c307a5e4c88d8fb05192edaee1acd230d0ac6e6adfce5fc09b74033fcfabc93e"
+          "sha256": "6b068a5b6a9a7d35d14eb7487ff9508a610ea0bc0acb62f88a628d93b104e8cb"
         },
         {
           "path": "artifacts/fixed_rope_tail_20260913/reports/olmo_s8_mix075_g4standard_vs_mrpro_yarn_bm_core6_4k16k32k6.json",
@@ -844,7 +844,7 @@
         {
           "path": "docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md",
           "availability": "tracked",
-          "sha256": "9e181396c1e1e83259f5a5feb5c2410f1fd20a0b5d93297dacce503de9935708"
+          "sha256": "22015773425933bf2e8c296a8f9654085dfd6b1fdbf308a176855b8658cc5740"
         },
         {
           "path": "artifacts/fixed_rope_tail_20260913/reports/qwen15_s2_mix075_vs_mrpro_yarn_bm_c42_core6_32k48k64k6.json",
@@ -911,7 +911,7 @@
         {
           "path": "docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md",
           "availability": "tracked",
-          "sha256": "ca2b18129bd4eb7577682622ab930af6ef23bb24e3cc663b901834f2235ef526"
+          "sha256": "b379d8bcc856ee7134858069d25987b044e0e4506fd9cd1d85a11be6c5faad15"
         }
       ]
     },
@@ -989,7 +989,7 @@
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md",
           "availability": "tracked",
-          "sha256": "38ebf9b5481a708ffde6135ce4a84224e25e4d4b4b9c5410fb4d5fdbf9961368",
+          "sha256": "2d151ac84f43178a423dc20a28df26fa08c5c581adc40218e1bf24fc6bd73710",
           "revision_note": "2026-09-15: append completed clean X4 and raw-score reaggregation; manuscript unchanged",
           "snapshot_note": "Appended completed clean and natural-task results; original classic evidence retained."
         },
@@ -1040,7 +1040,7 @@
         {
           "path": "docs/research/next_stage_20260912/TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md",
           "availability": "tracked",
-          "sha256": "3afd3fad685c57bc011e706e2aaa6ad0cf58c29cb450ed785f0c4b846355840f",
+          "sha256": "c5dd7b3f6d00045da55011fdb6a4affbaf321f67534b99c80c79e6d851ebdf1f",
           "snapshot_note": "Appended completed clean and natural-task results; original classic evidence retained."
         },
         {
@@ -1234,7 +1234,7 @@
         {
           "path": "docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md",
           "availability": "tracked",
-          "sha256": "0e9a51c8325fa32ff0a6f433d2e08bc23b62029b7b0c7f78cceff7a39dc7a219",
+          "sha256": "de6ca74d80008f2bb6ebdf3680d73a8170946803cf8bb12c79c28bbbc3f72e39",
           "snapshot_note": "Appended separate small extreme-panel analysis and expansion priority; original results unchanged."
         }
       ]
@@ -1735,6 +1735,52 @@
           "path": "experiments/llama70b_scale_20260916/reports/niah128k_mrpro_partial_live.json",
           "availability": "tracked",
           "sha256": "a77907f6fba07aab7ff82b829042203d1d25102a6d023665632f5c4f5c49f086"
+        }
+      ]
+    },
+    {
+      "id": "A62",
+      "name": "OLMo NCP native-window confirmation and mechanism split",
+      "priority": "P0",
+      "question": "Can a public-parameter NCP RoPE table improve a frozen mature checkpoint inside its native 4K window, and which tested mechanisms explain that improvement",
+      "evidence_grade": "Frozen OLMo-2-0425-1B-Instruct; same-target LM on 128 windows from 103 source documents; output-blind Full-13 x 10 and complete three-task Native Natural-QA census; paired mechanism and final-quarter intervention panels",
+      "manuscript_location": "next revision; current manuscript unchanged",
+      "interpretation": "NCP lowers Native-4K full-context NLL by 0.012786 nat/token, approximately 1.27% PPL, and raises the new Full-13 x 10 fixed-panel score by 3.2564pp. The 99-row Natural-QA census is -0.8549pp. Synthetic counterfactual and fixed final-quarter intervention results exclude those tested panels as a simple mediator but do not erase the formal LM and Full-13 gains.",
+      "sources": [
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/native_lm128_parallel.json",
+          "availability": "tracked",
+          "sha256": "a176087addee4fdbdca8a16387e6e8eaeec3a9d316f76ed11f3169f0e4d8985c"
+        },
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/native_quick_gate_x10_and_qa.json",
+          "availability": "tracked",
+          "sha256": "eb93765b827914178e31994b7f063a8aababc6cb692e984045c5d2c56e4d0c3e"
+        },
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/existing_five_arm_reanalysis.json",
+          "availability": "tracked",
+          "sha256": "fd38af8e761771a39dd24f3cb2baf324e3ad377bf1dc9ab31e202f98e91d87f1"
+        },
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/mechanism_halfturn_vs_native.json",
+          "availability": "tracked",
+          "sha256": "88f95b937e396003cb8e43e284c05a0becf5669c4816b49f91ad535d066e7297"
+        },
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/mechanism_ncp_vs_native.json",
+          "availability": "tracked",
+          "sha256": "5975e7fea494790c8c46d714fd7b32405d45758cbf32965df270fa910ca4048e"
+        },
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/mechanism_v1_vs_native.json",
+          "availability": "tracked",
+          "sha256": "4e15de4f70938338fbbd63b2abc9f9bbdbafcfd8bcc8ddc3dac7358df3c7ccc1"
+        },
+        {
+          "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/final_quarter_intervention.json",
+          "availability": "tracked",
+          "sha256": "2d4b8d927f568631ba59383a75ca7ea3a94e2c0fac262e2840743c79df7b8ad5"
         }
       ]
     }

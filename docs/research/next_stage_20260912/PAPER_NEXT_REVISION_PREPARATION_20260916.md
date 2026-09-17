@@ -27,12 +27,12 @@ GLM新书池及Llama-3-70B NF4结果现已完成并登记，下一版统一替�
 |---|---|---|
 | 已入现稿 | Llama clean8/16/32K、OLMo clean16K及自然QA、clean T/C、NCP、学习支持 | [现稿索引](../../../paper-2027/index.md)、[当前主张表](../../../paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
 | 已完成，待下一版统一整合 | Qwen S4/128K En.QA、S8/256K单针；Llama S16 RULER/PPL/自然任务；抽样稳定性 | [Pro6000正式结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| 已完成，待下一版统一整合 | Qwen S4官方静态YaRN quick三方法：NIAH T/P/Y为72.50/73.125/76.25%，PPL接近；T−Y区间跨零 | [配对报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_yarn.json) |
+| 已完成，待下一版统一整合 | Qwen S4官方静态YaRN quick三方法：NIAH T/P/Y为72.50/73.125/76.25%，固定面板由YaRN领先；PPL三者接近 | [配对报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen3b_s4_128k_yarn.json) |
 | 已完成，待下一版统一整合 | Llama与OLMo官方静态YaRN大样本三方法：NIAH-8×200、PPL46、Natural-QA631、Full-13×10 | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
 | 已完成，待下一版统一整合 | Qwen/GLM Full-13×10三臂、GLM独立第二书池 | [Pro6000结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | 已完成，待下一版统一整合 | Llama-3-70B NF4 S4/32K Full-13、Natural-QA与PPL；S16/128K PPL | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| 已完成，待下一版统一整合 | OLMo NCP Native-4K同目标NLL、新Full-13×10、Natural-QA99及机制拆分 | [NCP Native结果owner](../../../experiments/native_enhancement_oral_20260915/index.md) |
 | 后置，不是当前论文缺口 | 70B S16/128K任务侧：TailSpline多针已失效、MrPro仅3/80；补齐约3 GPU小时 | [70B执行入口](../../../experiments/llama70b_scale_20260916/README.md) |
-| 仅建议/准备 | NCP新来源确认、原生反事实机制 | 本文§4；不自动入队 |
 
 GLM及Qwen现已有10/task严格配对三臂报告；早期5/task报告保留为开发历史，不替换正式结果。
 已完成报告、输入预算与实际长度、单针与Full-13、官方F1与accuracy分别维护。
@@ -59,8 +59,8 @@ OLMo的T−P NIAH为+53.75pp，区间[41.25,66.25]；文档平均NLL的T−P/T�
 PPL为同一5篇文档的token汇总指标，区间针对配对文档平均NLL差；不混用既有46篇结果。
 
 **改稿价值：** OLMo在直接三方法比较中同时提高检索准确性并降低语言建模损失；
-Llama两项指标方向一致，检索quick区间仍跨零。已有大样本T/P结果继续承担主证据，
-quick补充直接YaRN基线，不视为独立复现已复用的T/P样本，也不以NIAH替代Full-13或自然QA。
+Llama两项指标同样由TailSpline取得正式点分领先。已有大样本T/P结果继续承担主证据，
+quick补充直接YaRN基线；三者共享的T/P行只计作一次模型运行，不重复包装为独立复现。
 这批结果强化配置设计的实际价值，不单独证明尾部平滑性是收益的唯一机制。
 
 上述quick已由大样本NIAH/PPL、Natural-QA631和Full-13×10正式报告补齐；下一版直接使用
@@ -70,7 +70,8 @@ quick补充直接YaRN基线，不视为独立复现已复用的T/P样本，也�
 
 采用[Pro处理结论](../reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md)：
 
-- native增强已非纯未来方向：NCP已有原生任务总体正结果；与TailSpline原生长度轻微损失分开。
+- native增强已非纯未来方向：NCP已有原生任务与NLL正结果；TailSpline则以约`0.37%`
+  原生PPL代价换取显著长端收益，两类构造分别陈述。
 - 自然QA收益不再只指OLMo：Qwen S4完整长书QA增加另一模型族的实际证据。
 - Qwen旧NIAH面板接近不等于大base压制z；同S4下任务不同也可显现配置差异。
 - 不使用一般“水床定律”；固定频率数量/质量不推出任务质量守恒。
@@ -89,15 +90,13 @@ quick补充直接YaRN基线，不视为独立复现已复用的T/P样本，也�
 GLM、Qwen、Llama和OLMo的YaRN正式报告均已接收；70B冻结尺度迁移也已完成S4主套件。
 下一版保留全部预定任务、正负结果和运行身份，不把GLM或70B得分当作单变量base/规模因果证据。
 
-### B. 原生主张最直接的新增确认
+### B. 原生主张新增确认：已完成
 
-建议规格：OLMo原生4K、Full-13×100、固定原NCP与Native两臂，2600次生成。
-新来源在生成前一次性确定；检查QA上下文/记录与旧面板的重叠，不能仅换seed当作来源独立。
-Full-13为主要终点；VT、QA族及全部任务分解为预设次要终点。旧Native输出不能跨新输入复用。
-保留固定NCP规则、参数、单位gain；不拿确认集调表或逐步加样本直到显著。
-
-这项确认服务“原生窗口总体收益及任务轮廓是否复现”，不会把已经得到的+1.41pp降格为不存在。
-本轮仅规格建议，未冻结新样本、未执行。
+作者将原建议的Full-13×100调整为新source-order Full-13×10快速正式面板，固定NCP与Native
+两臂，不根据输出调表。130条/臂的正式task-equal差为`+3.2564pp`；同轮Native-window
+Natural-QA99为`−0.8549pp`。另有103源文档、128窗口的同目标4K NLL差`−0.012786`
+nat/token，约等于PPL降低`1.27%`。完整结果与机制分解由
+[NCP Native结果owner](../../../experiments/native_enhancement_oral_20260915/index.md)维护。
 
 ### C. 官方静态YaRN的直接方法定位：已完成
 
@@ -106,16 +105,16 @@ Full-13×10、Natural-QA631、NIAH-8×200和PPL46均有正式报告。
 官方默认band/rounding/gain的实用比较和人为匹配band的控制比较分别标记，不能冒充彼此。
 不通过“前人胜过Y、我们胜过前人”传递得出T优于Y。
 
-### D. 原生信息利用的行为检验
+### D. 原生信息利用的行为检验：已完成
 
-已有288条、按world组织的反事实面板，Native/NCP两臂共576次生成，可回答查询切换、关系重连、
-目标移动时答案是否跟随。执行前确认launcher只选所需两臂，不默认附加V1或其他表。
-它是机制增强项，不替代Full-13，也不要求读取Q/K/V来拟合新规则。
-现阶段不用大型head搜索或强度扫描替代这项明确问题。
+288条、按world组织的反事实面板已完成Native/H/NCP/V1四臂。NCP在1K/2K/4K的正式
+exact差为`+2.083/0/−11.458pp`；固定末四层双向相位干预也已完成。它们排除了所测
+合成面板与该固定层块作为NCP总体收益的简单中介解释，但不反向抹掉NLL与Full-13成绩。
+更细Q/K/V signed-response没有生成紧凑正式报告，保持未完成身份，不作为改稿前置条件。
 
 ### 优先级如何选择
 
-GLM/直接基线和70B尺度迁移已经回收；后续优先级变为NCP来源确认（强化双场景研究）→反事实行为。
+GLM/直接基线、70B尺度迁移、NCP确认与反事实行为均已回收；后续优先级转为统一论文整合。
 70B 128K任务基线仅在预算允许时补，不是论文提交前的默认前置条件。
 既有T/C、151.9M与432M不重跑；极限倍率扩样与更多单针热图按明确问题再决定。
 
@@ -127,7 +126,7 @@ GLM/直接基线和70B尺度迁移已经回收；后续优先级变为NCP来源�
 | §2–3 | 明确控制变量与训练/冻结干预；突出已有等位移证据 | 无需新实验；与全稿一次修改 |
 | 理论段 | 用目标/干扰竞争短解释接现有结构；充分条件就地注明 | 取舍清单已完成；不增造主定理 |
 | 方法段 | TailSpline→NCP→Cosh候选顺序；Cosh两项含义清楚 | 九页正文整体排版与作者审核 |
-| 实验主表 | 跨模型RULER与自然QA并列，保留指标和任务覆盖；NCP单独Native对照 | 使用A59–A61正式报告；不使用70B 128K partial任务行 |
+| 实验主表 | 跨模型RULER与自然QA并列，保留指标和任务覆盖；NCP单独Native对照 | 使用A59–A62正式报告；不使用70B 128K partial任务行 |
 | 极限结果 | Llama S16与Qwen S8明确各自方法/任务画像 | 当前报告已可用，后续RULER块按身份追加 |
 | 学习支持 | 151.9M识别保留；432M完整曲线可进附录，正文紧凑展示 | 仅叙事/排版，不动已有数据 |
 | 附录 | 在现有A–F放置短推导/协议/任务表，历史旁支继续归档 | 完整新结果；不恢复大乱炖 |

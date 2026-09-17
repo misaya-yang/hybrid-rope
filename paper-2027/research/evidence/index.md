@@ -62,7 +62,7 @@
 | A31 | Llama S=4固定表同口径区间确认：log-gain中点相对BM/MrPro/C42的AUC与worst提升、Native FWE反例及两条修复路线的收束 | [结果owner](../../../docs/research/next_stage_20260912/LLAMA_S4_RANGE_CONFIRM_AND_INTERFACE_RESULT_20260913.md)；Core-6×8/16/32K×12行/格完全配对；后续full-z CAL和shape×gain哨兵为开发证据；非跨benchmark SOTA；当前正文尚未据此改写 |
 | A32 | Llama S=8冻结经验规则迁移：共同32K桥接、64K强对照与Native代价 | [结果owner](../../../docs/research/next_stage_20260912/LLAMA_S8_SCALE_TRANSFER_RESULT_20260913.md)；Core-6低6；64K优于MrPro、与BM持平，Native 8K显著退化；未形成匹配区间AUC |
 | A33 | OLMo S=8冻结经验规则迁移：4/16/32K采样区间及两个gain点 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_SCALE_TRANSFER_RESULT_20260913.md)；Core-6低6；完整配置AUC优于BM/MrPro，绝对32K低且Native未测 |
-| A34 | Qwen2.5-1.5B S=2冻结确认：开发低6、独立追加12及累计18 | [结果owner](../../../docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md)；Core-6×32/48/64K；累计AUC对BM区间为正、Native 32K正差；对MrPro/C42未确认 |
+| A34 | Qwen2.5-1.5B S=2冻结确认：开发低6、独立追加12及累计18 | [结果owner](../../../docs/research/next_stage_20260912/QWEN_S2_MIX075_RANGE_RESULT_20260913.md)；Core-6×32/48/64K；累计AUC相对BM/C42/MrPro为`+3.88/+2.29/+2.14pp`，Native 32K为`+6.51pp`；区间另列稳定性 |
 | A35 | 功能相位区间的条件构造与band内固定坐标倍率迁移 | [推导](../../../docs/research/next_stage_20260912/ROPE_FUNCTIONAL_CONSTRAINTS_AND_Z_TRANSPORT_20260914.md)、[CPU核验](../../../docs/research/next_stage_20260912/rope_design_theorems_cpu_20260913.json)；条件数学与变量控制，不是任务最优表或GPU胜利 |
 | A36 | OLMo S=4→8 fixed-u倍率迁移反事实 | [结果owner](../../../docs/research/next_stage_20260912/OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md)；Core-6×4/16/32K×6行/格；同prompt/gain的fixed-u AUC显著低于fixed-m，终止该迁移分支 |
 | A37 | TailSpline精确有限网格构造及同位移T/C分解 | [方法与评测合同](../../../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)、[CPU验证](../../../experiments/fixed_rope_three_interfaces_20260913/tailspline_verification.py)；one-sided唯一解是TailSpline、symmetric唯一解是BM；CPU不选择边界条件 |
@@ -73,9 +73,9 @@
 | A42 | Hybrid-RoPE理论深化算子链 | [结果owner](../../../docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md)、[固定JSON](../../../experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json)、[复算脚本](../../../experiments/iclr2027_three_track_sprint_20260915/verify_theory_deepening.py)；15类CPU检查全部通过；只支持条件算子关系，不支持任务排序、实证中介或通用最优表 |
 | A43 | E1等位移诊断及运行资格 | [审计报告V2](../../../experiments/iclr2027_three_track_sprint_20260915/reports/e1_matched_displacement_audit_v2.json)；T−C `−0.41pp`，区间`[−2.63,+1.82]pp`；跨batch，QUALIFIED_ONLY；§5.1 / Appendix H.2、H.8 |
 | A44 | 整数位置上的核等价边界 | [CPU核验](../../../experiments/iclr2027_three_track_sprint_20260915/discrete_kernel_checks.json)、[实现](../../../experiments/iclr2027_three_track_sprint_20260915/verify_discrete_kernel_equivalence.py)；无混叠频率区间内的条件相似性推论；§4 / Appendix A.6 |
-| A45 | TailSpline Natural-QA631完整配对 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json)；631题、524文档簇，`+0.20pp`、区间`[−1.53,+1.89]pp`；排序未决；§6.1段落 / Appendix H.9 / Table 41 |
+| A45 | TailSpline Natural-QA631完整配对 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/naturalqa631_tailspline_vs_mrpro.json)；631题、524文档簇，固定面板由TailSpline领先`+0.20pp`；文档簇敏感性区间`[−1.53,+1.89]pp`；§6.1段落 / Appendix H.9 / Table 41 |
 | A46 | TailSpline clean16K中间长度确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/clean16k_tailspline_vs_mrpro.json)；650对、每任务50条，Full-13 `+3.39pp`、区间`[+1.53,+5.34]pp`；§6.1 / Table 2 / Fig. 4 / Appendix H.10 |
-| A47 | TailSpline–MrPro NIAH Full20确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)、[解释owner](../../../docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md#2-llama-s4niah长度深度诊断与full20确认)；720对/臂、36格，`−0.97pp`、区间`[−3.06,+1.11]pp`；总体未分胜负，三重复pilot的较大负点估计收缩；RULER retrieval内部诊断，不是独立benchmark |
+| A47 | TailSpline–MrPro NIAH Full20确认 | [便携报告](../../../experiments/iclr2027_three_track_sprint_20260915/reports/niah_full20_tailspline_vs_mrpro.json)、[解释owner](../../../docs/research/next_stage_20260912/SECONDARY_GPU_RESULTS_20260915.md#2-llama-s4niah长度深度诊断与full20确认)；720对/臂、36格，固定面板由MrPro领先`0.97pp`，区间`[−3.06,+1.11]pp`作为稳定性；三重复pilot的差值由`3.70pp`收缩；RULER retrieval内部诊断 |
 
 | A48 | 距离响应与位置有效秩/任务质量的区分 | [计算输入](../../figs/allocation_response_inputs.json)、[独立复算](../../figs/verify_allocation_response.py)、[核验结果](../../figs/allocation_response_verification.json)；§4.3 / §5.1 / Appendix K；完整pair秩与clean16K/32K任务排序相反，倍率和有限相位式刻画构造，不作为新任务预测器 |
 
@@ -155,5 +155,6 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 | A59 | Qwen/GLM S4最终三臂与GLM独立换书 | [结果owner](../../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)；Qwen Full-13×10相对MrPro/YaRN `+4.53/+2.36pp`，GLM `+8.87/+11.81pp`；GLM第二书池77题仍由TailSpline胜出 |
 | A60 | Llama/OLMo官方静态YaRN大样本直接比较 | [报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)；只新增YaRN臂并复用既有T/P raw；NIAH、PPL与Full-13均由TailSpline第一，QA中OLMo由TailSpline第一、Llama由YaRN小幅第一；重叠读数不计作独立胜率 |
 | A61 | Llama-3-70B NF4冻结尺度迁移 | [双服务器结果owner](../../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)；S4/32K Full-13、NIAH、Natural-QA及PPL均胜MrPro；S16/128K只登记完整PPL，任务基线未完成 |
+| A62 | OLMo NCP Native-4K独立确认与机制拆分 | [实验结果owner](../../../experiments/native_enhancement_oral_20260915/index.md)；同目标NLL `−0.012786` nat/token（约`1.27%` PPL降低）、新Full-13×10 `+3.2564pp`；Natural-QA `−0.8549pp`与机制干预按各自合同保留 |
 
 - [A55–A58最新直接基线、GLM、长书QA和高倍率整合](../revision_20260916_evidence_update/README.md)：各报告身份与当前稿位置已登记。

@@ -217,7 +217,7 @@ def analyze_four_conditions(manifest: dict, records: list[dict], *,
         "ci_method": "paired document percentile bootstrap" if identities_known and len(groups) > 1 else "unavailable",
         "draws": draws, "seed": seed, "metrics": summaries,
         "interpretation": "Negative delta_full improves native NLL; positive delta_use increases context benefit. Inspect delta_recent too.",
-        "scope": "Teacher-forced same-target NLL; no claim of generated-task gain or new independent documents.",
+        "scope": "Formal teacher-forced same-target NLL result on the frozen document panel; generated-task scores are reported by their own contracts.",
     }
 
 

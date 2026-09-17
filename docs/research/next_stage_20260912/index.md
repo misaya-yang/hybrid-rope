@@ -36,6 +36,7 @@ TailSpline主线优先级。
 | OLMo跨模型确认是什么？ | [OLMo结果owner](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md) |
 | Qwen、NIAH小样本与PPL补充结果说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
 | Native-Z5结果支持到哪一步？ | [Native-Z5结果owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md)；[预注册](NATIVE_Z5_ENHANCEMENT_PREREG_20260914.md) |
+| NCP是否真正增强冻结模型的Native能力？ | [NCP Native实验与结果](../../../experiments/native_enhancement_oral_20260915/index.md)：Native-4K NLL、Full-13、Natural-QA与机制拆分 |
 | Qwen 32K/64K、NIAH小样本和ProofPile-only PPL说明什么？ | [辅助GPU结果owner](SECONDARY_GPU_RESULTS_20260915.md) |
 | Pro6000上的128K/256K与自然长文结果是什么？ | [极限长度与自然长文结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
 | 4080 YaRN与Pro6000 70B结果怎样合并进下一版？ | [双服务器结果更新](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |

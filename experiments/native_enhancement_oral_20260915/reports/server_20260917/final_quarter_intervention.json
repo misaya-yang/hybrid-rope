@@ -1,0 +1,105 @@
+{
+  "native_to_ncp_block": {
+    "baseline": 0.09375,
+    "baseline_only_correct": 2,
+    "by_task_length": {
+      "native_binding:1024": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 11
+      },
+      "native_binding:2048": {
+        "baseline": 0.09090909090909091,
+        "effect": 0.0,
+        "intervention": 0.09090909090909091,
+        "rows": 11
+      },
+      "native_binding:4096": {
+        "baseline": 0.45454545454545453,
+        "effect": -0.18181818181818182,
+        "intervention": 0.2727272727272727,
+        "rows": 11
+      },
+      "native_chain:1024": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 11
+      },
+      "native_chain:2048": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 10
+      },
+      "native_chain:4096": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 10
+      }
+    },
+    "candidate_only_correct": 0,
+    "effect": -0.03125,
+    "intervention": 0.0625,
+    "rows": 64,
+    "ties": 62
+  },
+  "ncp_to_native_block": {
+    "baseline": 0.0625,
+    "baseline_only_correct": 1,
+    "by_task_length": {
+      "native_binding:1024": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 11
+      },
+      "native_binding:2048": {
+        "baseline": 0.09090909090909091,
+        "effect": 0.0,
+        "intervention": 0.09090909090909091,
+        "rows": 11
+      },
+      "native_binding:4096": {
+        "baseline": 0.2727272727272727,
+        "effect": 0.0,
+        "intervention": 0.2727272727272727,
+        "rows": 11
+      },
+      "native_chain:1024": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 11
+      },
+      "native_chain:2048": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 10
+      },
+      "native_chain:4096": {
+        "baseline": 0.0,
+        "effect": 0.0,
+        "intervention": 0.0,
+        "rows": 10
+      }
+    },
+    "candidate_only_correct": 1,
+    "effect": 0.0,
+    "intervention": 0.0625,
+    "rows": 64,
+    "ties": 62
+  },
+  "panel_sha256": "99347c89bda90e7b27bbb0397953e3c7af02e7704d43c744f1dc254a7ab90c10",
+  "raw_sha256": {
+    "native": "184e02a879194ba52f33caf642a8fbe5227d8600ea308282f65c50d2d03395ad",
+    "native_with_ncp_block": "ec910baeff65d3d50b05830c584e7b0d3b8abde86ad05ca16ab80501f8696547",
+    "ncp": "d7c20f50330ffe4a9cd6f307c9fd42f8177153dcfc8bb983c8a84402255bfd98",
+    "ncp_with_native_block": "54881b107d4ec95619463112da84c27b7627f00bdd566bcf327c3ca157d09950"
+  },
+  "scope": "Fixed final-quarter layer block and output-blind 64-row synthetic mechanism subset. It tests one local mediator; it is not a deployable table or broad task estimate.",
+  "status": "NATIVE_FINAL_QUARTER_PHASE_INTERVENTION_COMPLETE_V1"
+}

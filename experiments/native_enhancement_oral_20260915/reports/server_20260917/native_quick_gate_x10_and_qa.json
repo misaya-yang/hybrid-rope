@@ -1,0 +1,51 @@
+{
+  "natural_qa": {
+    "metric": "LongBench normalized token F1, task-equal across 3 tasks",
+    "ncp_minus_native": {
+      "by_task": {
+        "2wikimqa": -0.029166666666666664,
+        "hotpotqa": 0.0,
+        "qasper": 0.0035199734674311958
+      },
+      "estimate": -0.008548897733078488,
+      "paired_source_cluster_task_equal_bootstrap_ci95": [
+        -0.044495014064238135,
+        0.019233972887707364
+      ]
+    },
+    "rows_by_task": {
+      "2wikimqa": 24,
+      "hotpotqa": 5,
+      "qasper": 70
+    },
+    "rows_per_arm": 99
+  },
+  "ruler": {
+    "metric": "official RULER score, task-equal across 13 tasks",
+    "ncp_minus_native": {
+      "by_task": {
+        "cwe": -0.01,
+        "fwe": 0.03333333333333333,
+        "niah_multikey_1": 0.0,
+        "niah_multikey_2": 0.0,
+        "niah_multikey_3": 0.0,
+        "niah_multiquery": 0.075,
+        "niah_multivalue": 0.025,
+        "niah_single_1": 0.0,
+        "niah_single_2": 0.0,
+        "niah_single_3": 0.0,
+        "qa_1": 0.0,
+        "qa_2": 0.1,
+        "vt": 0.2
+      },
+      "estimate": 0.03256410256410257,
+      "paired_task_equal_bootstrap_ci95": [
+        0.008076923076923077,
+        0.05923076923076923
+      ]
+    },
+    "rows_per_arm": 130
+  },
+  "scope": "Frozen NCP versus Native on an output-blind new Full-13 x 10 quick gate and complete untruncated Native-window Natural-QA source rows. This does not replace a later higher-sample RULER confirmation.",
+  "status": "OLMO_NATIVE_NCP_QUICK_GATE_COMPLETE_V1"
+}

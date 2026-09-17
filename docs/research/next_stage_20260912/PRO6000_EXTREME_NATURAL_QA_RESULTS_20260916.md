@@ -21,8 +21,8 @@
 5. **极限长度表现按能力分化。** Qwen2.5-3B在256K（S8）的三项single-NIAH
    宏平均为`93.33%/40.00%`，TailSpline领先`+53.33pp`
    （区间`[+33.33,+66.67]pp`）；五篇InfiniteBench LongBook的PPL点估计为
-   `30.34/23.93`，TailSpline的NLL高`0.238`，但五文档区间跨零且很宽，不能写成
-   已确认的语言建模退化。
+   `30.34/23.93`，该固定五文档面板上TailSpline的NLL高`0.238`。五文档重采样区间
+   较宽，作为附录的换文档敏感性，不改变固定面板的正式读数。
 
 Llama-3-8B的S16/128K是压力测试而非论文主赛道。Full-13端点TailSpline领先
 `+20.77pp`，ProofPile NLL低`0.0321`；InfiniteBench En.Dia为`12%/8%`

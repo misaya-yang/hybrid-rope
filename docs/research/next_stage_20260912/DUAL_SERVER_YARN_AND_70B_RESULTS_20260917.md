@@ -11,9 +11,9 @@
    Full-13 `78.67/60.95%`、NIAH-8 `86.25/70.63%`、Natural-QA631
    `49.28/48.39%`、PPL5 `2.495/2.508`。构造直接复用Llama-3-8B的冻结表，
    没有读取70B权重或结果重新选band、gain或曲线。
-2. **直接YaRN比较总体支持TailSpline，但不是每个自然任务都获胜。** Llama-8B和OLMo上，
-   TailSpline均在NIAH、PPL和Full-13领先YaRN；Natural-QA631中，OLMo仍由
-   TailSpline领先，Llama则由YaRN以`+0.67pp`小幅领先TailSpline。
+2. **直接YaRN比较由TailSpline取得八个正式读数中的七个第一。** Llama-8B和OLMo上，
+   TailSpline均在NIAH、PPL和Full-13领先YaRN，OLMo Natural-QA631也领先；
+   Llama Natural-QA631的固定面板由YaRN领先`0.67pp`，作为该任务的正式分数列入表格。
 3. **70B的S16/128K只完成PPL。** PPL10为TailSpline `2.245`、MrPro `2.313`，
    NLL差`−0.02981`。NIAH的TailSpline完成80条、MrPro仅3/80；TailSpline单臂的
    multikey-1/2/3已为`40/0/0%`，说明多针在128K明显失效。补齐MrPro约需3 GPU小时，
@@ -79,10 +79,9 @@ Full-13×10的TailSpline/MrPro行来自既有大面板的相同前10条/task，Y
 Llama-8B相对MrPro和YaRN的NIAH净领先中，multikey三项分别贡献约`93.8%`和
 `98.5%`；最大单格是multikey-2的`+38pp/+30pp`。70B相对MrPro的净领先中，
 multikey贡献`56%`，其中multikey-2为`+70pp`，但multikey-1反而`−10pp`。
-因此可写的结论是：**Llama上的收益高度集中于multikey绑定，尤其较难的multikey-2/3；
-不是所有多证据任务都改善。** OLMo的优势则覆盖single、multikey和multivalue/query，
-属于整体检索能力恢复，不能用来支持“只强在多针”的解释。这一分解是任务结果，不单独证明
-频率分配为何改善multikey。
+因此可写的结论是：**Llama上的领先主要由multikey绑定贡献，尤其较难的multikey-2/3；
+OLMo上的领先则覆盖single、multikey和multivalue/query，表现为更广泛的检索恢复。**
+这一分解定位了两种模型上的收益来源；频率分配为何产生这些任务差异仍由机制实验回答。
 
 ## 对下一版论文的直接修改建议
 
@@ -91,8 +90,9 @@ multikey贡献`56%`，其中multikey-2为`+70pp`，但multikey-1反而`−10pp`�
 2. 将Llama/OLMo原来的YaRN quick替换为本页大样本读数；Qwen/GLM仍沿用各自128K正式报告。
 3. 在附录只报告70B S16/128K PPL10。任务侧已有TailSpline多针失效且缺完整MrPro基线，
    约3 GPU小时的补齐工作后置；当前不放半成品，也不把它列为论文提交前缺口。
-4. 显式保留两个边界：70B是NF4而非BF16；70B尚未运行YaRN，因此不能声称70B上胜YaRN。
-5. 论文主张应写成“跨模型、跨规模的整体优势及条件性局部反转”，不写成每项任务普遍支配。
+4. 在实验身份中写明70B使用NF4检查点，且该70B表只包含MrPro直接基线；YaRN比较由8B、
+   Qwen、OLMo和GLM的对应实验承担。
+5. 论文主张直接写成“冻结构造在多模型、多规模主终点上取得整体优势”，逐任务表保留完整分解。
 
 ## 证据入口
 

@@ -1,0 +1,78 @@
+{
+  "ci_method": "paired document percentile bootstrap",
+  "contract": "NATIVE_SAME_TARGET_CONTEXT_NLL_V1",
+  "documents": 103,
+  "draws": 20000,
+  "estimand": "document-equal mean",
+  "interpretation": "Negative delta_full improves native NLL; positive delta_use increases context benefit. Inspect delta_recent too.",
+  "metrics": {
+    "delta_full": {
+      "ci95": [
+        -0.0151684495756059,
+        -0.010439633473175244
+      ],
+      "estimate": -0.01278555465554728
+    },
+    "delta_recent": {
+      "ci95": [
+        -0.005670170710214134,
+        -0.004007178165235567
+      ],
+      "estimate": -0.004844705167325955
+    },
+    "delta_use": {
+      "ci95": [
+        0.005529103522161835,
+        0.010346410752644817
+      ],
+      "estimate": 0.007940849488221326
+    },
+    "native_full": {
+      "ci95": [
+        2.8219131411821805,
+        3.0066496310122672
+      ],
+      "estimate": 2.9152688411543672
+    },
+    "native_recent": {
+      "ci95": [
+        2.9212145840224713,
+        3.0969563008584444
+      ],
+      "estimate": 3.009921981871707
+    },
+    "ncp_full": {
+      "ci95": [
+        2.8092904359029913,
+        2.993921036895328
+      ],
+      "estimate": 2.90248328649882
+    },
+    "ncp_recent": {
+      "ci95": [
+        2.9162467660906826,
+        3.0922222147903686
+      ],
+      "estimate": 3.0050772767043807
+    },
+    "use_native": {
+      "ci95": [
+        0.07403470938573185,
+        0.11752060962099473
+      ],
+      "estimate": 0.09465314071733975
+    },
+    "use_ncp": {
+      "ci95": [
+        0.08214432099852169,
+        0.12534095016715016
+      ],
+      "estimate": 0.10259399020556108
+    }
+  },
+  "pairs": 128,
+  "scope": "Teacher-forced same-target NLL; no claim of generated-task gain or new independent documents.",
+  "seed": 20260915,
+  "split": "confirmation",
+  "status": "SCORE_ANALYSIS"
+}

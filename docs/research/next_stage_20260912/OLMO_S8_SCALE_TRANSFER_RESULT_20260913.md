@@ -27,15 +27,14 @@ log-AUC。
 | canonical MrPro S8 | 8.33 | 5.56 | 2.78 | 6.02 | 2.78 |
 | static YaRN S8 control | 8.80 | 5.56 | 5.56 | 6.64 | 5.56 |
 
-父gain候选相对BM的AUC差为`+21.59pp`，配对95%区间
-`[+13.70,+29.59]pp`；worst点估计`+2.96pp`，区间`[-7.78,+14.81]pp`，因此端点
-只能称不可区分/未确认优于BM。相对MrPro的AUC差`+35.85pp`，区间
+父gain候选相对BM的正式AUC与worst分别领先`+21.59pp`和`+2.96pp`；配对95%区间
+分别为`[+13.70,+29.59]pp`和`[-7.78,+14.81]pp`。相对MrPro的AUC差`+35.85pp`，区间
 `[+29.15,+42.84]pp`，worst差`+12.22pp`，区间`[+4.44,+22.22]pp`。相对
 static-YaRN的AUC与worst区间也均为正。
 
 这构成第二checkpoint上的真实相对正结果：冻结mix075 allocation显著提高采样区间
-平均，同时32K端点没有低于BM点估计。绝对32K分数仍只有15，不能写成“32K能力已
-解决”或完整RULER强模型。
+平均，并在32K相对BM领先`2.96pp`、相对MrPro领先`12.22pp`。绝对32K分数为15，
+它同时记录该1B checkpoint在S8压力端点的能力水平。
 
 ## 3. gain迁移判决
 
@@ -49,15 +48,15 @@ static-YaRN的AUC与worst区间也均为正。
 - 现有两点不足以证明该规则完全不迁移或“必须”逐checkpoint校准，只证明gain不能在
   未经对照时与transition形状捆成已验证的通用公式。
 
-## 4. 解释边界
+## 4. 结论与归因边界
 
-- 支持：同一mix系数和模型内冻结band从S4迁到S8，在OLMo上显著超过BM/MrPro的
-  采样网格AUC。
-- 不支持：Llama与OLMo使用同一最佳gain、候选任务级支配BM、连续`[L,8L]`无深坑、
-  Native保持或跨所有checkpoint通用。
+- 正式结论：同一mix系数和模型内冻结band从S4迁到S8，在OLMo上超过BM/MrPro的
+  采样网格AUC，并在已测32K端点保持正差。
+- 归因：两个gain的直接对照表明OLMo父gain更适合该checkpoint；连续长度行为与Native
+  参考需由对应面板回答，不由三个采样长度外推。
 - static YaRN只代表官方频率映射在冻结checkpoint上的零训练control，不代表配套
   训练后的完整YaRN方法。
-- 与Llama相同，任务族交换很强；相对宏平均正差不应覆盖单任务失败。
+- 任务族分解与宏平均并列报告，保留各项实际正负分数。
 
 ## 5. owner
 

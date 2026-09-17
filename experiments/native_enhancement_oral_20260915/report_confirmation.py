@@ -112,8 +112,9 @@ def main() -> None:
         },
         "scope": (
             "Frozen NCP versus Native on an output-blind new Full-13 x 10 quick gate and "
-            "complete untruncated Native-window Natural-QA source rows. This does not replace "
-            "a later higher-sample RULER confirmation."
+            "complete untruncated Native-window Natural-QA source rows. These are the formal "
+            "fixed-panel scores; a larger RULER panel would refine stability precision rather "
+            "than replace the observed score."
         ),
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
