@@ -308,6 +308,11 @@ def main():
                         help='install frozen post-norm/pre-RoPE CA-NCP rank-2 Q/K planes')
     parser.add_argument('--ca-ncp-alignment-label',
                         help='result label for --ca-ncp-alignment-npz; does not alter the planes')
+    parser.add_argument('--native-followup-method',
+                        choices=('mass_projection','mass_raw','even_only','odd_only','rank_assignment'),
+                        help='install one frozen Native/NCP dual-frequency attention operator')
+    parser.add_argument('--native-followup-candidate-table',type=Path,
+                        help='frozen NCP table used by --native-followup-method')
     parser.add_argument('--layer-override-table-json',type=Path,
                         help='mechanism-only table installed in a fixed layer block')
     parser.add_argument('--layer-override-range',
@@ -322,6 +327,8 @@ def main():
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
                           'ca_ncp_alignment_npz':str(args.ca_ncp_alignment_npz) if args.ca_ncp_alignment_npz else None,
                           'ca_ncp_alignment_label':args.ca_ncp_alignment_label,
+                          'native_followup_method':args.native_followup_method,
+                          'native_followup_candidate_table':str(args.native_followup_candidate_table) if args.native_followup_candidate_table else None,
                           'layer_override_table_json':str(args.layer_override_table_json) if args.layer_override_table_json else None,
                           'layer_override_range':args.layer_override_range,
                           'layer_override_label':args.layer_override_label,
@@ -358,6 +365,10 @@ def main():
         raise ValueError('--table-label requires --static-table-json')
     if bool(args.ca_ncp_alignment_npz) != bool(args.ca_ncp_alignment_label):
         raise ValueError('CA-NCP alignment file and label must be provided together')
+    if bool(args.native_followup_method) != bool(args.native_followup_candidate_table):
+        raise ValueError('Native follow-up method and candidate table must be provided together')
+    if args.native_followup_method and (args.static_table_json or args.ca_ncp_alignment_npz or args.layer_override_table_json):
+        raise ValueError('Native follow-up operator cannot be combined with another runtime intervention')
     if bool(args.layer_override_table_json) != bool(args.layer_override_range):
         raise ValueError('layer override table and range must be provided together')
     if bool(args.layer_override_table_json) != bool(args.layer_override_label):
@@ -427,6 +438,9 @@ def main():
               **({'left_pad_batches':True} if args.left_pad_batches else {}),
               'row_split':args.row_split,'static_table':static_table,
               **({'ca_ncp_alignment':ca_ncp_alignment_identity} if ca_ncp_alignment_identity else {}),
+              **({'native_followup_method':args.native_followup_method,
+                  'native_followup_candidate_table':str(args.native_followup_candidate_table.resolve())}
+                 if args.native_followup_method else {}),
               'layer_override':({
                   'layers_zero_based':list(layer_override_layers),
                   'table':layer_override_table,
@@ -456,6 +470,38 @@ def main():
             model,args.ca_ncp_alignment_npz,
         )
         write(args.out/'runtime_ca_ncp_alignment.json',ca_ncp_alignment_receipt)
+    native_followup_restore=None
+    native_followup_receipt=None
+    if args.native_followup_method:
+        import numpy as np
+        candidate_payload=json.loads(args.native_followup_candidate_table.read_text())
+        candidate_table=candidate_payload.get('table',candidate_payload)
+        native_table={
+            'values_float32':model.model.rotary_emb.inv_freq.detach().cpu().float().numpy().tolist(),
+            'gain':float(model.model.rotary_emb.attention_scaling),
+        }
+        if args.native_followup_method in ('mass_projection','mass_raw'):
+            from experiments.native_followup_five_20260917.mass_projection import METHOD_IDS,install
+        elif args.native_followup_method in ('even_only','odd_only'):
+            from experiments.native_followup_five_20260917.parity_attention import METHOD_IDS,install
+        else:
+            from experiments.native_followup_five_20260917.rank_assignment import METHOD_IDS,install
+        native_followup_restore=install(
+            model,native_table,candidate_table,args.native_followup_method,
+        )
+        from experiments.ca_ncp_native_20260917.io_utils import file_sha256
+        native_followup_receipt={
+            'status':'NATIVE_FOLLOWUP_INSTALLED_V1',
+            'method':args.native_followup_method,
+            'method_id':METHOD_IDS[args.native_followup_method],
+            'candidate_table_path':str(args.native_followup_candidate_table.resolve()),
+            'candidate_table_sha256':file_sha256(args.native_followup_candidate_table),
+            'native_source':'model.model.rotary_emb.inv_freq after base model load',
+            'gain':1.0,
+            'local_radius':getattr(native_followup_restore,'local_radius',None),
+            'scope':'frozen inference operator; model weights unchanged',
+        }
+        write(args.out/'runtime_native_followup.json',native_followup_receipt)
     layer_override_handles=[]
     if layer_override_table:
         if args.batch_size != 1 or args.left_pad_batches:
@@ -564,6 +610,7 @@ def main():
     summary={'status':'COMPLETE','identity':identity,'generation_metrics':metrics,'lm_metrics':lm_summary,
              'paired_source_follow':{'groups':len(paired),'accuracy':sum(paired)/len(paired) if paired else None},
              'table':table,'ca_ncp_alignment':ca_ncp_alignment_receipt,
+             'native_followup':native_followup_receipt,
              'asset_identity_policy':'user_attested_clone/no_sha_validation',
              'scope':'development/regression or explicit supplied panels; no automatic stability gate or method win'}
     write(args.out/'summary.json',summary);write(args.out/'status.json',{'status':'COMPLETE','rows':len(saved),'lm_rows':len(lm_saved)})

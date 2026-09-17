@@ -6729,6 +6729,41 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_followup_five_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/contract.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/mass_projection.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/parity_attention.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/rank_assignment.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/run.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_halfturn_phase_20260915/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -15550,6 +15585,21 @@
     },
     {
       "path": "tests/test_native_enhancement_throughput.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_followup_mass.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_followup_parity.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_native_followup_rank.py",
       "area": "tests",
       "category": "code"
     },
