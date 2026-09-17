@@ -97,15 +97,13 @@ def main() -> None:
         import torch
         from experiments.olmo_recovery_20260912.recovery_v2_runtime import load_model
         from experiments.olmo_recovery_20260912.runtime import validate_cuda
-        from scripts.experiments.cross_audit.tables import install_static, native_table
+        from scripts.experiments.cross_audit.tables import install_static
 
         validate_cuda()
         model, wrapper, _ = load_model(args.model, "Native", checkpoint=None, training=False)
         if wrapper is not None:
             raise RuntimeError("native LM study requires the unadapted checkpoint")
-        dim = int(model.config.hidden_size // model.config.num_attention_heads)
-        base = float(model.config.rope_theta)
-        native = native_table(dim, base).astype(np.float32)
+        native = model.model.rotary_emb.inv_freq.detach().cpu().float().numpy().copy()
         ncp_payload = json.loads(args.ncp_table.read_text())
         ncp = ncp_payload.get("table", ncp_payload)
         records_path = args.out / ("scores.jsonl" if args.arm == "both" else f"scores_{args.arm}.jsonl")
