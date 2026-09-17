@@ -299,8 +299,8 @@ def prepare(
     selected_tasks = tuple(value.strip() for value in args.tasks.split(",") if value.strip())
     if not selected_tasks or len(selected_tasks) != len(set(selected_tasks)) or not set(selected_tasks).issubset(TASKS):
         raise ValueError("--tasks must be a unique non-empty subset of RULER-13")
-    if not math.isfinite(args.scale) or args.scale <= 1.0:
-        raise ValueError("--scale must be finite and greater than one")
+    if not math.isfinite(args.scale) or args.scale < 1.0:
+        raise ValueError("--scale must be finite and at least one")
     if args.rows_per_task <= 0 or args.seed < 0 or args.qa_offset < 0:
         raise ValueError("rows-per-task must be positive; seed and QA offset must be nonnegative")
 

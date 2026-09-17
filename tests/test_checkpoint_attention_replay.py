@@ -9,6 +9,7 @@ from experiments.checkpoint_attention_replay_20260913.capture_io import (
     save_capture,
 )
 from experiments.checkpoint_attention_replay_20260913.capture_checkpoint import (
+    annotated_queries,
     balanced_rows,
     head_layout,
     query_positions,
@@ -24,6 +25,9 @@ from experiments.checkpoint_attention_replay_20260913.solver import (
     solve_increment_qp,
 )
 from scripts.analysis.native_attention_kl import native_attention_kl
+from experiments.checkpoint_attention_replay_20260913.signed_phase_response import (
+    analyze_capture,
+)
 
 
 def fixture(group="layer0"):
@@ -138,6 +142,60 @@ def test_capture_receipt_round_trip(tmp_path):
         load_capture(tmp_path / "capture")
 
 
+def test_qkv_evidence_capture_round_trip_and_signed_response(tmp_path):
+    base = fixture()
+    q = torch.tensor(base.q).to(torch.bfloat16).float().numpy()
+    k = torch.tensor(base.k).to(torch.bfloat16).float().numpy()
+    v = torch.arange(2 * 7 * 5, dtype=torch.float32).reshape(2, 7, 5).to(torch.bfloat16).float().numpy() / 8
+    capture = ReplayCapture(
+        q=q, k=k,
+        **{name: getattr(base, name) for name in (
+            "query_positions", "native_inv_freq", "attention_scale",
+            "reference_gain", "group", "row_id", "layer",
+        )},
+        v=v,
+        query_roles=("relation_write", "final_readout"),
+        evidence_key_positions=((1, 2), (1, 4)),
+    )
+    receipt = save_capture(tmp_path / "qkv", capture)
+    assert receipt["status"] == "CHECKPOINT_ATTENTION_QKV_CAPTURE_V2"
+    assert receipt["arrays"]["k"]["encoding"] == "bfloat16_bits"
+    restored = load_capture(tmp_path / "qkv", mmap_mode="r")
+    np.testing.assert_equal(restored.v, capture.v)
+    assert restored.query_roles == capture.query_roles
+    assert restored.evidence_key_positions == capture.evidence_key_positions
+    result = analyze_capture(restored, capture.native_inv_freq.copy(), gain=1.13)
+    assert len(result["observations"]) == capture.q.shape[0] * capture.q.shape[1]
+    assert max(abs(row["delta_margin"]) for row in result["observations"]) < 1e-12
+    assert max(row["delta_output_l2"] for row in result["observations"]) < 1e-12
+    np.testing.assert_allclose(result["fmr_linear_contrast_mean"], 0, atol=1e-12)
+
+
+def test_signed_margin_gradient_matches_finite_difference():
+    rng = np.random.default_rng(811)
+    capture = ReplayCapture(
+        q=rng.normal(size=(1, 1, 6)).astype(np.float32),
+        k=rng.normal(size=(1, 5, 6)).astype(np.float32),
+        v=rng.normal(size=(1, 5, 4)).astype(np.float32),
+        query_positions=np.array([4], dtype=np.int64),
+        native_inv_freq=np.array([0.9, 0.2, 0.04], dtype=np.float32),
+        attention_scale=1 / math.sqrt(6), reference_gain=1.0,
+        group="gradient", row_id="gradient", layer=0,
+        query_roles=("final_readout",), evidence_key_positions=((1, 3),),
+    )
+    native = capture.native_inv_freq.astype(np.float64)
+    direction = np.array([0.3, -0.2, 0.1])
+    step = 1e-6
+    plus = analyze_capture(capture, native * np.exp(-step * direction), gain=1.0)
+    minus = analyze_capture(capture, native * np.exp(step * direction), gain=1.0)
+    finite = (
+        plus["observations"][0]["candidate_margin"]
+        - minus["observations"][0]["candidate_margin"]
+    ) / (2 * step)
+    base = analyze_capture(capture, native, gain=1.0)
+    assert finite == pytest.approx(float(base["b_mean"] @ direction), rel=2e-6, abs=2e-8)
+
+
 def test_closed_simplex_qp_can_create_exact_zero_increments():
     initial = np.full(4, 0.25)
     result = solve_increment_qp(
@@ -199,6 +257,13 @@ def test_capture_row_and_query_selection_are_deterministic_and_task_balanced():
     assert [row["row_id"] for row in balanced_rows(rows, 3)] == ["a0", "b0", "a1"]
     positions = query_positions(100, 4)
     assert positions.tolist() == [20, 46, 73, 99]
+    positions, roles, evidence = annotated_queries({"capture_queries": [
+        {"role": "write", "position": 3, "evidence_token_indices": [0, 1]},
+        {"role": "read", "position": 6, "evidence_token_indices": [1, 4]},
+    ]})
+    np.testing.assert_equal(positions, [3, 6])
+    assert roles == ("write", "read")
+    assert evidence == ((0, 1), (1, 4))
 
 
 def test_capture_head_layout_accepts_projection_and_both_normalized_layouts():

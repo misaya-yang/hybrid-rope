@@ -7,6 +7,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import shutil
 
 import numpy as np
 
@@ -45,6 +46,19 @@ def query_positions(length: int, count: int) -> np.ndarray:
     first = max(1, length // (count + 1))
     positions = np.linspace(first, length - 1, min(count, length - 1)).round().astype(np.int64)
     return np.unique(positions)
+
+
+def annotated_queries(row: dict) -> tuple[np.ndarray, tuple[str, ...], tuple[tuple[int, ...], ...]]:
+    records = row.get("capture_queries")
+    if not isinstance(records, list) or not records:
+        raise ValueError("annotated capture row lacks capture_queries")
+    positions = np.asarray([int(item["position"]) for item in records], dtype=np.int64)
+    roles = tuple(str(item["role"]) for item in records)
+    evidence = tuple(tuple(int(value) for value in item["evidence_token_indices"])
+                     for item in records)
+    if len(set(positions.tolist())) != len(positions) or len(set(roles)) != len(roles):
+        raise ValueError("annotated capture query positions and roles must be unique")
+    return positions, roles, evidence
 
 
 def balanced_rows(rows: list[dict], limit: int) -> list[dict]:
@@ -91,7 +105,9 @@ def main() -> None:
     parser.add_argument("--layer", type=int, action="append", required=True)
     parser.add_argument("--row-limit", type=int, default=4)
     parser.add_argument("--queries-per-row", type=int, default=8)
+    parser.add_argument("--query-mode", choices=("uniform", "annotated"), default="uniform")
     parser.add_argument("--max-input-tokens", type=int, required=True)
+    parser.add_argument("--max-capture-bytes", type=int, default=12 * 1024 ** 3)
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     layers = sorted(set(args.layer))
@@ -104,6 +120,19 @@ def main() -> None:
         row for row in read_jsonl(args.panel)
         if len(row.get("prompt_ids", [])) <= args.max_input_tokens
     ], args.row_limit)
+    heads = int(config["num_attention_heads"])
+    kv_heads = int(config.get("num_key_value_heads", heads))
+    head_dim = int(config.get("head_dim") or config["hidden_size"] // heads)
+    query_counts = [
+        len(row.get("capture_queries") or []) if args.query_mode == "annotated"
+        else len(query_positions(len(row["prompt_ids"]), args.queries_per_row))
+        for row in rows
+    ]
+    estimated_capture_bytes = len(layers) * sum(
+        2 * kv_heads * len(row["prompt_ids"]) * head_dim * 2
+        + heads * queries * head_dim * 2
+        for row, queries in zip(rows, query_counts)
+    )
     for row in rows:
         if row.get("prompt_sha256") != prompt_ids_sha256(row["prompt_ids"]):
             raise ValueError(f"selected capture row has a mismatched prompt hash: {row.get('row_id')}")
@@ -112,16 +141,21 @@ def main() -> None:
         "model": str(args.model), "model_id": args.model_id,
         "panel": str(args.panel), "out": str(args.out),
         "layers": layers, "rows": len(rows), "queries_per_row": args.queries_per_row,
+        "query_mode": args.query_mode,
+        "estimated_capture_bytes_bf16_payload": estimated_capture_bytes,
+        "max_capture_bytes": args.max_capture_bytes,
         "native_length": native_length, "max_input_tokens": args.max_input_tokens,
         "selected_rows": [{
             "row_id": str(row.get("row_id")), "task": str(row.get("task")),
             "prompt_sha256": row["prompt_sha256"], "input_tokens": len(row["prompt_ids"]),
         } for row in rows],
-        "scope": "Native input only; pre-RoPE Q and complete K sequence; detached replay proxy",
+        "scope": "Native input only; pre-RoPE Q and complete K/V sequence; detached replay proxy",
     }
     if not args.execute:
         print(json.dumps(plan, sort_keys=True))
         return
+    if estimated_capture_bytes > args.max_capture_bytes:
+        raise ValueError("frozen capture exceeds the declared on-disk byte cap")
     if not rows or args.row_limit < 1 or args.queries_per_row < 1:
         raise ValueError("capture rows/counts are invalid")
     capture_contract = {
@@ -130,7 +164,7 @@ def main() -> None:
         "model_config_sha256": file_sha256(args.model / "config.json"),
         "panel_sha256": file_sha256(args.panel),
         "model_geometry": geometry,
-        "capture_implementation": "post-qk-norm-if-present-else-projection-v2",
+        "capture_implementation": "post-qk-norm-if-present-else-projection-plus-v-v3",
     }
     contract_path = args.out / "contract.json"
     if args.out.exists():
@@ -153,6 +187,8 @@ def main() -> None:
     else:
         args.out.mkdir(parents=True)
         atomic_json(contract_path, capture_contract)
+    if shutil.disk_usage(args.out).free < estimated_capture_bytes + 2 * 1024 ** 3:
+        raise RuntimeError("insufficient free disk for capture plus the 2 GiB safety reserve")
 
     import torch
     from experiments.olmo_recovery_20260912.recovery_v2_runtime import load_model
@@ -181,7 +217,14 @@ def main() -> None:
 
     for row_index, row in enumerate(rows):
         ids = torch.tensor([row["prompt_ids"]], dtype=torch.long, device=device)
-        positions = query_positions(ids.shape[1], args.queries_per_row)
+        if args.query_mode == "annotated":
+            positions, roles, evidence = annotated_queries(row)
+        else:
+            positions = query_positions(ids.shape[1], args.queries_per_row)
+            roles = tuple(f"uniform_{index}" for index in range(len(positions)))
+            evidence = ()
+        if np.any(positions >= ids.shape[1]):
+            raise ValueError("capture query position lies outside prompt")
         captured: dict[int, dict[str, np.ndarray]] = {layer: {} for layer in layers}
         handles = []
 
@@ -204,6 +247,14 @@ def main() -> None:
                 captured[layer]["k"] = value.detach().cpu().float().numpy()
             return hook
 
+        def v_hook(layer: int):
+            def hook(_module, _inputs, output):
+                layout = head_layout(
+                    output, tokens=ids.shape[1], heads=kv_heads, head_dim=head_dim,
+                )
+                captured[layer]["v"] = layout.permute(1, 0, 2).detach().cpu().float().numpy()
+            return hook
+
         for layer in layers:
             attention = blocks[layer].self_attn
             q_module = getattr(attention, "q_norm", None) or attention.q_proj
@@ -211,9 +262,11 @@ def main() -> None:
             capture_modules[str(layer)] = {
                 "q": "q_norm" if q_module is not attention.q_proj else "q_proj",
                 "k": "k_norm" if k_module is not attention.k_proj else "k_proj",
+                "v": "v_proj",
             }
             handles.append(q_module.register_forward_hook(q_hook(layer)))
             handles.append(k_module.register_forward_hook(k_hook(layer)))
+            handles.append(attention.v_proj.register_forward_hook(v_hook(layer)))
         try:
             with torch.inference_mode(), torch.autocast("cuda", dtype=torch.bfloat16):
                 model(input_ids=ids, use_cache=False, return_dict=True)
@@ -221,8 +274,8 @@ def main() -> None:
             for handle in handles:
                 handle.remove()
         for layer in layers:
-            if set(captured[layer]) != {"q", "k"}:
-                raise RuntimeError(f"layer {layer} did not expose both q_proj and k_proj")
+            if set(captured[layer]) != {"q", "k", "v"}:
+                raise RuntimeError(f"layer {layer} did not expose q/k/v")
             attention = blocks[layer].self_attn
             scale = float(getattr(attention, "scaling", 1.0 / math.sqrt(head_dim)))
             family = str(row.get("family") or row.get("task") or "unclassified")
@@ -233,6 +286,8 @@ def main() -> None:
                 attention_scale=scale, reference_gain=reference_gain,
                 group=f"{family}|row={row_id}|layer={layer}",
                 row_id=row_id, layer=layer,
+                v=captured[layer]["v"], query_roles=roles,
+                evidence_key_positions=evidence,
             )
             directory = args.out / f"row_{row_index:03d}_layer_{layer:03d}"
             if directory.exists():
@@ -243,9 +298,12 @@ def main() -> None:
                     or not np.array_equal(restored.native_inv_freq, capture.native_inv_freq)
                     or not np.array_equal(restored.q, capture.q)
                     or not np.array_equal(restored.k, capture.k)
+                    or not np.array_equal(restored.v, capture.v)
                     or restored.attention_scale != capture.attention_scale
                     or restored.reference_gain != capture.reference_gain
                     or restored.group != capture.group
+                    or restored.query_roles != capture.query_roles
+                    or restored.evidence_key_positions != capture.evidence_key_positions
                 ):
                     raise ValueError(f"saved capture differs from frozen work item: {directory}")
                 receipt = json.loads((directory / "receipt.json").read_text())
@@ -255,6 +313,7 @@ def main() -> None:
                 "path": str(directory), "row_id": receipt["row_id"],
                 "group": receipt["group"], "layer": layer,
                 "queries": int(len(positions)), "keys": int(ids.shape[1]),
+                "query_roles": list(roles),
                 "receipt_sha256": file_sha256(directory / "receipt.json"),
             })
             atomic_json(args.out / "partial_index.json", {

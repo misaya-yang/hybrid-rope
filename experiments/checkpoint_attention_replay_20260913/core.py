@@ -32,15 +32,21 @@ class ReplayCapture:
     group: str
     row_id: str
     layer: int
+    v: np.ndarray | None = None
+    query_roles: tuple[str, ...] = ()
+    evidence_key_positions: tuple[tuple[int, ...], ...] = ()
 
 
 def validate_capture(capture: ReplayCapture) -> ReplayCapture:
     q = np.asarray(capture.q)
     k = np.asarray(capture.k)
+    v = None if capture.v is None else np.asarray(capture.v)
     positions = np.asarray(capture.query_positions)
     inv = np.asarray(capture.native_inv_freq)
     if q.ndim != 3 or k.ndim != 3 or q.shape[-1] != k.shape[-1]:
         raise ValueError("capture q/k must be matching rank-three arrays")
+    if v is not None and (v.ndim != 3 or v.shape[:2] != k.shape[:2]):
+        raise ValueError("capture v must have shape [Hkv,T,Dv] matching k heads/tokens")
     if q.shape[-1] % 2 or q.shape[0] % k.shape[0]:
         raise ValueError("capture must have an even head dimension and divisible GQA heads")
     if positions.shape != (q.shape[1],) or not np.issubdtype(positions.dtype, np.integer):
@@ -49,13 +55,30 @@ def validate_capture(capture: ReplayCapture) -> ReplayCapture:
         raise ValueError("capture query positions must lie in the complete key sequence")
     if inv.shape != (q.shape[-1] // 2,) or np.any(inv <= 0):
         raise ValueError("capture native frequencies must be positive [D/2]")
-    if not all(np.isfinite(value).all() for value in (q, k, inv)):
+    finite_arrays = (q, k, inv) if v is None else (q, k, v, inv)
+    if not all(np.isfinite(value).all() for value in finite_arrays):
         raise ValueError("capture arrays must be finite")
     if (not math.isfinite(float(capture.attention_scale)) or capture.attention_scale <= 0
             or not math.isfinite(float(capture.reference_gain)) or capture.reference_gain < 0):
         raise ValueError("capture attention scale/gain is invalid")
     if not capture.group or not capture.row_id or capture.layer < 0:
         raise ValueError("capture group, row identity, and layer are required")
+    if capture.query_roles and (
+        len(capture.query_roles) != q.shape[1]
+        or len(set(capture.query_roles)) != len(capture.query_roles)
+        or any(not value for value in capture.query_roles)
+    ):
+        raise ValueError("capture query roles must be unique nonempty labels for every query")
+    if capture.evidence_key_positions:
+        if len(capture.evidence_key_positions) != q.shape[1]:
+            raise ValueError("capture evidence positions must cover every query")
+        for query_position, evidence in zip(positions, capture.evidence_key_positions):
+            values = np.asarray(evidence, dtype=np.int64)
+            if (
+                values.ndim != 1 or not len(values) or len(np.unique(values)) != len(values)
+                or np.any(values < 0) or np.any(values > query_position)
+            ):
+                raise ValueError("capture evidence keys must be unique and causally visible")
     return capture
 
 

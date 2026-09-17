@@ -20,6 +20,7 @@ ROOT = PLAN / "native_enhancement_oral_cpu"
 MODEL = Path("/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct")
 TABLES = {
     "native": None,
+    "halfturn": PLAN / "olmo_native_halfturn_phase/tables/contract.json",
     "ncp": PLAN / "olmo_native_contrastive_proximal/tables/ncp.json",
     "v1": PLAN / "olmo_native_z5_enhancement/optimization/table.json",
     "ncp_dose_control": ROOT / "tables/ncp_dose_control.json",
@@ -72,7 +73,7 @@ def main() -> None:
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
-    arms = args.arm or ["native", "ncp", "v1"]
+    arms = args.arm or ["native", "halfturn", "ncp", "v1"]
     if len(set(arms)) != len(arms):
         raise ValueError("duplicate arm")
     commands = {arm: build_command(python=args.python, model=args.model, panel=args.panel,

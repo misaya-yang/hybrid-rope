@@ -304,12 +304,21 @@ def main():
     parser.add_argument('--static-table-json',type=Path,
                         help='install the table object (or result.table) from this frozen solver receipt')
     parser.add_argument('--table-label',help='result label for --static-table-json; does not alter the table')
+    parser.add_argument('--layer-override-table-json',type=Path,
+                        help='mechanism-only table installed in a fixed layer block')
+    parser.add_argument('--layer-override-range',
+                        help='zero-based START:STOP exclusive block for --layer-override-table-json')
+    parser.add_argument('--layer-override-label',
+                        help='result arm label for the mechanism-only layer override')
     parser.add_argument('--out',type=Path,required=True);parser.add_argument('--execute',action='store_true')
     args=parser.parse_args();manifest=json.loads(args.data.read_text())
     if not args.execute:
         print(json.dumps({'status':'PLAN_ONLY','arm':args.arm,'checkpoint':str(args.checkpoint) if args.checkpoint else None,
                           'split':args.split,'row_split':args.row_split,'lengths':LENGTHS,
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
+                          'layer_override_table_json':str(args.layer_override_table_json) if args.layer_override_table_json else None,
+                          'layer_override_range':args.layer_override_range,
+                          'layer_override_label':args.layer_override_label,
                           'asset_identity_policy':'user_attested_clone/no_sha_validation'}));return
     lm_lengths=resolve_lm_lengths(args.lm_length_cap,manifest)
     if (args.limit_per_cell<0 or args.lm_limit_documents<0 or args.prefill_chunk_size<0
@@ -341,6 +350,10 @@ def main():
         raise ValueError('--static-table-json is a frozen-model evaluation and cannot use a checkpoint')
     if args.table_label and not args.static_table_json:
         raise ValueError('--table-label requires --static-table-json')
+    if bool(args.layer_override_table_json) != bool(args.layer_override_range):
+        raise ValueError('layer override table and range must be provided together')
+    if bool(args.layer_override_table_json) != bool(args.layer_override_label):
+        raise ValueError('layer override table and label must be provided together')
     static_table=None
     if args.static_table_json:
         payload=json.loads(args.static_table_json.read_text())
@@ -351,7 +364,22 @@ def main():
             raise ValueError('invalid frozen solver table')
         static_table={'values_float32':values.tolist(),'gain':gain,
                       'construction':static_table.get('construction',{})}
-    result_arm=args.table_label or args.arm
+    layer_override_table=None
+    layer_override_layers=()
+    if args.layer_override_table_json:
+        payload=json.loads(args.layer_override_table_json.read_text())
+        layer_override_table=payload.get('table',payload)
+        values=np.asarray(layer_override_table.get('values_float32'),dtype=np.float32)
+        gain=float(layer_override_table.get('gain'))
+        if values.ndim!=1 or len(values)<2 or not np.isfinite(values).all() or not np.all(values[:-1]>values[1:]) or not np.isfinite(gain) or gain<=0:
+            raise ValueError('invalid layer override table')
+        from experiments.native_enhancement_oral_20260915.layer_phase_override import parse_layer_range
+        config=json.loads((args.model/'config.json').read_text())
+        layer_override_layers=parse_layer_range(
+            args.layer_override_range,num_hidden_layers=int(config['num_hidden_layers']))
+        layer_override_table={'values_float32':values.tolist(),'gain':gain,
+                              'construction':layer_override_table.get('construction',{})}
+    result_arm=args.layer_override_label or args.table_label or args.arm
     if state and state.get('arm')!=checkpoint_arm:raise ValueError('checkpoint belongs to another arm')
     precision_identity=checkpoint_precision_identity(args.model)
     identity={'arm':result_arm,'base_arm':args.arm,'checkpoint_arm':checkpoint_arm if args.checkpoint else None,
@@ -378,11 +406,19 @@ def main():
                   'allow_tf32':bool(torch.backends.cuda.matmul.allow_tf32),
               },
               **({'left_pad_batches':True} if args.left_pad_batches else {}),
-              'row_split':args.row_split,'static_table':static_table}
+              'row_split':args.row_split,'static_table':static_table,
+              'layer_override':({
+                  'layers_zero_based':list(layer_override_layers),
+                  'table':layer_override_table,
+                  'scope':'mechanism-only fixed layer block; not a deployable static table',
+              } if layer_override_table else None)}
     args.out.mkdir(parents=True,exist_ok=True);contract=args.out/'contract.json'
     if contract.exists():
         existing=json.loads(contract.read_text());existing_identity=normalize_existing_identity(existing)
-        if existing_identity!=identity:raise ValueError('output contains a different evaluation')
+        expected_identity=dict(identity)
+        if 'layer_override' not in existing_identity and expected_identity.get('layer_override') is None:
+            expected_identity.pop('layer_override')
+        if existing_identity!=expected_identity:raise ValueError('output contains a different evaluation')
     write(contract,identity)
     model,wrapper,table=load_model(args.model,args.arm,checkpoint=args.checkpoint,training=False)
     if static_table:
@@ -392,6 +428,16 @@ def main():
         if not np.array_equal(actual,np.asarray(static_table['values_float32'],dtype=np.float32)):
             raise RuntimeError('installed solver table differs from the frozen receipt')
         table=static_table
+    layer_override_handles=[]
+    if layer_override_table:
+        if args.batch_size != 1 or args.left_pad_batches:
+            raise ValueError('layer override mechanism run requires unpadded batch=1')
+        from experiments.native_enhancement_oral_20260915.layer_phase_override import install_layer_phase_override
+        layer_override_handles=install_layer_phase_override(
+            model,layers=layer_override_layers,
+            values_float32=layer_override_table['values_float32'],
+            gain=layer_override_table['gain'],
+        )
     tokenizer=AutoTokenizer.from_pretrained(args.model,local_files_only=True)
     eos=model.generation_config.eos_token_id;eos=set(eos if isinstance(eos,list) else [eos])
     pad_token_id = tokenizer.pad_token_id
