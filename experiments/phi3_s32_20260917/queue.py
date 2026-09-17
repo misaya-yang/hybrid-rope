@@ -27,10 +27,25 @@ def model_ready(model: Path) -> bool:
         return False
     payload = json.loads(index.read_text())
     shards = sorted(set(payload.get("weight_map", {}).values()))
-    expected = int(payload.get("metadata", {}).get("total_size", 0))
-    if not shards or expected <= 0 or any(not (model / name).is_file() for name in shards):
+    if not shards or any(not (model / name).is_file() for name in shards):
         return False
-    return sum((model / name).stat().st_size for name in shards) == expected
+    # ``metadata.total_size`` is the tensor payload size, not the safetensors
+    # file size (which also contains headers).  Validate each indexed shard by
+    # opening it and matching its complete key set instead of comparing bytes.
+    try:
+        from safetensors import safe_open
+
+        for name in shards:
+            expected_keys = {
+                key for key, shard in payload["weight_map"].items() if shard == name
+            }
+            with safe_open(model / name, framework="pt", device="cpu") as stream:
+                observed_keys = set(stream.keys())
+            if observed_keys != expected_keys:
+                return False
+    except (OSError, ValueError, RuntimeError):
+        return False
+    return True
 
 
 def main() -> None:

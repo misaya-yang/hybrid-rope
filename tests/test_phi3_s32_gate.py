@@ -22,12 +22,15 @@ def test_gate_rejects_incomplete_task_coverage():
         task_equal_score(rows()[:-1])
 
 
-def test_model_ready_requires_exact_indexed_total(tmp_path):
-    (tmp_path / "a.safetensors").write_bytes(b"a" * 3)
-    (tmp_path / "b.safetensors").write_bytes(b"b" * 2)
+def test_model_ready_checks_complete_indexed_safetensor_keys(tmp_path):
+    import torch
+    from safetensors.torch import save_file
+
+    save_file({"x": torch.ones(3)}, tmp_path / "a.safetensors")
+    save_file({"y": torch.ones(2)}, tmp_path / "b.safetensors")
     (tmp_path / "model.safetensors.index.json").write_text(
-        '{"metadata":{"total_size":5},"weight_map":{"x":"a.safetensors","y":"b.safetensors"}}'
+        '{"metadata":{"total_size":20},"weight_map":{"x":"a.safetensors","y":"b.safetensors"}}'
     )
     assert model_ready(tmp_path)
-    (tmp_path / "b.safetensors").write_bytes(b"b")
+    save_file({"z": torch.ones(2)}, tmp_path / "b.safetensors")
     assert not model_ready(tmp_path)
