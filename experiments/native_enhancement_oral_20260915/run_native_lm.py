@@ -52,16 +52,24 @@ def main() -> None:
     parser.add_argument("--tokens", type=Path, required=True)
     parser.add_argument("--ncp-table", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--arm", choices=("native", "ncp", "both"), default="both")
+    parser.add_argument("--allow-paired-parallel", action="store_true")
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text())
     matrix = np.load(args.tokens, mmap_mode="r", allow_pickle=False)
     if list(matrix.shape) != manifest["array_shape"] or len(matrix) != len(manifest["samples"]):
         raise ValueError("LM token matrix differs from the frozen manifest")
+    selected_conditions = CONDITIONS if args.arm == "both" else tuple(
+        condition for condition in CONDITIONS if condition[0] == args.arm
+    )
+    if args.allow_paired_parallel and args.arm == "both":
+        raise ValueError("paired-parallel mode requires one explicit arm")
     plan = {
         "status": "PLAN_ONLY", "rows": len(matrix),
-        "conditions": [list(value) for value in CONDITIONS],
-        "forwards": len(matrix) * len(CONDITIONS), "model_loaded": False,
+        "conditions": [list(value) for value in selected_conditions],
+        "forwards": len(matrix) * len(selected_conditions), "model_loaded": False,
+        "arm": args.arm, "allow_paired_parallel": bool(args.allow_paired_parallel),
     }
     if not args.execute:
         print(json.dumps(plan, sort_keys=True))
@@ -74,13 +82,18 @@ def main() -> None:
     if contract_path.exists() and json.loads(contract_path.read_text()) != contract:
         raise ValueError("LM output root belongs to another contract")
     atomic_json(contract_path, contract)
-    with open("/tmp/hybrid-rope-gpu0.lock", "a") as lock:
+    lock_path = (
+        f"/tmp/hybrid-rope-native-lm-{args.arm}.lock"
+        if args.allow_paired_parallel else "/tmp/hybrid-rope-gpu0.lock"
+    )
+    with open(lock_path, "a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        active = subprocess.check_output([
-            "nvidia-smi", "--query-compute-apps=pid", "--format=csv,noheader,nounits",
-        ], text=True).strip()
-        if active:
-            raise RuntimeError("another GPU process is active")
+        if not args.allow_paired_parallel:
+            active = subprocess.check_output([
+                "nvidia-smi", "--query-compute-apps=pid", "--format=csv,noheader,nounits",
+            ], text=True).strip()
+            if active:
+                raise RuntimeError("another GPU process is active")
         import torch
         from experiments.olmo_recovery_20260912.recovery_v2_runtime import load_model
         from experiments.olmo_recovery_20260912.runtime import validate_cuda
@@ -95,10 +108,10 @@ def main() -> None:
         native = native_table(dim, base).astype(np.float32)
         ncp_payload = json.loads(args.ncp_table.read_text())
         ncp = ncp_payload.get("table", ncp_payload)
-        records_path = args.out / "scores.jsonl"
+        records_path = args.out / ("scores.jsonl" if args.arm == "both" else f"scores_{args.arm}.jsonl")
         saved = read_jsonl(records_path)
         expected = [(sample, arm, context) for sample in manifest["samples"]
-                    for arm, context in CONDITIONS]
+                    for arm, context in selected_conditions]
         if len(saved) > len(expected):
             raise ValueError("LM output contains too many records")
         for index, row in enumerate(saved):
@@ -126,10 +139,14 @@ def main() -> None:
                 saved.append(row)
                 atomic_json(args.out / "live.json", {"completed": len(saved), "total": len(expected)})
                 torch.cuda.empty_cache()
-    analysis = analyze_four_conditions(manifest, saved)
-    atomic_json(args.out / "report.json", analysis)
-    atomic_json(args.out / "status.json", {"status": "COMPLETE", "rows": len(saved)})
-    print(json.dumps({"status": "COMPLETE", "records": len(saved)}))
+    if args.arm == "both":
+        analysis = analyze_four_conditions(manifest, saved)
+        atomic_json(args.out / "report.json", analysis)
+    atomic_json(args.out / "status.json", {
+        "status": "COMPLETE", "arm": args.arm, "rows": len(saved),
+        "report_complete": args.arm == "both",
+    })
+    print(json.dumps({"status": "COMPLETE", "arm": args.arm, "records": len(saved)}))
 
 
 if __name__ == "__main__":
