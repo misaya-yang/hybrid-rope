@@ -1,0 +1,68 @@
+{
+  "manifest_valid": true,
+  "packaged_pdf_matches": true,
+  "cpu_checks": {
+    "figs/make_revision_evidence.py": 0,
+    "figs/verify_completed_evidence.py": 0,
+    "figs/verify_field_gap.py": 0
+  },
+  "bundled_tables_regenerated_identically": 18,
+  "extra_unused_tables": [
+    "table_clean_full13.tex",
+    "table_tailspline_natural_main.tex",
+    "table_tailspline_natural_tasks.tex"
+  ],
+  "independent_compile": true,
+  "rebuilt_pdf_text_matches": true,
+  "validation_directory": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-module-source-20260917-c3j9a17m",
+  "status": "PASS",
+  "baseline_pdf": "history/v2.pdf",
+  "baseline_sha256": "f5534a4091ae298dc6a659e3de2f91d4fd498bf57963c27b739d0c19555e40fb",
+  "pdf": "main.pdf",
+  "pdf_sha256": "d464810292e6615203ae2ffd3ac66704b66fa796713356f2f6a8c50bf24be409",
+  "source_archive": "exponent-allocation-source.zip",
+  "source_archive_sha256": "b022cb0ff7cb79f946c17e173145738d39870019db08c0f931d84681950e0a62",
+  "main_pages": 9,
+  "total_pages": 34,
+  "abstract_has_digits": false,
+  "first_page_has_figure": false,
+  "undefined_references_or_citations": 0,
+  "overfull_hbox_pt": 0,
+  "all_fonts_embedded": true,
+  "type3_fonts": 0,
+  "visual_pages_checked": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    25
+  ],
+  "module_repair_unchanged_table_files": 44,
+  "module_repair_unchanged_figure_pdfs": 37,
+  "pdf_review": {
+    "candidate": "F",
+    "baseline": "B",
+    "models": [
+      "gpt-6-astra",
+      "gpt-5.6-sol"
+    ],
+    "same_prompt": "reviews/prompt_F.md",
+    "restriction": "PDF only",
+    "concurrent": true,
+    "material_mathematical_error_found": false,
+    "substantive_evidence_regression_found": false,
+    "remaining_opinions": "MODULE_REPAIRS_20260917.md"
+  },
+  "gpu_execution": false,
+  "repository_docs_check": {
+    "managed_documents": 139,
+    "local_links_checked": 1860,
+    "assets": 64,
+    "errors": []
+  }
+}

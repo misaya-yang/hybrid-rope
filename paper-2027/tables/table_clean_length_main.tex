@@ -1,16 +1,23 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Quality across context lengths and model families.} Clean Full-13 task-equal scores. One static $s=4$ table per model; paired intervals use each panel's inputs. Original RoPE scores $90.03\%$ on the Llama $8$K reference.}
+\caption{\textbf{Quality across lengths, families and scale.} Clean Full-13 scores (\%) with one static $s=4$ table per model. T/P/Y: TailSpline/MrPro/static YaRN. Scores are paired within each row; (a)/(b) retain their stated sample sizes, with small Llama/OLMo panels drawn as subsets. Original RoPE scores $90.03\%$ at Llama $8$K. Intervals are paired $95\%$ T--P contrasts (pp).}
 \label{tab:clean-length-main}
 \begin{tabular}{@{}llrrrrl@{}}
 \toprule
-Model & Length & $N$/task & T (\%) & P (\%) & $\Delta$ (pp) & $95\%$ interval \\
+Model & Length & $N$/task & T & P & Y & T--P interval \\
 \midrule
-Llama & $8$K ($L$) & 50 & 85.16 & 82.39 & +2.76 & [1.29, 4.25] \\
- & $16$K ($2L$) & 50 & 86.09 & 82.71 & +3.39 & [1.53, 5.34] \\
- & $32$K ($4L$) & 200 & 68.27 & 56.54 & +11.72 & [10.32, 13.11] \\
-OLMo & $16$K ($4L$) & 200 & 50.65 & 9.23 & +41.42 & [39.99, 42.81] \\
-GLM & $128$K ($4L$) & 5 & 44.36 & 31.56 & +12.79 & [6.64, 19.33] \\
+\multicolumn{7}{l}{\emph{(a) Large-panel confirmation across the deployment window}} \\
+Llama-8B & $8$K & 50 & 85.16 & 82.39 & -- & [1.29, 4.25] \\
+ & $16$K & 50 & 86.09 & 82.71 & -- & [1.53, 5.34] \\
+ & $32$K & 200 & 68.27 & 56.54 & -- & [10.32, 13.11] \\
+OLMo & $16$K & 200 & 50.65 & 9.23 & -- & [39.99, 42.81] \\
+\midrule
+\multicolumn{7}{l}{\emph{(b) Matched direct baselines and scale transfer}} \\
+Llama & $32$K & 10 & \textbf{70.38} & 58.35 & 55.88 & [6.44, 17.68] \\
+OLMo & $16$K & 10 & \textbf{52.24} & 10.60 & 9.81 & [35.38, 47.88] \\
+Qwen & $128$K & 10 & \textbf{64.40} & 59.87 & 62.04 & [-0.41, 9.49] \\
+GLM & $128$K & 10 & \textbf{39.65} & 30.78 & 27.85 & [4.04, 13.69] \\
+Llama-70B NF4 & $32$K & 10 & \textbf{78.67} & 60.95 & -- & [11.65, 23.78] \\
 \bottomrule
 \end{tabular}
 \end{table}

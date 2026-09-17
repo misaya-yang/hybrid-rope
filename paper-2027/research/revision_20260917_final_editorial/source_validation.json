@@ -1,0 +1,9 @@
+{
+  "archive_manifest_files_verified": 221,
+  "packaged_pdf_matches_main": true,
+  "independent_compile_passed": true,
+  "rebuilt_text_matches_delivered": true,
+  "validation_directory": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-final-validated-source-fo2n4pnq",
+  "pdf_sha256": "3b5ab4e4f601134060965db9f4e40d2adcadae51f0e201d940046a0459ff3f3a",
+  "zip_sha256": "6046252b9062be6528be322721e745350d23a2812a7e136f019931755e0d1d17"
+}

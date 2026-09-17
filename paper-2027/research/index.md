@@ -2,6 +2,9 @@
 
 | 任务 | 入口 |
 |---|---|
+| 改稿总结（日记）与每日版本原则 | [历次纠错、最新反思、证据/理论增量和交付三问](PAPER_REVISION_DIARY.md) |
+| 2026-09-17最终逐章审核与v3基线 | [写作skills、逐章取舍和最终验收](revision_20260917_final_editorial/README.md) |
+| 2026-09-17稿件升级与v2基线对读 | [完成结果、原生任务主线与回归审查](revision_20260917_evidence_update/README.md) |
 | 后续增量准备（本批完成部分已入稿） | [研究定位、Pro取舍、十篇审稿经验与实验准备](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
 | 此前附录整理与完整性检查（29页基线） | [六主题附录、保留映射和验证](appendix_restructure_20260916/README.md) |
 | 新落盘结果整合（已应用，含NCP正文） | [跨模型、自然QA、等位移与原生窗口分析](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |

@@ -1,0 +1,24 @@
+{
+  "date": "2026-09-17",
+  "baseline": "history/v3.pdf",
+  "baseline_sha256": "d464810292e6615203ae2ffd3ac66704b66fa796713356f2f6a8c50bf24be409",
+  "baseline_total_pages": 34,
+  "scope": "Author-requested chapter review using distilled writing and regression-review skills; local manuscript fixes only",
+  "status": "complete",
+  "temporary_source_snapshot": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-final-editorial-20260917-manf_55o",
+  "new_experiments": false,
+  "candidate_sha256": "c061575dfbaf92a5017bf6ba73fa55154bacf0cfd42d8e3546653aa37ff16b61",
+  "review_A": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-final-editorial-20260917-manf_55o/paper_A.pdf",
+  "review_B": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-final-editorial-20260917-manf_55o/paper_B.pdf",
+  "delivered_pdf_sha256": "3b5ab4e4f601134060965db9f4e40d2adcadae51f0e201d940046a0459ff3f3a",
+  "delivered_review_path": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-final-editorial-20260917-manf_55o/paper_final.pdf",
+  "final_source_archive_sha256": "6046252b9062be6528be322721e745350d23a2812a7e136f019931755e0d1d17",
+  "reviews": {
+    "astra": "PASS",
+    "sol": "PASS",
+    "same_prompt": true,
+    "independent_contexts": true,
+    "sources": "PDF only",
+    "final_candidate": "paper_final.pdf"
+  }
+}

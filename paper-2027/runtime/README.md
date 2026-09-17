@@ -109,3 +109,38 @@ The runtime includes `matched_three_method_quick_report.py`,
 These retain the official task scorers, paired prompt selection, source-context
 resampling and static YaRN installation. The Natural-QA panels use complete
 books, a 40-token generation cap and the official English-QA F1 adapter.
+
+
+## September 17 evidence and native-window deployments
+
+The runtime sources are pinned by `../figs/runtime_source_snapshot.json`; the
+packager reads that Git revision rather than ongoing working-tree experiments.
+The bundle is a frozen reference implementation. Individual runs retain their
+recorded runtime identities in the portable result inputs.
+
+`four_model_yarn_full13.py` provides the matched three-arm Full-13 protocol;
+`official_yarn_naturalqa.py` provides the natural-task comparison. The 70B
+comparison uses the reported NF4 checkpoint with BF16 computation and the same
+public Llama table and input manifests. It has no YaRN arm.
+
+Native Contrastive Proximal allocation is provided by
+`experiments/native_contrastive_proximal_20260915/tables.py`; the original FP32
+receipt and public native grid are in `../figs/completed_evidence_inputs.json`.
+The candidate preserves native support and unit gain. The source pack verifies
+its exact FP32 reconstruction and the finite-series curvature certificate.
+
+`lm_context.py` specifies same-target full/recent context pairs and scoring;
+`run_native_lm.py` evaluates them. These target-only OLMo losses are separate
+from whole-prefix PPL in the frozen extension experiments. The native QA primary
+score weights questions within task and tasks equally; bootstrap resamples
+source clusters while retaining that question weighting. The earlier
+source-equal sensitivity report remains a separate estimand.
+
+Recompute the paper tables, native score aggregates, paired intervals and
+public table checks without model execution:
+
+```bash
+python3 figs/make_revision_evidence.py
+```
+
+Run this command from the source archive root, not from runtime/.

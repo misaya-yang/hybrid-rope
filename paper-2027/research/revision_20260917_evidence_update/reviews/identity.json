@@ -1,0 +1,26 @@
+{
+  "A": {
+    "path": "/tmp/rope-review-20260917/manuscript_A.pdf",
+    "sha256": "b40f6dc76515e01456bd4e75d9693bb723b4ca733a45909fc0433c19c9da0733"
+  },
+  "B": {
+    "path": "/tmp/rope-review-20260917/manuscript_B.pdf",
+    "sha256": "f5534a4091ae298dc6a659e3de2f91d4fd498bf57963c27b739d0c19555e40fb"
+  },
+  "C": {
+    "path": "/tmp/rope-review-20260917/manuscript_C.pdf",
+    "sha256": "eebd3324803b9ff5af7a9198241c46cdb66109cc03e986b2cfb7bef5833d9b46"
+  },
+  "D": {
+    "path": "/tmp/rope-review-20260917/manuscript_D.pdf",
+    "sha256": "89c7b44a7c09b52b0992741d631715b75a9b6c87dee30cc4ef814d0c698cba77"
+  },
+  "E": {
+    "path": "/tmp/rope-review-20260917/manuscript_E.pdf",
+    "sha256": "44d30f174ea231eac047eb486dac317495b1f69ade2d32d77ad50ef23821e64d"
+  },
+  "F": {
+    "path": "/tmp/rope-review-20260917/manuscript_F.pdf",
+    "sha256": "d464810292e6615203ae2ffd3ac66704b66fa796713356f2f6a8c50bf24be409"
+  }
+}

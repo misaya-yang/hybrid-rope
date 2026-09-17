@@ -1,15 +1,22 @@
 \begin{table}[ht]
 \centering\small
-\caption{InfiniteBench En.QA contrasts (pp). Paired source-context bootstrap uses $20{,}000$ draws; the final column controls the two T--P/T--Y comparisons within each model by Bonferroni adjustment.}
+\caption{Natural-QA and book-QA contrasts (pp). Paired source-context bootstrap uses $20{,}000$ draws. The last column gives Bonferroni simultaneous intervals for the two comparisons within each three-arm panel; the 70B panel has one comparison. II identifies GLM\textquotesingle s second book pool.}
 \label{tab:infinite-qa-intervals}
 \begin{tabular}{@{}llrll@{}}
 \toprule
 Model & Contrast & Difference & Marginal $95\%$ & Simultaneous $95\%$ \\
 \midrule
+Llama-8B & T--P & +0.20 & [-1.48, 1.86] & [-1.74, 2.12] \\
+Llama-8B & T--Y & -0.67 & [-2.87, 1.38] & [-3.22, 1.63] \\
+OLMo & T--P & +3.30 & [0.39, 6.37] & [-0.02, 6.83] \\
+OLMo & T--Y & +2.65 & [0.04, 5.49] & [-0.35, 5.92] \\
+Llama-70B NF4 & T--P & +0.89 & [-0.60, 2.44] & [-0.60, 2.44] \\
 Qwen & T--P & +3.24 & [0.26, 7.51] & [-0.07, 7.89] \\
 Qwen & T--Y & +0.69 & [-3.66, 5.21] & [-3.99, 5.86] \\
 GLM & T--P & +3.33 & [-3.28, 8.98] & [-4.17, 9.70] \\
 GLM & T--Y & +1.29 & [-6.53, 8.61] & [-8.05, 9.29] \\
+GLM II & T--P & +4.00 & [-1.73, 9.68] & [-2.57, 10.61] \\
+GLM II & T--Y & +3.37 & [-1.58, 8.42] & [-2.38, 9.17] \\
 \bottomrule
 \end{tabular}
 \end{table}

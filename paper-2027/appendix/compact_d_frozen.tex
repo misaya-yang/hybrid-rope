@@ -20,8 +20,8 @@ for QA. The endpoint is the official within-task score averaged equally
 across the $13$ tasks. All outputs, including empty and capped answers,
 remain in the score. Intervals use $20{,}000$ paired resamples within task
 and length, with tasks fixed; all reported intervals are $95\%$ percentile
-intervals. Source-record intervals for RULER and
-source-context clustered intervals for natural QA are separate estimands.
+intervals. RULER resamples source records, while natural QA resamples
+source-context clusters.
 
 \subsection{Clean results across length and model}
 \label{sec:clean-confirmation}\label{sec:clean16k-confirmation}
@@ -50,6 +50,7 @@ intervals $[58.30,62.03]/[7.00,12.60]/[13.86,18.42]/[2.75,12.25]$.
 All thirteen task means increase. T/P end with EOS on $1251/1392$
 inputs and hit the cap on $1349/1208$, with no empty outputs.
 
+\FloatBarrier
 At native $8$K, original RoPE uses the native table and unit gain.
 T/P/original RoPE score $85.1564/82.3923/90.0256\%$.
 T--P is $+2.7641$ $[1.2923,4.2538]$ points; T--original RoPE is
@@ -70,7 +71,9 @@ $16/32$K with batch $1$ and $8192$-token prefill chunks.
 T/C score $86.0949/86.3462\%$ at $16$K, difference $-0.2513$
 $[-1.4051,0.8949]$ points; at $32$K they score $68.2660/66.1699\%$,
 difference $+2.0962$ $[1.1134,3.0769]$ points.
+
 \input{tables/table_clean_c_new}
+
 At $32$K, T and C both have EOS/cap rates $98.96/1.04\%$.
 Their full-pair ranks are $10.0773/10.0926$, compared with P's $10.2149$;
 the task contrast therefore also distinguishes positional rank from learned use.
@@ -86,23 +89,24 @@ questions within its native window and $315$ above it. Generation caps are
 $32$ for HotpotQA/2Wiki, $128$ for Qasper/NarrativeQA and $64$ for MultiFieldQA.
 Batch is $1$; Llama uses $8192$-token chunked prefill and OLMo direct prefill.
 
-The primary score averages whole-response normalized token F1 within each
-task, then equally across tasks. The paired bootstrap resamples source-context
-clusters within task, dividing sampled score sums by sampled question counts;
-$20{,}000$ draws use seed $20260914$ for Llama and $20260930$ for OLMo.
-There are no shared clusters across tasks. Both arms retain every answer.
-\input{tables/table_tailspline_natural_tasks}
-\input{tables/table_olmo_qa_new}
+The primary score includes all responses, averaging whole-response normalized
+token F1 within each task, then equally across tasks. For paired intervals,
+$20{,}000$ bootstrap draws resample source-context clusters within task.
+Each draw divides sampled score sums by sampled question counts and retains
+equal task weights.
+There are no shared clusters across tasks.
+\input{tables/table_natural_three_tasks}
 
-Llama's overall difference is $+0.1957$ $[-1.5311,1.8864]$ points;
-its within/above-native contrasts are $+0.6998$ $[-1.2478,2.8073]$
+The three-arm report gives Llama T--P $+0.1957$ $[-1.4826,1.8590]$ points;
+YaRN scores $41.7473\%$. Llama's within/above-native T--P contrasts are $+0.6998$ $[-1.2478,2.8073]$
 and $-0.9383$ $[-4.1494,1.9539]$. Document-equal sensitivity gives
 T/P $40.8141/40.8375\%$. OLMo's overall difference is $+3.2994$
-$[0.3359,6.4028]$ points, with every task mean positive; question-equal
-sensitivity gives $+3.9194$ $[1.1977,6.6794]$. Its $4$K--$8$K and
-$8$K--$16$K strata contain $316/315$ questions and give $+6.3989$
+$[0.3912,6.3651]$ points, with every T--P task mean positive;
+YaRN scores $22.2719\%$. Question-equal sensitivity gives $+3.9194$ $[1.1977,6.6794]$. OLMo's $4$K--$8$K and
+$8$K--$16$K strata contain $316/315$ questions and give T--P differences of $+6.3989$
 $[1.8747,10.8706]$ and $+1.5095$ $[-4.9432,7.6943]$ points.
-OLMo T/P EOS/cap/empty counts are $567/581$, $64/50$, $0/0$.
+Llama T/P EOS/cap/empty counts are $625/624$, $6/7$, $0/0$; generated-token
+totals are $6972/7019$. OLMo has $567/581$, $64/50$, $0/0$.
 
 LongBench v2 uses $117$ complete Llama inputs between $8$K and $32$K,
 with its direct-answer multiple-choice adapter, batch $1$, matched caps,
@@ -111,7 +115,9 @@ score one; incorrect/unparseable answers score zero. T/P answer $41/36$
 correctly, giving $35.0427/30.7692\%$ and difference $+4.2735$
 $[-3.3906,11.9658]$ points under source-context cluster resampling.
 T alone succeeds on $13$ inputs, P on $8$, with $96$ ties.
+
 \input{tables/table_longbench_new}
+
 The $28$ inputs at $8$K--$16$K give T/P $39.29/35.71\%$; the $89$
 above $16$K give $33.71/29.21\%$. Overall EOS/cap/empty counts are
 $88/91$, $29/26$, $0/0$. Accuracy and token F1 remain separate metrics.
@@ -149,60 +155,69 @@ Llama EOS/cap/empty counts are T/P $388/384$, $2/6$, $30/37$.
 
 The original classic T--C diagnostic gives AUC $78.8013/79.2115\%$,
 difference $-0.4103$ $[-2.6282,1.8205]$ points, with batch $1/2$.
-A $39$-input batch check has identical scores but six different generated
-sequences. This recorded diagnostic is separate from the clean comparison.
+The clean comparison uses matched batch-one evaluation.
 The classic $130$-input native reference scores $91.8846\%$, versus
 T $89.7436\%$, difference $-2.1410$ $[-6.1410,1.9231]$ points.
 Whole-prefix $8$K PPL on $46$ documents is original RoPE/T/P
 $5.275919/5.295283/5.286429$; T--original RoPE is $+0.019364$
 with paired document interval $[0.006602,0.034861]$.
 
-\subsection{Direct three-method evaluation across four model families}
+\subsection{Direct baselines across model families and scale}
 \label{sec:three-method-complete}
-The additional models are Qwen-2.5-3B-Instruct \citep{qwen2024qwen25} and
-GLM-4-9B-0414. Their native reference is $32768$ tokens; bases are
-$10^6$ and $10^4$, respectively. Qwen uses $64$ rotary pairs. GLM uses
-GQA with $32$ query and $2$ key/value heads; each $128$-dimensional head
-rotates $64$ coordinates, giving $32$ rotary pairs. Tables are installed only
-in this rotary subspace, retaining its adjacent-pair convention and the
-nonrotary coordinates. Its TailSpline/MrPro band is $[17,30]$, versus
-Qwen's $[23,40]$. Both use the public $s=4$ rule and shared gain.
+Qwen-2.5-3B-Instruct \citep{qwen2024qwen25} and GLM-4-9B-0414 have native
+reference length $32768$, with bases $10^6/10^4$ and $64/32$ rotary pairs.
+GLM uses GQA with $32$ query and $2$ key/value heads; $64$ of each head's
+$128$ coordinates rotate. We retain its adjacent-pair convention and
+nonrotary subspace. T/P use bands $[23,40]$ for Qwen and $[17,30]$ for GLM.
 
-The YaRN baseline is the official static frequency map, installed without
-fine-tuning, with its public $32/1$ correction and amplitude rule. Its native
-reference, rotary dimension and base are read from each model configuration.
-Unlike the matched T/P allocation control, YaRN retains its own boundary
-rounding and blend. Every method uses the same prompts, official task scorer,
-greedy decoding and BF16 weights. NIAH uses five source-order inputs for each
-of eight tasks, selected before execution-order sorting. Llama/OLMo reuse
-these exact inputs from their clean large-panel T/P outputs; GLM reuses the
-NIAH subset of its Full-13 panel. These overlapping subsets provide direct
-baseline comparisons, not additional independent replications.
+Official static YaRN uses its public $32/1$ correction and amplitude rule,
+without fine-tuning; its own boundary rounding and blend are retained.
+All methods share each panel's prompts, scoring and greedy decoder.
+Llama/OLMo NIAH uses $200$ source-order inputs per task ($1600$ pairs);
+PPL uses all $46$ matched Proof-Pile/PG-19 documents. Their Full-13 three-arm
+panels use the same first $10$ inputs per task from the large T/P panels,
+adding only the missing YaRN arm. Qwen/GLM use $10$ inputs/task at $128$K
+($130$ pairs); their earlier $5$/task subsets are included, not additional
+replications. Their PPL uses five matched InfiniteBench LongBook documents.
+Table~\ref{tab:three-method-main} reports the retrieval-family means and PPL;
+Tables~\ref{tab:full13-tasks-lo}--\ref{tab:full13-intervals} report complete
+Full-13 task scores and contrasts.
 
-PPL uses the same first five documents at the same token length for every
-method in a row. Llama/OLMo select from their classic Proof-Pile/PG-19 manifest;
-Qwen/GLM use InfiniteBench LongBook. PPL is the exponential of token-pooled
-NLL, and uncertainty concerns the mean paired document NLL difference.
-PPL values are not pooled across model-specific corpora and tokenizations.
-Batch is one with Flash-SDPA. NIAH prefill chunks are $8192$ for Llama/OLMo,
-$65536$ for GLM, and direct prefill for Qwen; the five-document LM runs use
-direct prefill. Llama/OLMo/GLM intervals use $10{,}000$ paired resamples;
-NIAH resampling is within task, with eight task weights fixed, and LM
-resampling is by document. Qwen retains its recorded paired intervals.
+PPL is the exponential of token-pooled NLL; intervals concern the mean paired
+document NLL difference. No scores are pooled across tokenizers or corpora.
+Weights are BF16, batch one and Flash-SDPA. Llama/OLMo use $8192$-token NIAH
+prefill chunks, GLM $65536$, and Qwen direct prefill; LM uses direct prefill.
+NIAH intervals resample within task; document intervals resample documents,
+using $10000$ draws. Full-13 uses $20000$ paired within-task draws.
 \input{tables/table_three_method_main}
 \input{tables/table_three_method_intervals}
 \input{tables/table_three_method_tasks_lo}
-\input{tables/table_three_method_tasks_qg}
+Llama's single-needle tasks are near ceiling; its multikey T/P/Y means are
+$51.83/24.67/27.00\%$. Multivalue/multiquery means are
+$94.19/96.25/97.13\%$. OLMo improves in all three groups: single-needle
+$87.17/9.83/9.83\%$, multikey $37.50/2.33/3.17\%$, and
+multivalue/multiquery $75.19/3.19/5.56\%$. These task profiles describe where
+the gains occur, separately from the structural analysis.
+\input{tables/table_full13_tasks_lo}
+\input{tables/table_full13_tasks_qg}
+\input{tables/table_full13_intervals}
 
-The GLM Full-13 comparison uses five source-order inputs per task, $65$ paired
-prompts in total, with the same T/P tables as above. The task-equal scores are
-$44.3590/31.5641\%$, difference $+12.7949$ points, interval $[6.6410,19.3333]$.
-Its interval uses $20{,}000$ paired within-task resamples, seed $20260923$.
-T/P EOS rates are $89.23/80.00\%$ and cap rates $10.77/20.00\%$.
-\input{tables/table_glm_full13}
+\newpage
+\paragraph{Frozen transfer to 70B.}
+The prequantized Llama-3-70B-Instruct checkpoint uses NF4 double quantization
+and BF16 computation. Its tokenizer, vocabulary, chat template and special
+tokens match the $8$B evaluation. T/P directly reuse the $8$B tables, band
+$[18,35]$ and common gain, with no allocation search on the $70$B model.
+Batch-one $32$K evaluation uses direct prefill. Full-13 uses the same
+$10$/task source subset, Natural-QA the same $631$ questions, and PPL the
+first five matched documents. T/P PPL is $2.4954/2.5075$; the pooled NLL
+contrast is $-0.00484$. This is a within-checkpoint NF4 comparison.
+T wins $10$ Full-13 task means, ties one and loses two; EOS/cap rates are
+$99.23/91.54\%$ and $0.77/8.46\%$. Natural-QA F1 is $49.2846/48.3924\%$,
+with T--P interval $[-0.5991,2.4379]$ points under source-context resampling.
 \FloatBarrier
 
-\subsection{Complete-book natural QA at 128K}
+\subsection{Complete-book QA and source-context uncertainty}
 \label{sec:infinite-qa-new}
 Qwen and GLM use InfiniteBench English book QA \citep{zhang2024infinitebench},
 with complete prompts between $100$K and $128$K tokens, no input truncation,
@@ -217,13 +232,20 @@ accepted references; it is not RULER's answer-containment score. All generated
 answers remain in the mean. The paired bootstrap keeps questions from a
 sampled source context together, using $20{,}000$ draws and seeds
 $20261401/20261402$ for T--P/T--Y. Table~\ref{tab:infinite-qa-intervals}
-reports both marginal intervals and simultaneous coverage for the two
-comparisons within each model. 
+reports marginal and simultaneous intervals for each three-arm panel,
+including the five-task Natural-QA comparisons. Task-macro Natural-QA
+resamples source clusters within task while retaining question-weighted means;
+complete-book QA uses its single task and retains all questions per book. 
+GLM's second source pool contains $77$ questions from $15$ books, none in
+pool I. Its complete inputs span $69660$--$95486$ tokens; the same $s=4$
+table and decoder are retained. T/P/Y F1 is $26.8672/22.8626/23.5015\%$.
+The two pools retain separate means and source-context intervals.
 \input{tables/table_infinite_qa_intervals}
 
 Qwen T/P/Y EOS counts are $29/28/30$, with cap counts $6/7/5$;
 GLM has EOS counts $31/29/26$ and cap counts $4/6/9$. Neither panel has
-empty outputs. Relative to P, Qwen T has higher per-question F1 on $13$
+empty outputs. GLM pool II has $70$ EOS and $7$ capped outputs in each arm,
+with no empty responses. Relative to P, Qwen T has higher per-question F1 on $13$
 questions, lower on $6$, and equal on $16$. 
 \FloatBarrier
 
@@ -247,6 +269,7 @@ Llama $128$K & Full-13 & 130 & 22.05 & 1.28 & [15.96, 25.64] pp \\
  & Proof-Pile PPL & 10 & 2.5870 & 2.6714 & [$-0.03505$, $-0.02918$] NLL \\
  & En.QA F1 & 41 & 13.21 & 20.17 & [$-11.87$, $-2.07$] pp \\
  & En.Dia accuracy & 100 & 12.00 & 8.00 & [$-1.00$, 10.00] pp \\
+Llama-70B NF4 $128$K & Proof-Pile PPL & 10 & 2.2449 & 2.3129 & -- \\
 Qwen $256$K & Single-NIAH & 15 & 93.33 & 40.00 & [33.33, 66.67] pp \\
  & LongBook PPL & 5 & 30.3437 & 23.9283 & [$-1.0561$, 1.7769] NLL \\
 \bottomrule
@@ -258,7 +281,9 @@ single-1/2/3, whose T/P scores are $100/100$, $100/20$ and $80/0\%$;
 this three-task endpoint is distinct from NIAH-8.
 Llama's natural panels retain complete $100$K--$131$K contexts and the official
 InfiniteBench metrics; En.QA contains eight book contexts. Generation scores
-use paired task or source-context resampling; PPL uses paired documents.
+use paired task or source-context resampling; PPL uses paired documents. The $70$B NF4 $s=16$ PPL contrast is
+$-0.02981$ pooled NLL on ten documents; no document interval is supplied.
+It uses $32768$-token prefill chunks and the shared gain $1+0.1\ln16$.
 Llama's Full-13 and PPL improve while its book-QA F1 decreases; Qwen's single-needle
 retrieval improves while its five-book PPL is higher. The results distinguish
 retrieval, language modeling and natural-task behavior at these extension factors.

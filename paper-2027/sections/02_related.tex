@@ -3,14 +3,12 @@
 \paragraph{Nonuniform scaling and frozen extension.}
 YaRN blends interpolation and extrapolation across frequency bands
 \citep{peng2024yarn}. MrRoPE organizes scaling through mixed-radix conversion
-and designs the intermediate allocation, with MrRoPE-Pro progressively
-redistributing its increments \citep{tian2026mrrope}. These are the closest
-frozen-extension references. TailSpline retains MrPro's outer bands and derives
+with MrRoPE-Pro progressively
+redistributing the intermediate increments \citep{tian2026mrrope}. TailSpline retains MrPro's outer bands and derives
 a different transition from a discrete tail-connection objective; matched
 support and total-displacement controls identify allocation and residual shape
 effects. LongRoPE and LongRoPE2 combine nonuniform scaling with search and
-learning \citep{ding2024longrope,shang2025longrope2}; our main deployment
-comparisons install fixed rules without weight updates.
+learning \citep{ding2024longrope,shang2025longrope2}; our deployment comparisons use frozen rules.
 
 \paragraph{Learnable frequencies.}
 LeRoPE learns per-frequency log scales jointly with model weights and analyzes
@@ -18,8 +16,7 @@ their attention gradients \citep{karypis2026lerope}. Its fixed-frequency
 transfer experiment also separates the learned table from joint learning
 dynamics. Our work complements this direction with controlled interior-placement
 interventions and public-parameter constructions for frozen extension and
-native-window quality. All three constructions use public RoPE parameters: Cosh studies learning
-and adaptation, while TailSpline and NCP target frozen deployment.
+native-window quality.
 
 \paragraph{Positional structure and learned frequency use.}
 Round and Round, HoPE and Massive Values investigate frequency roles and
@@ -30,7 +27,3 @@ encodings, while GRAPE connects group generators, frequencies and norms
 integer-position criterion distinguish positional overlap, coordinate assignment
 and a changed spectrum. Selective RoPE and RePo instead learn input-dependent
 rotations or positions \citep{movahedi2026selectiverope,li2026repo}.
-
-HELMET distinguishes application behavior beyond synthetic retrieval
-\citep{yen2024helmet}, motivating separate retrieval, natural-QA and native-window
-results.

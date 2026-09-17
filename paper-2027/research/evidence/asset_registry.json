@@ -87,7 +87,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
+          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -114,7 +114,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
+          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -169,7 +169,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
+          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
@@ -198,14 +198,14 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "tracked",
-          "sha256": "05630d352227f562dd75959ed8ce321c015998e511c2baeb691e2b8db443cd57",
+          "sha256": "fdc5b6e91aff59623466f88a69e34c403303938b2c25ca6e32f31c249dfba7d1",
           "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices",
           "snapshot_note": "Existing construction and data retained; updated cross-references for new clean and NCP evidence."
         },
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
+          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -264,7 +264,7 @@
         {
           "path": "paper-2027/appendix/compact_f_learning.tex",
           "availability": "tracked",
-          "sha256": "e2f27b9147dd18f0e35780856d75d2ae7074c845e5461f305dff2ee8c835aa2b",
+          "sha256": "ed7125b572613d72979371332f36b6b0dae6bc89b2783dbe70da3b105ff4d0ce",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -286,7 +286,7 @@
         {
           "path": "paper-2027/appendix/compact_f_learning.tex",
           "availability": "tracked",
-          "sha256": "e2f27b9147dd18f0e35780856d75d2ae7074c845e5461f305dff2ee8c835aa2b",
+          "sha256": "ed7125b572613d72979371332f36b6b0dae6bc89b2783dbe70da3b105ff4d0ce",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -339,7 +339,7 @@
         {
           "path": "paper-2027/appendix/compact_f_learning.tex",
           "availability": "tracked",
-          "sha256": "e2f27b9147dd18f0e35780856d75d2ae7074c845e5461f305dff2ee8c835aa2b",
+          "sha256": "ed7125b572613d72979371332f36b6b0dae6bc89b2783dbe70da3b105ff4d0ce",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -951,7 +951,7 @@
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
+          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1023,7 +1023,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1046,7 +1046,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1123,13 +1123,13 @@
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
+          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1156,7 +1156,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
+          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1190,7 +1190,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1212,7 +1212,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1266,13 +1266,13 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "05b94e9ee6c38acb4862632610f040e44d6b4c25191dbec218ec5856d27fffaf",
+          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4026afa56c8b2b8c559c110dfec0ef95bcf1b4135903ec2d6861f0e3b758ea76",
+          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1311,7 +1311,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1350,7 +1350,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1394,7 +1394,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1433,7 +1433,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1472,7 +1472,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "4a1b4dfe048695ede9f0ac6e91ba9e35c327e309d41fd67c90c2ce2b2b989730",
+          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1483,7 +1483,7 @@
       "priority": "P2",
       "question": "Can changing z improve task quality without extending the context window?",
       "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
-      "manuscript_location": "§6.2 / Eq. 10 / Appendix E",
+      "manuscript_location": "Section 6.2 / Eq. 10 / Appendix E: fixed-support native allocation and original task panel",
       "interpretation": "NCP +1.4081pp [0.2009,2.5833] on existing 780-row development panel; gain1 and public-parameter construction. Separate calibrated V1 +3.0107pp; not a TailSpline native claim",
       "sources": [
         {
@@ -1516,7 +1516,7 @@
         {
           "path": "paper-2027/appendix/compact_e_native.tex",
           "availability": "tracked",
-          "sha256": "97ec23f94d1aedef9d514478200a1fb4e6b38dc5a1a262df2da10d8d916363ab",
+          "sha256": "533290d3c672ff707dfccd11562957db43b9d923f5532b5d1c7d1615a7382136",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1527,7 +1527,7 @@
       "priority": "P0",
       "question": "Four-family direct static YaRN comparison",
       "evidence_grade": "Recorded matched model reports; aggregate arithmetic verified",
-      "manuscript_location": "§6.1 / Appendix D.6",
+      "manuscript_location": "Appendix D.6: five-document Qwen/GLM PPL retained; enlarged task panels use A59/A60",
       "interpretation": "Matched NIAH-8×5 and PPL-5; preserves each public method and all four outcomes",
       "sources": [
         {
@@ -1558,7 +1558,7 @@
       "priority": "P0",
       "question": "GLM partial-RoPE Full-13",
       "evidence_grade": "Recorded matched model reports; aggregate arithmetic verified",
-      "manuscript_location": "§6.1 / Table 1 / Appendix D.6",
+      "manuscript_location": "Historical GLM 65-row subset; current complete panel uses A59",
       "interpretation": "65 paired prompts, +12.7949pp; GQA, 32 rotary pairs",
       "sources": [
         {
@@ -1626,7 +1626,7 @@
       "priority": "P0",
       "question": "At 128K and S=4, does fixed TailSpline outperform MrPro and official static YaRN on full RULER task coverage, and does the GLM natural-QA ordering survive an independent book pool",
       "evidence_grade": "Qwen and GLM Full-13, 13 tasks x 10 paired rows per arm; GLM independent En.QA pool, 77 paired rows from 15 non-overlapping source books; aggregate arithmetic verified",
-      "manuscript_location": "next revision; current manuscript unchanged",
+      "manuscript_location": "Section 6.1 / Tables 1-2 / Appendices D.6-D.7",
       "interpretation": "Qwen Full-13 TailSpline/MrPro/YaRN 64.40/59.87/62.04%; GLM 39.65/30.78/27.85%; GLM second-book QA 26.87/22.86/23.50%. Fixed benchmark scores are primary; clustered resampling is a transfer-sensitivity appendix.",
       "sources": [
         {
@@ -1652,7 +1652,7 @@
       "priority": "P0",
       "question": "How do fixed TailSpline, MrRoPE-Pro and official static YaRN compare on large NIAH, natural-text PPL, Natural-QA and complete RULER task coverage",
       "evidence_grade": "Per model: NIAH-8 x 200 paired rows, PPL46 matched documents, Natural-QA631 paired prompts, and Full-13 x 10 paired rows; aggregate arithmetic and completion receipts verified",
-      "manuscript_location": "next revision; current manuscript unchanged",
+      "manuscript_location": "Section 6.1 / Tables 1-2 / Appendices D.4,D.6-D.7",
       "interpretation": "Llama Natural-QA631 is YaRN/TailSpline/MrPro 41.75/41.08/40.88%; OLMo is 22.27/24.92/21.62%. TailSpline leads both models on NIAH, PPL and Full-13, while the Llama natural-QA panel preserves the small YaRN win.",
       "sources": [
         {
@@ -1693,7 +1693,7 @@
       "priority": "P0",
       "question": "Does the frozen Llama-3 TailSpline construction transfer from 8B to a 70B-class checkpoint without model-specific table tuning",
       "evidence_grade": "Llama-3-70B-Instruct NF4/BF16-compute checkpoint; S4/32K Full-13 x 10, Natural-QA631 and PPL5 paired against MrPro; S16/128K PPL10 paired; exact server/local report hashes verified",
-      "manuscript_location": "next revision; current manuscript unchanged",
+      "manuscript_location": "Section 6.1 / Tables 1-2 / Appendices D.6-D.8",
       "interpretation": "At S4/32K, TailSpline/MrPro are 78.67/60.95% Full-13, 86.25/70.63% NIAH-8, 49.28/48.39% Natural-QA631, and 2.4954/2.5075 PPL5. At S16/128K, PPL10 is 2.2449/2.3129. No 70B YaRN arm exists. The 128K task baseline is incomplete and is not evidence; the completed TailSpline arm already scores 40/0/0% on multikey-1/2/3.",
       "sources": [
         {
@@ -1744,7 +1744,7 @@
       "priority": "P0",
       "question": "Can a public-parameter NCP RoPE table improve a frozen mature checkpoint inside its native 4K window, and which tested mechanisms explain that improvement",
       "evidence_grade": "Frozen OLMo-2-0425-1B-Instruct; same-target LM on 128 windows from 103 source documents; output-blind Full-13 x 10 and complete three-task Native Natural-QA census; paired mechanism and final-quarter intervention panels",
-      "manuscript_location": "next revision; current manuscript unchanged",
+      "manuscript_location": "Section 6.2 / Appendix E: new NCP diagnostic tasks, same-target NLL and context benefit",
       "interpretation": "NCP lowers Native-4K full-context NLL by 0.012786 nat/token, approximately 1.27% PPL, and raises the new Full-13 x 10 fixed-panel score by 3.2564pp. The 99-row Natural-QA census is -0.8549pp. Synthetic counterfactual and fixed final-quarter intervention results exclude those tested panels as a simple mediator but do not erase the formal LM and Full-13 gains.",
       "sources": [
         {

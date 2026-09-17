@@ -1,45 +1,36 @@
 # Beyond the Base：当前论证与证据安放表
 
-## Current compact manuscript (2026-09-16)
+## Current manuscript (2026-09-17)
 
-Current evidence update: [revision and regression checks](revision_20260916_evidence_update/README.md).
-The 151.9M fixed-endpoint experiment is part of the 50.9M–750M Cosh training
-series, not a separate FMRoPE comparison. The full task chart and 432M curve
-remain in the main paper. The pre-edit PDF is [v1](../history/v1.pdf).
+Current revision: [evidence integration and regression checks](revision_20260917_evidence_update/README.md).
+The round's pre-edit baseline is [v2](../history/v2.pdf). Main text: 9 pages; total: 34.
+Title and section order are retained. The abstract contains no numbers; the first page has no figure.
 
+The argument studies z through identification, positional structure, construction and measured quality.
+TailSpline provides the frozen extension construction. NCP retains the native fixed-support test,
+now supported by same-target language modeling; Cosh retains its training/adaptation role.
+NTS2 is a research-stage tradeoff study awaiting broader QA confirmation and is outside this manuscript.
+For future native enhancement, real downstream QA is primary; RULER and LM cannot replace it.
 
-
-The manuscript studies frequency allocation within and beyond the native context.
-The abstract has no digits. TailSpline supplies the main closed-form extension;
-NCP has a main-text subsection establishing task improvement within RoPE's
-native context; Cosh supplies complementary learning/extrapolation evidence.
-Native TailSpline performance is described as a slight reduction, with original
-RoPE retained as a reference. It is not called native enhancement.
-
-| Claim | Evidence | Current location |
+| Claim | Evidence | Location |
 |---|---|---|
-| Fixed-support allocation changes performance | A01, A08, paired training and frozen controls | Section 3; Figure 1; Appendix C |
-| Positional structure differs from learned use | A03-A06, A48; complete-pair geometry, coordinate interventions and rank/quality observations | Section 4; Figure 2; Appendices A, B |
-| TailSpline has an exact finite-grid construction | A37; constrained discrete objective and closed form | Section 5.1; Figure 3; Appendix B.1 |
-| TailSpline quality across L/2L/4L | A46, existing clean32K, A52 clean8K | Section 6.1; Table 1; Figure 4; Appendix D.2 |
-| Cross-model clean confirmation | A49 OLMo2600 pairs,+41.42pp; A56 GLM65 pairs,+12.79pp | Section 6.1; Table 1; Appendix D.2 |
-| Natural-task quality | A50 OLMo631 pairs/524 clusters,+3.30pp; A57 Qwen/GLM35 questions/7 books each, three-arm official F1 | Section 6.1; Table 2; Appendices D.4,D.7; main intervals retained |
-| Internal shape matters at equal displacement | A51;clean T-C +2.10pp at32K;16K near tie | Sections 3.2,6.1; Appendix D.3; previous classic cross-batch diagnostic stays in D.5 |
-| Longer real-input evaluation | A53;LongBench-v2 complete-input8K-32K subset117 pairs, +4.27pp with interval spanning zero | Section 6.1; Table 2; Appendix D.4 |
-| In-window task quality improves at native support | A54;public-parameter NCP, gain1,780-row OLMo development panel,+1.41pp | Section 6.2; Eq.10; Appendix E; distinct from TailSpline and calibrated V1 |
-| Cosh supports trained and adapted extrapolation | A09,A10 432M/750M; A19 1.485B recipe-matched training; A11 Llama LoRA; matched OLMo task adaptation | Section 6.3; Figure 5; Appendix F |
-| Direct public-method comparison | A55 four models, NIAH8×5/PPL5, T/P/official static YaRN; overlapping T/P rows reused | Section 6.1; Appendix D.6; complete-method comparison distinct from matched T/P allocation control |
-| Higher extension factors | A58 LlamaS16/QwenS8, full task profiles including mixed outcomes | Appendix D.8 |
-| Integer kernel equivalence and allocation-response identities | A44,A48;conditional mathematics and CPU checks | Sections 4-5; Appendices A.4,B.4-B.5 |
+| Allocation matters at fixed support | A01,A08; paired training and frozen controls | Section 3, Figure 1, Appendix C |
+| Positional structure and learned use differ | A03-A06,A48; full pairs, crossing, reassignment, rank/quality | Section 4, Figure 2, Appendix A |
+| TailSpline has an exact finite-grid construction | A37; stated convex objective and closed form | Section 5.1, Figure 3, Appendix B.1 |
+| One s=4 deployment serves L/2L/4L inputs | A39,A46,A52; large clean Llama panels, original Native reference retained | Section 6.1, Table 1(a), Figure 4, Appendix D.2 |
+| Cross-family direct comparisons | A49,A59,A60; four-family Full-13, large Llama/OLMo NIAH and PPL | Section 6.1, Table 1(b), Appendix D.6 |
+| Natural-task quality | A45,A50,A53,A57,A59,A60; QA631, LongBench v2, separate GLM book pools | Table 2, Appendices D.4,D.7 |
+| Frozen transfer to 70B NF4 | A61; same public 8B tables, paired 70B Full-13/QA/PPL | Tables 1-2, Appendices D.6-D.8 |
+| Shape effects at equal displacement | A51; clean T-C at16/32K | Sections 3.2,6.1, Appendix D.3 |
+| Native allocation at fixed support | A54,A62; NCP original780/new130 task panels, LM128 and context benefit | Section 6.2 and Appendix E; fixed-support control |
+| Cosh supports learned extrapolation | A09-A12,A19; 432M/750M/1.485B, Llama LoRA, OLMo adaptation | Section 6.3, Figure 5, Appendix F |
+| Higher-factor task profiles | A58,A61; Llama/Qwen mixed endpoints and 70B completed PPL | Appendix D.8 |
 
-[Completed-result interpretation](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md),
-[portable inputs](../figs/completed_evidence_inputs.json),
-[CPU verifier](../figs/verify_completed_evidence.py), and
-[asset registry](evidence/asset_registry.json) preserve the evidence mapping.
-No pending128K result is used. The main text retains the existing title and
-nine-page format; the latest validation records the final compiled artifact.
-
-[Appendix retention audit and length policy](appendix_restructure_20260916/README.md) records the consolidation; the historical map below is not current navigation.
+The [portable inputs](../figs/revision_evidence_inputs.json) and [generator](../figs/make_revision_evidence.py)
+retain score and protocol identities. Separate panels are never pooled as independent repetitions.
+Native-QA question-weighted primary scores and source-equal sensitivity remain different estimands.
+The fixed-support 151.9M study belongs to the Cosh training series, not a separate FMRoPE experiment.
+The full task chart and 432M curve remain in the main paper.
 
 ## Historical placement map (2026-09-14; superseded by the current table above)
 

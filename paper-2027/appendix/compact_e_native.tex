@@ -18,8 +18,8 @@ between two uniform positions on a continuous unit interval. The aligned
 reference comparison supplies a public design objective. The Transformer task
 scores below evaluate the resulting fixed construction.
 
-We minimize the objective in Eq.~\eqref{eq:ncp-main}, with fixed
-$\lambda=9/4$ (quadratic coefficient $\lambda/2=9/8$), subject to
+We minimize Eq.~\eqref{eq:ncp-main} with fixed $\lambda=9/4$
+(quadratic coefficient $\lambda/2=9/8$), subject to
 \begin{equation}
 u_0=u_{K-1}=0,\quad 0\le u_k\le 2/9,\qquad
 \log\frac{\omega'_k}{\omega'_{k+1}}
@@ -40,8 +40,17 @@ With $q(\phi)=d\mathcal R/d\log\phi$, an interior scalar solution satisfies
 $\lambda u=q(\phi e^{-u})$. We compute $r$ on a $1024$-point angular grid,
 retain $32$ Fourier modes and solve the scalar stationary equations by
 bisection, using zero shift when the native gradient is nonpositive. The two
-endpoint shifts are reset to zero. On the deployed OLMo grid all resulting
-log-gap constraints are inactive, so the scalar solutions are feasible jointly.
+endpoint shifts are reset to zero. The implemented $32$-mode scalar objective is strictly convex. For
+$f(x)=\operatorname{sinc}^2(x/2)$, its log-curvature is
+$h(x)=2\cos x-6\sin x/x+8(1-\cos x)/x^2$ and $|h(x)|\le4$:
+for $0\le x\le4$, the integral representation gives
+$|h(x)|\le x/3+x^2/6$; for $x\ge4$, it gives the bound
+$\sqrt{4+36/x^2}+16/x^2\le3.5$. The retained coefficients satisfy
+$\sum_{j=1}^{32}|a_j|<0.554403$, so scalar curvature is at least
+$9/4-4\sum_j|a_j|>0.03238$. Thus the stationary root, or the zero-shift
+boundary when its derivative is nonnegative, is the unique box minimizer.
+On the deployed OLMo grid the log-gap constraints are inactive, so these
+scalar minimizers also solve the constrained finite-series problem.
 
 The deployed grid has $64$ pairs, base $500000$ and native length $4096$.
 It changes $46$ FP32 entries, reaches maximum relative slowdown $16.7164\%$
@@ -63,7 +72,9 @@ $4096$-token prefill chunks. Their scores are $70.7821/69.3739\%$;
 the paired task-equal difference is $+1.4081$ points, interval
 $[0.2009,2.5833]$. NCP has higher per-input scores on $62$ inputs,
 original RoPE on $31$, with $687$ ties. Every task remains in the aggregate.
+
 \input{tables/table_ncp_tasks_new}
+
 Companion half-turn contraction and its reverse score $69.5085/67.8974\%$.
 Their exact mean contrast is $+1.6111$ points with paired interval
 $[0.2713,2.9722]$; contraction relative to original RoPE is $+0.1346$
@@ -72,4 +83,45 @@ checkpoint-calibrated V1 table scores $72.3846\%$, a $+3.0107$-point
 contrast with interval $[1.2949,4.7052]$. V1's calibration distinguishes it
 from NCP's public-parameter construction. Point differences here are computed
 from arm means; the companion report's bootstrap intervals are retained.
+\FloatBarrier
+
+\subsection{Additional task evaluation}
+\label{sec:native-confirmation-new}
+The new OLMo Full-13 panel has ten source-order records per task ($130$ pairs),
+fixed before evaluation. NCP reuses the original public table and unit gain;
+its task-equal difference is $+3.2564$ $[0.8077,5.9231]$ points. The interval
+uses $20000$ paired within-task draws, seed $20260916$.
+Table~\ref{tab:ncp-tasks-new} keeps the original and new task panels separate.
+
+Native-QA contains $99$ complete inputs within OLMo's native window:
+$24$ 2WikiMQA, $5$ HotpotQA and $70$ Qasper questions. Both arms share
+prompts, BF16 weights, greedy decoding and task-specific generation caps.
+Normalized whole-response token F1 is averaged over questions within task,
+then equally over tasks. Paired source-cluster resampling within task retains
+question weighting, using $20000$ draws and seed $20260917$.
+
+\input{tables/table_native_qa_tasks}
+
+Native/NCP F1 is $39.4116/38.4554\%$, difference
+$-0.9562$ $[-4.4410,1.5666]$ points. The earlier source-equal sensitivity
+instead gives $-0.8549$ $[-4.4495,1.9234]$ points; these estimands remain
+separate. Natural-QA and controlled RULER diagnostics measure different tasks.
+
+\subsection{Language modeling and benefit from earlier context}
+\label{sec:ncp-context-new}
+We evaluate $128$ nonoverlapping windows from $103$ documents in the
+PG-19 and Proof-Pile test corpora. Each $4097$-token window
+defines $4096$ next-token inputs. We score only its final $256$ target tokens,
+once with full history and once with $512$ preceding tokens plus the same
+teacher-forced targets. Shared tokens retain identical relative positions;
+the checkpoint, targets and score positions are paired. Loss is averaged
+within document and then equally over documents. Paired document intervals
+use $20000$ draws, seed $20260915$.
+
+\input{tables/table_ncp_context}
+
+NCP improves full-history NLL by $0.012786$ nat/token and recent-history NLL
+by $0.004845$. Its additional benefit from earlier context is $0.007941$
+$[0.005529,0.010346]$ nat/token. This measures context use at the same prediction
+targets, separately from generated-task accuracy.
 \FloatBarrier

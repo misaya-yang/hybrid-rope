@@ -1,16 +1,16 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Direct training-free comparison.} Static $s=4$ tables; NIAH is the eight-task macro score (\%, $5$/task), and PPL uses $5$ matched documents per model. T/P/Y: TailSpline/MrPro/official static YaRN. Each public method retains its correction-band convention. PPL corpora differ across models. Paired intervals and task scores follow below.}
+\caption{\textbf{Retrieval and language modeling with static $s=4$ tables.} NIAH uses $200$/task for Llama/OLMo and the $10$/task Full-13 retrieval subset for Qwen/GLM. PPL uses $46$ matched documents for Llama/OLMo and $5$ for Qwen/GLM; corpora and tokenizers remain model-specific. T/P/Y are defined in Table~\ref{tab:clean-length-main}.}
 \label{tab:three-method-main}
 \begin{tabular}{@{}llrrrrrr@{}}
 \toprule
-Model & Length & \multicolumn{3}{c}{NIAH $\uparrow$} & \multicolumn{3}{c}{PPL $\downarrow$} \\
+Model & Length & \multicolumn{3}{c}{NIAH $\uparrow$ (\%)} & \multicolumn{3}{c}{PPL $\downarrow$} \\
  & & T & P & Y & T & P & Y \\
 \midrule
-Llama & $32$K & \textbf{85.00} & 75.00 & 75.00 & \textbf{2.7698} & 2.7958 & 2.7889 \\
-OLMo & $16$K & \textbf{61.88} & 8.13 & 7.50 & \textbf{5.6616} & 8.3218 & 7.9126 \\
-Qwen & $128$K & 72.50 & 73.13 & \textbf{76.25} & \textbf{2.3272} & 2.3293 & 2.3278 \\
-GLM & $128$K & \textbf{58.75} & 41.88 & 35.00 & \textbf{27.3001} & 29.9507 & 30.0744 \\
+Llama & $32$K & \textbf{80.42} & 69.56 & 70.97 & \textbf{4.1106} & 4.1618 & 4.1495 \\
+OLMo & $16$K & \textbf{65.55} & 5.36 & 6.27 & \textbf{8.5362} & 12.8270 & 12.1410 \\
+Qwen & $128$K & \textbf{79.69} & 76.88 & 76.56 & \textbf{2.3272} & 2.3293 & 2.3278 \\
+GLM & $128$K & \textbf{52.81} & 38.44 & 35.00 & \textbf{27.3001} & 29.9507 & 30.0744 \\
 \bottomrule
 \end{tabular}
 \end{table}

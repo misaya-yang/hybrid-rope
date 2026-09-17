@@ -7469,87 +7469,42 @@
       "category": "code"
     },
     {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/decision.json",
+      "path": "experiments/native_tailspline_s2_midgain_20260917/report_glm_qa.py",
       "area": "experiments",
-      "category": "data-or-receipt"
+      "category": "code"
     },
     {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_contract.json",
+      "path": "experiments/native_tailspline_s2_midgain_20260917/report_llama.py",
       "area": "experiments",
-      "category": "data-or-receipt"
+      "category": "code"
     },
     {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_live.json",
+      "path": "experiments/native_tailspline_s2_midgain_20260917/report_paired_qa.py",
       "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_scores_candidate.jsonl",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_status.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/nts2_table.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_contract.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_generations.jsonl",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_runtime_batching.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_status.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_summary.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_contract.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_generations.jsonl",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_runtime_batching.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_status.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
-    },
-    {
-      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_summary.json",
-      "area": "experiments",
-      "category": "data-or-receipt"
+      "category": "code"
     },
     {
       "path": "experiments/native_tailspline_s2_midgain_20260917/run_server.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/run_server_glm_qa.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/run_server_llama.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/run_server_model_qa.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/run_server_qa_queue.sh",
       "area": "experiments",
       "category": "code"
     },
@@ -10834,6 +10789,11 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/native_control_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/profile_diagnostic_inputs.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
@@ -10860,6 +10820,11 @@
     },
     {
       "path": "paper-2027/figs/routing_protocol_receipts.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/runtime_source_snapshot.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
     },
@@ -10910,6 +10875,16 @@
     },
     {
       "path": "paper-2027/history/v1.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/history/v2.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/history/v3.pdf",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -11040,6 +11015,11 @@
     },
     {
       "path": "paper-2027/research/PAPER_INTERVAL_REORIENTATION_20260913.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/PAPER_REVISION_DIARY.md",
       "area": "paper-2027",
       "category": "document"
     },
@@ -12724,6 +12704,101 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/revision_20260917_evidence_update/MODULE_REPAIRS_20260917.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/MODULE_REVIEW_20260917.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/NARRATIVE_REVIEW.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/NATIVE_FOLLOWUP.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/nts2_interim_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/nts2_research_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/reviews/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/reviews/prompt.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/reviews/prompt_F.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/reviews/review_summary.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/sources.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_evidence_update/validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_final_editorial/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_final_editorial/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_final_editorial/reviews/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_final_editorial/reviews/prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_final_editorial/source_validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260917_final_editorial/technical_checks.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/theory_revision_proposal_20260915/MANUSCRIPT_DELTA.md",
       "area": "paper-2027",
       "category": "document"
@@ -13014,6 +13089,21 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_full13_intervals.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_full13_tasks_lo.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_full13_tasks_qg.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_glm_full13.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -13049,7 +13139,22 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/tables/table_native_qa_tasks.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_natural_three_tasks.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/tables/table_natural_transfer_main.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_ncp_context.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },

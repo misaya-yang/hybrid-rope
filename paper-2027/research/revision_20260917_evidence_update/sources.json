@@ -1,0 +1,95 @@
+{
+  "baseline": "history/v2.pdf",
+  "baseline_sha256": "f5534a4091ae298dc6a659e3de2f91d4fd498bf57963c27b739d0c19555e40fb",
+  "baseline_source_zip_temporary": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-revision-20260917-_3deydau/baseline-source.zip",
+  "starting_head": "8823cd52e3e20c070cd93f57c887978adef4c377",
+  "status": "revision_completed",
+  "scope": "September 17 completed evidence; no GPU execution",
+  "reports": {
+    "llama_direct": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_yarn_niah200_ppl46.json",
+      "sha256": "a3b2215ca69dc02070590d5c18cfd177133e7baf23ca64b9d1594657f075a028"
+    },
+    "olmo_direct": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_yarn_niah200_ppl46.json",
+      "sha256": "0ded9e9fbf5d520112cc0367b34951cf460f88683ad5b1814826c915c1932b56"
+    },
+    "llama_full13": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_32k_full13x10_triarm.json",
+      "sha256": "b223a458fb6efc14c9d3dd01b06439d25236cd76e6754d355751688685f6548c"
+    },
+    "olmo_full13": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_16k_full13x10_triarm.json",
+      "sha256": "ca33aec018e7f0a7ecf34650be6deb093d06192c6e108f2a9b3aad7a5ff72bf0"
+    },
+    "qwen_full13": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_qwen_s4_128k_full13x10_triarm.json",
+      "sha256": "df30a6e1407058fdb7497d7f3277a0ac48e42ef60fac772a1d491e6e0354df3e"
+    },
+    "glm_full13": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_full13x10_triarm.json",
+      "sha256": "657869cde2ef335dcc50e4eb7b6723ce8f74e6fd4fce7b4d83893cc73e769416"
+    },
+    "llama_qa": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_llama_s4_naturalqa631_triarm.json",
+      "sha256": "98a068525a2d33068e4252138132c4100cee13cc2345b49d5504f09e57e7a18e"
+    },
+    "olmo_qa": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/rtx4080_olmo_s4_naturalqa631_triarm.json",
+      "sha256": "694ad6198f8b5fa5fd744d75ed6e153ec3572f5beb7a42eb8db283823727cb28"
+    },
+    "glm_qa_second": {
+      "path": "experiments/iclr2027_strong_evidence_20260915/reports/pro6000_glm_s4_128k_naturalqa_second_books_triarm.json",
+      "sha256": "4e8abbe666ac6255781a4f5eac563b4939b63913a428153477dad3a8dd0bfc7b"
+    },
+    "llama70_full13": {
+      "path": "experiments/llama70b_scale_20260916/reports/ruler13x10.json",
+      "sha256": "d89265d66bcf43414593e6a83e28c2d39fa346150660412790c51c4f03b9f60e"
+    },
+    "llama70_qa": {
+      "path": "experiments/llama70b_scale_20260916/reports/naturalqa631.json",
+      "sha256": "95f75ccf5481626c2064d8f9fb4535ecc852b16c8924920b7cf1a08fac0bb16d"
+    },
+    "llama70_ppl32": {
+      "path": "experiments/llama70b_scale_20260916/reports/ppl5_32k.json",
+      "sha256": "67f8fb114c318db69a991da6678a0d0c21bf915090d2181c53ecde826a57234c"
+    },
+    "llama70_ppl128": {
+      "path": "experiments/llama70b_scale_20260916/reports/ppl10_128k.json",
+      "sha256": "f5e665745bb25451c7d304d9dbddb09feee2f4435023761567b9bb6153abdd72"
+    },
+    "ncp_confirmation": {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/native_quick_gate_x10_and_qa.json",
+      "sha256": "eb93765b827914178e31994b7f063a8aababc6cb692e984045c5d2c56e4d0c3e"
+    },
+    "ncp_lm": {
+      "path": "experiments/native_enhancement_oral_20260915/reports/server_20260917/native_lm128_parallel.json",
+      "sha256": "a176087addee4fdbdca8a16387e6e8eaeec3a9d316f76ed11f3169f0e4d8985c"
+    },
+    "ncp_confirm_arms": {
+      "path": "experiments/ca_ncp_native_20260917/reports/server_20260917/paired_report.json",
+      "sha256": "5eb443875306a0cba1b1b1536d7714f183045e29a1195082ce9ece67f842eca6"
+    }
+  },
+  "native_readonly_source": "paired baseline rows read from port 37849; no remote writes",
+  "research_only_reports": {
+    "nts2": {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/decision.json",
+      "sha256": "6394d3162ae087477e465e16635f475080ee624f22a99c8ca91f3ce7a9a82cd6"
+    },
+    "nts2_table": {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/nts2_table.json",
+      "sha256": "b934816b31572d8f1ac4ff5b3bb3b15d5050a8a213a619833b38740590d55281"
+    },
+    "nts2_llama": {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917_llama/decision.json",
+      "sha256": "353b4c8f8275ec82b0393ad39a328fab3078d5bb70aaaa0d46a7a6cb47dd808e"
+    },
+    "nts2_llama_table": {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917_llama/nts2_table.json",
+      "sha256": "384eb7786f54dd23bc94ece1a2b2d9634f896baa2ded9755446c7d68dbe56e0f"
+    }
+  },
+  "delivered_pdf_sha256": "d464810292e6615203ae2ffd3ac66704b66fa796713356f2f6a8c50bf24be409",
+  "validation": "validation.json"
+}

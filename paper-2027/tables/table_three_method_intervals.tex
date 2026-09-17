@@ -1,19 +1,19 @@
 \begin{table}[ht]
 \centering\small
-\caption{Paired contrasts for Table~\ref{tab:three-method-main}. NIAH intervals resample within task; NLL intervals resample the five documents. All intervals are marginal $95\%$ intervals.}
+\caption{Paired marginal $95\%$ contrasts. NIAH uses $200$/task; Qwen/GLM task uncertainty is reported for their primary Full-13 endpoint in Table~\ref{tab:full13-intervals}. NLL intervals resample matched documents ($46$ for Llama/OLMo, $5$ for Qwen/GLM) and concern the mean document NLL difference.}
 \label{tab:three-method-intervals}
 \begin{tabular}{@{}llrlrl@{}}
 \toprule
 Model & Contrast & NIAH (pp) & Interval & $\Delta$NLL & Interval \\
 \midrule
-Llama & T--P & +10.00 & [-0.62, 20.62] & -0.00936 & [-0.01089, -0.00760] \\
-Llama & T--Y & +10.00 & [-0.62, 20.00] & -0.00689 & [-0.00850, -0.00528] \\
-OLMo & T--P & +53.75 & [41.25, 66.25] & -0.38518 & [-0.44708, -0.34971] \\
-OLMo & T--Y & +54.38 & [43.12, 66.25] & -0.33476 & [-0.38266, -0.30367] \\
-Qwen & T--P & -0.62 & [-9.38, 7.50] & -0.00093 & [-0.00198, 0.00044] \\
-Qwen & T--Y & -3.75 & [-13.12, 6.25] & -0.00026 & [-0.00111, 0.00110] \\
-GLM & T--P & +16.88 & [8.75, 25.62] & -0.09266 & [-0.13809, -0.02102] \\
-GLM & T--Y & +23.75 & [16.25, 32.50] & -0.09678 & [-0.14876, -0.02092] \\
+Llama & T--P & +10.86 & [9.06, 12.62] & -0.01238 & [-0.01408, -0.01078] \\
+Llama & T--Y & +9.45 & [7.78, 11.11] & -0.00941 & [-0.01088, -0.00803] \\
+OLMo & T--P & +60.19 & [58.28, 62.08] & -0.40724 & [-0.43628, -0.38052] \\
+OLMo & T--Y & +59.28 & [57.36, 61.16] & -0.35227 & [-0.38037, -0.32606] \\
+Qwen & T--P & -- & -- & -0.00093 & [-0.00198, 0.00044] \\
+Qwen & T--Y & -- & -- & -0.00026 & [-0.00111, 0.00110] \\
+GLM & T--P & -- & -- & -0.09266 & [-0.13809, -0.02102] \\
+GLM & T--Y & -- & -- & -0.09678 & [-0.14876, -0.02092] \\
 \bottomrule
 \end{tabular}
 \end{table}

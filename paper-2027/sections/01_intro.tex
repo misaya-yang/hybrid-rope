@@ -14,12 +14,11 @@ interventions show that it can improve quality even at fixed endpoints and
 equal total log-frequency displacement. Its value depends on the chosen range
 and the model's learned use of frequencies.
 
-We use this freedom in complementary settings. TailSpline solves a discrete
-gap-smoothing problem connecting the transition to the fully interpolated
-low-frequency tail, yielding a closed-form rule for frozen extension. Native
-Contrastive Proximal allocation (NCP) improves native-window tasks at unchanged
-endpoints. Cosh supplies an analytic frequency transport studied through
-training and adaptation.
+Frozen extension must work with the model's learned frequency use. We therefore
+construct TailSpline around the native table by solving a discrete gap-smoothing
+problem that connects the transition to the interpolated low-frequency tail.
+Fixed-support native interventions examine in-window quality; Cosh transport
+tests allocation when weights can adapt.
 
 Our contributions are:
 \begin{itemize}
@@ -30,6 +29,7 @@ changing the range can reverse the preferred allocation.
 Complete sine--cosine pairs characterize positional overlap; reassigning the
 same spectrum across learned coordinates changes task performance.
 \item \textbf{Explicit allocations improve practical quality.}
-Public-parameter constructions improve extension and native-window tasks,
-with cross-model and natural-QA gains and complementary Cosh training evidence.
+TailSpline improves long-context quality across model families and scales.
+Native-window language modeling and Cosh training show that allocation is
+useful both within the original range and when weights adapt.
 \end{itemize}

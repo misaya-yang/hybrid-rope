@@ -1,0 +1,57 @@
+{
+  "changed_manuscript_files": [
+    "main.tex",
+    "sections/04_experiments.tex",
+    "sections/04_construction.tex",
+    "sections/01_intro.tex",
+    "sections/02_related.tex",
+    "appendix/compact_guide.tex",
+    "appendix/compact_d_frozen.tex",
+    "appendix/compact_e_native.tex"
+  ],
+  "result_numbers_unchanged_in_edited_modules": true,
+  "display_math_and_theorems_unchanged": true,
+  "bundled_tables_and_figures_unchanged": true,
+  "abstract_no_digits": true,
+  "render_pages": [
+    1,
+    5,
+    7,
+    9,
+    10,
+    14,
+    23,
+    24,
+    25,
+    27,
+    28,
+    31,
+    32
+  ],
+  "main_pages": 9,
+  "total_pages": 34,
+  "visual_inspection_passed": true,
+  "first_page_has_figure": false,
+  "undefined_references_or_citations": 0,
+  "overfull_hbox_pt": 0,
+  "all_fonts_embedded": true,
+  "type3_fonts": 0,
+  "tables_and_figure_files_verified_unchanged": 24,
+  "baseline_sha256": "d464810292e6615203ae2ffd3ac66704b66fa796713356f2f6a8c50bf24be409",
+  "final_sha256": "3b5ab4e4f601134060965db9f4e40d2adcadae51f0e201d940046a0459ff3f3a",
+  "repository_docs_check": {
+    "errors": [],
+    "local_links_checked": 1863
+  },
+  "skills_validated": [
+    "research-paper-editing",
+    "research-paper-regression-review"
+  ],
+  "new_experiments": false,
+  "final_pdf_regression": {
+    "astra": "PASS",
+    "sol": "PASS",
+    "baseline": "history/v3.pdf",
+    "candidate_sha256": "3b5ab4e4f601134060965db9f4e40d2adcadae51f0e201d940046a0459ff3f3a"
+  }
+}

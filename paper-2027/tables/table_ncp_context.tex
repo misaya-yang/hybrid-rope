@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering\small
+\caption{Same-target NLL (nat/token), document-equal across $103$ documents and $128$ windows. Context benefit is recent-history minus full-history NLL; positive benefit differences favor NCP.}
+\label{tab:ncp-context}
+\begin{tabular}{@{}lrrrl@{}}
+\toprule
+Context & Native & NCP & NCP--Native & $95\%$ interval \\
+\midrule
+Recent history & 3.009922 & 3.005077 & -0.004845 & [-0.005670, -0.004007] \\
+Full history & 2.915269 & 2.902483 & -0.012786 & [-0.015168, -0.010440] \\
+Context benefit & 0.094653 & 0.102594 & +0.007941 & [0.005529, 0.010346] \\
+\bottomrule
+\end{tabular}
+\end{table}

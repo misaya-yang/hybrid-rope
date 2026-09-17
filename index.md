@@ -2,9 +2,9 @@
 
 当前论文：**Beyond the Base: Frequency Allocation in RoPE**。
 研究主线是z：实际频率范围与旋转预算给定后，内部配置怎样改变位置行为和模型质量。
-受控干预、完整旋转对结构、显式构造与模型任务证据组成论证。TailSpline承担零训练扩展，
-NCP承担原生窗口增强，Cosh承担训练、适配与外推证据。
-当前进入[已完成证据的论文增量与新旧稿对读](paper-2027/research/revision_20260916_evidence_update/README.md)。
+受控干预、完整旋转对结构、显式构造与模型任务证据组成论证。TailSpline承担冻结扩展，
+NCP保留原生固定支持实验；Cosh承担训练、适配与外推证据。
+当前进入[已完成证据的论文增量与新旧稿对读](paper-2027/research/revision_20260917_evidence_update/README.md)。
 后续在跑实验完成后再增量加入；结果和执行状态由各自owner维护。
 
 | 当前任务 | 入口 |

@@ -6,6 +6,8 @@ import hashlib
 import ast
 import re
 import zipfile
+import json
+import subprocess
 from pathlib import Path
 
 PAPER = Path(__file__).resolve().parent
@@ -15,9 +17,25 @@ OUTPUT = PAPER / "exponent-allocation-source.zip"
 def runtime_sources() -> dict[str, bytes]:
     """Bundle existing frozen-evaluation entrypoints and their local imports."""
     repo = PAPER / 'runtime' if (PAPER / 'runtime/experiments').is_dir() else PAPER.parent
+    bundled = repo == PAPER / 'runtime'
+    snapshot = json.loads((PAPER / 'figs/runtime_source_snapshot.json').read_text())
+
+    def content_at_snapshot(path: Path) -> bytes:
+        if bundled:
+            return path.read_bytes()
+        return subprocess.check_output([
+            'git', '-C', str(repo), 'show',
+            snapshot['revision'] + ':' + path.relative_to(repo).as_posix(),
+        ])
     roots = [
         "experiments/iclr2027_strong_evidence_20260915/matched_three_method_quick_report.py",
         "experiments/iclr2027_strong_evidence_20260915/official_yarn_naturalqa.py",
+        "experiments/iclr2027_strong_evidence_20260915/four_model_yarn_full13.py",
+        "experiments/native_enhancement_oral_20260915/lm_context.py",
+        "experiments/native_enhancement_oral_20260915/prepare_native_lm.py",
+        "experiments/native_enhancement_oral_20260915/run_native_lm.py",
+        "experiments/native_enhancement_oral_20260915/report_native_lm.py",
+        "experiments/native_enhancement_oral_20260915/report_confirmation.py",
         "experiments/iclr2027_strong_evidence_20260915/run_natural_long.py",
         "experiments/iclr2027_strong_evidence_20260915/prepare_natural_long.py",
         "experiments/native_contrastive_proximal_20260915/tables.py",
@@ -56,7 +74,7 @@ def runtime_sources() -> dict[str, bytes]:
             init = repo.joinpath(*parent[:count], '__init__.py')
             if init.is_file() and init not in files:
                 pending.append(init)
-        for node in ast.walk(ast.parse(path.read_text())):
+        for node in ast.walk(ast.parse(content_at_snapshot(path).decode())):
             if isinstance(node, ast.Import):
                 for item in node.names:
                     enqueue(item.name.split('.'))
@@ -67,7 +85,7 @@ def runtime_sources() -> dict[str, bytes]:
                 for item in node.names:
                     if item.name != '*':
                         enqueue(parts + [item.name])
-    return {'runtime/' + p.relative_to(repo).as_posix(): p.read_bytes() for p in sorted(files)}
+    return {'runtime/' + p.relative_to(repo).as_posix(): content_at_snapshot(p) for p in sorted(files)}
 
 
 def source_files() -> set[Path]:
@@ -96,6 +114,7 @@ def source_files() -> set[Path]:
                  "runtime/README.md", "figs/fig_method_overview.svg",
                  "figs/revision_evidence_inputs.json", "figs/make_revision_evidence.py",
                  "figs/revision_evidence_verification.json",
+                 "figs/native_control_verification.json", "figs/runtime_source_snapshot.json",
                  "figs/field_gap_inputs.json", "figs/verify_field_gap.py",
                  "figs/allocation_design.py", "figs/make_allocation_value.py", "figs/allocation_value_inputs.json",
                  "figs/make_fig_exact_range_control.py",

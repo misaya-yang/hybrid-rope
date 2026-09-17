@@ -1,9 +1,7 @@
 \section{Explicit Frequency Allocations}
 \label{sec:allocation-methods}
-Allocation changes how a fixed number of rotary pairs covers the frequency
-range. Our main frozen construction, TailSpline, designs this change around
-the model's native table. Cosh supplies a complementary transport for paired
-training; Section~\ref{sec:ncp-main} develops a native-window allocation.
+We construct allocations for frozen extension and for learning: TailSpline
+uses the native table as its reference, while Cosh supplies an analytic frequency transport.
 \begin{figure}[ht]
 \centering\includegraphics[width=.60\linewidth]{fig_construction_contrast.pdf}
 \caption{\textbf{TailSpline connects the transition to the extended tail.}
@@ -14,7 +12,7 @@ gap of the fully interpolated tail.}
 \end{figure}
 \input{sections/04_mature}
 
-\subsection{Cosh as a supporting extrapolation transport}
+\subsection{Cosh frequency transport}
 \label{sec:construction}
 Cosh changes $z$ through a monotone map of normalized exponents. Motivated by
 finite-window overlap among slow pairs, it balances log-frequency density

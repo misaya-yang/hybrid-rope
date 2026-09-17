@@ -5,7 +5,7 @@ We first isolate the effect of interior placement by fixing the frequency endpoi
 
 \begin{figure}[ht]
 \centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
-\caption{\textbf{Fixed-support allocation and learned compatibility.} (a) Fixed endpoints leave internal spacing free ($K=8$ illustration). (b) Three paired training seeds favor Cosh at extended lengths with retained support; native NLL increases. (c) Two-seed mean tail NLL for the $151.9$M weights-by-derived-table crossing at $1$K. Rows freeze trained weights; columns install runtime tables. The matched diagonals outperform the crossed installations.}
+\caption{\textbf{Fixed-support allocation and learned compatibility.} (a) Fixed endpoints leave internal spacing free ($K=8$ illustration). (b) Three paired training seeds favor Cosh at extended lengths with retained support. (c) Two-seed mean tail NLL for the $151.9$M weights-by-derived-table crossing at $1$K. Rows freeze trained weights; columns install runtime tables. The matched diagonals outperform the crossed installations.}
 \label{fig:method-overview}
 \end{figure}
 
@@ -24,10 +24,10 @@ Appendix~\ref{sec:exact-range-factorial}.
 \subsection{The effect remains in frozen models}
 \label{sec:exp-frozen-support}
 
-On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we fix the checkpoint, sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The range extends from the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents score $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$. Qwen's four-task development comparison gives $57.75/64.00/66.50\%$ (Appendix~\ref{sec:frozen-fixed-support}). Both reallocations yield large OLMo gains while retaining the same sampled range.
+On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we fix the checkpoint, sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The range extends from the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents score $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$. Qwen's four-task comparison gives $57.75/64.00/66.50\%$ (Appendix~\ref{sec:frozen-fixed-support}). Both reallocations yield large OLMo gains while retaining the same sampled range.
 
 \paragraph{Internal shape beyond total displacement.}\label{sec:equal-displacement}
-Fixed endpoints do not fix the sum of native-relative shifts $\sum_k d_k$. A separate frozen OLMo comparison holds that sum, endpoints, band and gain fixed: the symmetric profile BM and uniform transition MrRoPE-Uni score $51.32$ and $32.12\%$ in a six-task, $48$-input $16$K follow-up comparison. Total displacement therefore does not explain this score difference (Appendix~\ref{sec:four-method-control}). The clean TailSpline--C comparison confirms a shape effect at matched displacement on Llama (Section~\ref{sec:clean-shape-main}).
+A frozen OLMo comparison also matches total displacement $\sum_k d_k$, alongside endpoints, band and gain: the symmetric profile BM and uniform transition MrRoPE-Uni score $51.32$ and $32.12\%$ in a six-task, $48$-input $16$K follow-up comparison. Total displacement therefore does not explain this score difference (Appendix~\ref{sec:four-method-control}). The clean TailSpline--C comparison confirms a shape effect at matched displacement on Llama (Section~\ref{sec:clean-shape-main}).
 
 \paragraph{A learned model uses more than a frequency range.}
 Crossing the runtime tables of the paired $151.9$M models tests whether weights

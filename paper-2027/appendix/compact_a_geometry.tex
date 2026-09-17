@@ -95,10 +95,8 @@ The squared chordal distance between the two nearby planes is therefore
 =\frac{19}{12600}(x^2-y^2)^2+O(\epsilon^6),
 \label{eq:slow-collapse-expanded}
 \end{equation}
-with $\epsilon=\max\{|x|,|y|\}\to0$.  The exact coefficient is reproduced
-with rational polynomial inner products by
-\texttt{scripts/analysis/full\_rope\_collision\_audit.py}; at
-$x{=}0.05,y{=}0.10$ its analytic Gram gives exact/leading ratio $1.00058$.
+with $\epsilon=\max\{|x|,|y|\}\to0$. At $x=0.05,y=0.10$, the analytic
+Gram gives exact/leading ratio $1.00058$.
 
 For the softmax metric with fixed $p$,
 $F=\operatorname{diag}(p)-pp^\top$ satisfies $F\mathbf1=0$, so the constant
@@ -185,12 +183,8 @@ The close pairs in $A$ retain high overlap as the interval grows, while the
 more evenly spread frequencies in $B$ become easier to distinguish. The
 example makes the interval dependence of the geometry explicit.
 
-All frequency entries and measures are specified above. The accompanying
-\path{figs/verify_explicit_geometry.py} evaluates the closed-form Gram and
-checks it against independent $128$-point Gauss--Legendre quadrature;
-the largest discrepancy in the displayed metrics is below $4\times10^{-14}$.
-These finite basis examples complement the trained allocation comparisons and
-the weight--table crossings.
+Closed-form Gram evaluations agree with independent numerical quadrature.
+These examples make the roles of complete pairs and evaluation length explicit.
 
 \FloatBarrier
 \subsection{Integer-position kernel equivalence and its boundaries}

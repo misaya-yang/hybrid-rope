@@ -1,19 +1,18 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Natural-task evaluation.} Scores are percentages: five-task macro
-F1 for Natural-QA, accuracy for LongBench v2, and official English-QA F1 for
-InfiniteBench. Intervals are marginal source-context paired $95\%$ intervals;
-Appendix~\ref{sec:infinite-qa-new} also reports simultaneous T--P/T--YaRN intervals.}
+\caption{\textbf{Natural-task evaluation.} Scores (\%): five-task macro F1 for Natural-QA, accuracy for LongBench v2 and official F1 for InfiniteBench book QA. I/II are separate book pools. Paired $95\%$ T--P intervals use source contexts (pp); T--Y and simultaneous intervals are in Appendix~\ref{sec:infinite-qa-new}.}
 \label{tab:natural-transfer-main}
 \begin{tabular}{@{}llrrrrl@{}}
 \toprule
-Model & Benchmark & $N$ & T & P & T--P (pp) & $95\%$ interval \\
+Model & Benchmark & $N$ & T & P & Y & T--P interval \\
 \midrule
-Llama & Natural-QA & 631 & 41.08 & 40.88 & +0.20 & [$-1.53$, 1.89] \\
-OLMo & Natural-QA & 631 & 24.92 & 21.62 & +3.30 & [0.34, 6.40] \\
-Llama & LongBench v2 & 117 & 35.04 & 30.77 & +4.27 & [$-3.39$, 11.97] \\
-Qwen & InfiniteBench & 35 & 19.14 & 15.90 & +3.24 & [0.26, 7.51] \\
-GLM & InfiniteBench & 35 & 28.61 & 25.28 & +3.33 & [$-3.28$, 8.98] \\
+Llama-8B & Natural-QA & 631 & 41.08 & 40.88 & \textbf{41.75} & [-1.48, 1.86] \\
+OLMo & Natural-QA & 631 & \textbf{24.92} & 21.62 & 22.27 & [0.39, 6.37] \\
+Llama-70B NF4 & Natural-QA & 631 & \textbf{49.28} & 48.39 & -- & [-0.60, 2.44] \\
+Llama-8B & LongBench v2 & 117 & \textbf{35.04} & 30.77 & -- & [$-3.39$, 11.97] \\
+Qwen & Book QA (I) & 35 & \textbf{19.14} & 15.90 & 18.45 & [0.26, 7.51] \\
+GLM & Book QA (I) & 35 & \textbf{28.61} & 25.28 & 27.32 & [-3.28, 8.98] \\
+GLM & Book QA (II) & 77 & \textbf{26.87} & 22.86 & 23.50 & [-1.73, 9.68] \\
 \bottomrule
 \end{tabular}
 \end{table}

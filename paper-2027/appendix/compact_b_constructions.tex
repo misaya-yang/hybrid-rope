@@ -15,7 +15,7 @@ Adding $\epsilon_1^2$ yields the symmetric objective, with unique solution
 m_q^{\rm BM}=\frac{q(q+1)(3n+2-2q)}{n(n+1)(n+2)}.
 \label{eq:bm-formula}
 \end{equation}
-Both profiles are monotone with $m_0=0,m_n=1$. The portable CPU check independently solves the constrained tridiagonal system and verifies each closed form.
+Both profiles are monotone with $m_0=0,m_n=1$.
 
 \paragraph{What the objective smooths.}
 On the geometric native grid, Eq.~\eqref{eq:increment-log-gap} makes each change between neighboring log gaps equal to $(\epsilon_{q+1}-\epsilon_q)\log s$. The terminal change is $-\epsilon_n\log s$ because the fully interpolated tail has constant displacement. Thus $(\log s)^2$ times Eq.~\eqref{eq:tailspline-objective} is exactly the squared log-gap variation within the transition and at its low-frequency junction. The high-frequency junction is deliberately unpenalized.
@@ -48,8 +48,6 @@ T_q-C_q=(1-w_n)(B_q-U_q)=\frac{q(n-q)(2q-n)}{2n(n+1)(2n+1)}.
 This cumulative-profile difference is antisymmetric under $q\mapsto n-q$, vanishes at both endpoints, and sums to zero. Since $U$ and $F$ have positive increments and $0<w_n<1$, $C$ is monotone with $C_0=0,C_n=1$. Extending both $T$ and $C$ by the same constant outer bands gives identical endpoints and total log displacement at a common scale. Their equal increment centroids follow from Eq.~\eqref{eq:displacement-centroid}, rather than imposing a further constraint. For $n=1,2$, $B=U$ and $T=C$; for wider bands the contrast tests higher-order shape.
 
 The clean T--C results are in Appendix~\ref{sec:clean-shape-new}.
-The finite-sum identities are checked with exact rational arithmetic in the
-bundled allocation constructor.
 
 \subsection{Cosh density and finite installation}
 \label{sec:proofs}\label{sec:table-identities}

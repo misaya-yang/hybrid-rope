@@ -1,7 +1,10 @@
 \section{Positional Structure and Content Use}
 \label{sec:theory}
 
-The controlled gains raise a structural question: what changes when the frequency range stays fixed? We examine the positional directions supplied by complete rotary pairs. Their overlap connects frequency spacing to redundancy within a finite window; the model learns how to combine these directions with content.
+The controlled gains raise a structural question: what changes when the
+frequency range stays fixed? Complete rotary pairs supply positional directions
+whose finite-window overlap connects frequency spacing to redundancy. The
+model learns how to combine these directions with content.
 
 \subsection{Complete rotary pairs and positional overlap}
 \label{sec:subspaces}
@@ -67,11 +70,10 @@ The complete frozen Llama tables provide a concrete example. At $16/32$K,
 TailSpline has full-pair effective ranks $8.28/10.08$, compared with
 MrPro's $8.74/10.21$ under uniform separations, while improving clean
 RULER by $3.39/11.72$ points (Table~\ref{tab:clean-length-main}).
-The formulas, full precision and alternative separation measures are in
-Appendix~\ref{sec:allocation-rank-quality}.
 These gains establish the value of controlling distance dependence through
 allocation even when normalized positional diversity decreases. The model's
-use of the supplied frequencies determines their practical value.
+use of the supplied frequencies determines their practical value
+(Appendix~\ref{sec:allocation-rank-quality}).
 Concretely, changing a frequency changes the distance response multiplying
 its content coefficients. A useful response improves target evidence relative
 to competing keys: a larger target logit alone does not determine its attention
@@ -85,3 +87,5 @@ maps preserve the full integer-position rotary kernel exactly if and only
 if the frequency multisets agree (Appendix~\ref{sec:discrete-kernel-proof}).
 This criterion complements the coordinate interventions and STRING's
 structural characterization \citep{schenck2025string}.
+These distinctions motivate treating the native table as a design reference
+for changing the distance responses of learned content channels.

@@ -8,8 +8,8 @@ x_k=-\log\omega_k=a+Rz_k,\quad z_k=\frac{x_k-x_0}{x_{K-1}-x_0},\quad z_0=0,\ z_{
 The endpoints $(a,R)$ fix the sampled log-frequency interval, called the support; $K-2$ interior coordinates define allocation. Every geometric table has $z_k=k/(K-1)$ irrespective of base. The full space $\mathcal Z_K=\{0=z_0<\cdots<z_{K-1}=1\}$ includes analytic subfamilies and positive-gap learned parameterizations.
 
 The endpoints determine the covered range; $z$ determines how the rotary pairs
-are placed inside it. Fixing endpoints isolates this placement effect, rather
-than requiring all deployment methods to retain the native range.
+are placed inside it. We fix endpoints in controlled comparisons to isolate the effect of
+interior placement.
 For deployment relative to a native table, write
 \begin{equation}
 \omega'_k=\omega_k^N s^{-m_k},\qquad d_k=\log(\omega_k^N/\omega'_k)=m_k\log s.
@@ -20,10 +20,7 @@ Changing frequencies preserves RoPE's relative-position composition and norm pre
 Geo denotes each protocol's geometric reference and Native a released model's inherited table. Standard and midpoint geometric grids share $z$ but differ by an overall frequency offset. Exact grid and endpoint conventions are in Appendix~\ref{sec:table-identities}.
 
 \paragraph{Separating the effects of allocation.}
-Fixed endpoints isolate internal placement. Holding $D=\sum_kd_k$ fixed
-then compares allocations with equal total log displacement; permuting a fixed
-frequency multiset tests coordinate assignment. At fixed native table and
-target endpoints, $D$ is itself a statistic of $z$. Equal-displacement
-controls therefore resolve finer configuration effects within this design
-space. The complete control definitions are in
-Appendix~\ref{sec:identification-details}.
+At fixed support, total displacement $D=\sum_kd_k$ is a statistic of $z$.
+Matching $D$ resolves finer allocation effects; permuting the same frequency
+multiset tests coordinate assignment. Appendix~\ref{sec:identification-details}
+specifies these controls.

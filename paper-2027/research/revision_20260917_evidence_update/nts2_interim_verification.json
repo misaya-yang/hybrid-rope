@@ -1,0 +1,130 @@
+{
+  "ruler": {
+    "scores": {
+      "native": 0.7352564102564103,
+      "ncp": 0.7678205128205128,
+      "nts2": 0.7614102564102564
+    },
+    "comparisons": {
+      "ncp": {
+        "estimate": 0.03256410256410247,
+        "ci95": [
+          0.008076923076923077,
+          0.05923076923076923
+        ],
+        "simultaneous95": [
+          0.004741987179487182,
+          0.06307692307692307
+        ]
+      },
+      "nts2": {
+        "estimate": 0.026153846153846083,
+        "ci95": [
+          -0.010256410256410255,
+          0.061666666666666654
+        ],
+        "simultaneous95": [
+          -0.01602564102564102,
+          0.0673076923076923
+        ]
+      }
+    }
+  },
+  "qa": {
+    "scores": {
+      "native": 0.39411605806324224,
+      "ncp": 0.3845537988570202,
+      "nts2": 0.47446542089865507
+    },
+    "comparisons": {
+      "ncp": {
+        "estimate": -0.009562259206222057,
+        "ci95": [
+          -0.044409674382574406,
+          0.01566576526942511
+        ],
+        "simultaneous95": [
+          -0.05004208483062138,
+          0.018716828796350504
+        ]
+      },
+      "nts2": {
+        "estimate": 0.08034936283541283,
+        "ci95": [
+          -0.0028486528056484825,
+          0.1815760348716658
+        ],
+        "simultaneous95": [
+          -0.011036109322172446,
+          0.19959474794214302
+        ]
+      }
+    }
+  },
+  "lm": {
+    "means": {
+      "native_full": 2.9152688411543672,
+      "native_recent": 3.009921981871707,
+      "ncp_full": 2.90248328649882,
+      "ncp_recent": 3.0050772767043807,
+      "nts2_full": 2.919841959927846,
+      "nts2_recent": 3.0076208285336357
+    },
+    "comparisons": {
+      "ncp": {
+        "estimate": -0.01278555465554728,
+        "ci95": [
+          -0.0151684495756059,
+          -0.010439633473175244
+        ]
+      },
+      "nts2": {
+        "estimate": 0.004573118773478906,
+        "ci95": [
+          -0.002932230817172134,
+          0.012225774465834047
+        ]
+      }
+    }
+  },
+  "llama_ruler": {
+    "estimate": 0.01807692307692299,
+    "ci95": [
+      -0.016153846153846154,
+      0.05384615384615384
+    ]
+  },
+  "llama_lm": {
+    "estimate": -0.009283247813784756,
+    "ci95": [
+      -0.010141601991578968,
+      -0.008405068236923252
+    ]
+  },
+  "public_table_checks": {
+    "nts2_table": {
+      "max_relative_fp32_error": 1.3530522835480951e-07,
+      "band": [
+        14,
+        32
+      ],
+      "gain": 1.0340767466953285
+    },
+    "nts2_llama_table": {
+      "max_relative_fp32_error": 1.1625300544437778e-07,
+      "band": [
+        18,
+        35
+      ],
+      "gain": 1.0340767466953285
+    }
+  },
+  "ncp_finite_series_convexity": {
+    "modes": 32,
+    "sum_absolute_coefficients": 0.5544017959546518,
+    "scalar_curvature_lower_bound": 0.03239281618139289,
+    "bound": "abs(log-curvature sinc-squared kernel)<=4 by the two analytic ranges stated in Appendix E.1"
+  },
+  "scope": "Paired stored RULER scores and fully rescored native QA; question-weighted task means with source-cluster resampling; document-equal same-target NLL.",
+  "draws": 20000
+}

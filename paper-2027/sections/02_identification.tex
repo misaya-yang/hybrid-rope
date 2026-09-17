@@ -1,11 +1,10 @@
 \subsection{A paired intervention at fixed support}
 \label{sec:exp-identify}
 
-Our small-model Cosh training studies span $50.9$M--$750$M. Within this series,
-a paired $151.9$M experiment fixes both frequency endpoints to isolate
-interior placement, using $K=32$ rotary pairs and training length $256$.
+A paired $151.9$M Cosh training experiment fixes both frequency endpoints
+to isolate interior placement, using $K=32$ rotary pairs and training length $256$.
 
-Within each of three seeds, architecture, initialization, token order, optimizer, schedule, and the $499{,}974{,}144$-token budget are identical. The matched geometric control (Geo) uses $b=L_{\mathrm{train}}$; the EVQ-Cosh intervention anchors its quantiles with $\tau=4$ to the same highest and lowest frequencies and log-span (\S\ref{sec:construction}). Only the $30$ interior $z$ coordinates differ.
+Within each of three seeds, architecture, initialization, token order, optimizer, schedule, and the approximately $500$M-token budget are identical. The matched geometric control (Geo) uses $b=L_{\mathrm{train}}$; the EVQ-Cosh intervention anchors its quantiles with $\tau=4$ to the same highest and lowest frequencies and log-span (\S\ref{sec:construction}). Only the $30$ interior $z$ coordinates differ.
 
 With the training support retained at evaluation, mean Cosh-minus-Geo tail NLL is $+0.026$ at the training length and $-0.281/-0.176/-0.146$ at $512/1024/2048$ tokens. All three paired seeds improve at every extended length (Fig.~\ref{fig:method-overview}b).
 

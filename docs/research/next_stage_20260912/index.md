@@ -1,17 +1,19 @@
 # 当前研究入口
 
 上位对象为RoPE内部配置z：固定实际范围与旋转预算后，内部位置仍可影响原生与扩展窗口质量。
-TailSpline、NCP、Cosh分别承担冻结扩展、原生增强和学习/外推支持，三者不冒充同一个任务最优解。
+TailSpline承担冻结扩展；NCP保留原生固定支持实验，Cosh提供学习/外推支持。
+原生增强优先看真实下游任务（当前Natural-QA），NLL/PPL作为预测质量读数，RULER作为诊断。
 构造只使用各自声明的公开参数；不从模型权重、激活、Q/K/V、梯度或输出中拟合通用规则。
 
 **当前阶段：**[下一版论文准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md)。
-本轮更新概念、证据和导航，等待更多实验后统一改稿；现稿9/29页暂不修改。
+已按作者批准方案完成本轮证据整合，正文9页、全稿34页；新旧PDF对读与交付见
+[9月17日改稿记录](../../../paper-2027/research/revision_20260917_evidence_update/README.md)。
 [Pro采用判断](../reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md)和
 [十篇审稿经验](../reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)是编辑依据，不是自动执行指令。
 
 已入稿的Llama/OLMo、等位移、NCP和学习证据见[论文索引](../../../paper-2027/index.md)。
 新完成的Qwen/GLM S4三臂Full-13、自然QA、Qwen S8单针及Llama S16结果见
-[本批结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)，尚待统一入稿。
+[本批结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md)，本轮已按完成报告入稿。
 [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)汇总Llama/OLMo大样本
 官方静态YaRN及Llama-3-70B NF4尺度迁移，供下一版论文直接取数。
 执行完成状态见[带时间戳执行快照](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
