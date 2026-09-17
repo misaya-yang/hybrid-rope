@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Freeze 3 x 80 independent LongBench Natural-QA rows inside OLMo Native 4K."""
+"""Freeze the complete untruncated LongBench Natural-QA Native-4K census.
+
+Each task is capped at 80 rows, but no minimum is invented: the official source
+contains far fewer complete Native-4K HotpotQA and 2WikiMQA prompts.
+"""
 from __future__ import annotations
 
 import argparse
@@ -105,8 +109,6 @@ def main() -> None:
                     continue
                 eligible.append((source_hash, source_index, item, prompt_ids, budget))
             eligible.sort(key=lambda item: (item[0], item[1]))
-            if len(eligible) < ROWS_PER_TASK:
-                raise ValueError(f"{task} has only {len(eligible)} independent Native-4K rows")
             for source_hash, source_index, item, prompt_ids, budget in eligible[:ROWS_PER_TASK]:
                 references = [str(value) for value in item["answers"]]
                 context_hash = hashlib.sha256(item["context"].encode()).hexdigest()
@@ -130,8 +132,8 @@ def main() -> None:
                     "content_truncation": False,
                 })
     counts = Counter(row["task"] for row in rows)
-    if counts != Counter({task: ROWS_PER_TASK for task in TASKS}):
-        raise AssertionError("Natural-QA task counts drifted")
+    if set(counts) != set(TASKS) or any(count <= 0 or count > ROWS_PER_TASK for count in counts.values()):
+        raise AssertionError("Natural-QA census task counts drifted")
     args.out.mkdir(parents=True)
     inputs = args.out / "inputs.jsonl"
     with inputs.open("w") as stream:
@@ -139,7 +141,7 @@ def main() -> None:
             stream.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
     manifest = {
         "status": "CPU_PREPARED",
-        "contract": "olmo_native4k_longbench_naturalqa_3x80_independent_v1",
+        "contract": "olmo_native4k_longbench_naturalqa_complete_census_cap80_v1",
         "rows": len(rows), "rows_by_task": dict(counts),
         "native_length": NATIVE_LENGTH,
         "minimum_input_tokens": min(row["input_tokens"] for row in rows),
@@ -149,9 +151,12 @@ def main() -> None:
         "official_config_revision": REVISION,
         "official_config_sha256": {name: sha256(args.config_root / name) for name in CONFIG_FILES},
         "excluded_source_rows": len(excluded),
-        "selection": "hash-order among complete untruncated rows fitting prompt plus official output budget in 4096 tokens",
+        "selection": "complete untruncated source census fitting prompt plus official output budget in 4096 tokens, capped at 80/task after hash order",
         "selection_uses_model_outputs": False,
-        "scope": "New Native-window source questions; three-task Natural-QA confirmation, not full LongBench.",
+        "scope": (
+            "New Native-window source questions; complete eligible three-task Natural-QA census, "
+            "not 80 guaranteed rows/task and not full LongBench."
+        ),
         "gpu_execution": False,
     }
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
