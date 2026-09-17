@@ -156,5 +156,6 @@ registry来源路径以Git仓库根为基准。`tracked`或`local-untracked`是�
 | A60 | Llama/OLMo官方静态YaRN大样本直接比较 | [报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md)；只新增YaRN臂并复用既有T/P raw；NIAH、PPL与Full-13均由TailSpline第一，QA中OLMo由TailSpline第一、Llama由YaRN小幅第一；重叠读数不计作独立胜率 |
 | A61 | Llama-3-70B NF4冻结尺度迁移 | [双服务器结果owner](../../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md)；S4/32K Full-13、NIAH、Natural-QA及PPL均胜MrPro；S16/128K只登记完整PPL，任务基线未完成 |
 | A62 | OLMo NCP Native-4K独立确认与机制拆分 | [实验结果owner](../../../experiments/native_enhancement_oral_20260915/index.md)；同目标NLL `−0.012786` nat/token（约`1.27%` PPL降低）、新Full-13×10 `+3.2564pp`；Natural-QA `−0.8549pp`与机制干预按各自合同保留 |
+| A63 | OLMo CA-NCP五臂坐标对齐否证 | [结果owner](../../../experiments/ca_ncp_native_20260917/RESULT.md)；Full-13×10同面板五臂，`N1−N0 −13.13pp`、`P1−P0 −11.35pp`，对应配对稳定区间均完全为负；carrier-only近中性；不迁移原方法到Llama |
 
 - [A55–A58最新直接基线、GLM、长书QA和高倍率整合](../revision_20260916_evidence_update/README.md)：各报告身份与当前稿位置已登记。

@@ -15,6 +15,7 @@
 | Llama-3-70B NF4尺度迁移 | [70B执行与报告入口](llama70b_scale_20260916/README.md)：S4/32K完整结果、S16/128K PPL及未完成NIAH边界 |
 | 原生增强、理论先行与评测提速 | [Native/oral实验与结果](native_enhancement_oral_20260915/index.md)：NCP Native-4K NLL、Full-13、Natural-QA及机制干预结果 |
 | CA-NCP载波对齐原生实验 | [OLMo代码与运行合同](ca_ncp_native_20260917/README.md)：无标签Native Q/K统计、rank-2换基、五臂Full-13×10；[Llama迁移准备](ca_ncp_llama_native_20260917/README.md)：仅在OLMo gate支持后执行，不代表Llama GPU结果 |
+| CA-NCP安全约束诊断 | [三臂后续合同](ca_ncp_safe_followup_20260917/README.md)：算子预算测地线与跨来源坐标共识；复用同一Full-13×10，属于失败后的开发诊断 |
 | 核实已进入论文的结果 | [论文证据](../paper-2027/research/evidence/index.md) |
 
 [完整实验目录](CATALOG_20260913.md)用于复用旧代码或追溯历史结果；其中队列和服务器状态不定义当前优先级。

@@ -4579,6 +4579,11 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/ca_ncp_native_20260917/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
       "path": "experiments/ca_ncp_native_20260917/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -4634,6 +4639,11 @@
       "category": "code"
     },
     {
+      "path": "experiments/ca_ncp_native_20260917/reports/server_20260917/paired_report.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/ca_ncp_native_20260917/reuse_baselines.py",
       "area": "experiments",
       "category": "code"
@@ -4645,6 +4655,31 @@
     },
     {
       "path": "experiments/ca_ncp_native_20260917/runtime.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/build_alignments.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/ca_ncp_safe_followup_20260917/run.py",
       "area": "experiments",
       "category": "code"
     },
@@ -15190,6 +15225,11 @@
     },
     {
       "path": "tests/test_ca_ncp_runtime.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_ca_ncp_safe_followup.py",
       "area": "tests",
       "category": "code"
     },

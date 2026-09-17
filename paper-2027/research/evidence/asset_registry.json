@@ -1783,6 +1783,22 @@
           "sha256": "2d4b8d927f568631ba59383a75ca7ea3a94e2c0fac262e2840743c79df7b8ad5"
         }
       ]
+    },
+    {
+      "id": "A63",
+      "name": "OLMo CA-NCP five-arm coordinate-alignment falsification",
+      "priority": "P1",
+      "question": "Does a frozen carrier-aligned rank-2 Q/K coordinate reassignment improve OLMo inside its Native 4K window beyond Native, NCP, and carrier-only controls",
+      "evidence_grade": "Frozen OLMo-2-0425-1B-Instruct; exact same output-blind Full-13 x 10 panel across N0/C0/P0/N1/P1; token-exact identity parity; all five raw files contain 130 paired rows and are identified by SHA256 in the formal report",
+      "manuscript_location": "negative evidence owner; current manuscript unchanged",
+      "interpretation": "Full-strength alignment is decisively harmful: N1-N0 is -13.13pp and P1-P0 is -11.35pp, with both paired stability intervals wholly negative. P0-C0 is -0.77pp with interval crossing zero. The carrier change neither helps reliably nor repairs alignment, so the original CA-NCP method is not transferred to Llama.",
+      "sources": [
+        {
+          "path": "experiments/ca_ncp_native_20260917/reports/server_20260917/paired_report.json",
+          "availability": "tracked",
+          "sha256": "5eb443875306a0cba1b1b1536d7714f183045e29a1195082ce9ece67f842eca6"
+        }
+      ]
     }
   ]
 }

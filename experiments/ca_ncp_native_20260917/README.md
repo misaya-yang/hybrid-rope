@@ -1,8 +1,8 @@
 # CA-NCP Native experiment
 
-Status: implementation and CPU validation package. No CA-NCP checkpoint statistic
-or task-quality result is claimed until real Native Q/K capture and five-arm
-generation complete.
+Status: OLMo five-arm execution complete. Full-strength CA-NCP is decisively
+negative; see the [formal result](RESULT.md). The implementation and frozen
+execution contract below remain the provenance for that result.
 
 ## Frozen question
 
