@@ -1,5 +1,9 @@
 # Native follow-up execution owner
 
+The A/B/C evaluation is complete. See the [result owner](RESULT.md) and its
+local raw/summary mirror. Only B (Native mass projection) survives as a near-tie
+with NCP; A is closed and C does not improve NCP.
+
 The current CA safety round remains authoritative and must finish without
 interruption. This directory prepares the next zero-training attention-operator
 experiments from the Pro five-scheme package. It does not treat all five schemes

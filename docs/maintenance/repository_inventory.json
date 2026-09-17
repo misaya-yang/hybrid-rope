@@ -6759,6 +6759,11 @@
       "category": "navigation"
     },
     {
+      "path": "experiments/native_followup_five_20260917/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
       "path": "experiments/native_followup_five_20260917/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -6782,6 +6787,366 @@
       "path": "experiments/native_followup_five_20260917/rank_assignment.py",
       "area": "experiments",
       "category": "code"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/even_only/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_projection/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/mass_raw/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/odd_only/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/runs/rank_assignment/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_block2/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/lm_rows.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_projection_qa99_ppl46/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/lm_rows.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/mass_raw_qa99_ppl46/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/ncp_block2/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/ncp_block2/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/ncp_block2/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/ncp_block2/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/ncp_block2/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/ncp_block2/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/lm_rows.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/runtime_native_followup.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_followup_five_20260917/reports/server_20260917/validation/rank_assignment_qa99_ppl46/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
     },
     {
       "path": "experiments/native_followup_five_20260917/run.py",

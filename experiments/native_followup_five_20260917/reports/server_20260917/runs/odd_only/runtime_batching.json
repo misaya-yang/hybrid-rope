@@ -1,0 +1,6 @@
+{
+  "batch_size": 1,
+  "left_pad_batches": false,
+  "pad_token_id": 100277,
+  "pad_tokens_attention_masked": false
+}

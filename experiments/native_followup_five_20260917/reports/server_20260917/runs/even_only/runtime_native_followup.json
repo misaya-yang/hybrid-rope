@@ -1,0 +1,11 @@
+{
+  "status": "NATIVE_FOLLOWUP_INSTALLED_V1",
+  "method": "even_only",
+  "method_id": "native_followup_A_even_only_v1",
+  "candidate_table_path": "/root/autodl-tmp/today_rope_plan_20260914/olmo_native_contrastive_proximal/tables/ncp.json",
+  "candidate_table_sha256": "ff0f6190e8a58c4837eac58ca06c10c9c64f6678904bfc91f8fd99c777474e2c",
+  "native_source": "model.model.rotary_emb.inv_freq after base model load",
+  "gain": 1.0,
+  "local_radius": null,
+  "scope": "frozen inference operator; model weights unchanged"
+}
