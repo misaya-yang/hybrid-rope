@@ -1,0 +1,24 @@
+{
+  "allow_paired_parallel": true,
+  "arm": "candidate",
+  "candidate_label": "native_tailspline_s2_midgain_v1",
+  "candidate_table": "/root/autodl-tmp/today_rope_plan_20260914/native_tailspline_s2_midgain_20260917/tables/nts2.json",
+  "conditions": [
+    [
+      "candidate",
+      "full"
+    ],
+    [
+      "candidate",
+      "recent"
+    ]
+  ],
+  "forwards": 256,
+  "manifest": "/root/autodl-tmp/today_rope_plan_20260914/native_research_20260916/assets/lm128/manifest.json",
+  "model": "/root/autodl-tmp/olmo2_1b_longalign_assets/models/OLMo-2-0425-1B-Instruct",
+  "model_loaded": false,
+  "ncp_table": null,
+  "rows": 128,
+  "status": "NATIVE_SAME_TARGET_CONTEXT_NLL_RUN_V1",
+  "tokens": "/root/autodl-tmp/today_rope_plan_20260914/native_research_20260916/assets/lm128/tokens_128x4097.npy"
+}

@@ -50,9 +50,11 @@ def main() -> None:
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--tokens", type=Path, required=True)
-    parser.add_argument("--ncp-table", type=Path, required=True)
+    parser.add_argument("--ncp-table", type=Path)
+    parser.add_argument("--candidate-table", type=Path)
+    parser.add_argument("--candidate-label", default="candidate")
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--arm", choices=("native", "ncp", "both"), default="both")
+    parser.add_argument("--arm", choices=("native", "ncp", "candidate", "both"), default="both")
     parser.add_argument("--allow-paired-parallel", action="store_true")
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
@@ -60,9 +62,16 @@ def main() -> None:
     matrix = np.load(args.tokens, mmap_mode="r", allow_pickle=False)
     if list(matrix.shape) != manifest["array_shape"] or len(matrix) != len(manifest["samples"]):
         raise ValueError("LM token matrix differs from the frozen manifest")
-    selected_conditions = CONDITIONS if args.arm == "both" else tuple(
-        condition for condition in CONDITIONS if condition[0] == args.arm
-    )
+    if args.arm == "candidate":
+        selected_conditions = (("candidate", "full"), ("candidate", "recent"))
+    else:
+        selected_conditions = CONDITIONS if args.arm == "both" else tuple(
+            condition for condition in CONDITIONS if condition[0] == args.arm
+        )
+    if args.arm in ("ncp", "both") and args.ncp_table is None:
+        raise ValueError("--ncp-table is required for the NCP arm")
+    if args.arm == "candidate" and args.candidate_table is None:
+        raise ValueError("--candidate-table is required for the candidate arm")
     if args.allow_paired_parallel and args.arm == "both":
         raise ValueError("paired-parallel mode requires one explicit arm")
     plan = {
@@ -77,7 +86,10 @@ def main() -> None:
     args.out.mkdir(parents=True, exist_ok=True)
     contract = {**plan, "status": "NATIVE_SAME_TARGET_CONTEXT_NLL_RUN_V1",
                 "manifest": str(args.manifest.resolve()), "tokens": str(args.tokens.resolve()),
-                "model": str(args.model.resolve()), "ncp_table": str(args.ncp_table.resolve())}
+                "model": str(args.model.resolve()),
+                "ncp_table": str(args.ncp_table.resolve()) if args.ncp_table else None,
+                "candidate_table": str(args.candidate_table.resolve()) if args.candidate_table else None,
+                "candidate_label": args.candidate_label if args.arm == "candidate" else None}
     contract_path = args.out / "contract.json"
     if contract_path.exists() and json.loads(contract_path.read_text()) != contract:
         raise ValueError("LM output root belongs to another contract")
@@ -104,8 +116,14 @@ def main() -> None:
         if wrapper is not None:
             raise RuntimeError("native LM study requires the unadapted checkpoint")
         native = model.model.rotary_emb.inv_freq.detach().cpu().float().numpy().copy()
-        ncp_payload = json.loads(args.ncp_table.read_text())
-        ncp = ncp_payload.get("table", ncp_payload)
+        ncp = None
+        if args.ncp_table:
+            ncp_payload = json.loads(args.ncp_table.read_text())
+            ncp = ncp_payload.get("table", ncp_payload)
+        candidate = None
+        if args.candidate_table:
+            candidate_payload = json.loads(args.candidate_table.read_text())
+            candidate = candidate_payload.get("table", candidate_payload)
         records_path = args.out / ("scores.jsonl" if args.arm == "both" else f"scores_{args.arm}.jsonl")
         saved = read_jsonl(records_path)
         expected = [(sample, arm, context) for sample in manifest["samples"]
@@ -120,8 +138,13 @@ def main() -> None:
             for sample, arm, context_name in expected[len(saved):]:
                 if arm == "native":
                     install_static(model, native, 1.0)
-                else:
+                elif arm == "ncp":
                     install_static(model, np.asarray(ncp["values_float32"], dtype=np.float32), float(ncp["gain"]))
+                else:
+                    install_static(
+                        model, np.asarray(candidate["values_float32"], dtype=np.float32),
+                        float(candidate["gain"]),
+                    )
                 pair = build_context_pair(
                     matrix[int(sample["source_row"])], native_length=manifest["native_length"],
                     recent_history=manifest["recent_history"], target_tokens=manifest["target_tokens"],

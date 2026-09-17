@@ -88,6 +88,21 @@ def phi3_sliding_visibility(q_len,key_len,window,device=None):
     k=torch.arange(key_len,device=device)[None,:]
     return (k<=q)&(k>q-window)
 
+def phi3_pad_attention_head(query,key,value):
+    """Zero-pad non-power-of-two Phi heads for the FlexAttention Triton kernel."""
+    head_dim=query.shape[-1]
+    if key.shape[-1]!=head_dim or value.shape[-1]!=head_dim:
+        raise RuntimeError('Phi sliding FlexAttention received incompatible Q/K/V')
+    padded_dim=1<<(head_dim-1).bit_length()
+    if padded_dim==head_dim:return query,key,value,head_dim
+    pad=(0,padded_dim-head_dim)
+    return (
+        torch.nn.functional.pad(query,pad),
+        torch.nn.functional.pad(key,pad),
+        torch.nn.functional.pad(value,pad),
+        head_dim,
+    )
+
 def phi3_sliding_flex(module,query,key,value,attention_mask,dropout=0.0,scaling=None,
                       sliding_window=None,**kwargs):
     """Preserve Phi-3's configured local causal operator with sparse FlexAttention."""
@@ -108,11 +123,13 @@ def phi3_sliding_flex(module,query,key,value,attention_mask,dropout=0.0,scaling=
     from experiments.nongeometric_screen.distance_operator import masks
     if _phi3_flex is None:_phi3_flex=torch.compile(flex_attention,dynamic=True)
     q_len,key_len=query.shape[-2],key.shape[-2]
+    query,key,value,output_dim=phi3_pad_attention_head(query,key,value)
     local_mask,_=masks(q_len,key_len,window-1,query.device)
     output=_phi3_flex(
         query,key,value,block_mask=local_mask,scale=scaling,enable_gqa=groups>1,
         kernel_options={'FORCE_USE_FLEX_ATTENTION':q_len>1},
     )
+    output=output[...,:output_dim]
     return output.transpose(1,2).contiguous(),None
 
 def register_phi3_sliding_flex_attention(model):

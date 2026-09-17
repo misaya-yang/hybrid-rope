@@ -7449,6 +7449,111 @@
       "category": "code"
     },
     {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/decision.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_live.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_scores_candidate.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/lm_status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/nts2_table.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/qa_summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_contract.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_runtime_batching.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_status.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/reports/server_20260917/ruler_summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/native_tailspline_s2_midgain_20260917/run_server.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/native_z_enhancement_20260914/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -8244,6 +8349,16 @@
       "category": "code"
     },
     {
+      "path": "experiments/olmo_s16_band_factorial_20260917/run_remaining_arms.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/olmo_s16_band_factorial_20260917/summarize.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/phi3_s32_20260917/README.md",
       "area": "experiments",
       "category": "navigation"
@@ -8259,7 +8374,37 @@
       "category": "code"
     },
     {
+      "path": "experiments/phi3_s32_20260917/reports/server_20260917/decision.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/reports/server_20260917/generations.jsonl",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/reports/server_20260917/summary.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/reports/server_20260917/tailspline_s32.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/reports/server_20260917/tailspline_s32_16384.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "experiments/phi3_s32_20260917/run_gate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/run_single_task_canary.py",
       "area": "experiments",
       "category": "code"
     },
@@ -16105,6 +16250,11 @@
     },
     {
       "path": "tests/test_phi3_s32_gate.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_phi3_sliding_flex.py",
       "area": "tests",
       "category": "code"
     },
