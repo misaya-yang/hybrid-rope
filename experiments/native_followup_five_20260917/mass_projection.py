@@ -249,7 +249,10 @@ def install(model, native_table, candidate_table, method: str):
     candidate_values = _as_numpy_table(candidate_table, "candidate_table")
     if native_values.shape != candidate_values.shape:
         raise ValueError("Native and candidate tables must share one geometry")
-    head_dim = int(getattr(config, "head_dim", 0) or 0)
+    head_dim = int(
+        getattr(config, "head_dim", 0)
+        or getattr(config, "hidden_size", 0) // getattr(config, "num_attention_heads", 1)
+    )
     if head_dim <= 0 or native_values.size * 2 != head_dim:
         raise ValueError("table geometry differs from config.head_dim")
     native_length = int(getattr(config, "max_position_embeddings", 0) or 0)

@@ -106,6 +106,14 @@ def fake_model():
     )
 
 
+def fake_model_without_config_head_dim():
+    model = fake_model()
+    model.config.head_dim = None
+    model.config.hidden_size = 4
+    model.config.num_attention_heads = 1
+    return model
+
+
 def test_olmo_projection_applies_qk_norm_before_head_reshape():
     attention = FakeAttention()
     hidden = torch.arange(8, dtype=torch.float32).reshape(1, 2, 4)
@@ -139,6 +147,12 @@ def test_install_rejects_gain_or_geometry_drift():
         install(fake_model(), good, {**good, "gain": 1.1}, "mass_projection")
     with pytest.raises(ValueError, match="geometry"):
         install(fake_model(), good, {"values_float32": [1.0], "gain": 1.0}, "mass_projection")
+
+
+def test_install_derives_head_dim_when_config_omits_it():
+    table = {"values_float32": [1.0, 0.1], "gain": 1.0}
+    restore = install(fake_model_without_config_head_dim(), table, table, "mass_projection")
+    restore()
 
 
 def test_module_cli_is_plan_only():
