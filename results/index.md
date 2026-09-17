@@ -38,3 +38,4 @@
 - `results/two_core_analysis_20260909`（本机材料，不随Git同步）
 - `results/video_dit`（本机材料，不随Git同步）
 - `results/zero_param_single_table_20260824`（本机材料，不随Git同步）
+- `results/paper_positive_raw_20260917/4080`（本机材料，不随Git同步）— 4080论文正结果最小raw镜像；归档、哈希和清理范围见[服务器资产清理记录](../docs/research/next_stage_20260912/SERVER_4080_STORAGE_CLEANUP_20260917.md)
