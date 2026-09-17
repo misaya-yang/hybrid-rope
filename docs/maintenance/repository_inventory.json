@@ -7879,6 +7879,26 @@
       "category": "code"
     },
     {
+      "path": "experiments/phi3_s32_20260917/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/queue.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/phi3_s32_20260917/run_gate.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/pm_keep/__init__.py",
       "area": "experiments",
       "category": "code"
@@ -15710,6 +15730,16 @@
     },
     {
       "path": "tests/test_permanent_mini_pipeline.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_phi3_runtime_support.py",
+      "area": "tests",
+      "category": "code"
+    },
+    {
+      "path": "tests/test_phi3_s32_gate.py",
       "area": "tests",
       "category": "code"
     },

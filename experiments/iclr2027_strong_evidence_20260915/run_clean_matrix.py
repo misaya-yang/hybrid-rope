@@ -550,7 +550,7 @@ def build_plan(args: argparse.Namespace) -> tuple[dict, list[Path], list[dict]]:
     args.lengths = tuple(args.lengths)
     if (
         args.rows_per_task <= 0 or args.scale <= 1 or not float(args.scale).is_integer()
-        or int(args.scale) not in {2, 4, 16} or args.batch_size not in {1, 2, 4, 8}
+        or int(args.scale) not in {2, 4, 16, 32} or args.batch_size not in {1, 2, 4, 8}
         or args.prefill_chunk_size < 0 or not _SLUG.fullmatch(args.model_id)
     ):
         raise ValueError("rows/scale/prefill are invalid; clean confirmation supports batch-size 1, 2, 4 or 8")

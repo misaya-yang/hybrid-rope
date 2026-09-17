@@ -36,7 +36,10 @@ def table_for_config(config, arm: str) -> dict:
     if arm not in TABLE_ARMS: raise ValueError(arm)
     attention_dim = int(getattr(config, "head_dim", config.hidden_size // config.num_attention_heads))
     parameters = getattr(config, "rope_parameters", {}) or {}
-    partial = float(getattr(config, "partial_rotary_factor", parameters.get("partial_rotary_factor", 1.0)))
+    partial = float(
+        getattr(config, "partial_rotary_factor", None)
+        or parameters.get("partial_rotary_factor", 1.0)
+    )
     dim = int(attention_dim * partial)
     if dim != attention_dim * partial or dim % 2: raise ValueError("invalid partial RoPE dimension")
     base = getattr(config, "rope_theta", None) or getattr(config, "rope_parameters", {}).get("rope_theta")
@@ -63,6 +66,16 @@ def table_for_config(config, arm: str) -> dict:
         reference_length = 32768
         if arm != "Native":
             raise ValueError("GLM partial-RoPE screens require an explicit static table")
+    elif (config.model_type == "phi3" and attention_dim == 96 and dim == 96
+          and config.num_hidden_layers == 32 and config.num_attention_heads == 32
+          and config.num_key_value_heads == 32
+          and config.max_position_embeddings == 4096 and base == 10000):
+        # The 4K checkpoint is the unscaled Phi-3 source model.  The generic
+        # evaluator loads its exact Native table first and installs only an
+        # explicit frozen receipt afterwards; no built-in Phi arm is inferred.
+        reference_length = 4096
+        if arm != "Native":
+            raise ValueError("Phi-3 screens require an explicit static table")
     else:
         raise ValueError("unsupported recovery-v2 model geometry")
     native = native_table(dim, base).astype(np.float32)
