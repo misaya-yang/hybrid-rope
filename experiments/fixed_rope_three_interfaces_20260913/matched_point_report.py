@@ -79,6 +79,10 @@ def main() -> None:
     parser.add_argument("--bootstrap-seed", type=int, default=20260929)
     parser.add_argument("--length", type=int, help="filter every source to this one registered length")
     parser.add_argument(
+        "--task", action="append", default=[],
+        help="retain only these tasks before pairing; repeat as needed",
+    )
+    parser.add_argument(
         "--allow-baseline-superset", action="store_true",
         help="filter baseline-only extra prompts to the candidate prompt set and report the dropped count",
     )
@@ -96,6 +100,16 @@ def main() -> None:
             name: [row for row in rows if int(row["length_cap"]) == args.length]
             for name, rows in arms.items()
         }
+    if args.task:
+        wanted_tasks = set(args.task)
+        if len(wanted_tasks) != len(args.task):
+            raise ValueError("--task values must be unique")
+        arms = {
+            name: [row for row in rows if row["task"] in wanted_tasks]
+            for name, rows in arms.items()
+        }
+        if any(not rows for rows in arms.values()):
+            raise ValueError("task filter removed every row from an arm")
     if args.allow_baseline_superset:
         reference_prompts = {row["prompt_sha256"] for row in arms[args.candidate]}
         arms = {

@@ -1,0 +1,687 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": 0.5221144690417584,
+        "hotpotqa": 0.6026614660585327,
+        "multifieldqa_en": 0.5127169645007914,
+        "narrativeqa": 0.30729666508355036,
+        "qasper": 0.47482899296358894
+      },
+      "macro_f1": 0.4839237115296443
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": 0.5662729691631426,
+        "hotpotqa": 0.6097501382074457,
+        "multifieldqa_en": 0.533870784019041,
+        "narrativeqa": 0.279751195445506,
+        "qasper": 0.4745834049961216
+      },
+      "macro_f1": 0.49284569836625136
+    }
+  },
+  "bootstrap_estimand": "Within each task, resample source_context_sha256 clusters and divide sampled cluster score sums by sampled question counts; then average task means equally. This matches the row-weighted point estimand while preserving document clustering.",
+  "candidate_minus_baseline": {
+    "bootstrap_mean": 0.00905060176030219,
+    "by_task": {
+      "2wikimqa": 0.044158500121384225,
+      "hotpotqa": 0.007088672148913067,
+      "multifieldqa_en": 0.021153819518249573,
+      "narrativeqa": -0.027545469638044384,
+      "qasper": -0.00024558796746732003
+    },
+    "ci95": [
+      -0.005990863034124674,
+      0.024379290195798292
+    ],
+    "comparison_family_size": 1,
+    "draws": 20000,
+    "estimate": 0.008921986836607054,
+    "familywise_ci95_bonferroni": [
+      -0.005990863034124674,
+      0.024379290195798292
+    ],
+    "probability_delta_gt_zero": 0.88145
+  },
+  "contract": "TAILSPLINE_LLAMA_NATURAL_QA_FROZEN631_PAIRED_V2",
+  "document_equal_sensitivity": {
+    "mrpro": 0.4817448103276517,
+    "tailspline": 0.49069579781778633
+  },
+  "llama_length_audit": {
+    "extended_effect": {
+      "baseline_macro_f1": 0.4836347748494883,
+      "candidate_macro_f1": 0.4991843181631774,
+      "candidate_minus_baseline": {
+        "bootstrap_mean": 0.015685506682852027,
+        "by_task": {
+          "2wikimqa": 0.06855096657728232,
+          "hotpotqa": 0.005704597958119173,
+          "multifieldqa_en": 0.0332923765935223,
+          "narrativeqa": -0.03170327637586237,
+          "qasper": 0.0019030518153838605
+        },
+        "ci95": [
+          -0.007232342283067214,
+          0.03996276890445279
+        ],
+        "comparison_family_size": 1,
+        "draws": 20000,
+        "estimate": 0.015549543313689074,
+        "familywise_ci95_bonferroni": [
+          -0.007232342283067214,
+          0.03996276890445279
+        ],
+        "probability_delta_gt_zero": 0.91045
+      },
+      "output_health": {
+        "mrpro": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 50,
+              "generated_tokens": 328,
+              "hit_cap": 2,
+              "output_length_quantiles": [
+                2.0,
+                5.0,
+                16.699999999999974,
+                32.0
+              ],
+              "rows": 52
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 138,
+              "generated_tokens": 869,
+              "hit_cap": 4,
+              "output_length_quantiles": [
+                2.0,
+                4.0,
+                20.94999999999999,
+                32.0
+              ],
+              "rows": 142
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 52,
+              "generated_tokens": 1290,
+              "hit_cap": 5,
+              "output_length_quantiles": [
+                2.0,
+                16.0,
+                64.0,
+                64.0
+              ],
+              "rows": 57
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 53,
+              "generated_tokens": 443,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                3.0,
+                8.0,
+                16.0,
+                18.0
+              ],
+              "rows": 53
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 11,
+              "generated_tokens": 176,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                3.0,
+                12.0,
+                42.0,
+                47.0
+              ],
+              "rows": 11
+            }
+          },
+          "empty": 0,
+          "ended_eos": 304,
+          "generated_tokens": 3106,
+          "hit_cap": 11,
+          "output_length_quantiles": [
+            2.0,
+            5.0,
+            32.30000000000001,
+            64.0
+          ],
+          "rows": 315
+        },
+        "tailspline": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 50,
+              "generated_tokens": 323,
+              "hit_cap": 2,
+              "output_length_quantiles": [
+                2.0,
+                5.0,
+                11.449999999999996,
+                32.0
+              ],
+              "rows": 52
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 140,
+              "generated_tokens": 782,
+              "hit_cap": 2,
+              "output_length_quantiles": [
+                2.0,
+                4.0,
+                17.799999999999955,
+                32.0
+              ],
+              "rows": 142
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 56,
+              "generated_tokens": 1259,
+              "hit_cap": 1,
+              "output_length_quantiles": [
+                2.0,
+                16.0,
+                59.99999999999998,
+                64.0
+              ],
+              "rows": 57
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 53,
+              "generated_tokens": 464,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                3.0,
+                8.0,
+                18.0,
+                22.0
+              ],
+              "rows": 53
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 11,
+              "generated_tokens": 181,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                3.0,
+                6.0,
+                45.5,
+                47.0
+              ],
+              "rows": 11
+            }
+          },
+          "empty": 0,
+          "ended_eos": 310,
+          "generated_tokens": 3009,
+          "hit_cap": 5,
+          "output_length_quantiles": [
+            2.0,
+            5.0,
+            34.900000000000034,
+            64.0
+          ],
+          "rows": 315
+        }
+      },
+      "question_equal_sensitivity": {
+        "bootstrap_mean": 0.01481666061393608,
+        "ci95": [
+          -0.008849907279033927,
+          0.040114521966869134
+        ],
+        "draws": 20000,
+        "estimate": 0.014644535110955169,
+        "probability_delta_gt_zero": 0.88605
+      },
+      "rows": 315,
+      "rows_by_task": {
+        "2wikimqa": 52,
+        "hotpotqa": 142,
+        "multifieldqa_en": 57,
+        "narrativeqa": 53,
+        "qasper": 11
+      },
+      "source_documents_by_task": {
+        "2wikimqa": 52,
+        "hotpotqa": 142,
+        "multifieldqa_en": 46,
+        "narrativeqa": 5,
+        "qasper": 9
+      }
+    },
+    "extended_rows": 315,
+    "input_token_max": 16304,
+    "input_token_min": 3694,
+    "native_length": 8192,
+    "rows_by_task": {
+      "2wikimqa": 173,
+      "hotpotqa": 166,
+      "multifieldqa_en": 112,
+      "narrativeqa": 61,
+      "qasper": 119
+    },
+    "within_native_effect": {
+      "baseline_macro_f1": 0.5463760094822013,
+      "candidate_macro_f1": 0.5577886083824575,
+      "candidate_minus_baseline": {
+        "bootstrap_mean": 0.011232969131300966,
+        "by_task": {
+          "2wikimqa": 0.03367578726430409,
+          "hotpotqa": 0.015277777777777946,
+          "multifieldqa_en": 0.008573860367512398,
+          "narrativeqa": 0.0,
+          "qasper": -0.0004644309083133291
+        },
+        "ci95": [
+          -0.015205035028665425,
+          0.03985864876509428
+        ],
+        "comparison_family_size": 1,
+        "draws": 20000,
+        "estimate": 0.011412598900256143,
+        "familywise_ci95_bonferroni": [
+          -0.015205035028665425,
+          0.03985864876509428
+        ],
+        "probability_delta_gt_zero": 0.78655
+      },
+      "output_health": {
+        "mrpro": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 116,
+              "generated_tokens": 861,
+              "hit_cap": 5,
+              "output_length_quantiles": [
+                2.0,
+                6.0,
+                16.0,
+                32.0
+              ],
+              "rows": 121
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 24,
+              "generated_tokens": 87,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                2.0,
+                3.0,
+                5.849999999999998,
+                11.0
+              ],
+              "rows": 24
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 54,
+              "generated_tokens": 872,
+              "hit_cap": 1,
+              "output_length_quantiles": [
+                2.0,
+                11.0,
+                50.699999999999974,
+                64.0
+              ],
+              "rows": 55
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 8,
+              "generated_tokens": 54,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                4.0,
+                6.5,
+                8.649999999999999,
+                9.0
+              ],
+              "rows": 8
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 108,
+              "generated_tokens": 1461,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                2.0,
+                11.0,
+                30.0,
+                52.0
+              ],
+              "rows": 108
+            }
+          },
+          "empty": 0,
+          "ended_eos": 310,
+          "generated_tokens": 3335,
+          "hit_cap": 6,
+          "output_length_quantiles": [
+            2.0,
+            7.0,
+            32.0,
+            64.0
+          ],
+          "rows": 316
+        },
+        "tailspline": {
+          "by_task": {
+            "2wikimqa": {
+              "empty": 0,
+              "ended_eos": 120,
+              "generated_tokens": 692,
+              "hit_cap": 1,
+              "output_length_quantiles": [
+                2.0,
+                5.0,
+                11.0,
+                32.0
+              ],
+              "rows": 121
+            },
+            "hotpotqa": {
+              "empty": 0,
+              "ended_eos": 24,
+              "generated_tokens": 84,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                2.0,
+                3.0,
+                5.849999999999998,
+                10.0
+              ],
+              "rows": 24
+            },
+            "multifieldqa_en": {
+              "empty": 0,
+              "ended_eos": 54,
+              "generated_tokens": 927,
+              "hit_cap": 1,
+              "output_length_quantiles": [
+                2.0,
+                11.0,
+                48.599999999999994,
+                64.0
+              ],
+              "rows": 55
+            },
+            "narrativeqa": {
+              "empty": 0,
+              "ended_eos": 8,
+              "generated_tokens": 54,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                4.0,
+                6.5,
+                8.649999999999999,
+                9.0
+              ],
+              "rows": 8
+            },
+            "qasper": {
+              "empty": 0,
+              "ended_eos": 108,
+              "generated_tokens": 1527,
+              "hit_cap": 0,
+              "output_length_quantiles": [
+                2.0,
+                10.0,
+                38.949999999999974,
+                61.0
+              ],
+              "rows": 108
+            }
+          },
+          "empty": 0,
+          "ended_eos": 314,
+          "generated_tokens": 3284,
+          "hit_cap": 2,
+          "output_length_quantiles": [
+            2.0,
+            6.0,
+            32.0,
+            64.0
+          ],
+          "rows": 316
+        }
+      },
+      "question_equal_sensitivity": {
+        "bootstrap_mean": 0.015449380649457799,
+        "ci95": [
+          -0.011278683883021156,
+          0.04300942700753758
+        ],
+        "draws": 20000,
+        "estimate": 0.015388736416970888,
+        "probability_delta_gt_zero": 0.8657
+      },
+      "rows": 316,
+      "rows_by_task": {
+        "2wikimqa": 121,
+        "hotpotqa": 24,
+        "multifieldqa_en": 55,
+        "narrativeqa": 8,
+        "qasper": 108
+      },
+      "source_documents_by_task": {
+        "2wikimqa": 121,
+        "hotpotqa": 24,
+        "multifieldqa_en": 44,
+        "narrativeqa": 1,
+        "qasper": 80
+      }
+    },
+    "within_native_rows": 316
+  },
+  "metric": "five-task equal macro whole-response LongBench-normalized token F1",
+  "output_health": {
+    "mrpro": {
+      "by_task": {
+        "2wikimqa": {
+          "empty": 0,
+          "ended_eos": 166,
+          "generated_tokens": 1189,
+          "hit_cap": 7,
+          "output_length_quantiles": [
+            2.0,
+            5.0,
+            16.400000000000006,
+            32.0
+          ],
+          "rows": 173
+        },
+        "hotpotqa": {
+          "empty": 0,
+          "ended_eos": 162,
+          "generated_tokens": 956,
+          "hit_cap": 4,
+          "output_length_quantiles": [
+            2.0,
+            4.0,
+            19.75,
+            32.0
+          ],
+          "rows": 166
+        },
+        "multifieldqa_en": {
+          "empty": 0,
+          "ended_eos": 106,
+          "generated_tokens": 2162,
+          "hit_cap": 6,
+          "output_length_quantiles": [
+            2.0,
+            12.5,
+            64.0,
+            64.0
+          ],
+          "rows": 112
+        },
+        "narrativeqa": {
+          "empty": 0,
+          "ended_eos": 61,
+          "generated_tokens": 497,
+          "hit_cap": 0,
+          "output_length_quantiles": [
+            3.0,
+            8.0,
+            16.0,
+            18.0
+          ],
+          "rows": 61
+        },
+        "qasper": {
+          "empty": 0,
+          "ended_eos": 119,
+          "generated_tokens": 1637,
+          "hit_cap": 0,
+          "output_length_quantiles": [
+            2.0,
+            11.0,
+            33.39999999999998,
+            52.0
+          ],
+          "rows": 119
+        }
+      },
+      "empty": 0,
+      "ended_eos": 614,
+      "generated_tokens": 6441,
+      "hit_cap": 17,
+      "output_length_quantiles": [
+        2.0,
+        6.0,
+        32.0,
+        64.0
+      ],
+      "rows": 631
+    },
+    "tailspline": {
+      "by_task": {
+        "2wikimqa": {
+          "empty": 0,
+          "ended_eos": 170,
+          "generated_tokens": 1015,
+          "hit_cap": 3,
+          "output_length_quantiles": [
+            2.0,
+            5.0,
+            11.400000000000006,
+            32.0
+          ],
+          "rows": 173
+        },
+        "hotpotqa": {
+          "empty": 0,
+          "ended_eos": 164,
+          "generated_tokens": 866,
+          "hit_cap": 2,
+          "output_length_quantiles": [
+            2.0,
+            4.0,
+            13.5,
+            32.0
+          ],
+          "rows": 166
+        },
+        "multifieldqa_en": {
+          "empty": 0,
+          "ended_eos": 110,
+          "generated_tokens": 2186,
+          "hit_cap": 2,
+          "output_length_quantiles": [
+            2.0,
+            13.5,
+            54.59999999999991,
+            64.0
+          ],
+          "rows": 112
+        },
+        "narrativeqa": {
+          "empty": 0,
+          "ended_eos": 61,
+          "generated_tokens": 518,
+          "hit_cap": 0,
+          "output_length_quantiles": [
+            3.0,
+            8.0,
+            18.0,
+            22.0
+          ],
+          "rows": 61
+        },
+        "qasper": {
+          "empty": 0,
+          "ended_eos": 119,
+          "generated_tokens": 1708,
+          "hit_cap": 0,
+          "output_length_quantiles": [
+            2.0,
+            10.0,
+            41.19999999999999,
+            61.0
+          ],
+          "rows": 119
+        }
+      },
+      "empty": 0,
+      "ended_eos": 624,
+      "generated_tokens": 6293,
+      "hit_cap": 7,
+      "output_length_quantiles": [
+        2.0,
+        6.0,
+        33.0,
+        64.0
+      ],
+      "rows": 631
+    }
+  },
+  "panel_sha256": "7c4524fc89b6910fde8239ebbc1cf440fff61ed4523569052a7e67f933011767",
+  "primary_pool": "exact historical 631-row OLMo-tokenizer >4096 frozen source pool, retokenized from original LongBench rows for Llama",
+  "question_equal_sensitivity": {
+    "bootstrap_mean": 0.015171472874149088,
+    "ci95": [
+      -0.0028948462782645095,
+      0.034041137393926765
+    ],
+    "draws": 20000,
+    "estimate": 0.015017225463888572,
+    "probability_delta_gt_zero": 0.94985
+  },
+  "raw_sha256": {
+    "mrpro": "a2d55afa131a35da6377eccc179293c07bc7579e80bc94b336e6c83166821031",
+    "tailspline": "5bf76386edcf27619e3148b16de32ccf5ba938d08e9c1c76e0d524eefa37a2c3"
+  },
+  "rows_per_arm": 631,
+  "scope": "Paired five-task natural-QA transfer evidence on a previously defined finite source pool; not full LongBench and not an independent sample.",
+  "source_cluster_audit": {
+    "clusters_shared_across_tasks": 0,
+    "interpretation": "No cross-task cluster correction is needed.",
+    "shared_cluster_tasks": {},
+    "unique_source_documents": 524
+  },
+  "status": "COMPLETE",
+  "tasks": [
+    "hotpotqa",
+    "2wikimqa",
+    "qasper",
+    "narrativeqa",
+    "multifieldqa_en"
+  ]
+}

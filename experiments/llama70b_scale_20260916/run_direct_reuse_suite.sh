@@ -104,14 +104,18 @@ run_ruler mrpro
 run_qa tailspline
 run_qa mrpro
 
-"${python_bin}" -m experiments.fixed_rope_three_interfaces_20260913.matched_generation_report \
-  --source "tailspline=${root}/ruler/runs/tailspline/generations.jsonl" \
-  --source "mrpro=${root}/ruler/runs/mrpro/generations.jsonl" \
-  --candidate tailspline --baseline mrpro --length 32768 \
-  --out "${root}/reports/ruler13x10.json"
-"${python_bin}" -m experiments.fixed_rope_three_interfaces_20260913.matched_naturalqa_report \
-  --panel "${qa}/assets/inputs.jsonl" \
-  --candidate "${root}/qa/runs/tailspline/generations.jsonl" \
-  --baseline "${root}/qa/runs/mrpro/generations.jsonl" \
-  --out "${root}/reports/naturalqa631.json"
+if [[ ! -f ${root}/reports/ruler13x10.json ]]; then
+  "${python_bin}" -m experiments.fixed_rope_three_interfaces_20260913.matched_generation_report \
+    --source "tailspline=${root}/ruler/runs/tailspline/generations.jsonl" \
+    --source "mrpro=${root}/ruler/runs/mrpro/generations.jsonl" \
+    --candidate tailspline --baseline mrpro --length 32768 \
+    --out "${root}/reports/ruler13x10.json"
+fi
+if [[ ! -f ${root}/reports/naturalqa631.json ]]; then
+  "${python_bin}" -m experiments.fixed_rope_three_interfaces_20260913.matched_naturalqa_report \
+    --panel "${qa}/assets/inputs.jsonl" \
+    --candidate "${root}/qa/runs/tailspline/generations.jsonl" \
+    --baseline "${root}/qa/runs/mrpro/generations.jsonl" \
+    --out "${root}/reports/naturalqa631.json"
+fi
 printf 'LLAMA3_70B_DIRECT_REUSE_COMPLETE %s\n' "$(date -u +%FT%TZ)" | tee "${root}/complete.txt"

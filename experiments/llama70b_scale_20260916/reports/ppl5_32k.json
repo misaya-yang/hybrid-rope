@@ -1,0 +1,19 @@
+{
+  "arms": {
+    "mrpro": {
+      "documents": 5,
+      "nll": 0.9193021664360004,
+      "ppl": 2.5075399337149653,
+      "target_tokens": 163840
+    },
+    "tailspline": {
+      "documents": 5,
+      "nll": 0.9144596143103854,
+      "ppl": 2.4954263947729443,
+      "target_tokens": 163840
+    }
+  },
+  "contract": "LLAMA3_70B_NF4_PPL5_32K_V1",
+  "delta_nll_tailspline_minus_mrpro": -0.004842552125615018,
+  "status": "COMPLETE"
+}

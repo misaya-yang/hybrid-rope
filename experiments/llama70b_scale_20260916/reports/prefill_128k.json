@@ -1,0 +1,103 @@
+{
+  "baseline_memory": {
+    "allocated_bytes": 39520349184,
+    "free_bytes": 61760995328,
+    "reserved_bytes": 39533412352,
+    "total_bytes": 101974081536
+  },
+  "environment": {
+    "architectures": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ],
+    "capability": [
+      12,
+      0
+    ],
+    "cuda": "12.8",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "torch": "2.8.0+cu128"
+  },
+  "generation_row_id": "clean_niah_single_1_131072_0000",
+  "length": 131072,
+  "lm_document": 0,
+  "max_new_tokens": 128,
+  "minimum_free_fraction": 0.03,
+  "model": "/root/autodl-tmp/models/llama-3-70b-Instruct-bnb-4bit",
+  "recommended_generation_chunk": 32768,
+  "recommended_lm_chunk": 32768,
+  "results": [
+    {
+      "chunk": 32768,
+      "generation": {
+        "after": {
+          "allocated_bytes": 39528868864,
+          "free_bytes": 4703715328,
+          "reserved_bytes": 96578043904,
+          "total_bytes": 101974081536
+        },
+        "before": {
+          "allocated_bytes": 39520349184,
+          "free_bytes": 61760995328,
+          "reserved_bytes": 39533412352,
+          "total_bytes": 101974081536
+        },
+        "free_fraction_at_peak": 0.05291577576106956,
+        "generated_ids": [
+          220,
+          25090,
+          23403,
+          24,
+          13,
+          128009
+        ],
+        "generated_ids_equal_reference": true,
+        "generated_ids_sha256": "6843d17fc0d478fe64c0cf28565ccd35bd73ec5587a7fc9f9b8cad57cf66aabb",
+        "peak_allocated_bytes": 89796900864,
+        "peak_reserved_bytes": 96578043904,
+        "ruler_score": 1.0,
+        "score_equal_reference": true,
+        "seconds": 117.85723154619336,
+        "stable": true,
+        "status": "ok"
+      },
+      "lm": {
+        "actual_strategy": "dynamic_cache_exact_nll_v1",
+        "after": {
+          "allocated_bytes": 39528868864,
+          "free_bytes": 6003949568,
+          "reserved_bytes": 95277809664,
+          "total_bytes": 101974081536
+        },
+        "before": {
+          "allocated_bytes": 39528868864,
+          "free_bytes": 61727375360,
+          "reserved_bytes": 39554383872,
+          "total_bytes": 101974081536
+        },
+        "finite": true,
+        "free_fraction_at_peak": 0.06566641024009624,
+        "peak_allocated_bytes": 90347187712,
+        "peak_reserved_bytes": 95277809664,
+        "seconds": 120.86207432672381,
+        "stable": true,
+        "status": "ok",
+        "tail128_nll": 1.5848698616027832,
+        "tail128_nll_abs_delta_reference": 0.0,
+        "whole_nll": 1.1185867728854646,
+        "whole_nll_abs_delta_reference": 0.0
+      }
+    }
+  ],
+  "scope": "one complete-budget generation row plus one LM document; runtime engineering only; generation and LM recommendations are deliberately independent",
+  "skip_lm": false,
+  "status": "PREFILL_CHUNK_BENCHMARK_COMPLETE_V2",
+  "table": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s16_128k_gate/tables/tailspline.json",
+  "tail_nll_tolerance": 0.001,
+  "whole_nll_tolerance": 0.0005
+}

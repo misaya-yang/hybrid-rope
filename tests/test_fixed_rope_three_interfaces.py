@@ -227,6 +227,28 @@ def test_point_summary_is_task_equal_not_row_equal():
     assert summary["by_length"]["8"]["tasks"]["a"]["rows"] == 2
 
 
+def test_point_report_supports_a_single_task_paired_slice():
+    arms = {}
+    for arm, scores in (("tailspline", (1.0, 0.5)), ("mrpro", (0.0, 0.5))):
+        arms[arm] = [
+            {
+                "task": "niah_single_1",
+                "length_cap": 131072,
+                "prompt_sha256": f"prompt-{index}",
+                "official_score": score,
+                "ended_eos": True,
+                "hit_cap": False,
+            }
+            for index, score in enumerate(scores)
+        ]
+    result = build_point_report(
+        arms, candidate="tailspline", baselines=["mrpro"], draws=20, seed=7,
+    )
+    assert result["tasks"] == ["niah_single_1"]
+    assert result["paired_prompts"] == 2
+    assert result["contrasts"]["mrpro"]["delta_task_macro_official"] == 0.5
+
+
 def test_receipt_format_is_explicit():
     config = tiny_config()
     geometry = model_geometry(config)
