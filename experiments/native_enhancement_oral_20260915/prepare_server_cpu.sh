@@ -58,7 +58,7 @@ prepare_ruler() {
     "${python_bin}" -m experiments.iclr2027_strong_evidence_20260915.prepare_clean_transfer \
       --model "${model}" --model-id olmo2_1b_native_confirm --data-root "${upstream}" \
       --out "${ruler}" --scale 1 --lengths 4096 --rows-per-task 100 \
-      --seed 20261216 --qa-offset 6000 \
+      --seed 20261216 --qa-offset 5800 \
       >"${root}/logs/prepare_ruler_confirm.log" 2>&1
   fi
 }
