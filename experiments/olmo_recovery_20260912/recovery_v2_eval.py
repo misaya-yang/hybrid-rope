@@ -471,6 +471,13 @@ def main():
         if not np.array_equal(actual,np.asarray(static_table['values_float32'],dtype=np.float32)):
             raise RuntimeError('installed solver table differs from the frozen receipt')
         table=static_table
+    if args.unmasked_unpadded_generate:
+        # Transformers may still materialize an additive causal mask internally
+        # even when callers omit an all-ones padding mask.  Use the existing
+        # lower-right Flash-SDPA interface so both prefill and cached decoding
+        # remain mask-free, exact, and Flash-only.
+        from .runtime import register_blackwell_chunked_attention
+        register_blackwell_chunked_attention(model)
     ca_ncp_alignment_handles=[]
     ca_ncp_alignment_receipt=None
     if args.ca_ncp_alignment_npz:
