@@ -130,7 +130,7 @@ while [[ ! -f "${root}/cpu_ready.json" ]]; do
   fi
   sleep 5
 done
-ruler=${root}/assets/ruler_confirm_13x100/panels/4096/inputs.jsonl
+ruler=${root}/assets/ruler_confirm_13x10/panels/4096/inputs.jsonl
 qa=${root}/assets/naturalqa_3x80/inputs.jsonl
 for suite in ruler qa; do
   panel_var=${suite}

@@ -22,7 +22,7 @@ export MKL_NUM_THREADS="${MKL_NUM_THREADS:-8}"
 
 mechanism=${root}/assets/mechanism_v2
 capture=${root}/assets/capture96
-ruler=${root}/assets/ruler_confirm_13x100
+ruler=${root}/assets/ruler_confirm_13x10
 qa=${root}/assets/naturalqa_3x80
 lm=${root}/assets/lm128
 
@@ -57,7 +57,7 @@ prepare_ruler() {
   if [[ ! -f "${ruler}/manifest.json" ]]; then
     "${python_bin}" -m experiments.iclr2027_strong_evidence_20260915.prepare_clean_transfer \
       --model "${model}" --model-id olmo2_1b_native_confirm --data-root "${upstream}" \
-      --out "${ruler}" --scale 1 --lengths 4096 --rows-per-task 100 \
+      --out "${ruler}" --scale 1 --lengths 4096 --rows-per-task 10 \
       --seed 20261216 --qa-offset 5800 \
       >"${root}/logs/prepare_ruler_confirm.log" 2>&1
   fi
