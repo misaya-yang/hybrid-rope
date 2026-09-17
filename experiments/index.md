@@ -14,6 +14,7 @@
 | 后续强证据实验包装器 | [2026-09-15 strong-evidence入口](iclr2027_strong_evidence_20260915/README.md)：clean跨模型、自然长文、C对照与OLMo QA→RULER-200顺序 |
 | Llama-3-70B NF4尺度迁移 | [70B执行与报告入口](llama70b_scale_20260916/README.md)：S4/32K完整结果、S16/128K PPL及未完成NIAH边界 |
 | 原生增强、理论先行与评测提速 | [Native/oral实验与结果](native_enhancement_oral_20260915/index.md)：NCP Native-4K NLL、Full-13、Natural-QA及机制干预结果 |
+| CA-NCP载波对齐原生实验 | [CA-NCP代码与运行合同](ca_ncp_native_20260917/README.md)：无标签Native Q/K统计、rank-2换基、五臂Full-13×10；当前仅准备，不代表GPU结果 |
 | 核实已进入论文的结果 | [论文证据](../paper-2027/research/evidence/index.md) |
 
 [完整实验目录](CATALOG_20260913.md)用于复用旧代码或追溯历史结果；其中队列和服务器状态不定义当前优先级。

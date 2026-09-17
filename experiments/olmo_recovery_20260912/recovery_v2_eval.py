@@ -304,6 +304,10 @@ def main():
     parser.add_argument('--static-table-json',type=Path,
                         help='install the table object (or result.table) from this frozen solver receipt')
     parser.add_argument('--table-label',help='result label for --static-table-json; does not alter the table')
+    parser.add_argument('--ca-ncp-alignment-npz',type=Path,
+                        help='install frozen post-norm/pre-RoPE CA-NCP rank-2 Q/K planes')
+    parser.add_argument('--ca-ncp-alignment-label',
+                        help='result label for --ca-ncp-alignment-npz; does not alter the planes')
     parser.add_argument('--layer-override-table-json',type=Path,
                         help='mechanism-only table installed in a fixed layer block')
     parser.add_argument('--layer-override-range',
@@ -316,6 +320,8 @@ def main():
         print(json.dumps({'status':'PLAN_ONLY','arm':args.arm,'checkpoint':str(args.checkpoint) if args.checkpoint else None,
                           'split':args.split,'row_split':args.row_split,'lengths':LENGTHS,
                           'static_table_json':str(args.static_table_json) if args.static_table_json else None,
+                          'ca_ncp_alignment_npz':str(args.ca_ncp_alignment_npz) if args.ca_ncp_alignment_npz else None,
+                          'ca_ncp_alignment_label':args.ca_ncp_alignment_label,
                           'layer_override_table_json':str(args.layer_override_table_json) if args.layer_override_table_json else None,
                           'layer_override_range':args.layer_override_range,
                           'layer_override_label':args.layer_override_label,
@@ -350,6 +356,8 @@ def main():
         raise ValueError('--static-table-json is a frozen-model evaluation and cannot use a checkpoint')
     if args.table_label and not args.static_table_json:
         raise ValueError('--table-label requires --static-table-json')
+    if bool(args.ca_ncp_alignment_npz) != bool(args.ca_ncp_alignment_label):
+        raise ValueError('CA-NCP alignment file and label must be provided together')
     if bool(args.layer_override_table_json) != bool(args.layer_override_range):
         raise ValueError('layer override table and range must be provided together')
     if bool(args.layer_override_table_json) != bool(args.layer_override_label):
@@ -379,7 +387,18 @@ def main():
             args.layer_override_range,num_hidden_layers=int(config['num_hidden_layers']))
         layer_override_table={'values_float32':values.tolist(),'gain':gain,
                               'construction':layer_override_table.get('construction',{})}
-    result_arm=args.layer_override_label or args.table_label or args.arm
+    result_arm=args.ca_ncp_alignment_label or args.layer_override_label or args.table_label or args.arm
+    ca_ncp_alignment_identity=None
+    if args.ca_ncp_alignment_npz:
+        from experiments.ca_ncp_native_20260917.io_utils import file_sha256
+        from experiments.ca_ncp_native_20260917.runtime import load_alignment
+        load_alignment(args.ca_ncp_alignment_npz)
+        ca_ncp_alignment_identity={
+            'label':args.ca_ncp_alignment_label,
+            'path':str(args.ca_ncp_alignment_npz.resolve()),
+            'sha256':file_sha256(args.ca_ncp_alignment_npz),
+            'hook_location':'q_norm/k_norm output before RoPE',
+        }
     if state and state.get('arm')!=checkpoint_arm:raise ValueError('checkpoint belongs to another arm')
     precision_identity=checkpoint_precision_identity(args.model)
     identity={'arm':result_arm,'base_arm':args.arm,'checkpoint_arm':checkpoint_arm if args.checkpoint else None,
@@ -407,6 +426,7 @@ def main():
               },
               **({'left_pad_batches':True} if args.left_pad_batches else {}),
               'row_split':args.row_split,'static_table':static_table,
+              **({'ca_ncp_alignment':ca_ncp_alignment_identity} if ca_ncp_alignment_identity else {}),
               'layer_override':({
                   'layers_zero_based':list(layer_override_layers),
                   'table':layer_override_table,
@@ -428,6 +448,14 @@ def main():
         if not np.array_equal(actual,np.asarray(static_table['values_float32'],dtype=np.float32)):
             raise RuntimeError('installed solver table differs from the frozen receipt')
         table=static_table
+    ca_ncp_alignment_handles=[]
+    ca_ncp_alignment_receipt=None
+    if args.ca_ncp_alignment_npz:
+        from experiments.ca_ncp_native_20260917.runtime import install_alignment
+        ca_ncp_alignment_handles,ca_ncp_alignment_receipt=install_alignment(
+            model,args.ca_ncp_alignment_npz,
+        )
+        write(args.out/'runtime_ca_ncp_alignment.json',ca_ncp_alignment_receipt)
     layer_override_handles=[]
     if layer_override_table:
         if args.batch_size != 1 or args.left_pad_batches:
@@ -535,7 +563,7 @@ def main():
             for items in pairs.values() if len(items)==2 and {r['world'] for r in items}=={0,1}]
     summary={'status':'COMPLETE','identity':identity,'generation_metrics':metrics,'lm_metrics':lm_summary,
              'paired_source_follow':{'groups':len(paired),'accuracy':sum(paired)/len(paired) if paired else None},
-             'table':table,
+             'table':table,'ca_ncp_alignment':ca_ncp_alignment_receipt,
              'asset_identity_policy':'user_attested_clone/no_sha_validation',
              'scope':'development/regression or explicit supplied panels; no automatic stability gate or method win'}
     write(args.out/'summary.json',summary);write(args.out/'status.json',{'status':'COMPLETE','rows':len(saved),'lm_rows':len(lm_saved)})
