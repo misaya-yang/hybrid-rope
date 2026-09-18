@@ -53,6 +53,18 @@ def table_for_config(config, arm: str) -> dict:
         reference_length = 8192
         if arm not in ("Native", "BM_g4", "BM_g8", "MrPro_g4", "MrPro_g8", "BetaSym_gamma3_g8", "RangeBridge50_g8", "BM_g8_RangeGain"):
             raise ValueError("unsupported Llama transfer table")
+    elif (config.model_type == "llama" and dim == 128
+          and config.num_hidden_layers == 32
+          and config.num_attention_heads == 32
+          and config.num_key_value_heads == 8
+          and config.max_position_embeddings == 32768 and base == 8000000):
+        # Kanana-1.5-8B uses the standard Llama rotary module with a public
+        # 32K/8M geometry.  The generic evaluator always loads its exact Native
+        # table first and then installs one explicit frozen receipt.  Do not
+        # infer any of the Meta-Llama-specific built-in transfer tables here.
+        reference_length = 32768
+        if arm != "Native":
+            raise ValueError("Kanana screens require an explicit static table")
     elif (config.model_type == "qwen2" and dim == 128
           and config.max_position_embeddings == 32768 and base == 1000000):
         # The generic evaluator loads Native first and then installs an explicit

@@ -409,7 +409,16 @@ def main(argv=None):
                         sys.path.insert(0, str(upstream / "scripts/data/synthetic"))
                         os.chdir(upstream)
                         with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
-                            runpy.run_path(command[1], run_name="__main__")
+                            try:
+                                runpy.run_path(command[1], run_name="__main__")
+                            except SystemExit as error:
+                                # Several pinned RULER entrypoints terminate a
+                                # successful CLI invocation with sys.exit(0).
+                                # When embedded for CPU asset preparation that
+                                # must not terminate the outer multi-task job;
+                                # nonzero exits remain hard failures.
+                                if error.code not in (None, 0):
+                                    raise
                     finally:
                         sys.argv, sys.path = old_argv, old_path
                         os.chdir(old_cwd)
