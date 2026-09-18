@@ -113,6 +113,8 @@ def validate_panel(panel: Path, manifest_path: Path, panel_kind: str) -> tuple[l
             raise ValueError(f"position hash mismatch: {row['row_id']}")
         if any(right <= left for left, right in zip(positions, positions[1:])):
             raise ValueError(f"position IDs are not strictly increasing: {row['row_id']}")
+        if positions[0] != 0:
+            raise ValueError(f"frozen panel must use canonical position origin zero: {row['row_id']}")
         actual_distance = (
             positions[row["query_token_index"]]
             - positions[row["target_value_token_index"]]
@@ -144,11 +146,13 @@ def greedy_generate(model, row: dict, eos_ids: set[int], *, common_offset: int =
     import torch
 
     prompt_ids = torch.tensor([row["prompt_ids"]], device="cuda", dtype=torch.long)
-    positions = torch.tensor(
+    raw_positions = torch.tensor(
         [[value + common_offset for value in row["position_ids"]]],
         device="cuda",
         dtype=torch.long,
     )
+    position_origin = raw_positions[:, :1]
+    positions = raw_positions - position_origin
     physical_length = prompt_ids.shape[1]
     attention_mask = torch.ones_like(prompt_ids)
     output = model(
@@ -187,7 +191,7 @@ def greedy_generate(model, row: dict, eos_ids: set[int], *, common_offset: int =
         )
         cache = output.past_key_values
         logits = output.logits[:, -1, :].float()
-    del output, cache, logits, prompt_ids, positions, attention_mask
+    del output, cache, logits, prompt_ids, raw_positions, positions, position_origin, attention_mask
     return generated, first_logits
 
 
@@ -286,6 +290,10 @@ def main() -> None:
         },
         "row_ids": [row["row_id"] for row in rows],
         "primary_inference_unit": "base_sample",
+        "position_origin_policy": (
+            "subtract the first prompt position from prompt and cached-decode position IDs; "
+            "this enforces RoPE global-translation invariance before BF16 rotary evaluation"
+        ),
     }
     args.out.mkdir(parents=True, exist_ok=True)
     contract_path = args.out / "contract.json"
@@ -311,6 +319,7 @@ def main() -> None:
                     "prompt_sha256": row["prompt_sha256"],
                     "position_ids_sha256": row["position_ids_sha256"],
                     "common_offset": common_offset,
+                    "canonical_origin_subtracted": common_offset,
                     "first_step_logit_max_abs": max_abs,
                     "generated_tokens_exact": token_exact,
                     "generated_token_count": len(tokens),
@@ -326,6 +335,7 @@ def main() -> None:
             "table_file_sha256": table_sha256,
             "manifest_file_sha256": manifest_sha256,
             "common_offset": common_offset,
+            "position_origin_policy": "subtract_first_prompt_position_before_model_forward_v1",
             "first_step_logit_max_abs_tolerance": PARITY_LOGIT_MAX_ABS_TOLERANCE,
             "rows_checked": len(checks),
             "checks": checks,

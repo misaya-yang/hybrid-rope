@@ -99,6 +99,14 @@ Before confirmation, each table must independently pass an exact generated-token
 parity check under a common `+17` position offset and a first-step full-logit
 maximum absolute difference tolerance of `0.02`.  Runtime contracts retain each
 row's input-token and position-ID hashes plus the installed table-file hash.
+The first TailSpline parity attempt exposed BF16 absolute-phase-origin drift:
+identical-position repeats were exact, while a common offset changed some
+outputs.  The failed receipt is retained in
+[`reports/parity_tailspline_failed_before_origin_canonicalization_v2.json`](reports/parity_tailspline_failed_before_origin_canonicalization_v2.json).
+The runtime now subtracts the first prompt position from all prompt and cached
+decode position IDs before RoPE.  This canonicalizes the mathematically
+irrelevant global origin; it leaves the frozen confirmation rows unchanged
+because they already start at zero and preserves every declared relative gap.
 The primary interaction remains the strict behavior-classifier DiD; official
 RULER substring score is secondary, wrong-binding transitions are secondary,
 and all uncertainty resamples the 64 base samples rather than 512 generations.

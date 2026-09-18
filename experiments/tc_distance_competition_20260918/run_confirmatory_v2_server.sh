@@ -15,7 +15,7 @@ MANIFEST=$ASSET_ROOT/manifest_v2.json
 PARITY_PANEL=$ASSET_ROOT/inputs_parity_v2.jsonl
 CONFIRM_PANEL=$ASSET_ROOT/inputs_confirm_v2.jsonl
 
-mkdir -p "$OUT_ROOT"/{logs,parity,runs,reports}
+mkdir -p "$OUT_ROOT"/{logs,parity_canonical,runs,reports}
 cd "$CODE_ROOT"
 
 run_parity() {
@@ -29,7 +29,7 @@ run_parity() {
     --stage1-report "$STAGE1_REPORT" \
     --reconciliation-report "$RECONCILIATION_REPORT" \
     --static-table-json "$table" --table-label "$label" \
-    --out "$OUT_ROOT/parity/$name" \
+    --out "$OUT_ROOT/parity_canonical/$name" \
     > "$OUT_ROOT/logs/parity_$name.log" 2>&1
 }
 
@@ -44,7 +44,7 @@ run_arm() {
     --stage1-report "$STAGE1_REPORT" \
     --reconciliation-report "$RECONCILIATION_REPORT" \
     --static-table-json "$table" --table-label "$label" \
-    --parity-receipt "$OUT_ROOT/parity/$name/parity_receipt.json" \
+    --parity-receipt "$OUT_ROOT/parity_canonical/$name/parity_receipt.json" \
     --out "$OUT_ROOT/runs/$name" \
     > "$OUT_ROOT/logs/$name.log" 2>&1
 }
