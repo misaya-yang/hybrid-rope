@@ -1,0 +1,21 @@
+{
+  "scope": "Portable immutable review PDFs. Historical prompts retain their original invocation paths; use these repository-root-relative copies on another machine. No numbered history version added.",
+  "artifacts": {
+    "chapter_pass_baseline": {
+      "path": "paper-2027/research/revision_20260918/reviews/chapter_pass_baseline.pdf",
+      "sha256": "a3919d82b21a38fadb69f2e6b52e271dc0ae8cabf4fe00a479021ce7be456626"
+    },
+    "chapter_pass_candidate": {
+      "path": "paper-2027/research/revision_20260918/reviews/chapter_pass_candidate.pdf",
+      "sha256": "6fe308a759a3920dffb5784c39bb5cecff0feb8ce12589ccda43b5e61056fd71"
+    },
+    "abstract_final_candidate": {
+      "path": "paper-2027/research/revision_20260918/reviews/abstract_final_candidate.pdf",
+      "sha256": "bf9965314eaaf663c65759abfc546123cd0119b5323a82d3ceb37bab75d8eab5"
+    },
+    "abstract_final_baseline": {
+      "path": "paper-2027/research/revision_20260918/reviews/chapter_pass_candidate.pdf",
+      "sha256": "6fe308a759a3920dffb5784c39bb5cecff0feb8ce12589ccda43b5e61056fd71"
+    }
+  }
+}

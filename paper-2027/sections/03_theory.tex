@@ -20,7 +20,7 @@ To avoid privileging a content phase, let $x_\omega(\Delta)=[\cos(\omega\Delta),
 c_{\omega\nu}=\tfrac12\|Q_{\omega\nu}\|_F^2\in[0,1],
 \label{eq:collision}
 \end{equation}
-measures shared positional directions and is invariant to invertible basis changes within either pair. Let $\Gamma$ be the Gram matrix of the concatenated block-whitened pairs, with diagonal blocks $I_2$. The average pairwise overlap $\bar c$ gives the exact R\'enyi-$2$ effective-rank identity
+measures shared positional directions and is invariant to invertible basis changes within either pair. Whitening normalizes each pair before comparing its directions. Let $\Gamma$ be the Gram matrix of the concatenated whitened pairs, with diagonal blocks $I_2$. The average pairwise overlap $\bar c$ gives the exact R\'enyi-$2$ effective-rank identity
 \begin{equation}
 r_2(\Gamma)=\frac{(\operatorname{tr}\Gamma)^2}{\operatorname{tr}(\Gamma^2)}
 =\frac{2K}{1+(K-1)\bar c}.
@@ -70,9 +70,8 @@ The complete frozen Llama tables provide a concrete example. At $16/32$K,
 TailSpline has full-pair effective ranks $8.28/10.08$, compared with
 MrPro's $8.74/10.21$ under uniform separations, while improving clean
 RULER by $3.39/11.72$ points (Table~\ref{tab:clean-length-main}).
-These gains establish the value of controlling distance dependence through
-allocation even when normalized positional diversity decreases. The model's
-use of the supplied frequencies determines their practical value
+Task quality thus improves even as normalized positional diversity decreases.
+The model's use of the supplied frequencies matters beyond their overlap
 (Appendix~\ref{sec:allocation-rank-quality}).
 Concretely, changing a frequency changes the distance response multiplying
 its content coefficients. A useful response improves target evidence relative

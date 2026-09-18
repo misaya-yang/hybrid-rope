@@ -1,6 +1,17 @@
 \subsection{TailSpline: allocating extension around a native table}
 \label{sec:mature-adjustments}\label{sec:exp-zero-training-system}\label{sec:coordinate}\label{sec:bm-main}
-A frozen model already uses its native frequencies. We retain its high-frequency band and divide its low-frequency tail by $s$, while designing the intervening allocation. Following the $32/1$-turn boundaries used by MrRoPE \citep{tian2026mrrope}, let $l$ be the last pair making more than $32$ turns over the native window and $h$ the first making less than one. For a nonempty transition, put $n=h-l\ge1$ and $q=\operatorname{clip}(k-l,0,n)$. The transition accumulates increments $\epsilon_q=m_q-m_{q-1}$, with $m_0=0$, $m_n=1$.
+In Eq.~\eqref{eq:movement-allocation}, $m_k=0$ preserves native-distance
+responses, whereas $m_k=1$ restores them at $s$ times the distance
+(Fig.~\ref{fig:intro-allocation}). Longer inputs can contain both unchanged
+local dependencies and stretched query--evidence separations, motivating
+different amounts of scaling across channels \citep{wu2026datashapes}.
+
+We retain the high-frequency band and divide the low-frequency tail by $s$,
+then design the intervening allocation. Following MrRoPE's $32/1$-turn
+boundaries \citep{tian2026mrrope}, let $l$ be the last pair above $32$ native
+turns and $h$ the first below one. Put $n=h-l\ge1$ and
+$q=\operatorname{clip}(k-l,0,n)$. The transition accumulates
+$\epsilon_q=m_q-m_{q-1}$, with $m_0=0$, $m_n=1$.
 
 The increments have a direct spectral meaning. For a geometric native grid with gap $c=\log b/K$,
 \begin{equation}
@@ -8,10 +19,8 @@ x'_{l+q}-x'_{l+q-1}=c+\epsilon_q\log s.
 \label{eq:increment-log-gap}
 \end{equation}
 Their unit sum distributes exactly $\log s$ of extra span across the band.
-The outer bands preserve two distance references: high frequencies retain
-$R_{\omega^N}(d)$, while the low-frequency tail satisfies
-$R_{\omega^N/s}(sd)=R_{\omega^N}(d)$. At the tail, constant displacement
-$m=1$ preserves native adjacent gaps, so the extra gap returns to zero.
+At the tail, constant displacement $m=1$ preserves native adjacent gaps,
+so the extra gap returns to zero.
 
 MrRoPE-Pro uses increasing increments, $m_q=q(q+1)/[n(n+1)]$.
 We formulate a discrete tail-connection problem by penalizing variation
@@ -21,7 +30,9 @@ in the extra log gaps and their mismatch with the fully interpolated tail:
 \sum_{q=1}^{n-1}(\epsilon_{q+1}-\epsilon_q)^2+\epsilon_n^2.
 \label{eq:tailspline-objective}
 \end{equation}
-The first term smooths neighboring extra gaps; the second closes the transition at the zero-extra-gap boundary supplied by the fully interpolated tail. The high-frequency outer band is fixed by construction. This boundary prior prioritizes a gradual handoff to the fully interpolated distance reference, while allowing a larger entry gap.
+This one-sided minimum-bending objective smooths the interior log gaps and
+their connection to the stretched-distance reference. The high-frequency
+band stays fixed, with its entry gap free to accommodate the required span.
 \begin{theorem}[Finite-grid TailSpline]\label{thm:tailspline}
 The unique minimizer of Eq.~\eqref{eq:tailspline-objective} has positive increments and cumulative profile
 \begin{equation}
@@ -30,17 +41,24 @@ m_q^{\rm TS}=\frac{q(3n^2+3n+1-q^2)}{n(n+1)(2n+1)}.
 \label{eq:tailspline}
 \end{equation}
 \end{theorem}
-The solution shifts more extension into the transition: $m_q^{\rm TS}\ge
-m_q^{\rm Pro}$ at every interior pair. Relative to MrPro, it accepts a larger
-entry jump and reduces the terminal jump by the exact factor $3/(2n+1)$:
-$0.086$ for Llama's $n=17$ and $0.081$ for OLMo's $n=18$
-(Fig.~\ref{fig:construction-contrast}). On the Llama $s=4$ grid, the largest
-TailSpline/MrPro wavelength ratio is $1.766$.
-Appendix~\ref{sec:allocation-scale-response} derives this ordering and
-compares the response to scale with YaRN's frequency blend.
+The solution assigns more extension throughout the transition:
+$m_q^{\rm TS}\ge m_q^{\rm Pro}$, with a larger entry gap and a smaller
+terminal gap (Fig.~\ref{fig:construction-contrast}). The gap reduction has
+a direct phase consequence. At the last interior pair, for $n\ge2$, $s>1$
+and any nonzero separation, residual phases relative to $\omega^N/s$ satisfy
+\begin{equation}
+\frac{\delta_{\rm TS}}{\delta_{\rm Pro}}
+=\frac{s^{\epsilon_n^{\rm TS}}-1}{s^{\epsilon_n^{\rm Pro}}-1}
+\le\frac{3}{2n+1}.
+\label{eq:tail-phase-ratio}
+\end{equation}
+Here $\delta_M=|\Delta|\,|\omega_{h-1}^{M}-\omega_{h-1}^N/s|$.
+The Llama $s=4$ ratio is $0.080$. More generally, Appendix~\ref{sec:allocation-reference-intervals}
+relates phase mismatch to dependency stretch and gives a finite content-response
+bound. These properties explain the distance preference encoded by the construction.
 
-Strict convexity and the tridiagonal stationarity system give the closed form
-(Appendix~\ref{sec:tailspline-details}). Penalizing both boundaries instead,
+Strict convexity gives the closed form (Appendix~\ref{sec:tailspline-details}).
+Penalizing both boundaries instead,
 by adding $\epsilon_1^2$, yields the symmetric construction BM with increments
 proportional to $q(n-q+1)$ (Appendix~\ref{sec:bm-construction}).
 

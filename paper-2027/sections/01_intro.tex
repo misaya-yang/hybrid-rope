@@ -1,24 +1,27 @@
 \section{Introduction}
 \label{sec:intro}
-As native context windows grow, the largest extension ratio is only one aspect
-of positional-encoding quality. For a model with native length $L$ deployed up
-to $sL$, we seek useful task quality across the intended range and ask whether
-performance within $L$ can improve over its native encoding. We study frequency
-allocation $z$: the placement of rotary frequencies within a chosen log-frequency range.
+As native context windows grow, we examine RoPE's frequency allocation as a
+design choice for quality throughout the working context range. For a model
+with native length $L$ deployed up to $sL$, the goal is effective use of both
+the original window and its extension, alongside increasing the extension
+ratio. Allocation $z$ denotes the placement of rotary frequencies within a
+chosen log-frequency range.
 
-RoPE's base selects a geometric table. YaRN and MrRoPE redistribute scaling
+Standard RoPE uses a geometric frequency table. YaRN and MrRoPE redistribute scaling
 for extension, while LeRoPE learns frequencies
 \citep{peng2024yarn,tian2026mrrope,karypis2026lerope}.
-What does internal placement contribute beyond choosing the range? Matched
-interventions show that it can improve quality even at fixed endpoints and
-equal total log-frequency displacement. Its value depends on the chosen range
-and the model's learned use of frequencies.
+These approaches establish the value of changing frequencies. We ask what
+internal placement contributes when the frequency range and total amount
+of movement are held fixed. Matched interventions reveal quality gains at
+fixed endpoints and equal total log-frequency displacement, isolating an
+allocation effect beyond both quantities.
 
-Frozen extension must work with the model's learned frequency use. We therefore
-construct TailSpline around the native table by solving a discrete gap-smoothing
-problem that connects the transition to the interpolated low-frequency tail.
-Fixed-support native interventions examine in-window quality; Cosh transport
-tests allocation when weights can adapt.
+Allocation changes each learned channel's distance response (Fig.~\ref{fig:intro-allocation}). A longer input
+can move a query farther from a relevant record while preserving local
+relations within it. TailSpline distributes this distance stretch through a
+closed-form transition to the interpolated low-frequency tail. A phase bound
+explains its approach to that reference; matched controls and deployment
+comparisons test its practical value.
 
 Our contributions are:
 \begin{itemize}
@@ -30,6 +33,18 @@ Complete sine--cosine pairs characterize positional overlap; reassigning the
 same spectrum across learned coordinates changes task performance.
 \item \textbf{Explicit allocations improve practical quality.}
 TailSpline improves long-context quality across model families and scales.
-Native-window language modeling and Cosh training show that allocation is
-useful both within the original range and when weights adapt.
+Native-window interventions improve language modeling; Cosh transport strengthens
+extrapolation during training and adaptation.
 \end{itemize}
+
+\begin{figure}[t]
+\centering\includegraphics[width=\linewidth]{fig_intro_claim.pdf}
+\caption{\textbf{The same frequency range permits different distance responses.}
+(a) YaRN, MrRoPE-Pro and TailSpline on the Llama-$3$-$8$B grid ($s=4$).
+Open circles mark shared endpoints; gray dots mark shared outer bands and
+colored dots the different interior placements.
+(b) Each channel has stretch $r_k=\omega_k^N/\omega'_k$: a separation
+$\Delta$ produces the native phase at distance $\Delta/r_k$.
+The curves follow from the frequency tables.}
+\label{fig:intro-allocation}
+\end{figure}

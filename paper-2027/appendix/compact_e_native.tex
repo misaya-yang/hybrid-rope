@@ -2,8 +2,8 @@
 \label{sec:compact-native}
 \subsection{Reference objective and numerical construction}
 \label{sec:ncp-construction-new}
-NCP improves task performance within the native context by reallocating the
-interior frequencies while fixing both sampled endpoints. Let
+NCP reallocates the interior frequencies within the native support while
+fixing both sampled endpoints. Let
 $\phi_k=(L-1)\omega_k$ and $\omega'_k=\omega_ke^{-u_k}$.
 The reference problem is a binary target--distractor comparison with unit
 amplitudes, aligned target phase and uniformly random distractor phase:
@@ -18,8 +18,13 @@ between two uniform positions on a continuous unit interval. The aligned
 reference comparison supplies a public design objective. The Transformer task
 scores below evaluate the resulting fixed construction.
 
-We minimize Eq.~\eqref{eq:ncp-main} with fixed $\lambda=9/4$
-(quadratic coefficient $\lambda/2=9/8$), subject to
+NCP minimizes
+\begin{equation}
+\min_u\ \sum_k\left[\mathcal R(\phi_ke^{-u_k})+\frac98u_k^2\right],
+\qquad \omega'_k=\omega_ke^{-u_k},
+\label{eq:ncp-main}
+\end{equation}
+with fixed $\lambda=9/4$ (quadratic coefficient $\lambda/2=9/8$), subject to
 \begin{equation}
 u_0=u_{K-1}=0,\quad 0\le u_k\le 2/9,\qquad
 \log\frac{\omega'_k}{\omega'_{k+1}}
@@ -100,7 +105,8 @@ Normalized whole-response token F1 is averaged over questions within task,
 then equally over tasks. Paired source-cluster resampling within task retains
 question weighting, using $20000$ draws and seed $20260917$.
 
-\input{tables/table_native_qa_tasks}
+The task F1 scores (Native/NCP, \%) are $37.96/35.05$ on 2WikiMQA,
+$45.00/45.00$ on HotpotQA and $35.27/35.32$ on Qasper.
 
 Native/NCP F1 is $39.4116/38.4554\%$, difference
 $-0.9562$ $[-4.4410,1.5666]$ points. The earlier source-equal sensitivity

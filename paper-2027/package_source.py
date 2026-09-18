@@ -23,9 +23,13 @@ def runtime_sources() -> dict[str, bytes]:
     def content_at_snapshot(path: Path) -> bytes:
         if bundled:
             return path.read_bytes()
+        relative = path.relative_to(repo).as_posix()
+        addition = snapshot.get('additions', {}).get(relative)
+        if addition:
+            return (PAPER / addition).read_bytes()
         return subprocess.check_output([
             'git', '-C', str(repo), 'show',
-            snapshot['revision'] + ':' + path.relative_to(repo).as_posix(),
+            snapshot['revision'] + ':' + relative,
         ])
     roots = [
         "experiments/iclr2027_strong_evidence_20260915/matched_three_method_quick_report.py",
@@ -54,6 +58,11 @@ def runtime_sources() -> dict[str, bytes]:
         "experiments/olmo_recovery_20260912/recovery_v2_eval.py",
         "experiments/fixed_rope_three_interfaces_20260913/tailspline_llama_classic_report.py",
         "experiments/fixed_rope_three_interfaces_20260913/tailspline_olmo_classic_report.py",
+        "experiments/kanana_yarn_tailspline_64k_20260918/prepare.py",
+        "experiments/kanana_yarn_tailspline_64k_20260918/prepare_mrpro.py",
+        "experiments/kanana_yarn_tailspline_64k_20260918/prepare_qa128k_tables.py",
+        "experiments/kanana_yarn_tailspline_64k_20260918/report_three_arm_full.py",
+        "experiments/kanana_yarn_tailspline_64k_20260918/report_qa_two_arm.py",
     ]
     pending = [repo / name for name in roots]
     files: set[Path] = set()
@@ -111,10 +120,13 @@ def source_files() -> set[Path]:
 
     add(PAPER / "main.tex")
     for name in ["main.pdf", "main.bbl", "compile.sh", "package_source.py", "SUPPLEMENT_README.md", "title_abstract.txt",
-                 "runtime/README.md", "figs/fig_method_overview.svg",
+                 "runtime/README.md", "figs/fig_intro_claim.svg",
+                 "figs/make_intro_claim.py", "figs/intro_claim_inputs.json",
                  "figs/revision_evidence_inputs.json", "figs/make_revision_evidence.py",
                  "figs/revision_evidence_verification.json",
                  "figs/native_control_verification.json", "figs/runtime_source_snapshot.json",
+                 "figs/verify_distance_response.py", "figs/selected_theory_verification.json",
+                 "figs/verify_finite_content_response.py", "figs/focused_tail_priority_verification.json",
                  "figs/field_gap_inputs.json", "figs/verify_field_gap.py",
                  "figs/allocation_design.py", "figs/make_allocation_value.py", "figs/allocation_value_inputs.json",
                  "figs/make_fig_exact_range_control.py",
@@ -169,6 +181,7 @@ def main() -> None:
             "  python3 figs/make_m4_tradeoff.py\n"
             "  python3 figs/make_allocation_value.py\n"
             "  python3 figs/make_revision_evidence.py\n"
+            "  python3 figs/make_intro_claim.py\n"
             "  python3 figs/make_fig_exact_range_control.py\n"
             "  python3 figs/allocation_design.py\n"
             "This uses the bundled figs/figure_inputs.json, with original-source\n"

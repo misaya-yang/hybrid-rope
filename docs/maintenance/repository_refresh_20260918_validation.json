@@ -1,0 +1,41 @@
+{
+  "scope": "Repository/documentation refresh; no manuscript change or model execution",
+  "status": "passed",
+  "document_check": {
+    "managed_documents": 151,
+    "local_links_checked": 2008,
+    "assets": 65,
+    "source_occurrences_checked": 196,
+    "relocations": 5,
+    "portable_reports_checked": 90,
+    "local_source_occurrences": 20,
+    "mode": "git-portable",
+    "errors": [],
+    "model_execution": false
+  },
+  "skills_validated": [
+    "hybrid-rope-evidence",
+    "hybrid-rope-paper-editing",
+    "hybrid-rope-regression-review",
+    "hybrid-rope-experiment-workflow"
+  ],
+  "cross_machine_simulation": {
+    "git_visible_files_copied": 3480,
+    "ignored_raw_included": false,
+    "personal_skills_required": false,
+    "documentation_and_evidence_check_passed": true
+  },
+  "manuscript_source_and_artifacts_unchanged": true,
+  "main_pdf_sha256": "bf9965314eaaf663c65759abfc546123cd0119b5323a82d3ceb37bab75d8eab5",
+  "experiment_directories_classified": 46,
+  "portable_immutable_review_pdfs": 3,
+  "external_pro_originals_copied": 2,
+  "history_versions": [
+    "v1.pdf",
+    "v2.pdf",
+    "v3.pdf",
+    "v4.pdf"
+  ],
+  "git_commit_or_push_performed": false,
+  "remote_connection_performed": false
+}

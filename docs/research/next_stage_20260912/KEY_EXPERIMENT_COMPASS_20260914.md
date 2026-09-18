@@ -1,82 +1,60 @@
-# Hybrid-RoPE关键实验罗盘
+# 核心证据时间线
 
-更新：2026-09-17。本文区分已入稿、完成待整合、运行中与仅准备。
-具体数值、任务分解和原始身份由链接的结果owner维护，不另复制一套完整报告。
-下一轮编辑与实验取舍见[统一准备](PAPER_NEXT_REVISION_PREPARATION_20260916.md)。
+更新：2026-09-18。本页只收纳**当前35页工作稿已经使用的核心证据**，按研究形成时间组织。具体分数、协议和来源只由链接的结果owner与[证据注册表](../../../paper-2027/research/evidence/index.md)维护；这里不复制服务器状态、执行队列或旧实验计划。
 
-## 当前认识
+## 论文主线
 
-内部配置z在实际范围与旋转预算给定后仍影响质量。TailSpline提供零训练扩展构造，
-NCP已同时取得Native-4K语言建模和新Full-13正结果，Cosh提供配对学习与外推支持。
-已完成的模型/任务证据覆盖Llama、OLMo、Qwen与GLM。
-几何秩、相位幅度、总位移和参考风险各描述不同对象，不充当任务优劣的通用排序。
+论文研究对象是RoPE内部配置`z`：在实际频率范围与旋转预算给定后，内部节点怎样改变位置结构、模型使用与任务质量。证据链按以下顺序闭合：
 
-## 报告口径
+1. 固定支持干预证明内部配置是独立变量；
+2. 几何与同谱干预区分“提供了什么位置结构”和“权重如何使用它”；
+3. TailSpline给出零训练冻结扩展构造，并在多模型、多长度和真实任务上验证；
+4. Cosh的训练与适配实验说明频率搬运可以被学习；
+5. NCP把同一配置问题推进到原生窗口。
 
-- 冻结面板上的官方点分数是该实验的正式成绩，结论先写候选、基线和差值。
-- bootstrap、重采样区间和换来源分析回答稳定性，放在主成绩之后；它们不否决已经观察到的正式成绩。
-- 主终点的胜利不因另一个任务、长度或模型没有获胜而降格。各benchmark分别报告，只有论文主动提出联合终点时才联合判决。
-- 后续候选、复验或晋级门失败，只约束该后续对象或是否追加预算，不反向抹掉先前冻结实验的成绩。
-- 运行身份、样本规模和比较变量必须准确；边界说明用于防止错归因，不主动添加“并非所有任务/模型都保证”等无人主张的免责声明。
+## 2026年7–8月：配置变量、学习与兼容性
 
-## 一、已进入当前9/29页论文
-
-| 证据 | 主要职责 | 唯一结果/核查入口 |
+| 论文职责 | 核心证据 | Canonical owner |
 |---|---|---|
-| Llama S4 clean8/16/32K Full-13 | 同一静态扩展表的多长度任务质量；Native原始表另列 | [Llama owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
-| OLMo S4 clean16K Full-13、经典曲线 | 另一模型族的匹配配置收益 | [OLMo owner](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md) |
-| OLMo Natural-QA631；Llama Natural-QA631/LongBench-v2 | 自然任务的分模型/分指标结果 | [本批入稿分析与源报告](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |
-| Llama clean T/C | 匹配总位移后32K仍有形状差异，16K接近 | [Llama owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
-| NCP OLMo原生4K、780条 | 公开参数、固定端点、gain1的原生Full-13总体提升；完整任务轮廓保留 | [NCP正式报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/olmo_native_ncp.json) |
-| 151.9M固定支持三seed、权重×表crossing | 训练期配置作用、范围交互和学得兼容性 | [A01](../../../paper-2027/research/evidence/EXACT_RANGE_151M_3SEED_RESULT_20260820.md)、[当前主张表](../../../paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
-| 完整pair几何、同谱指派干预、BM–Uni | 位置结构、已学内容坐标与等位移控制 | [证据索引](../../../paper-2027/research/evidence/index.md) |
-|432M MLA、750M续训、OLMo匹配适配 | Cosh学习/外推支持；各自网格、训练和读出协议分开 | [附录F](../../../paper-2027/appendix/compact_f_learning.tex) |
+| 固定实际范围后，内部配置仍能改变质量 | A01三seed固定支持、A02多形状factorial、A08成熟冻结干预 | [证据注册表A01–A08](../../../paper-2027/research/evidence/index.md) |
+| 权重与频率槽存在学得兼容性 | A05权重×表crossing、A06同谱指派与补偿 | [主张映射](../../../paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
+| 训练期和适配期能够利用新配置 | A09 432M MLA三seed、A10 750M继续学习、A12完整答案与EOS | [证据注册表A09–A12](../../../paper-2027/research/evidence/index.md) |
 
-## 二、新完成，等待下一版统一整合
+## 2026年9月14日：TailSpline构造与首轮冻结验证
 
-| 证据 | 新增加的认识 | 结果owner |
+| 论文职责 | 核心证据 | Canonical owner |
 |---|---|---|
-| Qwen S4/128K En.QA | 同S4下自然问答已出现配置收益；不能再概括Qwen尚无优势 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| Qwen S8/256K single-NIAH三任务及LongBook PPL5 | 更远检索与平均建模质量分别呈现，不混成一个分数 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| Llama S16/128K Full-13 gate、PPL10、En.QA/En.Dia | 任务类型相关的高倍率表现，正负结果均保留 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| Qwen/GLM S4 Full-13×10三臂 | 两个32K-native模型在128K对MrPro与官方静态YaRN的直接比较 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| GLM独立第二书池En.QA | 77题、15个新来源簇；换书后TailSpline仍为三臂第一 | [Pro6000结果](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
-| Llama/OLMo大样本官方静态YaRN | NIAH-8×200、PPL46、Natural-QA631及Full-13×10三臂；Llama QA保留YaRN小幅领先，其余读数TailSpline第一 | [便携报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md) |
-| Llama-3-70B NF4尺度迁移 | 冻结8B表直接迁移；S4/32K的Full-13、NIAH、PPL与Natural-QA均胜MrPro；S16/128K仅PPL完成，多针单臂已失效，约3 GPU小时的基线补齐后置 | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
-| OLMo NCP Native-4K独立确认与机制拆分 | 同目标NLL降低`0.012786` nat/token（约`1.27%` PPL），新Full-13×10提高`3.2564pp`；Natural-QA与机制干预按独立合同保留 | [NCP Native结果owner](../../../experiments/native_enhancement_oral_20260915/index.md) |
-| Llama既有2600条的抽样稳定性分析 | 描述当前固定总体中小样本的变化，非新模型实验 | [抽样报告](../../../experiments/iclr2027_strong_evidence_20260915/reports/pro6000_ruler_sampling_stability.json) |
+| 公共参数、零训练的解析构造 | A37有限网格TailSpline、BM与等位移控制 | [方法与评测合同](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) |
+| Llama多长度任务、PPL与原生参照 | A39 classic与clean 32K | [Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
+| OLMo跨模型迁移 | A40 classic曲线与后续clean 16K | [OLMo结果owner](TAILSPLINE_OLMO_CLASSIC_RESULT_20260914.md) |
 
-[Base综合分析](../reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md)已包含新Qwen结果与独立公共几何复算。
-Qwen不同面板的单针/八任务/Full-13不能混为同一条曲线。
+## 2026年9月15日：大样本、真实任务与控制
 
-## 三、旧结果仍有效，解释保持协议范围
-
-| 资产 | 当前用途 | 来源 |
+| 论文职责 | 核心证据 | Canonical owner |
 |---|---|---|
-| Qwen S2 Core-6、S4 NIAH-8 | 旧面板的接近和任务异号仍保留；不覆盖新自然QA/S8检索 | [辅助结果](SECONDARY_GPU_RESULTS_20260915.md) |
-| Llama Full20单针与classic Native参照 | 饱和/任务区别及历史参照，不替代clean Full-13/Native | [辅助结果](SECONDARY_GPU_RESULTS_20260915.md)、[Llama owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
-| Native-Z5 V1、consensus、all50 | 各自校准与确认身份；其后续未通过不否定独立NCP实验 | [Native-Z5 owner](NATIVE_Z5_EXPLORATION_RESULT_20260915.md) |
-| C42/C42V24 | 等位移形状开发证据；重心是同一总位移约束的结果，不另算一项控制 | [原始判决](../../../ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md) |
-| C2、fixed-u、proxy选表 | 保留实际失效与反例，不重启曲线搜索挽救旧候选 | [证据索引](../../../paper-2027/research/evidence/index.md)、[fixed-u](OLMO_S8_FIXED_U_TRANSPORT_RESULT_20260914.md) |
+| clean中间长度与大样本确认 | A46 Llama clean16K、A49 OLMo clean16K | [完成实验采用表](../../../paper-2027/research/COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |
+| 自然语言任务，而非只看synthetic retrieval | A45 Llama Natural-QA631、A50 OLMo Natural-QA631、A53 LongBench-v2子集 | [强证据报告索引](../../../experiments/iclr2027_strong_evidence_20260915/reports/README.md) |
+| 原生表与等位移形状控制 | A51 matched-dose C、A52 Native8K | [Llama结果owner](TAILSPLINE_LLAMA_CLASSIC_RESULT_20260914.md) |
+| 几何供应与任务使用不是同一排序 | A42算子链、A44有限窗口核、A48有效秩与任务排序反例 | [证据注册表A42/A44/A48](../../../paper-2027/research/evidence/index.md) |
 
-“尚未确认/接近/负向”必须带模型、任务、倍率和协议，不能扩大为整条配置轴失效；
-正式正结果同样直接按其合同陈述，不用额外的普适性稻草人削弱。
+## 2026年9月16–17日：直接基线、规模迁移与原生窗口
 
-## 四、数学与CPU证据
-
-| 资产 | 已完成内容 | 当前作用 |
+| 论文职责 | 核心证据 | Canonical owner |
 |---|---|---|
-| [TailSpline构造](TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md) | 有限差分目标唯一解、BM及等位移恒等式 | 可安装的公共构造与控制，不声称真实模型最优 |
-| [理论算子链](THEORY_DEEPENING_CPU_VERIFICATION_20260915.md) | 相位、logit、key竞争、value读出的条件计算 | 与任务证据连接；不是全模型中介实验 |
-| [Base/turn归一化](../reviews/QWEN_BASE_SCALE_SYNTHESIS_20260916.md) | 不同base下的band、采样与相位响应 | 排除简单“大base抹掉干预”解释，不按RMS选赢家 |
-| [Pro重评核验](../reviews/PRO_REASSESSMENT_DISPOSITION_20260916.md) | Cosh目标、竞争恒等式、非零和反例、NCP既有分数重聚合 | 概念澄清与下一版取舍，无新模型生成 |
+| Qwen/GLM在128K对MrPro与官方静态YaRN | A59 Full-13三臂及GLM独立换书 | [Pro6000结果owner](PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md) |
+| Llama/OLMo对官方静态YaRN的大样本比较 | A60 NIAH、PPL、Full-13与Natural-QA | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| 方法规模迁移 | A61 Llama-3-70B NF4 S4/32K | [双服务器结果owner](DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md) |
+| 原生窗口内的公开参数配置干预 | A54/A62 OLMo NCP：NLL、Full-13、Natural-QA与机制拆分 | [Native/NCP结果owner](../../../experiments/native_enhancement_oral_20260915/index.md) |
 
-## 五、执行与准备分开
+## 2026年9月18日：官方部署对照与理论身份收束
 
-易变状态只认[带时间戳执行owner](../../../experiments/iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md)。
-2026-09-16至17日，Pro6000与32GB队列的Qwen/GLM、Llama/OLMo YaRN及70B S4结果
-均已归档；70B S16/128K任务对照仍是明确未完成项，不混入完成表。
+这是核心证据时间线的最新节点。两项工作均已完成、登记并写入当前工作稿。
 
-NCP新Full-13/Natural-QA、同目标NLL、288题反事实和固定末四层干预均已完成并登记；
-Llama/OLMo的YaRN直接比较也已归档。剩余未完成的Q/K/V signed-response分析只影响更细机制归因，
-不改变这些正式任务与NLL结果，也不因旧launcher存在自动运行。
+| 核心证据 | 主要结论 | 入稿状态与Owner |
+|---|---|---|
+| A65 Kanana官方runtime YaRN直接比较 | 64K Full-13中TailSpline/MrPro/YaRN为`72.65/70.33/65.64%`；128K完整上下文English-QA中TailSpline/YaRN为`19.59/17.85%` | **已入当前稿**；[Kanana结果owner](../../../experiments/kanana_yarn_tailspline_64k_20260918/RESULT.md) |
+| Minimum-bending/frame CPU审计 | Llama/OLMo单侧bending energy相对MrPro降低`95.70/95.93%`；严格支持one-sided minimum-bending身份，同时排除Nyquist或frame稳定性最优的过度解释 | **结构结论已入当前稿**；[9月18日修订owner](../../../paper-2027/research/revision_20260918/README.md) |
+
+## 按需历史
+
+NIAH局部反转、Native-Z5、NTS2、CA-NCP、fixed-u、C42、Phi门控和其他失败/开发实验仍保留真实结果，但不进入默认上下文。需要核实特定主张时从[完整证据注册表](../../../paper-2027/research/evidence/index.md)或[历史实验目录](../../../experiments/CATALOG_20260913.md)按ID进入，不从旧计划恢复任务。

@@ -3,7 +3,7 @@
 当前方法、数据、对照与停止条件以[TailSpline统一评测合同](../../docs/research/next_stage_20260912/TAILSPLINE_ROPE_METHOD_AND_UNIFIED_EVAL_20260914.md)为准；研究优先级见[研究索引](../../docs/research/next_stage_20260912/index.md)。
 本目录同时保留旧实验代码，脚本存在不表示它仍在执行队列中。
 
-| 当前任务 | 实现 |
+| 复用用途或历史路径 | 实现 |
 |---|---|
 | 构造静态表与记录身份 | [tables.py](tables.py) |
 | 核验TailSpline数学与边界 | [tailspline_verification.py](tailspline_verification.py)：CPU证明不代表任务性能 |

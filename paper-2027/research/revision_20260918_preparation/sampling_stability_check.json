@@ -1,0 +1,19 @@
+{
+  "status": "COMPLETE",
+  "scope": "Public Llama mathematical grid; S4; centered discrete 32K; inclusive transition [18,35]; real full-pair block whitening; explicit 32768-by-36 feature SVD",
+  "results": {
+    "TailSpline": {
+      "lambda_min": 2.8322368585924366e-08,
+      "lambda_max": 2.8298735116556926,
+      "gram_condition_number": 99916555.4628818,
+      "feature_condition_number": 9995.826902406914
+    },
+    "MrPro": {
+      "lambda_min": 0.030651293719271864,
+      "lambda_max": 1.9339008477108617,
+      "gram_condition_number": 63.09361247270716,
+      "feature_condition_number": 7.943148775687583
+    }
+  },
+  "conclusion": "MrPro is an admissible same-endpoint alternative with better lower eigenvalue and condition number under this declared metric. This refutes TailSpline optimality for these finite-dictionary stability objectives, not its task quality or every possible signal model."
+}

@@ -1,0 +1,10 @@
+{
+  "manifest_files_verified": 239,
+  "packaged_pdf_matches_main": true,
+  "table_regeneration_matches": true,
+  "independent_compile_passed": true,
+  "rebuilt_text_matches_delivered": true,
+  "validation_directory": "/var/folders/py/yshkz8454g98pq1wc0rnw5pm0000gp/T/rope-source-20260918-1x3a85by",
+  "pdf_sha256": "865fe7d376c0c877dd429b3daafbe4b6a4ae90533f67d7bdf57e1c262edf9a02",
+  "zip_sha256": "e025ea3bc7cc3881dd2216baa088d9f73a17fa12f9c22300e6de8373a014a110"
+}

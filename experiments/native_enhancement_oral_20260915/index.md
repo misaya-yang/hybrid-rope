@@ -10,10 +10,9 @@
 - 新Full-13×10：130条/臂，NCP比Native高`+3.2564pp`。正式点分按固定13任务等权；
   配对bootstrap区间`[+0.8077,+5.9231]pp`作为稳定性分析。
 
-同一轮的完整Native-window Natural-QA普查为99条/臂，NCP比Native`−0.8549pp`；这是该
-自然任务面板的正式结果，与上述NLL和Full-13分别报告，不拥有相互否决权。三个主要结果见
-[Full-13与Natural-QA](reports/server_20260917/native_quick_gate_x10_and_qa.json)和
-[同目标NLL](reports/server_20260917/native_lm128_parallel.json)。
+同一轮Native-window Natural-QA有99条/臂。当前论文主指标为任务内问题等权、再对三任务等权：Native/NCP为`39.4116/38.4554%`，差`−0.9562pp`，区间`[−4.4410,+1.5666]pp`。原报告的source-equal敏感性为`−0.8549pp`，区间`[−4.4495,+1.9234]pp`；两种聚合不能互换。
+
+[Full-13与原QA报告](reports/server_20260917/native_quick_gate_x10_and_qa.json)和[同目标NLL](reports/server_20260917/native_lm128_parallel.json)保留原身份；问题等权复算使用[便携配对分数](../../paper-2027/figs/revision_evidence_inputs.json)，口径见[论文附录E](../../paper-2027/appendix/compact_e_native.tex)。这些是不同终点，分别解释。
 
 机制拆分给出更具体的边界，而不反向抹掉正式性能结果：
 
@@ -47,7 +46,7 @@ Natural-QA与两组机制面板完整保留其各自分数，用于任务分解�
   末四层双向相位干预及独立Full-13/Natural-QA/NLL确认。
 - Q/K/V只用于解释冻结表，不用于拟合新表。固定干预块为OLMo零起始层12–15；64题在模型输出前冻结。
 
-当时的无卡准备、`cpu_ready.json`与显式`--execute`边界均已按合同使用；服务器当前已关机，
+当时的无卡准备、`cpu_ready.json`与显式`--execute`边界均已按合同使用；该次结果回传记录服务器已关机，
 本地只保留紧凑正式报告，完整raw仍在服务器数据盘。
 
 
@@ -65,7 +64,7 @@ NCP和reference_predictions保留为候选/参考模型资产，不再默认决�
 - [同目标NLL索引canary](reports/lm_alignment_canary.json)、[现有2600×2生成吞吐剖析](reports/throughput_cpu.json)。
 - [未来生成计划](reports/generation_plan.json)、[等log剂量表](reports/ncp_dose_control.json)、[相位反射表](reports/ncp_phase_reflection.json)。
 
-上述JSON都是CPU准备/既有输出分析，没有本包新方法的GPU准确率。完整prompt资产保留在服务器；
+上述JSON属于CPU准备/既有输出分析；已完成的GPU结果由页首正式报告单独维护。完整prompt资产保留在服务器；
 可用prepare.py和原有tokenizer按冻结seed重建。
 
 ## 代码

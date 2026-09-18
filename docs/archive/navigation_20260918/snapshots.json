@@ -1,0 +1,36 @@
+{
+  "date": "2026-09-18",
+  "purpose": "Preserve former mixed current/history documents before reorganizing navigation",
+  "snapshots": [
+    {
+      "original_path": "paper-2027/HANDOFF.md",
+      "snapshot_path": "docs/archive/navigation_20260918/paper_HANDOFF_before.md",
+      "sha256": "d268d23aadd0c65cf11c77172e141129cb73520028ecc440148d08500a5af079",
+      "link_context": "Original relative links retain their source-file directory context."
+    },
+    {
+      "original_path": "paper-2027/REVISION_BRIEF.md",
+      "snapshot_path": "docs/archive/navigation_20260918/paper_REVISION_BRIEF_before.md",
+      "sha256": "3c001df73d9f35e751e54f50773720c06b7387d1873d267c2019b2cc534fb9a2",
+      "link_context": "Original relative links retain their source-file directory context."
+    },
+    {
+      "original_path": "paper-2027/research/EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md",
+      "snapshot_path": "docs/archive/navigation_20260918/paper_CLAIM_MAP_before.md",
+      "sha256": "41bb16a481d90bd0b22a968b04d6b28b0b7fe0d4f1bcb605001a53f0d76564e4",
+      "link_context": "Original relative links retain their source-file directory context."
+    },
+    {
+      "original_path": "paper-2027/research/evidence/index.md",
+      "snapshot_path": "docs/archive/navigation_20260918/paper_EVIDENCE_INDEX_before.md",
+      "sha256": "0a1c5c4069eea35d9dcf11fddbe4f81181901dd0c884cebfc91800b530a3dff2",
+      "link_context": "Original relative links retain their source-file directory context."
+    },
+    {
+      "original_path": "paper-2027/research/revision_20260918/README.md",
+      "snapshot_path": "docs/archive/navigation_20260918/paper_REVISION_20260918_before.md",
+      "sha256": "743df26758821fa01853fa005f9760316c14761b44a11219c438109342d349d8",
+      "link_context": "Original relative links retain their source-file directory context."
+    }
+  ]
+}

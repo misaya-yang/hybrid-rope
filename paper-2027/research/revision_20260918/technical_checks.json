@@ -1,0 +1,43 @@
+{
+  "baseline": "history/v4.pdf",
+  "baseline_sha256": "3b5ab4e4f601134060965db9f4e40d2adcadae51f0e201d940046a0459ff3f3a",
+  "all_prior_report_objects_unchanged": true,
+  "native_score_rows_and_cosh_inputs_unchanged": true,
+  "unchanged_core_figures": {
+    "fig_allocation_learning.pdf": true,
+    "fig_tailspline_complete.pdf": true,
+    "fig_allocation_geometry.pdf": true,
+    "fig_construction_contrast.pdf": true
+  },
+  "abstract_words": 151,
+  "abstract_digits": false,
+  "body_pages": 9,
+  "total_pages": 35,
+  "appendix_tables_before_after": [
+    24,
+    21
+  ],
+  "main_tables_before_after": [
+    2,
+    2
+  ],
+  "scope": "Existing completed evidence and mathematical checks; no model execution.",
+  "review_status": "complete; findings integrated with independent judgment",
+  "final_pdf_sha256": "865fe7d376c0c877dd429b3daafbe4b6a4ae90533f67d7bdf57e1c262edf9a02",
+  "rendered_pages_checked": [
+    1,
+    2,
+    5,
+    6,
+    8,
+    9,
+    14,
+    20,
+    27,
+    28,
+    29,
+    35
+  ],
+  "pdf_only_review_candidate_sha256": "f2e454406c0c665c1bceee83e825bfbaf3d63c5b979dfbe02e8b55c2509ee60f",
+  "first_page_no_figure": true
+}

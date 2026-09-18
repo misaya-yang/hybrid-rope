@@ -1,7 +1,7 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Retrieval and language modeling with static $s=4$ tables.} NIAH uses $200$/task for Llama/OLMo and the $10$/task Full-13 retrieval subset for Qwen/GLM. PPL uses $46$ matched documents for Llama/OLMo and $5$ for Qwen/GLM; corpora and tokenizers remain model-specific. T/P/Y are defined in Table~\ref{tab:clean-length-main}.}
-\label{tab:three-method-main}
+\caption{\textbf{Retrieval and language modeling with static $s=4$ tables.} NIAH uses $200$/task for Llama/OLMo and the $10$/task Full-13 retrieval subset for Qwen/GLM. PPL uses $46$ matched documents for Llama/OLMo and $5$ for Qwen/GLM; corpora and tokenizers remain model-specific. Below, NIAH intervals resample within task and NLL intervals resample documents; NLL differences are document means. Full-13 intervals accompany their task tables. T/P/Y are defined in Table~\ref{tab:clean-length-main}.}
+\label{tab:three-method-main}\label{tab:three-method-intervals}
 \begin{tabular}{@{}llrrrrrr@{}}
 \toprule
 Model & Length & \multicolumn{3}{c}{NIAH $\uparrow$ (\%)} & \multicolumn{3}{c}{PPL $\downarrow$} \\
@@ -11,6 +11,21 @@ Llama & $32$K & \textbf{80.42} & 69.56 & 70.97 & \textbf{4.1106} & 4.1618 & 4.14
 OLMo & $16$K & \textbf{65.55} & 5.36 & 6.27 & \textbf{8.5362} & 12.8270 & 12.1410 \\
 Qwen & $128$K & \textbf{79.69} & 76.88 & 76.56 & \textbf{2.3272} & 2.3293 & 2.3278 \\
 GLM & $128$K & \textbf{52.81} & 38.44 & 35.00 & \textbf{27.3001} & 29.9507 & 30.0744 \\
+\bottomrule
+\end{tabular}
+\par\medskip\textit{Paired differences and marginal $95\%$ intervals}\par\smallskip
+\begin{tabular}{@{}llrlrl@{}}
+\toprule
+Model & Contrast & NIAH (pp) & Interval & $\Delta$NLL & Interval \\
+\midrule
+Llama & T--P & +10.86 & [9.06, 12.62] & -0.01238 & [-0.01408, -0.01078] \\
+Llama & T--Y & +9.45 & [7.78, 11.11] & -0.00941 & [-0.01088, -0.00803] \\
+OLMo & T--P & +60.19 & [58.28, 62.08] & -0.40724 & [-0.43628, -0.38052] \\
+OLMo & T--Y & +59.28 & [57.36, 61.16] & -0.35227 & [-0.38037, -0.32606] \\
+Qwen & T--P & -- & -- & -0.00093 & [-0.00198, 0.00044] \\
+Qwen & T--Y & -- & -- & -0.00026 & [-0.00111, 0.00110] \\
+GLM & T--P & -- & -- & -0.09266 & [-0.13809, -0.02102] \\
+GLM & T--Y & -- & -- & -0.09678 & [-0.14876, -0.02092] \\
 \bottomrule
 \end{tabular}
 \end{table}

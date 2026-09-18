@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "scope": "Mathematical finite-response bound, tightness and public-grid examples; no checkpoint phase or task validation",
+  "finite_response_cases": 12024,
+  "positive_bound_cases": 9324,
+  "minimum_normalized_slack": -2.033589267150308e-15,
+  "max_normalized_tightness_error": 2.033589267150308e-15,
+  "smaller_residual_can_reduce_signal_counterexample": -0.15601911386209166,
+  "llama_TC_mathematical_examples": [
+    {
+      "q": 12,
+      "far_delta_T": 0.8738901665207118,
+      "far_delta_C": 1.0182351724168959,
+      "far_unit_signal_T_minus_C": 0.11697934952638422,
+      "near_unit_signal_T_minus_C": -0.0037714394564899445,
+      "sufficient_kappa_upper_bound": 1.3868095718098015
+    },
+    {
+      "q": 16,
+      "far_delta_T": 0.025543970371453437,
+      "far_delta_C": 0.05603067794354326,
+      "far_unit_signal_T_minus_C": 0.0012430783370377396,
+      "near_unit_signal_T_minus_C": -0.007547621810713723,
+      "sufficient_kappa_upper_bound": 0.04080995722846151
+    }
+  ],
+  "q12_to_q16_far_gain_ratio": 94.10456770178013
+}

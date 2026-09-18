@@ -1,0 +1,17 @@
+=================== BUILD REPORT (engine: pdflatex) ===================
+main body ends on page : 9   [OK, limit 9]
+references start on page: 11   [OK, clean page break after main body]
+statement present       : AI use statement
+statement present       : Ethics statement
+statement present       : Reproducibility statement
+undefined refs/cites   : 0
+worst overfull hbox    : 0pt  (aim < 5pt)
+anonymity scan         : [OK]
+total pages            : 35
+page size              : 612 x 792 pts (letter)
+PDF author             : <none>
+Type 3 fonts           : 0
+fonts not embedded     : 0
+PDF bytes              : 672249  (limit 52428800)
+====================================================
+all ICLR 2027 format gates passed

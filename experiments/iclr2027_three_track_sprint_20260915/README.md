@@ -1,5 +1,7 @@
 # ICLR 2027 three-track sprint execution
 
+**Archived sprint bundle (2026-09-18):** all current results have moved to their canonical owners in the [experiment index](../index.md). The running/parked statements below are dated receipts, not current tasks; do not restore them as a queue.
+
 This directory contains the completed sprint evidence, CPU-prepared assets,
 and the active or parked follow-up launchers.
 

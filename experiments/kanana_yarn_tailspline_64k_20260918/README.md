@@ -1,38 +1,34 @@
-# Kanana 64K: official runtime YaRN vs TailSpline S=2
+# Kanana official-runtime comparison
 
-This is a frozen, paired zero-training runtime comparison on
-`kakaocorp/kanana-1.5-8b-instruct-2505` at 64K.
+Status: **complete**. The canonical score owner is [RESULT.md](RESULT.md); this
+README only maps code and compact artifacts and does not maintain a second set
+of results.
 
-- Official arm: Transformers YaRN with factor 4.4, original length 32768,
-  beta-fast 64 and beta-slow 2, matching the model's published runtime recipe.
-- Candidate arm: exact finite-grid TailSpline, S=2, canonical public 32-turn to
-  1-turn transition, with the fixed `1 + 0.1 ln 2` gain.
-- Pilot: `niah_multiquery` and `vt`, ten source-order unpadded prompts per task.
-- If the absolute task-equal pilot difference is at most 10 percentage points,
-  run only the remaining eleven tasks and merge them with the pilot into
-  Full-13 x 10. A directionally larger pilot stops for inspection.
-- The two arms always use the same prompts, tokenizer, decoder and scorer.
+## Compact reports
 
-CPU preparation:
+| Endpoint | Report |
+|---|---|
+| 64K two-task three-arm pilot | [reports/pilot2_three_arm.json](reports/pilot2_three_arm.json) |
+| 64K TailSpline/YaRN Full-13x10 | [reports/full13x10.json](reports/full13x10.json) |
+| 64K TailSpline/MrPro/YaRN Full-13x10 | [reports/full13x10_three_arm.json](reports/full13x10_three_arm.json) |
+| 128K complete-context InfiniteBench English QA | [reports/qa128k_two_arm.json](reports/qa128k_two_arm.json) |
 
-```bash
-bash experiments/kanana_yarn_tailspline_64k_20260918/prepare_parallel_server.sh
-```
+Large generation rows remain under the experiment server root
+`/root/autodl-tmp/today_rope_plan_20260914/kanana_yarn_tailspline_64k_20260918`
+and are identified by hashes in the result owner. They are not copied into Git.
 
-The server wrapper uses at most twelve single-threaded CPU workers. It generates
-the thirteen upstream task sources in parallel, then performs one shared
-tokenization/conversion pass and freezes both runtime tables.
+## Reusable code
 
-GPU execution is dry-run by default:
+- `prepare.py`, `prepare_parallel_server.sh`, `run_server.sh`: frozen 64K input,
+  table and two-arm execution path.
+- `prepare_mrpro.py`, `run_mrpro_full13.sh`, `report_three_arm_full.py`: canonical
+  MrRoPE completion and three-arm recomputation at 64K.
+- `prepare_qa128k.sh`, `prepare_qa128k_tables.py`, `run_qa128k_three_arm.sh`:
+  untruncated 128K English-QA assets and execution. The completed run used only
+  TailSpline S=4 and official runtime YaRN factor 4.4; MrRoPE was skipped before
+  start.
+- `report_qa_two_arm.py`, `finish_qa128k_two_arm.sh`: strict paired completion
+  and compact report generation.
 
-```bash
-bash experiments/kanana_yarn_tailspline_64k_20260918/run_server.sh
-bash experiments/kanana_yarn_tailspline_64k_20260918/run_server.sh --execute
-```
-
-To insert a same-prompt canonical MrRoPE-Pro S=2 pilot before resuming the
-YaRN/TailSpline Full-13 continuation:
-
-```bash
-bash experiments/kanana_yarn_tailspline_64k_20260918/run_mrpro_then_resume.sh
-```
+The other `run_qa64k_*` and queue wrappers are retained as execution history or
+recovery tools. Their presence does not define a pending experiment.

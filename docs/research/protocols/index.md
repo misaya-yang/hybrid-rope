@@ -1,4 +1,8 @@
-# 协议与历史计划
+# 实验工作流程与历史协议
+
+当前可复用的准备、执行、报告与入稿流程见[Experiment workflow](EXPERIMENT_WORKFLOW.md)。具体任务优先级由[当前研究索引](../next_stage_20260912/index.md)维护。
+
+## 历史协议与计划
 
 上级：[research/index.md](../index.md)。受代码/回执/历史hash引用的来源保持原路径；本目录index完成主题分类。普通独立叙述文档已移入对应目录。文件中的“当前”以原记录日期解释。
 

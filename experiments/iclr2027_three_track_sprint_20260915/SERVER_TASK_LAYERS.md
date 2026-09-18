@@ -1,10 +1,11 @@
 # Server task layers
 
-This file is the execution handoff for the current experiment server. It routes
-operators to runnable work; it is not another experiment plan or result
-narrative.
+**Archived execution snapshot (2026-09-18):** no entry in this file describes a current queue. Use the [experiment index](../index.md) for completed result owners. Server endpoints, process states and launch instructions below are retained only for provenance and should not be loaded into ordinary research or writing context.
 
-## Current observed snapshot: 2026-09-17T01:29:38Z
+This file preserves the former execution handoff. Its layer names and launch
+conditions describe that past queue, not currently runnable work.
+
+## Recorded snapshot: 2026-09-17T01:29:38Z
 
 The PRO6000 endpoint is `ssh -p 51638 root@connect.westd.seetacloud.com`; it is
 reachable in no-GPU mode and has no evaluator process. The 32GB endpoint was
@@ -212,7 +213,7 @@ handoff. They encode an older two-GPU sprint order whose component jobs are now
 completed, superseded, or deliberately parked; running them can reopen YaRN or
 Native-Z work that is not in the current queue.
 
-## Handoff decision rule
+## Historical handoff decision rule (superseded)
 
 1. If layer A is healthy, leave it alone.
 2. If layer A completes, register/analyse its report before selecting new GPU

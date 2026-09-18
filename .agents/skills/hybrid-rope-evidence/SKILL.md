@@ -39,6 +39,8 @@ absolute score from paired differences.
 
 Use document-relative links and repository-root-relative registry paths. Follow
 [maintenance guidance](../../../docs/maintenance/index.md) for inventory refresh
-when files are added; run `python3 scripts/check_repository_docs.py` after navigation
-changes. This checks document/source consistency, not model capability. Do not
+when files are added. After changing asset metadata, regenerate its navigation
+with `python3 scripts/render_evidence_index.py`; run
+`python3 scripts/check_repository_docs.py` after navigation changes.
+This checks document/source consistency, not model capability. Do not
 launch experiments merely to complete an evidence-registration request.

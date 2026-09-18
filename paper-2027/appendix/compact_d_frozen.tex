@@ -180,7 +180,7 @@ adding only the missing YaRN arm. Qwen/GLM use $10$ inputs/task at $128$K
 ($130$ pairs); their earlier $5$/task subsets are included, not additional
 replications. Their PPL uses five matched InfiniteBench LongBook documents.
 Table~\ref{tab:three-method-main} reports the retrieval-family means and PPL;
-Tables~\ref{tab:full13-tasks-lo}--\ref{tab:full13-intervals} report complete
+Tables~\ref{tab:full13-tasks-lo}--\ref{tab:full13-tasks-qg} report complete
 Full-13 task scores and contrasts.
 
 PPL is the exponential of token-pooled NLL; intervals concern the mean paired
@@ -190,7 +190,6 @@ prefill chunks, GLM $65536$, and Qwen direct prefill; LM uses direct prefill.
 NIAH intervals resample within task; document intervals resample documents,
 using $10000$ draws. Full-13 uses $20000$ paired within-task draws.
 \input{tables/table_three_method_main}
-\input{tables/table_three_method_intervals}
 \input{tables/table_three_method_tasks_lo}
 Llama's single-needle tasks are near ceiling; its multikey T/P/Y means are
 $51.83/24.67/27.00\%$. Multivalue/multiquery means are
@@ -200,9 +199,7 @@ multivalue/multiquery $75.19/3.19/5.56\%$. These task profiles describe where
 the gains occur, separately from the structural analysis.
 \input{tables/table_full13_tasks_lo}
 \input{tables/table_full13_tasks_qg}
-\input{tables/table_full13_intervals}
 
-\newpage
 \paragraph{Frozen transfer to 70B.}
 The prequantized Llama-3-70B-Instruct checkpoint uses NF4 double quantization
 and BF16 computation. Its tokenizer, vocabulary, chat template and special
@@ -215,6 +212,28 @@ contrast is $-0.00484$. This is a within-checkpoint NF4 comparison.
 T wins $10$ Full-13 task means, ties one and loses two; EOS/cap rates are
 $99.23/91.54\%$ and $0.77/8.46\%$. Natural-QA F1 is $49.2846/48.3924\%$,
 with T--P interval $[-0.5991,2.4379]$ points under source-context resampling.
+\FloatBarrier
+
+\paragraph{Publisher-recommended deployment on Kanana.}
+Kanana-1.5-8B-Instruct-2505 has native length $32768$, $64$ rotary pairs
+and base $8{,}000{,}000$ \citep{kanana2025model}. At $64$K, T/P use $s=2$,
+band $[20,35]$ and gain $1+0.1\ln2$. Official runtime YaRN uses factor
+$4.4$, $64/2$-turn corrections and gain $1+0.1\ln4.4$, as recommended
+by its model card. T/P isolates allocation; T/Y compares complete deployment
+recipes on the same checkpoint and inputs. All arms use BF16, batch one,
+Flash-SDPA and greedy decoding. Full-13 comprises $130$ paired prompts.
+Table~\ref{tab:kanana-tasks} reports every task; EOS rates for T/P/Y are
+$70.77/69.23/65.38\%$, with no empty outputs.
+\input{tables/table_kanana_tasks}
+
+At $128$K, TailSpline uses $s=4$ and the same native band; official YaRN keeps
+its factor-$4.4$ recipe. InfiniteBench English-QA contains all $118$ complete
+prompts fitting the tokenizer and input budget, from $23$ book contexts.
+Inputs span $69680$--$130852$ tokens; the output cap is $40$ tokens.
+Question-mean official F1 is $19.59/17.85\%$ for T/Y; source-context-equal
+F1 is $19.63/18.04\%$. T wins $31$ questions, Y wins $30$, and $57$ tie;
+EOS/cap counts are $80/38$ versus $76/42$, with no empty outputs.
+These two target lengths use separately constructed TailSpline tables.
 \FloatBarrier
 
 \subsection{Complete-book QA and source-context uncertainty}

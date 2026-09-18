@@ -2,6 +2,9 @@
 
 本次以论文为中心建立分层小写index，保留有依赖的代码/raw/回执位置。
 
+- [跨机器接续](CROSS_MACHINE_CONTINUATION.md)：当前工作树、仓库技能、审稿材料与PC环境如何接上。
+- [9月18日仓库收口](REPOSITORY_REFRESH_20260918.md)：本轮更新、保留路径、当前／历史分层及验证。
+
 - [组织说明](REPOSITORY_ORGANIZATION_20260912.md)：改了什么、未动什么、完整性检查。
 - [文件清单](repository_inventory.json)：Git可见文件逐项路径/分类，含新增未提交文件；ignored原始目录单列。
 - [迁移与保留路径](relocations.json)：实际移动、因代码/JSON来源依赖保留的文件。
@@ -17,7 +20,7 @@
 2. 新文档：理论放theory/foundations，协议放protocols，复盘放reviews/audits，历史放history/archive；实验家族代码和结果仍与已有运行路径一致。
 3. 更新最近一级index；改变论文主张时同步claim map与交接。根index只保留稳定分类，不堆所有日期文件。
 4. 来源路径要移动时先查脚本、JSON、Markdown和hash引用，写迁移清单并检查链接；不要以目录清爽为由移动活跃runner/原始流。
-5. 运行 `python3 scripts/check_repository_docs.py` 检查受管理入口。历史快照的相对链接保留原路径语境，不当作当前有效导航。
+5. 资产注册表更新后运行 `python3 scripts/render_evidence_index.py`，再运行 `python3 scripts/check_repository_docs.py` 检查受管理入口。历史快照的相对链接保留原路径语境，不当作当前有效导航。
 6. 可移植实验报告不得写入个人电脑绝对路径。当前next-stage结果、论文证据目录和冲刺便携报告会由检查器拒绝`/Users/...`与Windows用户目录；使用文档相对链接、仓库根相对registry路径，远端raw只记录必要的实验服务器路径。
 
 README介绍用途；AGENTS保留稳定原则；日期状态只写在具体报告。计划、准备、CPU核验、模型完成四种状态分别表达。

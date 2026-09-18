@@ -1,13 +1,23 @@
 \section{Frequency Allocation Matters at Fixed Range}
 \label{sec:controlled-findings}
 
-We first isolate the effect of interior placement by fixing the frequency endpoints. We then examine how that effect depends on training, total frequency displacement, and the model's learned use of its coordinates.
+Different grids within one range need not be interchangeable for a model.
+We test this first with frozen weights, then with paired training, and use
+equal-displacement and coordinate interventions to separate the effects.
 
-\begin{figure}[ht]
-\centering\includegraphics[width=\linewidth]{fig_method_overview.pdf}
-\caption{\textbf{Fixed-support allocation and learned compatibility.} (a) Fixed endpoints leave internal spacing free ($K=8$ illustration). (b) Three paired training seeds favor Cosh at extended lengths with retained support. (c) Two-seed mean tail NLL for the $151.9$M weights-by-derived-table crossing at $1$K. Rows freeze trained weights; columns install runtime tables. The matched diagonals outperform the crossed installations.}
-\label{fig:method-overview}
-\end{figure}
+\subsection{Different allocations with the same frozen weights}
+\label{sec:exp-frozen-support}
+
+On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, comparisons share weights, $64$ pairs,
+amplitude, inputs and decoder. Endpoints run from the native fast frequency to
+one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks
+\citep{hsieh2024ruler}, uniform normalized exponents score $0.56\%$, a coarse
+ramp $61.04\%$, and a residual-guided profile $60.47\%$. Qwen's four-task
+comparison gives $57.75/64.00/66.50\%$ (Appendix~\ref{sec:frozen-fixed-support}).
+The same range supports markedly different quality depending on interior allocation.
+
+\paragraph{Internal shape beyond total displacement.}\label{sec:equal-displacement}
+A frozen OLMo comparison also matches total displacement $\sum_k d_k$, alongside endpoints, band and gain: the symmetric profile BM and uniform transition MrRoPE-Uni score $51.32$ and $32.12\%$ in a six-task, $48$-input $16$K follow-up comparison. Total displacement therefore does not explain this score difference (Appendix~\ref{sec:four-method-control}). The clean TailSpline--C comparison confirms a shape effect at matched displacement on Llama (Section~\ref{sec:clean-shape-main}).
 
 \input{sections/02_identification}
 
@@ -21,19 +31,11 @@ These results support nonuniform allocation across families, with strength-depen
 trade-offs; full settings and a separate standard-grid control are in
 Appendix~\ref{sec:exact-range-factorial}.
 
-\subsection{The effect remains in frozen models}
-\label{sec:exp-frozen-support}
-
-On OLMo-$2$-$1$B and Qwen-$2.5$-$1.5$B, we fix the checkpoint, sampled endpoints, $64$ pairs, attention amplitude, input rows, and decoder. The range extends from the native fast frequency to one-quarter of the native slow frequency. On OLMo's nine held-out RULER tasks \citep{hsieh2024ruler}, uniform normalized exponents score $0.56\%$, a coarse ramp $61.04\%$, and a residual-guided profile $60.47\%$. Qwen's four-task comparison gives $57.75/64.00/66.50\%$ (Appendix~\ref{sec:frozen-fixed-support}). Both reallocations yield large OLMo gains while retaining the same sampled range.
-
-\paragraph{Internal shape beyond total displacement.}\label{sec:equal-displacement}
-A frozen OLMo comparison also matches total displacement $\sum_k d_k$, alongside endpoints, band and gain: the symmetric profile BM and uniform transition MrRoPE-Uni score $51.32$ and $32.12\%$ in a six-task, $48$-input $16$K follow-up comparison. Total displacement therefore does not explain this score difference (Appendix~\ref{sec:four-method-control}). The clean TailSpline--C comparison confirms a shape effect at matched displacement on Llama (Section~\ref{sec:clean-shape-main}).
-
 \paragraph{A learned model uses more than a frequency range.}
 Crossing the runtime tables of the paired $151.9$M models tests whether weights
 can use a different allocation interchangeably. Both seeds favor the table
-derived from their training allocation (Fig.~\ref{fig:method-overview}c;
-Appendix~\ref{sec:crossing-151m}). A complementary frozen intervention permutes
+derived from their training allocation (Table~\ref{tab:crossing-151m}).
+A complementary frozen intervention permutes
 the same frequency multiset across coordinates and changes model performance
 (Appendix~\ref{sec:slot-protocol}). These findings connect the two operating
 settings: learning can adapt weights to an allocation, whereas frozen extension

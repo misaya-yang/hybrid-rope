@@ -1,6 +1,6 @@
 {
   "schema": "paper_asset_registry_v1",
-  "as_of": "2026-09-17",
+  "as_of": "2026-09-18",
   "scope": "current manuscript assets; local availability snapshot, no model execution",
   "assets": [
     {
@@ -9,7 +9,7 @@
       "priority": "P0",
       "question": "相同实际support与训练配置下，只改变30个interior z能否改善外推",
       "evidence_grade": "三seed配对；带raw hash摘要",
-      "manuscript_location": "§3.1 / Fig. 1b / Appendix C.2",
+      "manuscript_location": "§3.2 / Appendix C.2 (all seed scores)",
       "interpretation": "保留训练support时三seed的2×/4×/8× NLL均改善；target-matched时排序反转，说明所测排序依赖support policy。几何配置源自FMRoPE，不作方法排名；绝对四格NLL尚未追回，配对差已确认",
       "sources": [
         {
@@ -31,7 +31,7 @@
       "priority": "P0",
       "question": "设计价值是否超出一条曲线",
       "evidence_grade": "12配置×3seed；摘要",
-      "manuscript_location": "§3.1 / Appendix C.4",
+      "manuscript_location": "§3.2 / Appendix C.4",
       "interpretation": "128步；reference7/12，1.25×10/12，Exp9/12",
       "sources": [
         {
@@ -87,7 +87,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
+          "sha256": "40c18a26f9e2e4e0ad6d07eb9a5b0ddc1db9c6cf36904a4299902c6a0d6dceb2",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -114,7 +114,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
+          "sha256": "40c18a26f9e2e4e0ad6d07eb9a5b0ddc1db9c6cf36904a4299902c6a0d6dceb2",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -125,7 +125,7 @@
       "priority": "P0",
       "question": "权重如何学得使用分配",
       "evidence_grade": "50M报告、151M两seed摘要",
-      "manuscript_location": "§3.1 / Fig. 1c / Appendix C.3",
+      "manuscript_location": "§3.2 / Appendix C.3",
       "interpretation": "50M/151M指标不同；range差值不是四格绝对排序",
       "sources": [
         {
@@ -169,7 +169,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
+          "sha256": "40c18a26f9e2e4e0ad6d07eb9a5b0ddc1db9c6cf36904a4299902c6a0d6dceb2",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
@@ -198,14 +198,14 @@
         {
           "path": "paper-2027/sections/04_construction.tex",
           "availability": "tracked",
-          "sha256": "fdc5b6e91aff59623466f88a69e34c403303938b2c25ca6e32f31c249dfba7d1",
+          "sha256": "195e0ced4c7df3446d8772f570081a4530d745e96795d094c2cb5d46fd6b3644",
           "revision_note": "2026-09-15: authorized narrative reorganization; formulas retained in referenced appendices",
           "snapshot_note": "Existing construction and data retained; updated cross-references for new clean and NCP evidence."
         },
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
+          "sha256": "3e270cee6d3c460da4ab88e0b8703960537d92ad01ed31566786e98bee83aefa",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -216,7 +216,7 @@
       "priority": "P0",
       "question": "已有权重下变量是否仍有效",
       "evidence_grade": "held-out与curated摘要",
-      "manuscript_location": "§3.2 / Appendix C.5",
+      "manuscript_location": "§3.1 / Appendix C.5",
       "interpretation": "与BM改变范围的应用对比分开",
       "sources": [
         {
@@ -350,7 +350,7 @@
       "priority": "P1",
       "question": "位置相关适配能否改善自然输出",
       "evidence_grade": "匹配独立适配摘要",
-      "manuscript_location": "Extended records only; prior 69-page location: Appendix F.1 selective-QK adaptation",
+      "manuscript_location": "Appendix F.2: separate selective-Q/K task continuation",
       "interpretation": "与EOS/8B不同adapter和协议",
       "sources": [
         {
@@ -921,7 +921,7 @@
       "priority": "P0",
       "question": "one-sided与symmetric边界roughness分别导出什么中频allocation，真实任务是否偏好early transport与smooth tail landing",
       "evidence_grade": "两种严格凸KKT闭式、n=17/18独立CPU核验、精确BM/front有限网格等价；任务结果另见A39",
-      "manuscript_location": "§5.1 / Fig. 3 / Appendix B.1",
+      "manuscript_location": "§5.1 / Fig. 3 / Appendix B.1/B.5; finite-grid construction and tail phase response",
       "interpretation": "one-sided唯一解是TailSpline，symmetric唯一解是BM；边界条件本身不能由CPU选择，不证明任务优势，旧mix075只作近似prior",
       "sources": [
         {
@@ -951,7 +951,7 @@
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
+          "sha256": "3e270cee6d3c460da4ab88e0b8703960537d92ad01ed31566786e98bee83aefa",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1023,7 +1023,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1046,7 +1046,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1080,9 +1080,9 @@
       "name": "Hybrid-RoPE理论深化算子链CPU核验",
       "priority": "P1",
       "question": "z如何通过内容相位、key相对竞争、value聚合与架构访问路径产生条件性作用，哪些关系可由CPU独立核验",
-      "evidence_grade": "15类代数与数值算子检查；固定seed；无checkpoint、CUDA或任务分数",
-      "manuscript_location": "next-stage theory result owner; selected identities may enter main theory and proof appendix",
-      "interpretation": "有限softmax/value关系、gain仿射可恢复条件、T-C边际配对及稀疏/压缩/旋转value边界通过；不证明任务排序、实证中介、跨架构迁移或通用最优表",
+      "evidence_grade": "15类代数与数值算子检查，加one-sided minimum-bending与五方法Fourier Gram审计；固定seed或精确有理数；无checkpoint、CUDA或任务分数",
+      "manuscript_location": "§5.1 / Appendix B; CPU audit detail in the 2026-09-18 revision owner",
+      "interpretation": "有限softmax/value关系、gain仿射可恢复条件、T-C边际配对及稀疏/压缩/旋转value边界通过；TailSpline是声明的单侧低频tail接口目标的唯一minimum-bending解，Llama/OLMo能量相对MrPro降低95.70/95.93%。完整Gram的frame lower bound未被float64稳定识别，且TailSpline r2低于MrPro；不证明任务排序、实证中介、frame优势、跨架构迁移或通用最优表",
       "sources": [
         {
           "path": "docs/research/next_stage_20260912/THEORY_DEEPENING_CPU_VERIFICATION_20260915.md",
@@ -1098,6 +1098,16 @@
           "path": "experiments/iclr2027_three_track_sprint_20260915/theory_deepening_checks.json",
           "availability": "tracked",
           "sha256": "1d623100da8e6e8fd11a85177f3771ab61be4b7b78de1213da5be0a9b2baf6df"
+        },
+        {
+          "path": "paper-2027/research/revision_20260918_preparation/verify_minimum_bending_mesh.py",
+          "availability": "local-untracked",
+          "sha256": "a5ed581e94019f92d9b6060821dc2f130ebb92e9dfae1d663d4a412415156d13"
+        },
+        {
+          "path": "paper-2027/research/revision_20260918_preparation/minimum_bending_mesh_cpu_audit.json",
+          "availability": "local-untracked",
+          "sha256": "68ba8570d656d9c2b728576b3947adbbfb548404a573149f5da24828ea98efd2"
         }
       ]
     },
@@ -1123,13 +1133,13 @@
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
+          "sha256": "3e270cee6d3c460da4ab88e0b8703960537d92ad01ed31566786e98bee83aefa",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1156,7 +1166,7 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
+          "sha256": "40c18a26f9e2e4e0ad6d07eb9a5b0ddc1db9c6cf36904a4299902c6a0d6dceb2",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1190,7 +1200,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1212,7 +1222,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1266,13 +1276,13 @@
         {
           "path": "paper-2027/appendix/compact_a_geometry.tex",
           "availability": "tracked",
-          "sha256": "22d52f5e07966e59dba7a0403cd23619f757ee721ecd45642932e63c8df5db42",
+          "sha256": "40c18a26f9e2e4e0ad6d07eb9a5b0ddc1db9c6cf36904a4299902c6a0d6dceb2",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         },
         {
           "path": "paper-2027/appendix/compact_b_constructions.tex",
           "availability": "tracked",
-          "sha256": "4047cc05529a3087f1a96afbc952f48c3c44dcb3b27611473f86de7a2e8dbb4c",
+          "sha256": "3e270cee6d3c460da4ab88e0b8703960537d92ad01ed31566786e98bee83aefa",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1311,7 +1321,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1350,7 +1360,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1361,7 +1371,7 @@
       "priority": "P0",
       "question": "Does internal placement matter at fixed total log-frequency displacement?",
       "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
-      "manuscript_location": "§§3.2,6.1 / Appendix D.3",
+      "manuscript_location": "Sections 3.1, 6.1 / Appendix D.3",
       "interpretation": "T-C +2.0962pp [1.1134,3.0769] at32K; -0.2513pp [-1.4051,0.8949] at16K; same support and gain",
       "sources": [
         {
@@ -1394,7 +1404,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1433,7 +1443,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1472,7 +1482,7 @@
         {
           "path": "paper-2027/appendix/compact_d_frozen.tex",
           "availability": "tracked",
-          "sha256": "823b787d54f197f0a4592bc8551c152ba0f41e66b272f5ae0767179be9bb3658",
+          "sha256": "90526ebabec3ad31820976fa25a4d2b203f50779ac6888faedf9715c2c62fd9d",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1482,8 +1492,8 @@
       "name": "OLMo native allocation exploration",
       "priority": "P2",
       "question": "Can changing z improve task quality without extending the context window?",
-      "evidence_grade": "Remote raw pairing and stored-score aggregation checked; OLMo QA and LongBench-v2 full outputs rescored; original report intervals retained",
-      "manuscript_location": "Section 6.2 / Eq. 10 / Appendix E: fixed-support native allocation and original task panel",
+      "evidence_grade": "Original 780-row native diagnostic panel; paired stored-score verification and original report intervals",
+      "manuscript_location": "Section 6.2 / Appendix E.1-E.2: fixed-support native allocation and original task panel",
       "interpretation": "NCP +1.4081pp [0.2009,2.5833] on existing 780-row development panel; gain1 and public-parameter construction. Separate calibrated V1 +3.0107pp; not a TailSpline native claim",
       "sources": [
         {
@@ -1516,7 +1526,7 @@
         {
           "path": "paper-2027/appendix/compact_e_native.tex",
           "availability": "tracked",
-          "sha256": "533290d3c672ff707dfccd11562957db43b9d923f5532b5d1c7d1615a7382136",
+          "sha256": "8ee6cb30d91cf76ba5120d5c4e7da9299dabe56170e976df8754a6c62580a001",
           "role": "Current compact manuscript statement/proof/protocol; original evidence identity unchanged"
         }
       ]
@@ -1828,6 +1838,27 @@
           "path": "experiments/ca_ncp_safe_followup_20260917/reports/server_20260917/raw/P_axis_consensus.jsonl",
           "availability": "tracked",
           "sha256": "c89a385b29a8349fc7e7eaa0d28b72940c7071f4059c883231c82a7ec6c1deb7"
+        }
+      ]
+    },
+    {
+      "id": "A65",
+      "name": "Kanana official-runtime YaRN comparison at 64K and 128K",
+      "priority": "P0",
+      "question": "Can zero-training TailSpline outperform Kanana's documented official runtime YaRN on broad synthetic tasks at 64K and complete-context natural book QA at 128K",
+      "evidence_grade": "Frozen kakaocorp/kanana-1.5-8b-instruct-2505; paired 64K RULER Full-13 x 10 and paired 128K InfiniteBench English-QA with 118 complete untruncated prompts from 23 source contexts; exact prompt identity and independent scorer replay",
+      "manuscript_location": "§6.1 / main length and natural-task tables / Appendix D",
+      "interpretation": "At 64K, TailSpline/MrRoPE-Pro/official runtime YaRN score 72.65/70.33/65.64% on Full-13 x 10. At 128K complete-context English QA, TailSpline scores 19.59% versus official runtime YaRN 17.85%, a +1.74pp fixed-panel lead; cluster-equal scoring also favors TailSpline by +1.58pp. The YaRN contrast is a complete-method runtime comparison, not evidence that the checkpoint was YaRN-trained. The 128K MrRoPE arm was skipped before start.",
+      "sources": [
+        {
+          "path": "experiments/kanana_yarn_tailspline_64k_20260918/reports/full13x10_three_arm.json",
+          "availability": "local-untracked",
+          "sha256": "5457d9bbb57afc0821a4631b66dad6c4616c1aad5c33d5b860d6bca116268d49"
+        },
+        {
+          "path": "experiments/kanana_yarn_tailspline_64k_20260918/reports/qa128k_two_arm.json",
+          "availability": "local-untracked",
+          "sha256": "3e681cef4a44114a697e61c4e425d49dce4ce67d5c7057365fd04daef91f87f3"
         }
       ]
     }

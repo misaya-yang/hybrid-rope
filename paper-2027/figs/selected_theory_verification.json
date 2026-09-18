@@ -1,0 +1,92 @@
+{
+  "status": "PASS",
+  "scope": "Selected finite-grid, unwrapped phase and aligned-reference identities; no model evaluation or FP32 installation replay",
+  "counts": {
+    "exact_grids": 128,
+    "tail_residual_comparisons": 32512,
+    "crossover_comparisons": 130048
+  },
+  "max_crossover_identity_error": 5.684341886080802e-14,
+  "public_float64_grids": [
+    {
+      "model": "Llama",
+      "base": 500000,
+      "L": 8192,
+      "K": 64,
+      "band": [
+        18,
+        35
+      ],
+      "n": 17,
+      "terminal_bound": 0.08571428571428572,
+      "terminal_phase_ratio": {
+        "2": 0.0827287109520667,
+        "4": 0.07980797417729213
+      }
+    },
+    {
+      "model": "OLMo",
+      "base": 500000,
+      "L": 4096,
+      "K": 64,
+      "band": [
+        14,
+        32
+      ],
+      "n": 18,
+      "terminal_bound": 0.08108108108108109,
+      "terminal_phase_ratio": {
+        "2": 0.07839074175871105,
+        "4": 0.07575628632611192
+      }
+    },
+    {
+      "model": "Qwen",
+      "base": 1000000,
+      "L": 32768,
+      "K": 64,
+      "band": [
+        23,
+        40
+      ],
+      "n": 17,
+      "terminal_bound": 0.08571428571428572,
+      "terminal_phase_ratio": {
+        "2": 0.0827287109520667,
+        "4": 0.07980797417729213
+      }
+    },
+    {
+      "model": "GLM",
+      "base": 10000,
+      "L": 32768,
+      "K": 32,
+      "band": [
+        17,
+        30
+      ],
+      "n": 13,
+      "terminal_bound": 0.1111111111111111,
+      "terminal_phase_ratio": {
+        "2": 0.10628433255595994,
+        "4": 0.10158526824717384
+      }
+    },
+    {
+      "model": "Kanana",
+      "base": 8000000,
+      "L": 32768,
+      "K": 64,
+      "band": [
+        20,
+        35
+      ],
+      "n": 15,
+      "terminal_bound": 0.0967741935483871,
+      "terminal_phase_ratio": {
+        "2": 0.09303178796976322,
+        "4": 0.08937872346695491
+      }
+    }
+  ]
+}

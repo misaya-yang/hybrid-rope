@@ -17,6 +17,14 @@ approve paid GPU runs, downloads, remote changes, or publication.
 
 ## Context and evidence
 
+- For a fresh session, use `index.md` to select one task route. The repository
+  contains portable skills under `.agents/skills/`; use those project-specific
+  workflows for manuscript editing, PDF regression review and experiments.
+  Do not assume another machine has personal skills or previous conversations.
+- Current manuscript state and author corrections are in `paper-2027/HANDOFF.md`
+  and `paper-2027/research/AUTHOR_WORKING_CONTRACT.md`. The current research
+  index controls priorities; a historical plan is not an active queue.
+
 - Use root `index.md` when the task location is unclear; otherwise read the relevant
   file or experiment directly. Catalogs, old plans, and full handoffs are for
   specific provenance questions, not startup reading.

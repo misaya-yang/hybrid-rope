@@ -17,13 +17,11 @@ b_\star(s)+b_\star(d) & a(d)-a(s)
 and $S_\omega=H_{\omega\omega}$. Since $Q_{\omega\nu}=S_\omega^{-1/2}H_{\omega\nu}S_\nu^{-1/2}$
 is the whitened cross-Gram of two two-dimensional subspaces, its singular values
 are the canonical correlations, and $c_{\omega\nu}=\frac12\|Q_{\omega\nu}\|_F^2$
-is invariant under $x_\omega\mapsto x_\omega O$ for any invertible $O$ (in
-particular under rotation of the phase inside a pair), because $S_\omega$
-transforms congruently and the whitening cancels $O$.
+is invariant under invertible changes of basis within either pair,
+including phase rotation, as shown below.
 
 \paragraph{Basis invariance.}
-The cancellation can be stated exactly. Under independent invertible basis
-changes $x_\omega\mapsto x_\omega A_\omega$ and
+Under independent invertible basis changes $x_\omega\mapsto x_\omega A_\omega$ and
 $x_\nu\mapsto x_\nu A_\nu$, let
 $U_j=S_j^{1/2}A_j(A_j^\top S_j A_j)^{-1/2}$ for $j\in\{\omega,\nu\}$. Then
 $U_j^\top U_j=I$, and the transformed whitened cross-Gram is
@@ -32,7 +30,7 @@ orthogonal factors preserve the two canonical correlations and therefore
 $c_{\omega\nu}$. Thus $c_{\omega\nu}$ is an intrinsic measure of overlap
 between the two positional subspaces.
 
-\begin{theorem}[Spectral budget identity]
+\begin{theorem}[Complete-pair effective-rank identity]
 \label{thm:budget}
 For the block-whitened Gram matrix $\Gamma$ with diagonal blocks $I_2$,
 $\operatorname{tr}\Gamma=2K$ and

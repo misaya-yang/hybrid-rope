@@ -1,12 +1,13 @@
 # Hybrid-RoPE
 
-研究有限 RoPE 位置基的分配、学习与长度行为。当前论文是 **Beyond the Base: Exponent Allocation in RoPE**，位于 `paper-2027/`。
+研究 RoPE 内部频率配置、学习与上下文利用。当前论文是 **Beyond the Base: Frequency Allocation in RoPE**，位于 `paper-2027/`。
 
-**从 [index.md](index.md) 开始查询。** 当前研究以既有分配识别和学习证据为基础，推进一张固定RoPE表在任务可用短端、原生段、中段和目标端的上下文质量，并与YaRN、MrRoPE等强方法比较。transition、band和低频终值是设计手段；已有方法差异解释不作为论文主线。最新定位见[当前研究方向](docs/research/next_stage_20260912/PAPER_INTERVAL_DIRECTION_20260913.md)。
+**从 [index.md](index.md) 按任务进入。** 当前论文通过固定范围和等位移控制识别配置的作用，分析位置结构与学得使用，并以TailSpline、原生窗口干预和学习／适配验证实际价值。研究与执行状态由[当前研究入口](docs/research/next_stage_20260912/index.md)维护。
 
 - [当前研究](docs/research/next_stage_20260912/index.md)：目标、固定表确认与当前证据。
 - [论文与构建](paper-2027/index.md)：稿件及交付。
 - [AGENTS.md](AGENTS.md)：稳定工作原则。
+- [跨机器接续](docs/maintenance/CROSS_MACHINE_CONTINUATION.md)：把本工作树安全同步到家里PC；仓库内技能无需依赖这台Mac的个人记忆。
 
 快速构建：在仓库根运行 `bash paper-2027/compile.sh`；源码打包：`python3 paper-2027/package_source.py`。运行环境和可选数字复核见论文索引。文档浏览无需运行模型。
 

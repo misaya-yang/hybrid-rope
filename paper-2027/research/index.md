@@ -1,29 +1,31 @@
-# 当前论文研究入口
+# 论文研究入口
+
+默认从当前论文和核心证据时间线进入，不把历史计划、服务器交接或逐轮审稿记录作为写作前置上下文。
+
+## 按任务进入
 
 | 任务 | 入口 |
 |---|---|
-| 改稿总结（日记）与每日版本原则 | [历次纠错、最新反思、证据/理论增量和交付三问](PAPER_REVISION_DIARY.md) |
-| 2026-09-17最终逐章审核与v3基线 | [写作skills、逐章取舍和最终验收](revision_20260917_final_editorial/README.md) |
-| 2026-09-17稿件升级与v2基线对读 | [完成结果、原生任务主线与回归审查](revision_20260917_evidence_update/README.md) |
-| 后续增量准备（本批完成部分已入稿） | [研究定位、Pro取舍、十篇审稿经验与实验准备](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md) |
-| 此前附录整理与完整性检查（29页基线） | [六主题附录、保留映射和验证](appendix_restructure_20260916/README.md) |
-| 新落盘结果整合（已应用，含NCP正文） | [跨模型、自然QA、等位移与原生窗口分析](COMPLETED_EXPERIMENTS_PAPER_VALUE_20260915.md) |
-| 本轮理论整合与精确修改（已应用） | [修改记录](theory_revision_proposal_20260915/README.md) · [R08独立PDF审稿](pdf-review-rounds/20260915_theory_integration_r08/README.md) |
-| 判断现稿是否还需要修改、查看本轮文档修正 | [现状与修改必要性审计](audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md) |
-| 查看Oral建议及作者纠正 | [Oral研究策略](ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md)：顶部已撤回TailSpline中心定位，具体构造实验建议保留 |
-| 当前主线与修订目标 | [修订目标](../REVISION_BRIEF.md) |
-| 重新理解完整研究贡献 | [仓库证据与贡献重建](RESEARCH_RECONSTRUCTION_20260914.md) |
-| 对照32篇同领域论文优化叙事、理论、实验与附录 | [顶会论文综合审读](ROPE_TOP_PAPER_WRITING_AND_RESEARCH_SYNTHESIS_20260914.md) |
-| 本轮稿件与对照审查 | [三个发现改稿与验证](THREE_DISCOVERIES_REVISION_20260914.md) |
-| 核实数字与来源可达性 | [证据索引](evidence/index.md) |
-| 查具体主张、图表或公式 | [主张映射](EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
-| 下一步研究 | [当前研究索引](../../docs/research/next_stage_20260912/index.md) |
+| 了解论文当前状态与交付物 | [论文索引](../index.md) · [当前handoff](../HANDOFF.md) |
+| 按时间理解已经形成的核心证据 | [核心证据时间线](../../docs/research/next_stage_20260912/KEY_EXPERIMENT_COMPASS_20260914.md) |
+| 核实具体数字、协议和来源 | [证据注册表](evidence/index.md) |
+| 查某条正文主张对应什么证据 | [主张映射](EXPONENT_CLAIM_EVIDENCE_MAP_20260909.md) |
+| 查看9月18日最新证据怎样进入当前稿 | [9月18日修订owner](revision_20260918/README.md) |
+| 查看当前研究边界与实验owner | [当前研究索引](../../docs/research/next_stage_20260912/index.md) |
 
-需要完整科学资产背景时再查[资产交接](PAPER_REVISION_HANDOFF_20260911.md)。理论基础、成熟模型分支、审查、外部意见与历史过程在[完整研究目录](CATALOG_20260913.md)，不是所有写作任务的前置阅读。
+## 本轮经验与后续问题
 
-- [Field-gap revision and decisions](COMPARATIVE_GAP_AND_DECISION_MAP_20260915.md): current manuscript outline, completed clean/control evidence, and bounded follow-up arrangements.
-- [ICLR 2027 深度优化计划](ICLR2027_STABLE7_STRATEGY_20260915.md)：保留问题陈述与写法推演；顶部已按现稿重新评估必要性，整套重排和新增实验不再作为必改清单。实际下一步以当前研究索引为准。
+- [作者工作约定](AUTHOR_WORKING_CONTRACT.md)：历次纠错的可复用原则。
+- [标题摘要封板](revision_20260918/FINAL_TITLE_ABSTRACT.md)：正文迭代默认保持这两项。
+- [给Pro的三个问题](revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md)：未来一周的理论、证据与叙事取舍。
+- [外部建议原文](external-reviews/index.md)：原文、采纳记录和未采用建议分开。
 
-- [五轮 Astra/Sol 独立审稿与逐轮改稿](pdf-review-rounds/20260915_astra_sol_five_rounds/README.md)：冻结PDF、同轮相同提示词、逐项判断与AC综合。
+## 稿件时间线
 
-- [2026-09-16证据增量与新旧PDF对读](revision_20260916_evidence_update/README.md)：已完成结果、取舍和v1基线回归检查。
+- [9月18日当前修订与v4基线](revision_20260918/README.md)：Kanana与单侧minimum-bending进入当前35页工作稿。
+- [9月17日最终逐章审核与v3基线](revision_20260917_final_editorial/README.md)：上一轮PDF交付状态。
+- [9月17日证据升级与v2对读](revision_20260917_evidence_update/README.md)：A59–A62等已入稿证据。
+- [9月16日附录整理](appendix_restructure_20260916/README.md)：旧29页基线及完整性检查。
+- [改稿日记](PAPER_REVISION_DIARY.md)：按日期保留作者取舍和历史纠正，不作为实验状态表。
+
+更早的审稿轮次、外部意见、策略稿和完整研究背景从[历史研究目录](CATALOG_20260913.md)按需检索。它们不会覆盖当前证据owner或自动产生新实验任务。

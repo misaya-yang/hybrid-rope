@@ -1,0 +1,58 @@
+{
+  "changed_manuscript_files": [
+    "sections/04_experiments.tex",
+    "sections/04_construction.tex",
+    "sections/02_exponents.tex",
+    "sections/02_identification.tex",
+    "sections/01_intro.tex",
+    "sections/04_mature.tex",
+    "sections/03_findings.tex",
+    "sections/03_theory.tex",
+    "appendix/compact_a_geometry.tex",
+    "appendix/compact_e_native.tex"
+  ],
+  "all_existing_result_tables_unchanged": true,
+  "four_retained_figures_unchanged": {
+    "fig_allocation_learning.pdf": true,
+    "fig_tailspline_complete.pdf": true,
+    "fig_allocation_geometry.pdf": true,
+    "fig_construction_contrast.pdf": true
+  },
+  "approved_abstract_unchanged": true,
+  "abstract_contains_digits": false,
+  "history_versions_unchanged": true,
+  "main_style_unchanged": true,
+  "body_pages": 9,
+  "total_pages": 35,
+  "undefined_references": 0,
+  "overfull_boxes": 0,
+  "review_candidate_sha256": "6fe308a759a3920dffb5784c39bb5cecff0feb8ce12589ccda43b5e61056fd71",
+  "figure_source": "figs/make_intro_claim.py",
+  "new_figure_role": "Analytic illustration; no task scores or new model experiment.",
+  "active_display_equations_unchanged": 41,
+  "active_tex_files": 38,
+  "archive_compile_text_matches": true,
+  "archive_sha256": "fa3d005d1d926e2444445970383573776c0f13d5a07972cde3fc889d35ed6d1b",
+  "archive_manifest_files_verified": 241,
+  "rendered_main_pages_checked": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "first_page_no_figure": true,
+  "concept_figure_regenerates_in_extracted_archive": true,
+  "rendered_appendix_pages_checked": [
+    14,
+    31
+  ],
+  "final_pdf_sha256": "6fe308a759a3920dffb5784c39bb5cecff0feb8ce12589ccda43b5e61056fd71",
+  "review_status": "complete: independent concurrent Astra and Sol, identical PDF-only prompt",
+  "post_review_manuscript_changes": false,
+  "repository_docs_check": "passed: zero errors"
+}

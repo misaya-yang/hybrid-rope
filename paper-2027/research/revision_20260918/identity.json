@@ -1,0 +1,19 @@
+{
+  "baseline": "paper-2027/history/v4.pdf",
+  "baseline_sha256": "3b5ab4e4f601134060965db9f4e40d2adcadae51f0e201d940046a0459ff3f3a",
+  "pre_edit_source_archive_sha256": "6046252b9062be6528be322721e745350d23a2812a7e136f019931755e0d1d17",
+  "scope": "Completed Kanana evidence, distance-response design explanation, native-study presentation; no model runs.",
+  "review_candidate_sha256": "f2e454406c0c665c1bceee83e825bfbaf3d63c5b979dfbe02e8b55c2509ee60f",
+  "final_pdf_sha256": "865fe7d376c0c877dd429b3daafbe4b6a4ae90533f67d7bdf57e1c262edf9a02",
+  "final_zip_sha256": "e025ea3bc7cc3881dd2216baa088d9f73a17fa12f9c22300e6de8373a014a110",
+  "reviewers": {
+    "astra": "gpt-6-astra",
+    "sol": "gpt-5.6-sol"
+  },
+  "post_review_changes": [
+    "Figure 1(b) panel identities",
+    "Kanana QA reported as observed panel scores",
+    "Table 2 interval pointer scope",
+    "Two-sentence appendix protocol map"
+  ]
+}

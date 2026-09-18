@@ -5,20 +5,21 @@ This directory implements the thin execution layer specified by
 It reuses the existing table, RULER, generation and report kernels. Code or data
 being ready is not a completed model experiment.
 
-## Current status routing (2026-09-16)
+## Current result routing (2026-09-18)
 
-Current completed extreme/natural results are in the
+Completed Llama/OLMo direct YaRN and 70B results belong to the
+[dual-server result owner](../../docs/research/next_stage_20260912/DUAL_SERVER_YARN_AND_70B_RESULTS_20260917.md).
+Completed Qwen/GLM Full-13 and book-QA results belong to the
 [Pro6000 result owner](../../docs/research/next_stage_20260912/PRO6000_EXTREME_NATURAL_QA_RESULTS_20260916.md).
-GLM is downloaded and its S4 queue has started; Qwen official static YaRN has a
-complete generation receipt. These do not yet supply an uninspected paired conclusion.
-See the [timestamped execution snapshot](../iclr2027_three_track_sprint_20260915/SERVER_TASK_LAYERS.md).
+The [portable report index](reports/README.md) identifies the underlying files.
+These results have entered the manuscript. There is no current queue implied
+by this directory. Research priorities are in the
+[current research index](../../docs/research/next_stage_20260912/index.md).
 
-The older implementation table and128K package below preserve their original
-specification and dated states, not today's queue. In particular, Llama S16 is
-completed, NCP is completed, and "YaRN parked" does not describe Qwen's new arm.
-Llama clean32K X8 remains a separate unexecuted comparison.
-[Next revision preparation](../../docs/research/next_stage_20260912/PAPER_NEXT_REVISION_PREPARATION_20260916.md)
-contains research priorities without adding GPU jobs.
+The implementation table and launch recipes below are dated execution history
+and reusable code. In particular, the old descriptions of GLM starting, YaRN
+being parked and the 128K package waiting for Pro6000 are not current status.
+Read the specific result owner and current task before using a wrapper.
 
 ## Completed report snapshot
 

@@ -144,3 +144,32 @@ python3 figs/make_revision_evidence.py
 ```
 
 Run this command from the source archive root, not from runtime/.
+
+## Kanana publisher-recommended deployment comparison
+
+The Kanana constructors and report entrypoints are frozen additions listed in
+`../figs/runtime_source_snapshot.json`; the earlier shared runtime remains pinned.
+The additions preserve the completed report's scoring and public-parameter table
+construction. As with other entries, this is a reference implementation; the
+result inputs retain the recorded comparison identities.
+
+The `experiments.kanana_yarn_tailspline_64k_20260918` modules provide `prepare`,
+`prepare_mrpro`, `prepare_qa128k_tables`, `report_three_arm_full`, and
+`report_qa_two_arm`. Use each module's `--help` from runtime/ for its arguments.
+64K RULER compares TailSpline/MrPro S2 with the model card's YaRN factor 4.4,
+64/2-turn corrections; 128K QA compares TailSpline S4 with the same official
+YaRN recipe. The public native grid has 64 pairs, base 8,000,000, length 32,768.
+
+For the complete-book QA panel, `prepare_natural_long` uses InfiniteBench
+`longbook_qa_eng`, the Kanana tokenizer, `--scale 4 --lengths 131072`,
+`--minimum-input-tokens 32769 --maximum-input-tokens 131032`, and
+`--rows-per-task 1000` (all 118 eligible questions are retained).
+`run_natural_long` uses greedy decoding and a 40-token cap; the same complete
+prompts are used for both static tables. Results are reproduced from stored
+outputs with `report_qa_two_arm`, using the official English-QA F1 adapter.
+
+The paper's portable inputs include both compact Kanana reports. Regeneration
+checks their aggregate arithmetic and retains the owner-reported RULER intervals;
+it does not reconstruct bootstrap draws or rescore remote raw generations.
+The new mathematical checks are `figs/verify_distance_response.py` and
+`figs/verify_finite_content_response.py`, run from the source archive root.

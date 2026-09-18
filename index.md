@@ -4,8 +4,8 @@
 研究主线是z：实际频率范围与旋转预算给定后，内部配置怎样改变位置行为和模型质量。
 受控干预、完整旋转对结构、显式构造与模型任务证据组成论证。TailSpline承担冻结扩展，
 NCP保留原生固定支持实验；Cosh承担训练、适配与外推证据。
-当前进入[已完成证据的论文增量与新旧稿对读](paper-2027/research/revision_20260917_evidence_update/README.md)。
-后续在跑实验完成后再增量加入；结果和执行状态由各自owner维护。
+当前稿正文9页、全稿35页，**标题和167词摘要已封板**。9月18日Kanana、理论解释与逐章优化已入稿，概念首图已替换；后续以实质证据和有价值的Pro建议决定正文增量。
+本轮未安排新增GPU队列；结果由各自owner维护。OpenReview表单已填好，最终提交留给作者，仓库不宣称已经提交。
 
 | 当前任务 | 入口 |
 |---|---|
@@ -13,6 +13,8 @@ NCP保留原生固定支持实验；Cosh承担训练、适配与外推证据。
 | 修改论文、编译与交付 | [论文索引](paper-2027/index.md) |
 | 核实主张与实验数字 | [证据索引](paper-2027/research/evidence/index.md) |
 | 实验代码与结果确认 | [实验索引](experiments/index.md) |
+| 新会话与家里PC接续 | [当前工作handoff](paper-2027/HANDOFF.md) · [跨机器同步](docs/maintenance/CROSS_MACHINE_CONTINUATION.md) |
+| 作者要求与反复纠错 | [工作约定](paper-2027/research/AUTHOR_WORKING_CONTRACT.md) |
 
 按任务选择一条路线，已知文件直接读取局部上下文。既有 scratch、LoRA、BM 等结果仍是论文基础；当前研究排序不改变其证据效力。
 

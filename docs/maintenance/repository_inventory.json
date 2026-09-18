@@ -9,6 +9,26 @@
       "category": "document"
     },
     {
+      "path": ".agents/skills/hybrid-rope-experiment-workflow/SKILL.md",
+      "area": ".agents",
+      "category": "document"
+    },
+    {
+      "path": ".agents/skills/hybrid-rope-paper-editing/SKILL.md",
+      "area": ".agents",
+      "category": "document"
+    },
+    {
+      "path": ".agents/skills/hybrid-rope-regression-review/SKILL.md",
+      "area": ".agents",
+      "category": "document"
+    },
+    {
+      "path": ".agents/skills/hybrid-rope-regression-review/references/pdf-review-prompt.md",
+      "area": ".agents",
+      "category": "document"
+    },
+    {
       "path": ".gitattributes",
       "area": "root",
       "category": "other"
@@ -1209,6 +1229,41 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "docs/archive/navigation_20260918/index.md",
+      "area": "docs",
+      "category": "navigation"
+    },
+    {
+      "path": "docs/archive/navigation_20260918/paper_CLAIM_MAP_before.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/archive/navigation_20260918/paper_EVIDENCE_INDEX_before.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/archive/navigation_20260918/paper_HANDOFF_before.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/archive/navigation_20260918/paper_REVISION_20260918_before.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/archive/navigation_20260918/paper_REVISION_BRIEF_before.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/archive/navigation_20260918/snapshots.json",
+      "area": "docs",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "docs/archive/tau_star_paper_ready_v1.md",
       "area": "docs",
       "category": "document"
@@ -1414,7 +1469,17 @@
       "category": "document"
     },
     {
+      "path": "docs/maintenance/CROSS_MACHINE_CONTINUATION.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/maintenance/REPOSITORY_ORGANIZATION_20260912.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/maintenance/REPOSITORY_REFRESH_20260918.md",
       "area": "docs",
       "category": "document"
     },
@@ -1422,6 +1487,11 @@
       "path": "docs/maintenance/SOL_RESEARCH_SUPERVISION_20260913.md",
       "area": "docs",
       "category": "document"
+    },
+    {
+      "path": "docs/maintenance/ds_workspace_cleanup_20260918.json",
+      "area": "docs",
+      "category": "data-or-receipt"
     },
     {
       "path": "docs/maintenance/index.md",
@@ -1440,6 +1510,11 @@
     },
     {
       "path": "docs/maintenance/repository_inventory.json",
+      "area": "docs",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "docs/maintenance/repository_refresh_20260918_validation.json",
       "area": "docs",
       "category": "data-or-receipt"
     },
@@ -2389,6 +2464,11 @@
       "category": "document"
     },
     {
+      "path": "docs/research/next_stage_20260912/WEB_PRO_HOURLY_RESEARCH_SOLUTION_LEDGER_20260917.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
       "path": "docs/research/next_stage_20260912/WEB_PRO_NATIVE_METHOD_DELIVERY_CORRECTION_20260915.md",
       "area": "docs",
       "category": "document"
@@ -2450,6 +2530,11 @@
     },
     {
       "path": "docs/research/next_stage_20260912/theory.md",
+      "area": "docs",
+      "category": "document"
+    },
+    {
+      "path": "docs/research/protocols/EXPERIMENT_WORKFLOW.md",
       "area": "docs",
       "category": "document"
     },
@@ -3214,11 +3299,6 @@
       "category": "document"
     },
     {
-      "path": "ds_workspace/GPT_PROMPT_TONIGHT.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
       "path": "ds_workspace/LESSONS.md",
       "area": "ds_workspace",
       "category": "document"
@@ -3230,21 +3310,6 @@
     },
     {
       "path": "ds_workspace/TONIGHT_EXPERIMENT_RULES_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/codex_failures_20260910/part1_lines_1_2300.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/codex_failures_20260910/part2_lines_2300_4600.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/codex_failures_20260910/part3_lines_4600_end.md",
       "area": "ds_workspace",
       "category": "document"
     },
@@ -3264,202 +3329,12 @@
       "category": "document"
     },
     {
-      "path": "ds_workspace/recon_20260910/FEEDBACK_LLAMA54_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/MASTER_SUMMARY_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/MIGRATION_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/PHASE1_CLOSURE_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/RESEARCH_OWNER_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/RUN_READY_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
       "path": "ds_workspace/recon_20260910/YARN_MRROPE_RESEARCH_EVIDENCE.md",
       "area": "ds_workspace",
       "category": "document"
     },
     {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/BAND_FORCING_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/CONTRACTION_KKT1_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/CONTRACTION_KNIFE_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/CONTRACTION_SUPPORT_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/CORRECTIONS_FROM_PRO_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/CORRECTION_KNEE_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/CORRECTION_QWEN_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/DOC_SYNTHESIS_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/EVQ_UNIFY_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/INDEX_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/K6_PREFLIGHT_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/KKT_ANALYTIC_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/PHASE1_ROUND1_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/PLAN_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/QWEN_INSTRUMENT_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/README.md",
-      "area": "ds_workspace",
-      "category": "navigation"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/REANCHOR_KKT_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/RESOLUTION_MISSING_TERM_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_B2_OLMO_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_KNIFE_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_SIGMA_SHAPE_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_THEORY_TESTS_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/SEP_CAUSE_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/TURN_WINDOW_THEORY_20260910.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_archive_20260911/WHY_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/ANALYTIC_BUDGET_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/EVQ_LIMIT_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
       "path": "ds_workspace/recon_20260910/_reports/LEDGER_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/MECHANISM_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/MIDBAND_MECH_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/MINIMAL_PARAMS_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/PRO_PLAN_VERIFY_A_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/_reports/PRO_PLAN_VERIFY_B_20260911.md",
       "area": "ds_workspace",
       "category": "document"
     },
@@ -3489,19 +3364,9 @@
       "category": "document"
     },
     {
-      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/check_remote.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
       "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/check_results.json",
       "area": "ds_workspace",
       "category": "data-or-receipt"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/curvature_model_before.py",
-      "area": "ds_workspace",
-      "category": "code"
     },
     {
       "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/formula_results.json",
@@ -3509,59 +3374,9 @@
       "category": "data-or-receipt"
     },
     {
-      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/natural_read.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/olmo_beta.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/qwen4x_power_read.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/qwen_longnll.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
       "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/REPORT.md",
       "area": "ds_workspace",
       "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/amp4x_prescription.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/build_amp_sweep.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/oos_qwen.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/verify_coverage.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/budget_20260911.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/chain_pro_items.py",
-      "area": "ds_workspace",
-      "category": "code"
     },
     {
       "path": "ds_workspace/recon_20260910/code/coverage_theory_20260911.py",
@@ -3574,26 +3389,6 @@
       "category": "data-or-receipt"
     },
     {
-      "path": "ds_workspace/recon_20260910/code/evq_limit_20260911.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/fisher_local_20260911.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/holdout180.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/holdout180_read.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
       "path": "ds_workspace/recon_20260910/code/index.md",
       "area": "ds_workspace",
       "category": "navigation"
@@ -3604,27 +3399,7 @@
       "category": "code"
     },
     {
-      "path": "ds_workspace/recon_20260910/code/minimal_params_20260911.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/patch_mfile.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/patch_pro_arms.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
       "path": "ds_workspace/recon_20260910/code/pro_tables_20260911.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/repair_pro_arms.py",
       "area": "ds_workspace",
       "category": "code"
     },
@@ -3689,172 +3464,12 @@
       "category": "code"
     },
     {
-      "path": "ds_workspace/recon_20260910/code/yarn_baseline/add_yarn_spec.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/code/yarn_baseline/build_yarn_entry.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/design/D1_first_round.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
       "path": "ds_workspace/recon_20260910/index.md",
       "area": "ds_workspace",
       "category": "navigation"
     },
     {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/AMP4X_PRESCRIPTION_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/AMP8X_SWEEP_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/COVERAGE_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/DOSE_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/HOLDOUT180_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/LONGBRIDGE_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/NATURAL_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/QWEN3_SURVIVOR_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/QWEN4X_POWER_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/RUNBOOK_OFFICE_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/S8_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/SATPRO_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/STEP42_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/WALK_PREREG_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/prereg_protocols/index.md",
-      "area": "ds_workspace",
-      "category": "navigation"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/recon/R1_ordering_and_tables.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/recon/R2_sparse_and_training.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/recon/R3_probe_and_corpora.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/CONSTRAINT_IS_SLACK_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/COST_IS_NOT_QUADRATIC_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/COVERAGE_CEILING_THEORY_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/FOUR_CORNERS_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/GPT6PRO_MECHANISM_BRIEF_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/MRROPE_RECONCILIATION_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/NO_STATIC_FUNCTIONAL_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/ONE_AXIS_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/PLATEAU_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
       "path": "ds_workspace/recon_20260910/theory/RELEASE_AXIS_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/SYNTHESIS_20260911.md",
-      "area": "ds_workspace",
-      "category": "document"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/theory/THE_ANSWER_20260911.md",
       "area": "ds_workspace",
       "category": "document"
     },
@@ -4484,32 +4099,12 @@
       "category": "data-or-receipt"
     },
     {
-      "path": "ds_workspace/recon_20260910/work/s6_deep.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/work/s6_same_mechanism.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/work/s7_qwen_check.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/work/s7_s8_math.py",
-      "area": "ds_workspace",
-      "category": "code"
-    },
-    {
-      "path": "ds_workspace/recon_20260910/work/s7_s8_out.txt",
-      "area": "ds_workspace",
-      "category": "other"
-    },
-    {
       "path": "experiments/CATALOG_20260913.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
+      "path": "experiments/DIRECTORY_MAP.md",
       "area": "experiments",
       "category": "document"
     },
@@ -6040,6 +5635,141 @@
     },
     {
       "path": "experiments/joint_kkt_20260910/selftest.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/RESULT.md",
+      "area": "experiments",
+      "category": "document"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/finish_qa128k_two_arm.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/prepare.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/prepare_mrpro.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/prepare_parallel_server.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/prepare_qa128k.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/prepare_qa128k_tables.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/prepare_qa64k.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/report.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/report_qa_three_arm.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/report_qa_two_arm.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/report_three_arm_full.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/report_three_arm_pilot.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/reports/full13x10.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/reports/full13x10_three_arm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/reports/pilot2_three_arm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/reports/qa128k_two_arm.json",
+      "area": "experiments",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_mrpro_full13.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_mrpro_then_resume.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_pro6000_qa128k_queue.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_qa128k_three_arm.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_qa64k_after_assets.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_qa64k_three_arm.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/run_server.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/kanana_yarn_tailspline_64k_20260918/test_kanana_64k.py",
       "area": "experiments",
       "category": "code"
     },
@@ -9139,6 +8869,36 @@
       "category": "code"
     },
     {
+      "path": "experiments/tc_distance_competition_20260918/README.md",
+      "area": "experiments",
+      "category": "navigation"
+    },
+    {
+      "path": "experiments/tc_distance_competition_20260918/__init__.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/tc_distance_competition_20260918/audit_existing_multikey.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/tc_distance_competition_20260918/prepare_distance_competition.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/tc_distance_competition_20260918/report_distance_competition.py",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
+      "path": "experiments/tc_distance_competition_20260918/run_server.sh",
+      "area": "experiments",
+      "category": "code"
+    },
+    {
       "path": "experiments/twotrack_20260911/EXPERIMENT_PLAN.md",
       "area": "experiments",
       "category": "document"
@@ -10224,6 +9984,46 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/extended-records/kanana_runtime/__init__.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/prepare.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/prepare_mrpro.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/prepare_qa128k_tables.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/report.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/report_qa_three_arm.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/report_qa_two_arm.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/extended-records/kanana_runtime/report_three_arm_full.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/extended-records/sections/03_compatibility.tex",
       "area": "paper-2027",
       "category": "manuscript"
@@ -10584,6 +10384,31 @@
       "category": "manuscript"
     },
     {
+      "path": "paper-2027/figs/fig_intro_claim.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_intro_claim.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_intro_claim.svg",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_intro_claim_draft.png",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/figs/fig_intro_claim_draft.svg",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
       "path": "paper-2027/figs/fig_lerope_profile_oracle.pdf",
       "area": "paper-2027",
       "category": "manuscript"
@@ -10699,7 +10524,22 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/figs/focused_tail_priority_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/interval_development_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/intro_claim_draft_inputs.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/figs/intro_claim_inputs.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
     },
@@ -10774,6 +10614,16 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/make_intro_claim.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/figs/make_intro_claim_draft.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/make_m4_tradeoff.py",
       "area": "paper-2027",
       "category": "code"
@@ -10829,6 +10679,11 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/figs/selected_theory_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/figs/story_figure_inputs.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
@@ -10844,12 +10699,22 @@
       "category": "code"
     },
     {
+      "path": "paper-2027/figs/verify_distance_response.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/figs/verify_explicit_geometry.py",
       "area": "paper-2027",
       "category": "code"
     },
     {
       "path": "paper-2027/figs/verify_field_gap.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/figs/verify_finite_content_response.py",
       "area": "paper-2027",
       "category": "code"
     },
@@ -10885,6 +10750,11 @@
     },
     {
       "path": "paper-2027/history/v3.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/history/v4.pdf",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -10937,6 +10807,11 @@
       "path": "paper-2027/refs/references.bib",
       "area": "paper-2027",
       "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/AUTHOR_WORKING_CONTRACT.md",
+      "area": "paper-2027",
+      "category": "document"
     },
     {
       "path": "paper-2027/research/CATALOG_20260913.md",
@@ -12094,6 +11969,26 @@
       "category": "document"
     },
     {
+      "path": "paper-2027/research/external-reviews/pro-theory-20260918/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/external-reviews/pro-theory-20260918/ROPE_TAIL_PRIORITY_FOCUSED_20260918.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/external-reviews/pro-theory-20260918/ROPE_THEORY_SYNTHESIS_FOR_CODEX_20260917.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/external-reviews/pro-theory-20260918/source_manifest.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
       "path": "paper-2027/research/external-reviews/qwen-panel-20260826/01_journal_fit_review.md",
       "area": "paper-2027",
       "category": "document"
@@ -12799,6 +12694,186 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/revision_20260918/CHAPTER_PASS.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/FINAL_TITLE_ABSTRACT.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/abstract_final_identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/abstract_final_review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/abstract_final_review_prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/abstract_final_validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/chapter_pass_astra.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/chapter_pass_disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/chapter_pass_identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/chapter_pass_review_prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/chapter_pass_sol.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/chapter_pass_validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/portable_review_artifacts.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/reviews/abstract_final_candidate.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/reviews/candidate.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/reviews/chapter_pass_baseline.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/reviews/chapter_pass_candidate.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/reviews/disposition.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/reviews/prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/source_compile.log",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/source_validation.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/technical_checks.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/WEB_PRO_DESIGN_PRINCIPLE_FOLLOWUP.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/focused_tail_priority_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/index.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/minimum_bending_mesh_cpu_audit.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/sampling_stability_check.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/selected_theory_verification.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/verify_focused_tail_priority.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/verify_minimum_bending_mesh.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/verify_sampling_stability.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918_preparation/verify_selected_theory.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
       "path": "paper-2027/research/theory_revision_proposal_20260915/MANUSCRIPT_DELTA.md",
       "area": "paper-2027",
       "category": "document"
@@ -13115,6 +13190,11 @@
     },
     {
       "path": "paper-2027/tables/table_infinite_qa_intervals.tex",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/tables/table_kanana_tasks.tex",
       "area": "paper-2027",
       "category": "manuscript"
     },
@@ -15324,6 +15404,11 @@
       "category": "code"
     },
     {
+      "path": "scripts/export_continuation_overlay.py",
+      "area": "scripts",
+      "category": "code"
+    },
+    {
       "path": "scripts/figures/build_fig5_downstream_qa.sh",
       "area": "scripts",
       "category": "code"
@@ -15520,6 +15605,11 @@
     },
     {
       "path": "scripts/package_supplement.py",
+      "area": "scripts",
+      "category": "code"
+    },
+    {
+      "path": "scripts/render_evidence_index.py",
       "area": "scripts",
       "category": "code"
     },
@@ -17034,7 +17124,6 @@
     "ds_workspace/recon_20260910/audit/index.md",
     "ds_workspace/recon_20260910/code/index.md",
     "ds_workspace/recon_20260910/index.md",
-    "ds_workspace/recon_20260910/prereg_protocols/index.md",
     "ds_workspace/recon_20260910/theory/index.md",
     "ds_workspace/recon_20260910/verdicts/index.md",
     "experiments/broad_position_eval/index.md",
@@ -17140,6 +17229,18 @@
     "paper-2027/research/pdf-review-rounds/20260915_two_rounds/r02/disposition.md",
     "paper-2027/research/audits/STATE_AND_REVISION_NECESSITY_AUDIT_20260915.md",
     "paper-2027/research/ICLR2027_ORAL_RESEARCH_STRATEGY_20260915.md",
-    "docs/research/next_stage_20260912/WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md"
+    "docs/research/next_stage_20260912/WEB_PRO_NATIVE_Z_ENHANCEMENT_PROMPT_20260915.md",
+    "paper-2027/research/AUTHOR_WORKING_CONTRACT.md",
+    "paper-2027/research/revision_20260918/README.md",
+    "paper-2027/research/revision_20260918/CHAPTER_PASS.md",
+    "paper-2027/research/revision_20260918/FINAL_TITLE_ABSTRACT.md",
+    "docs/research/protocols/EXPERIMENT_WORKFLOW.md",
+    "docs/maintenance/CROSS_MACHINE_CONTINUATION.md",
+    "docs/maintenance/REPOSITORY_REFRESH_20260918.md",
+    "experiments/DIRECTORY_MAP.md",
+    ".agents/skills/hybrid-rope-paper-editing/SKILL.md",
+    ".agents/skills/hybrid-rope-regression-review/SKILL.md",
+    ".agents/skills/hybrid-rope-experiment-workflow/SKILL.md",
+    "paper-2027/research/external-reviews/pro-theory-20260918/README.md"
   ]
 }

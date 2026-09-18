@@ -47,7 +47,9 @@ T_q-C_q=(1-w_n)(B_q-U_q)=\frac{q(n-q)(2q-n)}{2n(n+1)(2n+1)}.
 \end{equation}
 This cumulative-profile difference is antisymmetric under $q\mapsto n-q$, vanishes at both endpoints, and sums to zero. Since $U$ and $F$ have positive increments and $0<w_n<1$, $C$ is monotone with $C_0=0,C_n=1$. Extending both $T$ and $C$ by the same constant outer bands gives identical endpoints and total log displacement at a common scale. Their equal increment centroids follow from Eq.~\eqref{eq:displacement-centroid}, rather than imposing a further constraint. For $n=1,2$, $B=U$ and $T=C$; for wider bands the contrast tests higher-order shape.
 
-The clean T--C results are in Appendix~\ref{sec:clean-shape-new}.
+For $q<n/2$, $T_q<C_q$; for $q>n/2$, $T_q>C_q$. TailSpline thus
+allocates less stretch in the entry half and more in the tail half, at the same
+total displacement. The clean T--C results are in Appendix~\ref{sec:clean-shape-new}.
 
 \subsection{Cosh density and finite installation}
 \label{sec:proofs}\label{sec:table-identities}
@@ -167,15 +169,48 @@ $2|\sin(d(\nu-\nu_{\rm ref})/2)|$.
 Thus the distances quantify two specified phase references; they are not
 effective context lengths of a model.
 
-For a fixed content component
-$f_\nu(d)=a\cos(\nu d-\omega d_0)$, with $a>0$ and desired stretched
-distance $d=sd_0$, its residual phase is $\delta=d(\nu-\omega/s)$.
-If $0\le\delta_T\le\delta_P\le\pi$, then $f_T(d)\ge f_P(d)$ by the
-monotonicity of cosine on $[0,\pi]$. The content phase specifies the
-reference calculation. Outside that interval, reducing residual phase
-from $2\pi$ to $\pi$ instead changes the response from $a$ to $-a$.
-The conditional example explains a possible use of distance scaling,
-while the full-model comparisons measure its actual task value.
+\paragraph{Tail-junction phase residual.}
+At $q=n-1$, $m_q=1-\epsilon_n$ and hence
+$\nu-\omega/s=(\omega/s)(s^{\epsilon_n}-1)$. For $n\ge2$ and $s>1$,
+$0<\epsilon_n^{\rm TS}\le\epsilon_n^{\rm Pro}$. Since
+$(e^x-1)/x$ is increasing for $x>0$, dividing the two residuals gives
+Eq.~\eqref{eq:tail-phase-ratio}. It quantifies the approach to the stretched
+distance reference at the final interior pair.
+
+\paragraph{Dependency stretch and response.}
+Let a reference dependency have separation $d_0>0$ and its extended separation
+be $\alpha d_0$. The residual phase in channel $q$ is
+$\delta_M=\omega d_0(\alpha s^{-m_q^M}-1)$. For an interior pair with
+$T_q>P_q$ and $s>1$, the smaller absolute residual switches from P to T at
+\begin{equation}
+\alpha_q^*=\frac{2}{s^{-T_q}+s^{-P_q}}.
+\label{eq:dependency-crossover}
+\end{equation}
+Indeed, with $v_M=s^{-m_q^M}$,
+$\delta_T^2-\delta_P^2=(\omega d_0)^2\alpha(v_T-v_P)
+[\alpha(v_T+v_P)-2]$. Thus P has smaller residual for
+$0<\alpha<\alpha_q^*$, and T for $\alpha>\alpha_q^*$.
+The relevant scale is the dependency's stretch, not the total input length.
+
+To allow a nonzero content phase, write a reference-aligned complex
+coefficient as $a+ib$, with $a>0$ and $|b|\le\kappa a$. Its response at residual
+$\delta$ is $f(\delta)=a\cos\delta-b\sin\delta$. If two residuals have the
+same sign and $0\le r=|\delta_A|<t=|\delta_B|\le\pi$, then
+\begin{equation}
+f(\delta_A)-f(\delta_B)\ge
+2a\sin\frac{t-r}{2}
+\left(\sin\frac{t+r}{2}-\kappa\left|\cos\frac{t+r}{2}\right|\right).
+\label{eq:finite-coherent-response}
+\end{equation}
+This follows from the cosine and sine difference identities and
+$|b|\le\kappa a$; an allowed endpoint value of $b$ attains the bound.
+A positive bracket guarantees a larger response. At $\kappa=0$ it recovers
+the aligned cosine comparison; beyond that case the allowable phase offset
+is explicit. These are fixed-content responses. Their contribution to
+attention depends on competing keys, as specified in
+Appendix~\ref{sec:content-competition}. For example, $a=1$, $b=-1$ and
+positive residuals $0.1/0.3$ give a response difference of $-0.156$,
+illustrating why the phase condition matters.
 
 \paragraph{Equal displacement does not imply a small phase intervention.}
 On the same Llama $s=4$ mathematical grid, the largest T/C unwrapped

@@ -1,4 +1,4 @@
-"""Verify recorded aggregates and render the September 17 evidence tables.
+"""Verify recorded aggregates and render the completed evidence tables.
 
 This script does not load models or rescore generated text. Paired score rows
 are checked where present; remaining observations retain report-level identity.
@@ -53,7 +53,22 @@ def full_ci(key, base):
     return b['delta_task_macro_interval95'] if key!='llama70' else b['delta_by_length_interval95']['32768']
 
 
+def verify_kanana():
+    ruler, qa = D['kanana_full13'], D['kanana_qa']
+    assert ruler['paired_prompts'] == 130 and ruler['rows_per_task'] == 10
+    for arm, values in ruler['arms'].items():
+        assert len(values['by_task']) == 13
+        assert all(t['rows'] == 10 for t in values['by_task'].values())
+        close(mean(t['official_score'] for t in values['by_task'].values()), ruler['task_equal_scores'][arm])
+    for base in ('mrpro','official_yarn'):
+        close(ruler['task_equal_scores']['tailspline']-ruler['task_equal_scores'][base],ruler['deltas']['tailspline_minus_'+base])
+    assert qa['rows_per_arm'] == 118 and qa['source_context_clusters'] == 23
+    assert qa['identity']['same_ordered_prompts'] and qa['identity']['complete_context_preserved']
+    close(qa['arms']['tailspline']['qa_f1']-qa['arms']['official_yarn']['qa_f1'],qa['delta_tailspline_minus_official_yarn'])
+
+
 def verify():
+    verify_kanana()
     for key, _, _ in MODELS:
         macro, ppl, tasks, contrasts = normalized(key)
         assert len(tasks)==8
@@ -205,8 +220,10 @@ def generate():
     for key,label,length in MODELS+[('llama70','Llama-70B NF4','32')]:
         vals=[full_score(key,a) for a in ARMS[:2]]+[full_score(key,'yarn') if key!='llama70' else None]
         rows.append(f'{label} & ${length}$K & 10 & '+scores(vals)+' & '+interval(full_ci(key,'mrpro'))+r' \\')
+    k=D['kanana_full13']['task_equal_scores']
+    rows.insert(-1,'Kanana & $64$K & 10 & '+scores([k[a] for a in ('tailspline','mrpro','official_yarn')])+r' & [-3.13, 8.04] \\')
     table('table_clean_length_main.tex',
-          r'\textbf{Quality across lengths, families and scale.} Clean Full-13 scores (\%) with one static $s=4$ table per model. '
+          r'\textbf{Quality across lengths, families and scale.} Clean Full-13 scores (\%). T/P use static $s=4$ tables except Kanana ($s=2$); its YaRN uses the official factor $4.4$. '
           r'T/P/Y: TailSpline/MrPro/static YaRN. Scores are paired within each row; (a)/(b) retain their stated sample sizes, with small Llama/OLMo panels drawn as subsets. '
           r'Original RoPE scores $90.03\%$ at Llama $8$K. Intervals are paired $95\%$ T--P contrasts (pp).',
           'tab:clean-length-main','llrrrrl',r'Model & Length & $N$/task & T & P & Y & T--P interval',rows)
@@ -221,9 +238,11 @@ def generate():
         rows.append(f'{label} & {bench} & {n} & '+scores(vals)+' & '+interval(ci)+r' \\')
         if key=='llama70_qa':
             rows.append(r'Llama-8B & LongBench v2 & 117 & \textbf{35.04} & 30.77 & -- & [$-3.39$, 11.97] \\')
+    k=D['kanana_qa']['arms']
+    rows.append('Kanana & Book QA & 118 & '+scores([k['tailspline']['qa_f1'],None,k['official_yarn']['qa_f1']])+r' & -- \\')
     table('table_natural_transfer_main.tex',
           r'\textbf{Natural-task evaluation.} Scores (\%): five-task macro F1 for Natural-QA, accuracy for LongBench v2 and official F1 for InfiniteBench book QA. '
-          r'I/II are separate book pools. Paired $95\%$ T--P intervals use source contexts (pp); T--Y and simultaneous intervals are in Appendix~\ref{sec:infinite-qa-new}.',
+          r'I/II are separate book pools. Paired $95\%$ T--P intervals use source contexts (pp); Further source-context contrasts are tabulated in Appendix~\ref{sec:infinite-qa-new}.',
           'tab:natural-transfer-main','llrrrrl',r'Model & Benchmark & $N$ & T & P & Y & T--P interval',rows)
     nat=native_analysis();lm=D['ncp_lm']['metrics']
     rows=[]
@@ -259,7 +278,15 @@ def generate():
         for t in sorted(full_cell(keys[0],'tailspline')['tasks']):
             vals=[full_cell(k,a)['tasks'][t]['official'] for k in keys for a in arms[k]]
             rows.append(t.replace('niah_','').replace('_',r'\_')+' & '+' & '.join(fmt(v) for v in vals)+r' \\')
-        table('table_full13_tasks_'+suffix+'.tex',r'Complete paired Full-13 scores (\%, $10$/task). These are the direct-baseline panels in Table~\ref{tab:clean-length-main}.',
+        rows.append(r'\midrule')
+        rows.append('Macro & '+' & '.join(fmt(full_score(k,a)) for k in keys for a in arms[k])+r' \\')
+        for base, name in [('mrpro','T--P'),('yarn','T--Y')]:
+            cells=[]
+            for k in keys:
+                ci=interval(full_ci(k,base)) if base in arms[k] else '--'
+                cells.append(r'\multicolumn{'+str(len(arms[k]))+r'}{c}{'+ci+'}')
+            rows.append(name+r' $95\%$ (pp) & '+' & '.join(cells)+r' \\')
+        table('table_full13_tasks_'+suffix+'.tex',r'Complete paired Full-13 scores (\%, $10$/task). These are the direct-baseline panels in Table~\ref{tab:clean-length-main}; paired task-stratified $95\%$ intervals appear below each model.',
               'tab:full13-tasks-'+suffix,'l'+'r'*sum(map(len,arms.values())),
               r'Task & '+' & '.join(r'\multicolumn{'+str(len(arms[k]))+r'}{c}{'+labels[k]+'}' for k in keys)+r' \\'+'\n'+r' & '+' & '.join('T & P & Y' if k!='llama70' else 'T & P' for k in keys),rows)
     rows=[]
@@ -304,10 +331,34 @@ def generate():
           'tab:natural-three-tasks','lrrrrrr',r'Task & \multicolumn{3}{c}{Llama-8B} & \multicolumn{3}{c}{OLMo} \\'+'\n'+r' & T & P & Y & T & P & Y',rows)
 
 
+
+def consolidate_tables():
+    """Keep each result and its uncertainty together instead of separate floats."""
+    root=HERE.parent/'tables'
+    a=(root/'table_three_method_main.tex').read_text()
+    b=(root/'table_three_method_intervals.tex').read_text()
+    start=b.index(r'\begin{tabular}')
+    tabular=b[start:b.index(r'\end{table}')].strip()
+    a=a.replace(r'\end{table}',r'\par\medskip\textit{Paired differences and marginal $95\%$ intervals}\par\smallskip'+'\n'+tabular+'\n'+r'\end{table}')
+    a=a.replace(r'\label{tab:three-method-main}',r'\label{tab:three-method-main}\label{tab:three-method-intervals}')
+    a=a.replace(r'T/P/Y are defined in Table~\ref{tab:clean-length-main}.',r'Below, NIAH intervals resample within task and NLL intervals resample documents; NLL differences are document means. Full-13 intervals accompany their task tables. T/P/Y are defined in Table~\ref{tab:clean-length-main}.')
+    (root/'table_three_method_main.tex').write_text(a)
+    k=D['kanana_full13']; rows=[]
+    for task in k['tasks']:
+        vals=[k['arms'][a]['by_task'][task]['official_score'] for a in ('tailspline','mrpro','official_yarn')]
+        rows.append(task.replace('niah_','').replace('_',r'\_')+' & '+' & '.join(fmt(v) for v in vals)+r' \\')
+    rows += [r'\midrule','Macro & '+scores([k['task_equal_scores'][a] for a in ('tailspline','mrpro','official_yarn')])+r' \\',
+             r'\multicolumn{4}{l}{T--P: $+2.32$ pp, $95\%$ interval $[-3.13,8.04]$} \\',
+             r'\multicolumn{4}{l}{T--Y: $+7.01$ pp, $95\%$ interval $[0.21,13.81]$} \\']
+    table('table_kanana_tasks.tex',r'Kanana at $64$K: complete Full-13 scores (\%, $10$/task) and paired within-task intervals. T/P use $s=2$ and Y the publisher-recommended factor $4.4$.',
+          'tab:kanana-tasks','lrrr',r'Task & T & P & Y',rows)
+
+
 if __name__ == '__main__':
     verify()
     error=verify_connections()
     generate()
+    consolidate_tables()
     result={'status':'PASS','paired_score_rows_reaggregated':3240,
             'document_nll_rows_reaggregated':97,
             'native_paired_prompt_rows':229,'native_lm_score_rows':512,

@@ -1,26 +1,38 @@
 \section{Allocation as a Design Variable}
 \label{sec:exponents}\label{sec:identification}
-For $K=d_{\rm rot}/2$ pairs, standard RoPE uses $\omega_k=b^{-k/K}$. Any strictly ordered positive table admits
+For $K=d_{\rm rot}/2$ pairs, standard RoPE uses $\omega_k=b^{-k/K}$.
+Order a positive table from fast to slow, $\omega_0>\cdots>\omega_{K-1}$.
+Its log frequencies admit
 \begin{equation}
 x_k=-\log\omega_k=a+Rz_k,\quad z_k=\frac{x_k-x_0}{x_{K-1}-x_0},\quad z_0=0,\ z_{K-1}=1.
 \label{eq:table-decomposition}
 \end{equation}
-The endpoints $(a,R)$ fix the sampled log-frequency interval, called the support; $K-2$ interior coordinates define allocation. Every geometric table has $z_k=k/(K-1)$ irrespective of base. The full space $\mathcal Z_K=\{0=z_0<\cdots<z_{K-1}=1\}$ includes analytic subfamilies and positive-gap learned parameterizations.
+Here $a=x_0$ and $R=x_{K-1}-x_0$ specify the sampled log-frequency interval,
+called the support; $K-2$ interior coordinates define allocation. Every
+geometric table has $z_k=k/(K-1)$ irrespective of base. The space
+$\mathcal Z_K=\{0=z_0<\cdots<z_{K-1}=1\}$ includes analytic and learned allocations.
 
-The endpoints determine the covered range; $z$ determines how the rotary pairs
-are placed inside it. We fix endpoints in controlled comparisons to isolate the effect of
-interior placement.
+Fixing the endpoints isolates the effect of interior placement.
 For deployment relative to a native table, write
 \begin{equation}
 \omega'_k=\omega_k^N s^{-m_k},\qquad d_k=\log(\omega_k^N/\omega'_k)=m_k\log s.
 \label{eq:movement-allocation}
 \end{equation}
-Changing frequencies preserves RoPE's relative-position composition and norm preservation \citep{su2024roformer}. Multiplying cosine/sine amplitudes by $g$ separately scales the rotary Q/K contribution by $g^2$. Fixed-support experiments isolate $z$; complete methods may jointly choose allocation, range and amplitude.
+For $m_0=0$, $m_{K-1}=1$, the corresponding allocation is
+$z'_k=(R_Nz_k^N+m_k\log s)/(R_N+\log s)$, where $R_N$ is the native
+log-frequency span. Thus $m$ describes placement relative to the native grid;
+the distance stretch in Figure~\ref{fig:intro-allocation} is $s^{m_k}$.
+Changing frequencies preserves RoPE's relative-position composition and norms
+\citep{su2024roformer}. A cosine/sine gain $g$ scales the rotary Q/K contribution
+by $g^2$. Complete methods may jointly choose allocation, range and amplitude.
 
-Geo denotes each protocol's geometric reference and Native a released model's inherited table. Standard and midpoint geometric grids share $z$ but differ by an overall frequency offset. Exact grid and endpoint conventions are in Appendix~\ref{sec:table-identities}.
+Geo denotes each protocol's geometric reference and Native a released model's
+inherited table. Standard and midpoint geometric grids share $z$ but differ by
+a frequency offset (Appendix~\ref{sec:table-identities}).
 
 \paragraph{Separating the effects of allocation.}
 At fixed support, total displacement $D=\sum_kd_k$ is a statistic of $z$.
-Matching $D$ resolves finer allocation effects; permuting the same frequency
-multiset tests coordinate assignment. Appendix~\ref{sec:identification-details}
+Matching $D$ tests whether the distribution of that movement matters;
+permuting the same frequency multiset instead tests its assignment to learned
+coordinates. Appendix~\ref{sec:identification-details}
 specifies these controls.

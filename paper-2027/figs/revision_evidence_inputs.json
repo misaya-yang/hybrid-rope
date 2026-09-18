@@ -47627,6 +47627,488 @@
       },
       "status": "QWEN25_3B_S4_128K_STATIC_YARN_COMPARISON_COMPLETE_V1",
       "yarn_table_sha256": "a1f51ec6542939d5b884d867213948d43bc4d3cc3c62e535489daabc59f2c9ce"
+    },
+    "kanana_full13": {
+      "arms": {
+        "mrpro": {
+          "by_task": {
+            "cwe": {
+              "cap_rate": 0.8,
+              "empty_rate": 0.0,
+              "eos_rate": 0.2,
+              "official_score": 0.51,
+              "rows": 10
+            },
+            "fwe": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.9333333333333333,
+              "rows": 10
+            },
+            "niah_multikey_1": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.8,
+              "rows": 10
+            },
+            "niah_multikey_2": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.5,
+              "rows": 10
+            },
+            "niah_multikey_3": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.5,
+              "rows": 10
+            },
+            "niah_multiquery": {
+              "cap_rate": 1.0,
+              "empty_rate": 0.0,
+              "eos_rate": 0.0,
+              "official_score": 0.325,
+              "rows": 10
+            },
+            "niah_multivalue": {
+              "cap_rate": 0.9,
+              "empty_rate": 0.0,
+              "eos_rate": 0.1,
+              "official_score": 0.575,
+              "rows": 10
+            },
+            "niah_single_1": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "niah_single_2": {
+              "cap_rate": 0.3,
+              "empty_rate": 0.0,
+              "eos_rate": 0.7,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "niah_single_3": {
+              "cap_rate": 0.1,
+              "empty_rate": 0.0,
+              "eos_rate": 0.9,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "qa_1": {
+              "cap_rate": 0.4,
+              "empty_rate": 0.0,
+              "eos_rate": 0.6,
+              "official_score": 0.7,
+              "rows": 10
+            },
+            "qa_2": {
+              "cap_rate": 0.2,
+              "empty_rate": 0.0,
+              "eos_rate": 0.8,
+              "official_score": 0.6,
+              "rows": 10
+            },
+            "vt": {
+              "cap_rate": 0.3,
+              "empty_rate": 0.0,
+              "eos_rate": 0.7,
+              "official_score": 0.7,
+              "rows": 10
+            }
+          },
+          "rows": 130,
+          "task_equal_cap_rate": 0.3076923076923077,
+          "task_equal_empty_rate": 0.0,
+          "task_equal_eos_rate": 0.6923076923076923,
+          "task_equal_official_score": 0.7033333333333333
+        },
+        "official_yarn": {
+          "by_task": {
+            "cwe": {
+              "cap_rate": 0.4,
+              "empty_rate": 0.0,
+              "eos_rate": 0.6,
+              "official_score": 0.13,
+              "rows": 10
+            },
+            "fwe": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.9333333333333333,
+              "rows": 10
+            },
+            "niah_multikey_1": {
+              "cap_rate": 0.2,
+              "empty_rate": 0.0,
+              "eos_rate": 0.8,
+              "official_score": 0.8,
+              "rows": 10
+            },
+            "niah_multikey_2": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.5,
+              "rows": 10
+            },
+            "niah_multikey_3": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.4,
+              "rows": 10
+            },
+            "niah_multiquery": {
+              "cap_rate": 1.0,
+              "empty_rate": 0.0,
+              "eos_rate": 0.0,
+              "official_score": 0.25,
+              "rows": 10
+            },
+            "niah_multivalue": {
+              "cap_rate": 1.0,
+              "empty_rate": 0.0,
+              "eos_rate": 0.0,
+              "official_score": 0.6,
+              "rows": 10
+            },
+            "niah_single_1": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "niah_single_2": {
+              "cap_rate": 0.6,
+              "empty_rate": 0.0,
+              "eos_rate": 0.4,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "niah_single_3": {
+              "cap_rate": 0.3,
+              "empty_rate": 0.0,
+              "eos_rate": 0.7,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "qa_1": {
+              "cap_rate": 0.5,
+              "empty_rate": 0.0,
+              "eos_rate": 0.5,
+              "official_score": 0.7,
+              "rows": 10
+            },
+            "qa_2": {
+              "cap_rate": 0.1,
+              "empty_rate": 0.0,
+              "eos_rate": 0.9,
+              "official_score": 0.4,
+              "rows": 10
+            },
+            "vt": {
+              "cap_rate": 0.4,
+              "empty_rate": 0.0,
+              "eos_rate": 0.6,
+              "official_score": 0.82,
+              "rows": 10
+            }
+          },
+          "rows": 130,
+          "task_equal_cap_rate": 0.34615384615384615,
+          "task_equal_empty_rate": 0.0,
+          "task_equal_eos_rate": 0.6538461538461539,
+          "task_equal_official_score": 0.6564102564102564
+        },
+        "tailspline": {
+          "by_task": {
+            "cwe": {
+              "cap_rate": 0.6,
+              "empty_rate": 0.0,
+              "eos_rate": 0.4,
+              "official_score": 0.43,
+              "rows": 10
+            },
+            "fwe": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.9,
+              "rows": 10
+            },
+            "niah_multikey_1": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.8,
+              "rows": 10
+            },
+            "niah_multikey_2": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.6,
+              "rows": 10
+            },
+            "niah_multikey_3": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 0.7,
+              "rows": 10
+            },
+            "niah_multiquery": {
+              "cap_rate": 1.0,
+              "empty_rate": 0.0,
+              "eos_rate": 0.0,
+              "official_score": 0.225,
+              "rows": 10
+            },
+            "niah_multivalue": {
+              "cap_rate": 0.9,
+              "empty_rate": 0.0,
+              "eos_rate": 0.1,
+              "official_score": 0.65,
+              "rows": 10
+            },
+            "niah_single_1": {
+              "cap_rate": 0.0,
+              "empty_rate": 0.0,
+              "eos_rate": 1.0,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "niah_single_2": {
+              "cap_rate": 0.2,
+              "empty_rate": 0.0,
+              "eos_rate": 0.8,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "niah_single_3": {
+              "cap_rate": 0.2,
+              "empty_rate": 0.0,
+              "eos_rate": 0.8,
+              "official_score": 1.0,
+              "rows": 10
+            },
+            "qa_1": {
+              "cap_rate": 0.4,
+              "empty_rate": 0.0,
+              "eos_rate": 0.6,
+              "official_score": 0.8,
+              "rows": 10
+            },
+            "qa_2": {
+              "cap_rate": 0.2,
+              "empty_rate": 0.0,
+              "eos_rate": 0.8,
+              "official_score": 0.7,
+              "rows": 10
+            },
+            "vt": {
+              "cap_rate": 0.3,
+              "empty_rate": 0.0,
+              "eos_rate": 0.7,
+              "official_score": 0.64,
+              "rows": 10
+            }
+          },
+          "rows": 130,
+          "task_equal_cap_rate": 0.29230769230769227,
+          "task_equal_empty_rate": 0.0,
+          "task_equal_eos_rate": 0.7076923076923076,
+          "task_equal_official_score": 0.7265384615384616
+        }
+      },
+      "delta_by_task": {
+        "cwe": {
+          "mrpro_minus_official_yarn": 0.38,
+          "tailspline_minus_mrpro": -0.08000000000000002,
+          "tailspline_minus_official_yarn": 0.3
+        },
+        "fwe": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": -0.033333333333333326,
+          "tailspline_minus_official_yarn": -0.033333333333333326
+        },
+        "niah_multikey_1": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": 0.0,
+          "tailspline_minus_official_yarn": 0.0
+        },
+        "niah_multikey_2": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": 0.09999999999999998,
+          "tailspline_minus_official_yarn": 0.09999999999999998
+        },
+        "niah_multikey_3": {
+          "mrpro_minus_official_yarn": 0.09999999999999998,
+          "tailspline_minus_mrpro": 0.19999999999999996,
+          "tailspline_minus_official_yarn": 0.29999999999999993
+        },
+        "niah_multiquery": {
+          "mrpro_minus_official_yarn": 0.07500000000000001,
+          "tailspline_minus_mrpro": -0.1,
+          "tailspline_minus_official_yarn": -0.024999999999999994
+        },
+        "niah_multivalue": {
+          "mrpro_minus_official_yarn": -0.025000000000000022,
+          "tailspline_minus_mrpro": 0.07500000000000007,
+          "tailspline_minus_official_yarn": 0.050000000000000044
+        },
+        "niah_single_1": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": 0.0,
+          "tailspline_minus_official_yarn": 0.0
+        },
+        "niah_single_2": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": 0.0,
+          "tailspline_minus_official_yarn": 0.0
+        },
+        "niah_single_3": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": 0.0,
+          "tailspline_minus_official_yarn": 0.0
+        },
+        "qa_1": {
+          "mrpro_minus_official_yarn": 0.0,
+          "tailspline_minus_mrpro": 0.10000000000000009,
+          "tailspline_minus_official_yarn": 0.10000000000000009
+        },
+        "qa_2": {
+          "mrpro_minus_official_yarn": 0.19999999999999996,
+          "tailspline_minus_mrpro": 0.09999999999999998,
+          "tailspline_minus_official_yarn": 0.29999999999999993
+        },
+        "vt": {
+          "mrpro_minus_official_yarn": -0.12,
+          "tailspline_minus_mrpro": -0.05999999999999994,
+          "tailspline_minus_official_yarn": -0.17999999999999994
+        }
+      },
+      "deltas": {
+        "mrpro_minus_official_yarn": 0.046923076923076845,
+        "tailspline_minus_mrpro": 0.023205128205128323,
+        "tailspline_minus_official_yarn": 0.07012820512820517
+      },
+      "metric": "RULER official score, task-equal macro",
+      "model": "kakaocorp/kanana-1.5-8b-instruct-2505",
+      "paired_prompts": 130,
+      "paired_row_outcomes": {
+        "mrpro_vs_official_yarn": {
+          "left_losses": 16,
+          "left_wins": 30,
+          "ties": 84
+        },
+        "tailspline_vs_mrpro": {
+          "left_losses": 20,
+          "left_wins": 16,
+          "ties": 94
+        },
+        "tailspline_vs_official_yarn": {
+          "left_losses": 16,
+          "left_wins": 30,
+          "ties": 84
+        }
+      },
+      "rows_per_task": 10,
+      "source_sha256": {
+        "mrpro": [
+          "e2b3bfa3ed7dac6e214f9059266662e9a8fbc8a372e8cde383ba7527088cb0f0",
+          "58b76a28e7f17be420199e4b9ab8d4225d194bc7046d659465685bd24f2f8042"
+        ],
+        "official_yarn": [
+          "df26a809cd924237c7d4c0772f4516179699c746dff9dc1945805e2200025792",
+          "d0f0c5a834713e54593de6adbe7c65b9ae7ba9d79ccbd1aaa1c5f5f200792dd8"
+        ],
+        "tailspline": [
+          "9e7b0e92dfa03f0bcf5053ed0f0b4fd63c370d2bbdd65f989a8d8a764a100733",
+          "aa6ef94a1dcbb19896105657919c90c6f3ac16c271065d5bcfe40d448cdbdb02"
+        ]
+      },
+      "status": "KANANA_64K_THREE_ARM_FULL13_COMPLETE_V1",
+      "target_length": 65536,
+      "task_equal_scores": {
+        "mrpro": 0.7033333333333333,
+        "official_yarn": 0.6564102564102564,
+        "tailspline": 0.7265384615384616
+      },
+      "tasks": [
+        "niah_single_1",
+        "niah_single_2",
+        "niah_single_3",
+        "niah_multikey_1",
+        "niah_multikey_2",
+        "niah_multikey_3",
+        "niah_multivalue",
+        "niah_multiquery",
+        "vt",
+        "cwe",
+        "fwe",
+        "qa_1",
+        "qa_2"
+      ]
+    },
+    "kanana_qa": {
+      "arms": {
+        "official_yarn": {
+          "cap_rate": 0.3559322033898305,
+          "cluster_equal_qa_f1": 0.18042878790174507,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6440677966101694,
+          "qa_f1": 0.17848093162631112,
+          "rows": 118,
+          "source_context_clusters": 23
+        },
+        "tailspline": {
+          "cap_rate": 0.3220338983050847,
+          "cluster_equal_qa_f1": 0.19625210926458223,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6779661016949152,
+          "qa_f1": 0.19585502414073147,
+          "rows": 118,
+          "source_context_clusters": 23
+        }
+      },
+      "benchmark": "InfiniteBench longbook_qa_eng",
+      "delta_tailspline_minus_official_yarn": 0.017374092514420347,
+      "identity": {
+        "complete_context_preserved": true,
+        "mrpro_status": "USER_SKIPPED_BEFORE_START",
+        "panel_sha256": "87dafb6f07bb5611e741bf14f6ba17fa7778ba20b5569592845f7dc19b779626",
+        "raw_sha256": {
+          "official_yarn": "627034794dced6dfbad1a5437672d8ef8712e2b0f2931a6e5ffe72b766e1d36a",
+          "tailspline": "4f8988e21ec0966619451da7195832a5945e0454f12a3149304f06a1aaab27e1"
+        },
+        "same_ordered_prompts": true
+      },
+      "input_token_range": [
+        69680,
+        130852
+      ],
+      "metric": "official English-QA token F1",
+      "model": "kakaocorp/kanana-1.5-8b-instruct-2505",
+      "paired_row_outcomes": {
+        "left_losses": 30,
+        "left_wins": 31,
+        "ties": 57
+      },
+      "rows_per_arm": 118,
+      "source_context_clusters": 23,
+      "status": "KANANA_128K_INFINITEBENCH_EN_QA_TWO_ARM_COMPLETE_V1",
+      "target_length": 131072
     }
   },
   "source_sha256": {
@@ -47701,6 +48183,39 @@
       "sha256": "df30a6e1407058fdb7497d7f3277a0ac48e42ef60fac772a1d491e6e0354df3e"
     },
     "qwen_qa": "268452a2b6ff283d25bb6092d2b062920fc5d60264fdd0c2dbdf663eff8c6a8b",
-    "qwen_quick": "924411c32c6a0648b0c9e2b0bb58100e6c852c2e0779bbc46b390bcf7393f57a"
+    "qwen_quick": "924411c32c6a0648b0c9e2b0bb58100e6c852c2e0779bbc46b390bcf7393f57a",
+    "experiments/kanana_yarn_tailspline_64k_20260918/reports/full13x10_three_arm.json": "5457d9bbb57afc0821a4631b66dad6c4616c1aad5c33d5b860d6bca116268d49",
+    "experiments/kanana_yarn_tailspline_64k_20260918/reports/qa128k_two_arm.json": "3e681cef4a44114a697e61c4e425d49dce4ce67d5c7057365fd04daef91f87f3"
+  },
+  "kanana_protocol": {
+    "source": "experiments/kanana_yarn_tailspline_64k_20260918/RESULT.md",
+    "source_sha256": "2c9232b33fbca994c536c388dcaaf29c695262d2a39426d92406da261098e94e",
+    "full13_reported_ci95_pp": {
+      "mrpro": [
+        -3.13,
+        8.04
+      ],
+      "official_yarn": [
+        0.21,
+        13.81
+      ]
+    },
+    "interval_evidence": "Owner-reported paired within-task resampling; compact JSON retains aggregates, not bootstrap draws.",
+    "native_length": 32768,
+    "rope_theta": 8000000,
+    "rotary_pairs": 64,
+    "tailspline_mrpro_band": [
+      20,
+      35
+    ],
+    "official_yarn": {
+      "factor": 4.4,
+      "beta_fast": 64,
+      "beta_slow": 2
+    },
+    "tailspline_scales": {
+      "ruler64k": 2,
+      "qa128k": 4
+    }
   }
 }

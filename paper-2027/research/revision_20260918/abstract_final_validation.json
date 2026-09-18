@@ -1,0 +1,29 @@
+{
+  "title_unchanged": true,
+  "abstract_words": 167,
+  "abstract_has_numbers": false,
+  "plain_text_matches_tex": true,
+  "changed_manuscript_sources": [
+    "sections/00_abstract.tex"
+  ],
+  "pages_2_through_35_text_unchanged": true,
+  "all_tables_and_figures_unchanged": true,
+  "body_pages": 9,
+  "total_pages": 35,
+  "undefined_references": 0,
+  "overfull_boxes": 0,
+  "first_page_no_figure": true,
+  "all_contributions_on_first_page": true,
+  "font_size_and_margins_unchanged": true,
+  "paragraph_line_breaking": "TeX looseness=-1 for the abstract only",
+  "archive_manifest_files_verified": 241,
+  "archive_sha256": "4926a4a56c7294970ac9c988a6eb12d0ca50f5947f089c9acaee32aeb1e540c3",
+  "final_pdf_sha256": "bf9965314eaaf663c65759abfc546123cd0119b5323a82d3ceb37bab75d8eab5",
+  "history_versions_unchanged": true,
+  "archive_independent_compile_passed": true,
+  "archive_compile_full_text_matches": true,
+  "astra_review": "Abstract supported; no substantive regression; reviewer verified pages 2–35 pixel-identical.",
+  "review_status": "complete: concurrent independent Astra/Sol under identical PDF-only prompt",
+  "post_review_manuscript_changes": false,
+  "final_pdf_matches_review_candidate": true
+}

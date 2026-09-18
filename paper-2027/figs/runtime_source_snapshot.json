@@ -1,5 +1,15 @@
 {
   "revision": "c5f3dbee5687d0acae6465a26c9a4ea146eb58eb",
   "role": "Frozen reference implementation for source packaging; individual historical execution identities remain in the report inputs.",
-  "native_control": "NCP constructor and same-target scoring are included. Model execution is not part of manuscript compilation."
+  "native_control": "NCP constructor and same-target scoring are included. Model execution is not part of manuscript compilation.",
+  "additions": {
+    "experiments/kanana_yarn_tailspline_64k_20260918/__init__.py": "extended-records/kanana_runtime/__init__.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/prepare.py": "extended-records/kanana_runtime/prepare.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/prepare_mrpro.py": "extended-records/kanana_runtime/prepare_mrpro.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/prepare_qa128k_tables.py": "extended-records/kanana_runtime/prepare_qa128k_tables.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/report.py": "extended-records/kanana_runtime/report.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/report_three_arm_full.py": "extended-records/kanana_runtime/report_three_arm_full.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/report_qa_three_arm.py": "extended-records/kanana_runtime/report_qa_three_arm.py",
+    "experiments/kanana_yarn_tailspline_64k_20260918/report_qa_two_arm.py": "extended-records/kanana_runtime/report_qa_two_arm.py"
+  }
 }

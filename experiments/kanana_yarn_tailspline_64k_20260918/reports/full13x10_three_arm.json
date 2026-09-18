@@ -1,0 +1,433 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "cwe": {
+          "cap_rate": 0.8,
+          "empty_rate": 0.0,
+          "eos_rate": 0.2,
+          "official_score": 0.51,
+          "rows": 10
+        },
+        "fwe": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.9333333333333333,
+          "rows": 10
+        },
+        "niah_multikey_1": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.8,
+          "rows": 10
+        },
+        "niah_multikey_2": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.5,
+          "rows": 10
+        },
+        "niah_multikey_3": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.5,
+          "rows": 10
+        },
+        "niah_multiquery": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.325,
+          "rows": 10
+        },
+        "niah_multivalue": {
+          "cap_rate": 0.9,
+          "empty_rate": 0.0,
+          "eos_rate": 0.1,
+          "official_score": 0.575,
+          "rows": 10
+        },
+        "niah_single_1": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "niah_single_2": {
+          "cap_rate": 0.3,
+          "empty_rate": 0.0,
+          "eos_rate": 0.7,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "niah_single_3": {
+          "cap_rate": 0.1,
+          "empty_rate": 0.0,
+          "eos_rate": 0.9,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "qa_1": {
+          "cap_rate": 0.4,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6,
+          "official_score": 0.7,
+          "rows": 10
+        },
+        "qa_2": {
+          "cap_rate": 0.2,
+          "empty_rate": 0.0,
+          "eos_rate": 0.8,
+          "official_score": 0.6,
+          "rows": 10
+        },
+        "vt": {
+          "cap_rate": 0.3,
+          "empty_rate": 0.0,
+          "eos_rate": 0.7,
+          "official_score": 0.7,
+          "rows": 10
+        }
+      },
+      "rows": 130,
+      "task_equal_cap_rate": 0.3076923076923077,
+      "task_equal_empty_rate": 0.0,
+      "task_equal_eos_rate": 0.6923076923076923,
+      "task_equal_official_score": 0.7033333333333333
+    },
+    "official_yarn": {
+      "by_task": {
+        "cwe": {
+          "cap_rate": 0.4,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6,
+          "official_score": 0.13,
+          "rows": 10
+        },
+        "fwe": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.9333333333333333,
+          "rows": 10
+        },
+        "niah_multikey_1": {
+          "cap_rate": 0.2,
+          "empty_rate": 0.0,
+          "eos_rate": 0.8,
+          "official_score": 0.8,
+          "rows": 10
+        },
+        "niah_multikey_2": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.5,
+          "rows": 10
+        },
+        "niah_multikey_3": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.4,
+          "rows": 10
+        },
+        "niah_multiquery": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.25,
+          "rows": 10
+        },
+        "niah_multivalue": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.6,
+          "rows": 10
+        },
+        "niah_single_1": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "niah_single_2": {
+          "cap_rate": 0.6,
+          "empty_rate": 0.0,
+          "eos_rate": 0.4,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "niah_single_3": {
+          "cap_rate": 0.3,
+          "empty_rate": 0.0,
+          "eos_rate": 0.7,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "qa_1": {
+          "cap_rate": 0.5,
+          "empty_rate": 0.0,
+          "eos_rate": 0.5,
+          "official_score": 0.7,
+          "rows": 10
+        },
+        "qa_2": {
+          "cap_rate": 0.1,
+          "empty_rate": 0.0,
+          "eos_rate": 0.9,
+          "official_score": 0.4,
+          "rows": 10
+        },
+        "vt": {
+          "cap_rate": 0.4,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6,
+          "official_score": 0.82,
+          "rows": 10
+        }
+      },
+      "rows": 130,
+      "task_equal_cap_rate": 0.34615384615384615,
+      "task_equal_empty_rate": 0.0,
+      "task_equal_eos_rate": 0.6538461538461539,
+      "task_equal_official_score": 0.6564102564102564
+    },
+    "tailspline": {
+      "by_task": {
+        "cwe": {
+          "cap_rate": 0.6,
+          "empty_rate": 0.0,
+          "eos_rate": 0.4,
+          "official_score": 0.43,
+          "rows": 10
+        },
+        "fwe": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.9,
+          "rows": 10
+        },
+        "niah_multikey_1": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.8,
+          "rows": 10
+        },
+        "niah_multikey_2": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.6,
+          "rows": 10
+        },
+        "niah_multikey_3": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 0.7,
+          "rows": 10
+        },
+        "niah_multiquery": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.225,
+          "rows": 10
+        },
+        "niah_multivalue": {
+          "cap_rate": 0.9,
+          "empty_rate": 0.0,
+          "eos_rate": 0.1,
+          "official_score": 0.65,
+          "rows": 10
+        },
+        "niah_single_1": {
+          "cap_rate": 0.0,
+          "empty_rate": 0.0,
+          "eos_rate": 1.0,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "niah_single_2": {
+          "cap_rate": 0.2,
+          "empty_rate": 0.0,
+          "eos_rate": 0.8,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "niah_single_3": {
+          "cap_rate": 0.2,
+          "empty_rate": 0.0,
+          "eos_rate": 0.8,
+          "official_score": 1.0,
+          "rows": 10
+        },
+        "qa_1": {
+          "cap_rate": 0.4,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6,
+          "official_score": 0.8,
+          "rows": 10
+        },
+        "qa_2": {
+          "cap_rate": 0.2,
+          "empty_rate": 0.0,
+          "eos_rate": 0.8,
+          "official_score": 0.7,
+          "rows": 10
+        },
+        "vt": {
+          "cap_rate": 0.3,
+          "empty_rate": 0.0,
+          "eos_rate": 0.7,
+          "official_score": 0.64,
+          "rows": 10
+        }
+      },
+      "rows": 130,
+      "task_equal_cap_rate": 0.29230769230769227,
+      "task_equal_empty_rate": 0.0,
+      "task_equal_eos_rate": 0.7076923076923076,
+      "task_equal_official_score": 0.7265384615384616
+    }
+  },
+  "delta_by_task": {
+    "cwe": {
+      "mrpro_minus_official_yarn": 0.38,
+      "tailspline_minus_mrpro": -0.08000000000000002,
+      "tailspline_minus_official_yarn": 0.3
+    },
+    "fwe": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": -0.033333333333333326,
+      "tailspline_minus_official_yarn": -0.033333333333333326
+    },
+    "niah_multikey_1": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": 0.0,
+      "tailspline_minus_official_yarn": 0.0
+    },
+    "niah_multikey_2": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": 0.09999999999999998,
+      "tailspline_minus_official_yarn": 0.09999999999999998
+    },
+    "niah_multikey_3": {
+      "mrpro_minus_official_yarn": 0.09999999999999998,
+      "tailspline_minus_mrpro": 0.19999999999999996,
+      "tailspline_minus_official_yarn": 0.29999999999999993
+    },
+    "niah_multiquery": {
+      "mrpro_minus_official_yarn": 0.07500000000000001,
+      "tailspline_minus_mrpro": -0.1,
+      "tailspline_minus_official_yarn": -0.024999999999999994
+    },
+    "niah_multivalue": {
+      "mrpro_minus_official_yarn": -0.025000000000000022,
+      "tailspline_minus_mrpro": 0.07500000000000007,
+      "tailspline_minus_official_yarn": 0.050000000000000044
+    },
+    "niah_single_1": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": 0.0,
+      "tailspline_minus_official_yarn": 0.0
+    },
+    "niah_single_2": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": 0.0,
+      "tailspline_minus_official_yarn": 0.0
+    },
+    "niah_single_3": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": 0.0,
+      "tailspline_minus_official_yarn": 0.0
+    },
+    "qa_1": {
+      "mrpro_minus_official_yarn": 0.0,
+      "tailspline_minus_mrpro": 0.10000000000000009,
+      "tailspline_minus_official_yarn": 0.10000000000000009
+    },
+    "qa_2": {
+      "mrpro_minus_official_yarn": 0.19999999999999996,
+      "tailspline_minus_mrpro": 0.09999999999999998,
+      "tailspline_minus_official_yarn": 0.29999999999999993
+    },
+    "vt": {
+      "mrpro_minus_official_yarn": -0.12,
+      "tailspline_minus_mrpro": -0.05999999999999994,
+      "tailspline_minus_official_yarn": -0.17999999999999994
+    }
+  },
+  "deltas": {
+    "mrpro_minus_official_yarn": 0.046923076923076845,
+    "tailspline_minus_mrpro": 0.023205128205128323,
+    "tailspline_minus_official_yarn": 0.07012820512820517
+  },
+  "metric": "RULER official score, task-equal macro",
+  "model": "kakaocorp/kanana-1.5-8b-instruct-2505",
+  "paired_prompts": 130,
+  "paired_row_outcomes": {
+    "mrpro_vs_official_yarn": {
+      "left_losses": 16,
+      "left_wins": 30,
+      "ties": 84
+    },
+    "tailspline_vs_mrpro": {
+      "left_losses": 20,
+      "left_wins": 16,
+      "ties": 94
+    },
+    "tailspline_vs_official_yarn": {
+      "left_losses": 16,
+      "left_wins": 30,
+      "ties": 84
+    }
+  },
+  "rows_per_task": 10,
+  "source_sha256": {
+    "mrpro": [
+      "e2b3bfa3ed7dac6e214f9059266662e9a8fbc8a372e8cde383ba7527088cb0f0",
+      "58b76a28e7f17be420199e4b9ab8d4225d194bc7046d659465685bd24f2f8042"
+    ],
+    "official_yarn": [
+      "df26a809cd924237c7d4c0772f4516179699c746dff9dc1945805e2200025792",
+      "d0f0c5a834713e54593de6adbe7c65b9ae7ba9d79ccbd1aaa1c5f5f200792dd8"
+    ],
+    "tailspline": [
+      "9e7b0e92dfa03f0bcf5053ed0f0b4fd63c370d2bbdd65f989a8d8a764a100733",
+      "aa6ef94a1dcbb19896105657919c90c6f3ac16c271065d5bcfe40d448cdbdb02"
+    ]
+  },
+  "status": "KANANA_64K_THREE_ARM_FULL13_COMPLETE_V1",
+  "target_length": 65536,
+  "task_equal_scores": {
+    "mrpro": 0.7033333333333333,
+    "official_yarn": 0.6564102564102564,
+    "tailspline": 0.7265384615384616
+  },
+  "tasks": [
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multivalue",
+    "niah_multiquery",
+    "vt",
+    "cwe",
+    "fwe",
+    "qa_1",
+    "qa_2"
+  ]
+}

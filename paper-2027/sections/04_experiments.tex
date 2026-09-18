@@ -3,12 +3,12 @@
 
 \subsection{Task quality with a frozen TailSpline table}
 \label{sec:tailspline-evaluation}
-We evaluate Llama-$3$-$8$B-Instruct, OLMo-$2$-$1$B-Instruct,
-Qwen-$2.5$-$3$B-Instruct and GLM-$4$-$9$B-0414, and test scale transfer on
-Llama-$3$-$70$B-Instruct NF4. T/P denote TailSpline/MrRoPE-Pro with static
-$s=4$ tables: weights, outer bands, endpoints, gain $1+0.1\ln4$, inputs and
-decoder are shared; only internal allocation changes. Official static YaRN
-\citep{peng2024yarn} retains its public correction and amplitude rules.
+We compare TailSpline (T), MrRoPE-Pro (P) and static YaRN (Y) across Llama,
+OLMo, Qwen, GLM and Kanana, with a Llama-$70$B NF4 scale-transfer test.
+T/P share weights, outer bands, endpoints, gain, inputs and decoder; only
+internal allocation changes. Both use static $s=4$ tables except Kanana's
+$64$K panel ($s=2$). YaRN retains its public recipe, including Kanana's
+publisher-recommended factor $4.4$ \citep{peng2024yarn,kanana2025model}.
 All methods are installed without training. RULER \citep{hsieh2024ruler}
 uses matched source-order prompts and official scoring.
 \input{tables/table_clean_length_main}
@@ -29,12 +29,23 @@ and $32$K uses $200$.}
 \label{fig:tailspline-main}
 \end{figure}
 
+\paragraph{Internal shape at equal displacement.}
+\label{sec:clean-shape-main}
+T--C matches endpoints, outer bands, gain and total log-frequency displacement.
+At $32$K, T/C score $68.27/66.17\%$, a $+2.10$-point difference with interval
+$[1.11,3.08]$; at $16$K they score $86.09/86.35\%$.
+T assigns less stretch than C in the entry half of the transition and more
+in its tail half, at the same total displacement. This comparison links the
+target-length gain to how stretch is distributed (Appendix~\ref{sec:clean-shape-new}). C has slightly higher positional
+effective rank at $32$K ($10.093/10.077$), complementing Section~\ref{sec:theory}.
+
 \paragraph{Direct baselines and transfer.}
 On OLMo, the Full-13 gain reaches $41.42$ points across $2{,}600$ pairs,
 with all $13$ tasks improving.
-The matched three-arm panels extend the comparison to four model families:
-TailSpline scores highest on each Full-13 panel, including GLM's partial
-rotary subspace. Llama/OLMo NIAH-$8$ with $200$ inputs per task and $46$-document
+The matched three-arm panels extend the comparison across model families,
+including GLM's partial rotary subspace and Kanana's $8$-million base.
+TailSpline scores highest on each Full-13 panel; on Kanana it exceeds the
+publisher-recommended YaRN deployment by $7.01$ points at $64$K. Llama/OLMo NIAH-$8$ with $200$ inputs per task and $46$-document
 PPL also favor TailSpline over both baselines. Llama's retrieval gains are
 concentrated in multikey tasks; OLMo improves across retrieval types
 (Appendix~\ref{sec:three-method-complete}). The allocation also transfers
@@ -43,11 +54,12 @@ $70$B NF4 checkpoint improves Full-13 by $17.72$ points and PPL from
 $2.5075$ to $2.4954$.
 
 \paragraph{Natural question answering.}
-Question answering over complete passages and books tests the application-level
-value of improved retrieval \citep{yen2024helmet}. TailSpline improves OLMo's five-task Natural-QA
+Question answering over complete passages and books tests downstream quality
+\citep{yen2024helmet}. TailSpline improves OLMo's five-task Natural-QA
 score, with gains on every task, and leads the Qwen book-QA panel and both
-GLM book pools (Table~\ref{tab:natural-transfer-main}). The $70$B NF4 panel
-also scores $49.28/48.39\%$ for T/P.
+GLM book pools (Table~\ref{tab:natural-transfer-main}). At Kanana's $128$K deployment,
+TailSpline/recommended YaRN score $19.59/17.85\%$ book-QA F1
+across $118$ questions from $23$ complete source contexts.
 
 Natural-QA uses $631$ questions from $524$ source contexts. LongBench v2
 \citep{bai2025longbenchv2} adds complete Llama inputs at $8$K--$32$K.
@@ -57,47 +69,32 @@ sources, GLM retains the same allocation on a second pool of $15$ books
 disjoint from pool I's seven, with complete inputs spanning $70$K--$95$K.
 \input{tables/table_natural_transfer_main}
 
-\paragraph{Internal shape at equal displacement.}
-\label{sec:clean-shape-main}
-T--C matches endpoints, outer bands, gain and total log-frequency displacement.
-At $32$K, T/C score $68.27/66.17\%$, a $+2.10$-point difference with interval
-$[1.11,3.08]$; at $16$K they score $86.09/86.35\%$.
-The target-length gain therefore depends on internal shape beyond total
-movement (Appendix~\ref{sec:clean-shape-new}). C has slightly higher positional
-effective rank at $32$K ($10.093/10.077$), complementing Section~\ref{sec:theory}.
 \label{sec:interval-main}
 Higher-factor profiles at Llama $128$K ($s=16$) and Qwen $256$K ($s=8$)
 appear in Appendix~\ref{sec:extreme-new}.
 
 \subsection{Native-window allocation at fixed support}
 \label{sec:ncp-main}
-We test an in-window allocation change with native support and model weights
-fixed. Native Contrastive Proximal allocation (NCP) uses only the public native
-grid and length. A binary reference comparison models an aligned target competing
-with a uniformly phased distractor. Averaging its logistic loss over relative
-separations gives a reference risk $\mathcal R(\phi)$ at phase span
-$\phi=(L-1)\omega$. NCP selects log-frequency shifts $u_k$ through
-\begin{equation}
-\min_u\ \sum_k\left[\mathcal R(\phi_ke^{-u_k})+\frac{9}{8}u_k^2\right],
-\qquad \omega'_k=\omega_ke^{-u_k}.
-\label{eq:ncp-main}
-\end{equation}
-The quadratic term keeps the allocation near its native grid. We fix both
-endpoints, bound shifts, and preserve frequency ordering and minimum log gaps;
-Appendix~\ref{sec:ncp-construction-new} gives the reference model, constraints
-and numerical construction. Gain remains $1$, and the same table is installed
-across layers and inputs without weight updates or calibration.
+The fixed-range findings also motivate an intervention within the native
+window. We use Native Contrastive Proximal allocation (NCP), a public-parameter
+construction that shifts interior frequencies while preserving both endpoints,
+frequency ordering, model weights and unit gain. Its reference target--distractor
+comparison favors a more stable aligned response while keeping shifts close
+to the native grid (Appendix~\ref{sec:ncp-construction-new}). One table is
+used across layers and inputs.
 
-On OLMo's native $4$K Full-13 panel ($780$ pairs), the score rises from
-$69.37$ to $70.78\%$, a $+1.41$-point gain $[0.20,2.58]$; a new
-$130$-pair panel adds $+3.26$ $[0.81,5.92]$. Beyond these task diagnostics,
-we test context use by comparing full and recent histories while keeping
+To test context use, we compare full and recent histories while keeping
 the prediction targets fixed. Across $128$ windows from $103$ documents,
 scoring the final $256$ tokens gives Native/NCP full-history NLL
 $2.91527/2.90248$. NCP gains $0.00794$ nat/token more from the additional
 history, interval $[0.00553,0.01035]$, connecting its language-modeling
-improvement to better use of earlier context. Appendix~\ref{sec:compact-native}
-provides complete task scores, natural-QA results and the same-target protocol.
+improvement to better use of earlier context.
+
+On OLMo's native $4$K Full-13 diagnostic panel ($780$ pairs), the score
+rises from $69.37$ to $70.78\%$,
+a $+1.41$-point gain $[0.20,2.58]$; a new $130$-pair panel adds
+$+3.26$ $[0.81,5.92]$. Appendix~\ref{sec:compact-native} provides
+complete task scores, natural-QA results and the same-target protocol.
 
 \subsection{Allocation during training and adaptation}
 \label{sec:exp-capability}

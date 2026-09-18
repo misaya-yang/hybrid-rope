@@ -7,21 +7,7 @@ results are in Appendices~\ref{sec:compact-frozen},~\ref{sec:compact-native}
 and~\ref{sec:compact-learning}, respectively. The source archive includes
 numerical inputs, construction/scoring code and CPU verification scripts.
 
-\begin{table}[ht]
-\centering\small
-\caption{\textbf{Protocol glossary.} Each comparison retains its own data,
-weights, support convention and metric.}
-\label{tab:protocol-glossary}\label{tab:evidence-map}
-\begin{tabular}{@{}p{.23\linewidth}p{.36\linewidth}p{.34\linewidth}@{}}
-\toprule
-Comparison & Matched quantities & Question \\
-\midrule
-Fixed-support training & Initialization, tokens, endpoints & Interior allocation during learning \\
-Frozen T/P & Weights, outer bands, gain, inputs & Complete interior allocations \\
-Frozen T/C & Above plus total displacement & Residual shape \\
-Slot permutation & Weights and frequency multiset & Learned coordinate assignment \\
-NCP/native & Weights, endpoints, unit gain & In-window task and LM quality \\
-Cosh learning & Recipe, data; grid stated per study & Allocation during learning \\
-\bottomrule
-\end{tabular}
-\end{table}
+Fixed-support interventions isolate placement; matching total displacement
+tests residual shape, and preserving the spectrum tests coordinate assignment.
+Frozen comparisons retain the weights, while paired learning studies match
+their training or adaptation conditions.

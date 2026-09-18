@@ -1,15 +1,16 @@
-# BM与成熟模型研究：证据索引
+# 历史实验依赖入口
 
-更新：2026-09-12。这里连接已记录实验与当前论文，不报告实时GPU状态。旧“今晚/正在跑/已排队”按记录时间解读。
+本目录已减负，不再是研究计划或执行队列。当前研究见[研究入口](../docs/research/next_stage_20260912/index.md)。
 
-| 内容 | 入口 |
+| 保留用途 | 入口 |
 |---|---|
-| 整体战役与更正 | [EXPERIMENT_THEORY_MASTER](EXPERIMENT_THEORY_MASTER_20260911.md)，历史时点总账 |
-| 方法身份、证据可信度 | [YARN_MRROPE_RESEARCH_EVIDENCE](recon_20260910/YARN_MRROPE_RESEARCH_EVIDENCE.md) |
-| 分类查找判决、理论、协议、代码、raw | [recon/index.md](recon_20260910/index.md) |
-| 当前论文中的作用 | [A14–A17/A25–A27](../paper-2027/research/evidence/index.md) |
-| 用户下一阶段计划 | [next_stage/index.md](../docs/research/next_stage_20260912/index.md) |
-| 失败与过程记录 | [LESSONS](LESSONS.md)、[旧导航](../docs/archive/navigation_20260912/index.md) |
-| Llama本地实现 | [实验目录](../experiments/index.md)；旧TONIGHT/RUN_READY保留原位，不能代替当前状态核验 |
+| 旧比较的算子身份、输入与更正 | [证据核查](recon_20260910/YARN_MRROPE_RESEARCH_EVIDENCE.md) |
+| A16／A25／A27的来源身份 | [论文证据注册表](../paper-2027/research/evidence/index.md) |
+| 原始输出和运行manifest | `recon_20260910/work/jsonl/` |
+| 结果判决与正负边界 | [verdicts](recon_20260910/verdicts/index.md) |
+| 在用校验依赖 | [code](recon_20260910/code/index.md) |
+| 方法失败原因的保留结论 | [theory](recon_20260910/theory/index.md) |
+| 历史全臂映射 | [ledger](recon_20260910/_reports/LEDGER_20260911.md) |
+| 删除清单与恢复提交 | [清理清单](../docs/maintenance/ds_workspace_cleanup_20260918.json) |
 
-C42开发对、held-out反转、NLL任务分离、gain交互要区分面板和指标。公式同一、表张量近等、文本逐位重放是不同核验；按具体回执判读。
+[旧实验总账](EXPERIMENT_THEORY_MASTER_20260911.md)、[历史规则](TONIGHT_EXPERIMENT_RULES_20260911.md)和[经验](LESSONS.md)仅用于按原日期核实具体问题；它们不授权新的运行。原文中提到的已删过程稿从清理清单指定的Git版本恢复。

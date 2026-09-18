@@ -63,7 +63,7 @@ def method_overview():
     q=1-np.arcsinh((1-u)*np.sinh(2))/2
     z=(q-q[0])/(q[-1]-q[0])
     ax=axes[0]
-    for y, values, color, label in [(1,np.linspace(0,1,8),BLUE,'Geometric'),(0,z,ORANGE,'Cosh')]:
+    for y, values, color, label in [(1,np.linspace(0,1,8),BLUE,'Geometric'),(0,z,ORANGE,'Reallocated')]:
         ax.hlines(y,0,1,color=INK,lw=.7)
         ax.scatter(values[1:-1],np.full(6,y),s=20,color=color)
         ax.scatter([0,1],[y,y],s=23,facecolor='white',edgecolor=INK,zorder=3)
@@ -71,14 +71,15 @@ def method_overview():
     ax.set(xlim=(-.05,1.05),ylim=(-.25,1.48),yticks=[],xticks=[0,1],xlabel='Normalized exponent z')
     ax.set_title('(a) Fixed support',loc='left',fontsize=9)
     axis_style(ax)
-    ax=axes[1];lengths=[256,512,1024,2048]
-    block=D['range']['fixed_training_range']
-    values=np.array([[block[str(length)]['seed_values'][str(seed)] for length in lengths] for seed in [42,137,256]])
-    for row in values: ax.plot(range(4),row,color='#B4BBC2',lw=.8,marker='o',ms=2)
-    ax.plot(range(4),values.mean(0),color=ORANGE,lw=1.5,marker='D',ms=3)
-    ax.axhline(0,color=INK,lw=.7)
-    ax.set(xticks=range(4),xticklabels=['1x','2x','4x','8x'],xlabel='Eval. / train length',ylabel='Cosh - Geo NLL')
-    ax.set_title('(b) Three paired seeds',loc='left',fontsize=9);axis_style(ax)
+    ax=axes[1]
+    keys=['same_support_geometric','nearest_movement_profile_ramp','derived']
+    for i,(key,color,label) in enumerate(zip(keys,[BLUE,'#009E73',ORANGE],['Uniform','Ramp','Residual'])):
+        values=[D['frozen'][model]['macro'][key]*100 for model in ['olmo_16k_unseen9','qwen_64k_core4']]
+        ax.bar(np.arange(2)+(i-1)*.24,values,width=.23,color=color,label=label)
+    ax.set(xticks=[0,1],xticklabels=['OLMo','Qwen'],ylabel='Task score (%)',ylim=(0,88))
+    ax.set_title('(b) Same range, fixed weights',loc='left',fontsize=9)
+    ax.legend(frameon=False,fontsize=6.5,ncol=3,loc='upper center',columnspacing=.4,handlelength=.65)
+    axis_style(ax)
     ax=axes[2]
     crossing=D['controlled_crossing']['mean_tail_nll_two_seed_length1024']
     matrix=np.array([[crossing[w][t] for t in ['fmrope_derived','cosh_derived']]

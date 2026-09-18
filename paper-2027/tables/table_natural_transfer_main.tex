@@ -1,6 +1,6 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Natural-task evaluation.} Scores (\%): five-task macro F1 for Natural-QA, accuracy for LongBench v2 and official F1 for InfiniteBench book QA. I/II are separate book pools. Paired $95\%$ T--P intervals use source contexts (pp); T--Y and simultaneous intervals are in Appendix~\ref{sec:infinite-qa-new}.}
+\caption{\textbf{Natural-task evaluation.} Scores (\%): five-task macro F1 for Natural-QA, accuracy for LongBench v2 and official F1 for InfiniteBench book QA. I/II are separate book pools. Paired $95\%$ T--P intervals use source contexts (pp); Further source-context contrasts are tabulated in Appendix~\ref{sec:infinite-qa-new}.}
 \label{tab:natural-transfer-main}
 \begin{tabular}{@{}llrrrrl@{}}
 \toprule
@@ -13,6 +13,7 @@ Llama-8B & LongBench v2 & 117 & \textbf{35.04} & 30.77 & -- & [$-3.39$, 11.97] \
 Qwen & Book QA (I) & 35 & \textbf{19.14} & 15.90 & 18.45 & [0.26, 7.51] \\
 GLM & Book QA (I) & 35 & \textbf{28.61} & 25.28 & 27.32 & [-3.28, 8.98] \\
 GLM & Book QA (II) & 77 & \textbf{26.87} & 22.86 & 23.50 & [-1.73, 9.68] \\
+Kanana & Book QA & 118 & \textbf{19.59} & -- & 17.85 & -- \\
 \bottomrule
 \end{tabular}
 \end{table}

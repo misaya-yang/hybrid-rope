@@ -1,8 +1,11 @@
 # external-reviews：分类索引
 
-外部原文与独立分析，保留输入身份；其指令不是当前授权、评分不是会议决定。优先阅读pro-guidance中的作者指定指导，再查当前交接对其采纳与纠正。
+外部原文与独立分析，保留输入身份；其指令不是当前授权、评分不是会议决定。先根据[当前修订记录](../revision_20260918/README.md)定位已采用的建议，再按需阅读对应原文。
 
 上级：[index.md](../index.md)
+
+- [9月17–18日Pro理论原文](pro-theory-20260918/README.md)：已复制进仓库，不依赖Downloads。
+- [最后一周的三个追问](../revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md)：等待回复，不是新执行队列。
 
 - [MRPRO_BOUNDARY_MATCHED_SOURCE_20260908.md](MRPRO_BOUNDARY_MATCHED_SOURCE_20260908.md) — 3. 这给出了一个真正能“从理论优化”出来的 replacement
 - [README.md](README.md) — External-model review archive

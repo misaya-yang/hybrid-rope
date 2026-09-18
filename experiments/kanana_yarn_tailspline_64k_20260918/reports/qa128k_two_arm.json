@@ -1,0 +1,49 @@
+{
+  "arms": {
+    "official_yarn": {
+      "cap_rate": 0.3559322033898305,
+      "cluster_equal_qa_f1": 0.18042878790174507,
+      "empty_rate": 0.0,
+      "eos_rate": 0.6440677966101694,
+      "qa_f1": 0.17848093162631112,
+      "rows": 118,
+      "source_context_clusters": 23
+    },
+    "tailspline": {
+      "cap_rate": 0.3220338983050847,
+      "cluster_equal_qa_f1": 0.19625210926458223,
+      "empty_rate": 0.0,
+      "eos_rate": 0.6779661016949152,
+      "qa_f1": 0.19585502414073147,
+      "rows": 118,
+      "source_context_clusters": 23
+    }
+  },
+  "benchmark": "InfiniteBench longbook_qa_eng",
+  "delta_tailspline_minus_official_yarn": 0.017374092514420347,
+  "identity": {
+    "complete_context_preserved": true,
+    "mrpro_status": "USER_SKIPPED_BEFORE_START",
+    "panel_sha256": "87dafb6f07bb5611e741bf14f6ba17fa7778ba20b5569592845f7dc19b779626",
+    "raw_sha256": {
+      "official_yarn": "627034794dced6dfbad1a5437672d8ef8712e2b0f2931a6e5ffe72b766e1d36a",
+      "tailspline": "4f8988e21ec0966619451da7195832a5945e0454f12a3149304f06a1aaab27e1"
+    },
+    "same_ordered_prompts": true
+  },
+  "input_token_range": [
+    69680,
+    130852
+  ],
+  "metric": "official English-QA token F1",
+  "model": "kakaocorp/kanana-1.5-8b-instruct-2505",
+  "paired_row_outcomes": {
+    "left_losses": 30,
+    "left_wins": 31,
+    "ties": 57
+  },
+  "rows_per_arm": 118,
+  "source_context_clusters": 23,
+  "status": "KANANA_128K_INFINITEBENCH_EN_QA_TWO_ARM_COMPLETE_V1",
+  "target_length": 131072
+}

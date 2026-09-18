@@ -1,6 +1,6 @@
 \begin{table}[ht]
 \centering\small
-\caption{\textbf{Quality across lengths, families and scale.} Clean Full-13 scores (\%) with one static $s=4$ table per model. T/P/Y: TailSpline/MrPro/static YaRN. Scores are paired within each row; (a)/(b) retain their stated sample sizes, with small Llama/OLMo panels drawn as subsets. Original RoPE scores $90.03\%$ at Llama $8$K. Intervals are paired $95\%$ T--P contrasts (pp).}
+\caption{\textbf{Quality across lengths, families and scale.} Clean Full-13 scores (\%). T/P use static $s=4$ tables except Kanana ($s=2$); its YaRN uses the official factor $4.4$. T/P/Y: TailSpline/MrPro/static YaRN. Scores are paired within each row; (a)/(b) retain their stated sample sizes, with small Llama/OLMo panels drawn as subsets. Original RoPE scores $90.03\%$ at Llama $8$K. Intervals are paired $95\%$ T--P contrasts (pp).}
 \label{tab:clean-length-main}
 \begin{tabular}{@{}llrrrrl@{}}
 \toprule
@@ -17,6 +17,7 @@ Llama & $32$K & 10 & \textbf{70.38} & 58.35 & 55.88 & [6.44, 17.68] \\
 OLMo & $16$K & 10 & \textbf{52.24} & 10.60 & 9.81 & [35.38, 47.88] \\
 Qwen & $128$K & 10 & \textbf{64.40} & 59.87 & 62.04 & [-0.41, 9.49] \\
 GLM & $128$K & 10 & \textbf{39.65} & 30.78 & 27.85 & [4.04, 13.69] \\
+Kanana & $64$K & 10 & \textbf{72.65} & 70.33 & 65.64 & [-3.13, 8.04] \\
 Llama-70B NF4 & $32$K & 10 & \textbf{78.67} & 60.95 & -- & [11.65, 23.78] \\
 \bottomrule
 \end{tabular}

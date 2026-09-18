@@ -1,0 +1,555 @@
+{
+  "base_commit": "c2abf72ae208d0e351e67062b8a47e3d63e43f4b",
+  "scope": "Remove superseded ds_workspace narratives and one-off/snapshot scripts; preserve results and runtime/source dependencies",
+  "removed": [
+    {
+      "path": "ds_workspace/GPT_PROMPT_TONIGHT.md",
+      "sha256": "1a6025170d21980e02b8ffe5a86176733682ab6a7ef6d7267156f297e65a27f3",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/codex_failures_20260910/part1_lines_1_2300.md",
+      "sha256": "8b6060307b1f84e61ee9779af9ad58252649db841c1ce2b6f2cf678a7f9aa0b8",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/codex_failures_20260910/part2_lines_2300_4600.md",
+      "sha256": "efbe49b93bfbf820f92170b37234538c633c25ff72b815dfbf22bb5a8d2b80f7",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/codex_failures_20260910/part3_lines_4600_end.md",
+      "sha256": "4f7e2de4d9ea049d0f68ec134bc8e7ecece051b326084d0950a78fb91228c54f",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/FEEDBACK_LLAMA54_20260911.md",
+      "sha256": "cd80515ec70a50fdffb78fc8a241e2bf3fc9cd7815219cdb15c9ceeed80aaea0",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/MASTER_SUMMARY_20260911.md",
+      "sha256": "455a3f4f8536a7c4826912c2d77a6564e0eaca0ddd7520739962d61c0cf07203",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/MIGRATION_20260911.md",
+      "sha256": "3b72eeea781cfd38d011b10e065cdb091024f2a03b55b2accb8a3c5d95579812",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/PHASE1_CLOSURE_20260911.md",
+      "sha256": "af5c7e1b41fdc03569dbac77b973357d0db7a02b7bd21624a895af9997e9ff91",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/RESEARCH_OWNER_20260911.md",
+      "sha256": "b38f7621673da6ce1c141759b3203b20a4830aef3296633e503ac145314bbc13",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/RUN_READY_20260911.md",
+      "sha256": "cc4db511ab32f0e684375af1fed8ac61187d7c8bdcd7c66136655e2f9da30b18",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/BAND_FORCING_20260910.md",
+      "sha256": "1826789f44092cb5a7e7f8bf1a1f26128c2913a3b1993be9139fae0b848855a8",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/CONTRACTION_KKT1_20260910.md",
+      "sha256": "b5fc19076e834ef7d5a74566c173abf55dd7bf4ebdb0822b5d3c4d54de9e3882",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/CONTRACTION_KNIFE_20260911.md",
+      "sha256": "7827bf4e42cf635c809a3f55a8fc6992528dc6d5e0ab1098ef28e6249d27915b",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/CONTRACTION_SUPPORT_20260910.md",
+      "sha256": "1bc18f775a4d0e39595d90c408c0e012e3cc672f585e66ef3b5cd01b76f69043",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/CORRECTIONS_FROM_PRO_20260911.md",
+      "sha256": "7fce63010952fc00f25d9bebe9120f03f9d7e9ae5e263209ce9ffad5b2e855a2",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/CORRECTION_KNEE_20260911.md",
+      "sha256": "62f102714b9891cc00a9450453a219e622c49bca685a7c6ccd7b4af135d086d7",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/CORRECTION_QWEN_20260911.md",
+      "sha256": "d9c47b3ca6b403cb5ef8b1441a512e209dde939a3d28c8e9ad5e4652daeae830",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/DOC_SYNTHESIS_20260910.md",
+      "sha256": "7add4afdaeceb668ca086794029adddec5a6b7c614b1f6df562e99c72b73e933",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/EVQ_UNIFY_20260910.md",
+      "sha256": "e3898aed93827ad9510f262c92bc9ed58af38f3aa8b58bbe46a4e70dcbbf1a90",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/INDEX_20260911.md",
+      "sha256": "11a3523f2348b6c1df6a2ad9ae6220b420d68ea9c1d9164ef5a751ffd88fda3a",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/K6_PREFLIGHT_20260910.md",
+      "sha256": "9ca98a5545cfd434f627b09bee77b921cadea02c6dd073bb9c43acba940e97dc",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/KKT_ANALYTIC_20260910.md",
+      "sha256": "5dd9087088428f96d73cce3358d2661567313f07dc5edcee847dc64354df786c",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/PHASE1_ROUND1_20260910.md",
+      "sha256": "8aa5a5916cc46f517bb8d4e2737bb90c84e404d2e677128fff1ece1849aa8906",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/PLAN_20260911.md",
+      "sha256": "d1ba7be9f4a43017c35127f2079e615c90451854fe152b6f42f955c132470d9c",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/QWEN_INSTRUMENT_20260911.md",
+      "sha256": "cbbd609e30ebe18d07625c342347272dc8b578e73dfeb25351615645eab0c71a",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/README.md",
+      "sha256": "037b7760285c3e1bec3413890dd00a84ac677f827eaccd0b862fa7f5fee92f93",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/REANCHOR_KKT_20260911.md",
+      "sha256": "f2804a4a45981b913fec6a7078344f0ff00a0d26a82f46be0f7d1413a6d2e834",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/RESOLUTION_MISSING_TERM_20260911.md",
+      "sha256": "dc541d92519240225cecfeb6a04967f00f5cdb4767f6544b842fcae8d7ebe9ba",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_B2_OLMO_20260910.md",
+      "sha256": "955454fccf9b8b7c305c6564284a90d086d8a4d9ccefaeaac516e2b62957e62a",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_KNIFE_20260911.md",
+      "sha256": "264977b80f4e3b96430db11ae346413ba8ad3e80f19c06bb719d3a0186bb117b",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_SIGMA_SHAPE_20260910.md",
+      "sha256": "b6c69d9ed551441f5997a05341218a20583955342ecf94c518cdca1a708ccdef",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/RESULT_THEORY_TESTS_20260911.md",
+      "sha256": "8573c8ecbd4a3c2725d59bd9718f46c4384d52b69ac5050c4b3e2caeab4b23d0",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/SEP_CAUSE_20260911.md",
+      "sha256": "4c2fb1425f6f439a2989fd87db301345e8c73e3c2d4f7a68361231bfc103a72c",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/TURN_WINDOW_THEORY_20260910.md",
+      "sha256": "2857123de96a89757a2a62592884af647ce9448a00f87cc4d8967fd8f8d90883",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_archive_20260911/WHY_20260911.md",
+      "sha256": "581e5fde94c018c095b48ffe59722a55a2de130165d530bbac208742a8903948",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/ANALYTIC_BUDGET_20260911.md",
+      "sha256": "cbafc46a407561eece25cab67cc4b7f61c4e3547727d587c052b49d75e7a5b1f",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/EVQ_LIMIT_20260911.md",
+      "sha256": "635b9673c5f488ebac54cb9de8f3c727270ad6f2319ea95d9a673431a0d85a80",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/MECHANISM_20260911.md",
+      "sha256": "4b848c62785ea0d03f0140117563b808c2db4d3a26bdeb79b1cf11e713d2be37",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/MIDBAND_MECH_20260911.md",
+      "sha256": "e190e77bbe45072b3465a045833e5248b33e3c92fdf31ff8c677eeb75fa8b2a6",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/MINIMAL_PARAMS_20260911.md",
+      "sha256": "95a56506cabe7d3916900f7b10f5a8152b60eb060de287d10b8938af05b6b393",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/PRO_PLAN_VERIFY_A_20260911.md",
+      "sha256": "14b7cc99f298e5998e3b21339abeba373eafc9fe72a195f6d1c7296e587dcf31",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/_reports/PRO_PLAN_VERIFY_B_20260911.md",
+      "sha256": "5d547fac8c48eb6673d61f0a653128308172e82d664d496fe54bf19e09fb160b",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/check_remote.py",
+      "sha256": "fc3f5892bfaebe65770a2ab3e8c7b4741c0ec3416d847489b41511c97d8d00b8",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/curvature_model_before.py",
+      "sha256": "bbfa0fefbc893f89758c4008287d2b928e3196f0cb4b5a0ecbc1b225609e9fc3",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/natural_read.py",
+      "sha256": "152d179e566659c48022bcca47353ab48b3c5c46fff7e2d6fef41ab082a04f56",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/olmo_beta.py",
+      "sha256": "dcf13bdd1756a102f72a533556795ca8aeafc393efdd0cf85fff1b042a0ee6b3",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/qwen4x_power_read.py",
+      "sha256": "07770cb1f567ec80864e4fb99d21743b19de3bcce8a692735703460ea981b758",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/pro_decision_20260911/qwen_longnll.py",
+      "sha256": "eb6fd293052443a57eca98f4b10c6a994073a426fe28582b202ffc4a28fe185a",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/amp4x_prescription.py",
+      "sha256": "aef501854427c272c85a43520ff160301b8701bfa1dd1c521e5423bb95656c96",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/build_amp_sweep.py",
+      "sha256": "f9108a52ae80f30e2e3c156c59e65e8182a10dc58f30c760f168ba42b936f136",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/oos_qwen.py",
+      "sha256": "6b2237bc5d05f3664bd9adb2a0ee2b6d3a97aa6a8938dfb485440a8ea2d9553c",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/audit/verify_coverage_20260911/verify_coverage.py",
+      "sha256": "d732c8f74c9560a9b7777e6b4b1c2ac82b8ef7296897944041d0a6a52ece8061",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/budget_20260911.py",
+      "sha256": "3befe82bd01fce7523d42f4ea7439b5d6b7abdd75c6326bb82387ded70412f7b",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/chain_pro_items.py",
+      "sha256": "52ba4967c1e5eb7bd90730e8a94da73d65d6f79012b1bf7da46fc6218f9dc7cd",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/evq_limit_20260911.py",
+      "sha256": "0ff9cf2780e0cc66e8d11032aa1b86f4aaa70c57fc080fbe346ec25a591d5496",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/fisher_local_20260911.py",
+      "sha256": "7efc255c622465a6fa06ae63b16b28ee7e552e66b75db7039761e180836e1ca9",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/holdout180.py",
+      "sha256": "e874751f02f846b78288260dafc57ccab8b33a9dd6777f2238e6d7b23724f629",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/holdout180_read.py",
+      "sha256": "4d31d8d160e769a9ca17f9e6bc07bf718d14dc7df8d5a49aaa73c646f4436e7f",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/minimal_params_20260911.py",
+      "sha256": "1349c07d046fa8fd73a0af81fba1e110c4ef5e3c41b6ee563ed7a991223aeefb",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/patch_mfile.py",
+      "sha256": "396d43d870a6f1f6e100046af7f9c6723b5e010594a0e504ae602df45ef90df8",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/patch_pro_arms.py",
+      "sha256": "80cc294825e0ddf119abe571de5438c802bff9bdef01d2f6491d27d31691eb40",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/repair_pro_arms.py",
+      "sha256": "6f421c784f569b0890b3186abfc959209ddeb7f5a012c1fed82367ae6120c6a2",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/yarn_baseline/add_yarn_spec.py",
+      "sha256": "35f45a33258e494f1020a8d1bba7e904935dd86b4acc03f53642f1e7e985bcd5",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/code/yarn_baseline/build_yarn_entry.py",
+      "sha256": "a693c248dddacafb0ee5500e84cd2e92d0af16b97821b649e7b8158de69c1eb1",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/design/D1_first_round.md",
+      "sha256": "3f55c4ccc5977f8647f49510fbed1c012f1ae553a23bc15c9061cbf55ceba159",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/AMP4X_PRESCRIPTION_PREREG_20260911.md",
+      "sha256": "e01665e43bdbe2e42838bcc3716e50caaeab524492f83e156dcd4a912fcc8ee9",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/AMP8X_SWEEP_PREREG_20260911.md",
+      "sha256": "b14594b79c372ce00933489a63ce50349d18790099f9c79b8702995b752a6f81",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/COVERAGE_PREREG_20260911.md",
+      "sha256": "46344c103aaba99a4b8eff5c152fc015910baf4ce164cd44faa508c2eb4e09c5",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/DOSE_PREREG_20260911.md",
+      "sha256": "ff849214cf3a029e2eec7b8d757bfdbc6a6b1f61f909e727936f9dec3c169d10",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/HOLDOUT180_PREREG_20260911.md",
+      "sha256": "978811e540c4f5c7bc17e08ad25a78a0cc492438f63255d6c6085596485ff261",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/LONGBRIDGE_PREREG_20260911.md",
+      "sha256": "360cdbd5f4fe57a55a02b8936c7604e372393263f17968bcafcf53aa14951833",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/NATURAL_PREREG_20260911.md",
+      "sha256": "166e3e677b691327bef2f41de590b14acc1281208705cd28d0d5c842f9c5d224",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/QWEN3_SURVIVOR_PREREG_20260911.md",
+      "sha256": "3ab07eefba5137c25a1df5c779386a4a41236967eee619e407573d2ea05a5b56",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/QWEN4X_POWER_PREREG_20260911.md",
+      "sha256": "a5cabd9b2c2655a816e9fcd1db0b8c0a065c1dd87a82838d3edd85a8659dc70e",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/RUNBOOK_OFFICE_20260911.md",
+      "sha256": "4913fafb2a0a53e7545ecdfcc8cbc91c2d33d8596af620c08004420af26d0f32",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/S8_PREREG_20260911.md",
+      "sha256": "090309ffe637702f759d2ba836d33bf8da0ca2e3b2d41083688cf43fbe69cf81",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/SATPRO_PREREG_20260911.md",
+      "sha256": "e8153fa3e8753b5069d623a83f07c24b6352a9c6fccacdaac4a5f7f80cbc965d",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/STEP42_PREREG_20260911.md",
+      "sha256": "619e0816ac758a386fb1ceacd9a58e2cb05d48cf8b5e85bbb7faf0d9257cea57",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/WALK_PREREG_20260911.md",
+      "sha256": "eff935984ba82b786d8aabf692d45f0103453991e0694bcf8e0e9d7bbb6f87db",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/prereg_protocols/index.md",
+      "sha256": "cbd75669d480f40f20c097951945566a65f24c0197424892173684f8519e8b7c",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/recon/R1_ordering_and_tables.md",
+      "sha256": "a733e0c8cc406ca4c6406777ff2608582a5b0548042b704814d12fde11d7fa14",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/recon/R2_sparse_and_training.md",
+      "sha256": "a5fb95019b9e9ce8e8ab07af5d3383768dba39491bbbbe1c16544174891386ce",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/recon/R3_probe_and_corpora.md",
+      "sha256": "bed3b7465fcc5ddaab251d1ceb091390aa24d47e57c669a4a9c784ee59a29c5e",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/CONSTRAINT_IS_SLACK_20260911.md",
+      "sha256": "0a88cfadeccdb8894812b961024913f21e6a4c86bd07ba930c2f9edd1c96e60a",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/COST_IS_NOT_QUADRATIC_20260911.md",
+      "sha256": "e4b9888eb804da395f07e3132db3bbab8f1d069e5ea486b7aae1a6e0a5589c0b",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/COVERAGE_CEILING_THEORY_20260911.md",
+      "sha256": "6d1e1e0a889ba52d3ee456274d772ccd2368348fce789c14ffc582a069ac9023",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/FOUR_CORNERS_20260911.md",
+      "sha256": "be6b1ceaedece510e3327408883b9c1bc6e08ce6b6f2104497bd5ab3db5a7146",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/GPT6PRO_MECHANISM_BRIEF_20260911.md",
+      "sha256": "5074f74bd36c282939658002927ee819eda2a92c9abafb083332d6e34f55762a",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/MRROPE_RECONCILIATION_20260911.md",
+      "sha256": "19df81ef3ffe4d824cf352e3189eada7914c219f569520a7086e8b06d1e25cca",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/NO_STATIC_FUNCTIONAL_20260911.md",
+      "sha256": "c0f08be96954780559c0e3c530e47867eeebff2768804cf615dce864b73b1d7c",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/ONE_AXIS_20260911.md",
+      "sha256": "f5d69197e56f9bf6b421421c27d7faa5e270b0c4d25f1f1bad6d1ab1c28bd744",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/PLATEAU_20260911.md",
+      "sha256": "a719e827288cfa5c1f253997a2fc2911abe1fe42ec4fafb1fb3352e65da2e307",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/SYNTHESIS_20260911.md",
+      "sha256": "4f994efb3543c6adf5b78247c3a93f75162622a9998381e5674f502bb4b6b7e4",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/theory/THE_ANSWER_20260911.md",
+      "sha256": "f7e88b14b2c758552d5765635e8fe80f67e263b3497c20faaa21a814f447efb6",
+      "reason": "superseded narrative/plan"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/work/s6_deep.py",
+      "sha256": "50827ed7cdd1a8f71755a895f287c9e72832a51eb2d75b0dcad147ad84be740a",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/work/s6_same_mechanism.py",
+      "sha256": "43a663de7db159006de70f3154314c07f77ac723c6733f6e02600c5216be686f",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/work/s7_qwen_check.py",
+      "sha256": "8f769d693f3376f3371544cf56626b513fb7a0f26c0b35e214ea02af9235316d",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/work/s7_s8_math.py",
+      "sha256": "ed7ffd623b3e2992c35f39d6c8dffa3736edc5f0e86c6595d5dc8eea1b83a5f9",
+      "reason": "retired one-off script or audit copy"
+    },
+    {
+      "path": "ds_workspace/recon_20260910/work/s7_s8_out.txt",
+      "sha256": "400ac99aa1c1acc1558834a29909f5a5eec8262b8784d254647f4cbf71b16e69",
+      "reason": "historical console output"
+    }
+  ],
+  "protected_sources": [
+    "ds_workspace/recon_20260910/code/coverage_theory_20260911.py",
+    "ds_workspace/recon_20260910/theory/RELEASE_AXIS_20260911.md",
+    "ds_workspace/recon_20260910/verdicts/GAIN_TABLE_2x2_FINAL_20260911.md",
+    "ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md",
+    "ds_workspace/recon_20260910/verdicts/NLL_VS_TASK_20260911.md",
+    "ds_workspace/recon_20260910/verdicts/STEP42_RESULT_20260911.md",
+    "ds_workspace/recon_20260910/work/jsonl/archive/MrPro.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/archive/MrProBM.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/beta_b0p25.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/beta_b0p5.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/beta_b2p0.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a0p5_b32.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a1_b16.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a1_b64.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a2_b32.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42V24.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_knife/knife_d0_a0p0063.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_knife/knife_d0p0063_a0.jsonl",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_knife/knife_d0p0063_a0p0063.jsonl"
+  ],
+  "protected_source_hashes": {
+    "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42.jsonl": "6108c03f6ff39d8c829990b43aa4aaac0a6ba5a18ada7dedce7674d81177b278",
+    "ds_workspace/recon_20260910/theory/RELEASE_AXIS_20260911.md": "d3cb66cd32c357e0915930d696eba2b65582607d9ac3ff648dc528e2d36e381f",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a2_b32.jsonl": "36d7ef840b94e8afd68326fac0dec7dc316476c6ce4a2f0d1abf8c7b2175f90a",
+    "ds_workspace/recon_20260910/verdicts/NLL_VS_TASK_20260911.md": "c79f7a1876da3be528a0604bd1cd433a105231726b16a898f1207ac763e471bb",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_c42/ctl_C42V24.jsonl": "1430b9eb65ac09d9c3d30a7d51259564eb0d8df76fd9b02e37d4385d10b18d9c",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_knife/knife_d0_a0p0063.jsonl": "640e954a5b71a3ff39ae1b613f507ca2c1da7756184cc28f0bca36c82976dbf1",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_knife/knife_d0p0063_a0.jsonl": "8e50b5c50ef7435c9578367e91d50eb9f705ff512c90ec972e947c1092924ef6",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/beta_b2p0.jsonl": "b4e389362018a128a1dd4a1d25340e9ca3ef82a5512f5676747977b6648d2c04",
+    "ds_workspace/recon_20260910/work/jsonl/archive/MrPro.jsonl": "58c65a6172a5d0c3843d081453ed163c2be83d15395cb39fe013e095d4b2d1e2",
+    "ds_workspace/recon_20260910/verdicts/STEP42_RESULT_20260911.md": "02db28fb2f9abb85f8a08c32ca2a4dca995973861e59e8188125a966cc740d77",
+    "ds_workspace/recon_20260910/work/jsonl/olmo_knife/knife_d0p0063_a0p0063.jsonl": "36b9dbfb787556ad4b018de38e41d771c7da0e864ee3041942e88b0b63d94da0",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a1_b16.jsonl": "b307d72b356b47c834066e4e1780072e62ea7b97f2b69f4620f16f1f96be0bfd",
+    "ds_workspace/recon_20260910/code/coverage_theory_20260911.py": "f1e48fd6578a3fc574238d3b696036a98622d997ba83cd573775dd24d96a1129",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/beta_b0p5.jsonl": "d419534b48841baef0a3630677a363665d989022929072f30448a85823ef154d",
+    "ds_workspace/recon_20260910/work/jsonl/archive/MrProBM.jsonl": "3edebc134a8925721e92b8de7857b84bd8d17d2c73eeb000ef47c328f5e58683",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a1_b64.jsonl": "b86b6b4ba0934a58a26d94d09c0a39f3080350818d3a8ec05eb4b3441f805c84",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/beta_b0p25.jsonl": "7b56eb50a54ff43e50bc816af538257b3a9cde02689d83f87c2b05bd0b6b1e7a",
+    "ds_workspace/recon_20260910/work/jsonl/olmo/turns_a0p5_b32.jsonl": "cf722e4c2f520a53ff54c217d1f9e9cda0fe47ddad8febcbc693ecce0cf87c5d",
+    "ds_workspace/recon_20260910/verdicts/HEADLINE_20260911.md": "5eadf9bb7a6cbde7bc4b4435da165b50f8e2e7c865136bb73e767e15d2a29d2d",
+    "ds_workspace/recon_20260910/verdicts/GAIN_TABLE_2x2_FINAL_20260911.md": "d0768dc396344df079708e997fccf6ed57e4e0cf408d2286b1f8cd95680732fb"
+  },
+  "counts_before": {
+    "ds_markdown": 120,
+    "ds_python": 30,
+    "ds_tracked_files": 260
+  },
+  "recovery": "Recover an individual original with git show <base_commit>:<removed.path>; all removed files matched that commit byte-for-byte before deletion.",
+  "counts_after": {
+    "ds_markdown": 48,
+    "ds_python": 4
+  }
+}
