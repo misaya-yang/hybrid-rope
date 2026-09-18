@@ -1,0 +1,110 @@
+{
+  "arms": {
+    "mrpro": {
+      "by_task": {
+        "niah_multiquery": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.325,
+          "rows": 10
+        },
+        "vt": {
+          "cap_rate": 0.3,
+          "empty_rate": 0.0,
+          "eos_rate": 0.7,
+          "official_score": 0.7,
+          "rows": 10
+        }
+      },
+      "rows": 20,
+      "task_equal_cap_rate": 0.65,
+      "task_equal_empty_rate": 0.0,
+      "task_equal_eos_rate": 0.35,
+      "task_equal_official_score": 0.5125
+    },
+    "official_yarn": {
+      "by_task": {
+        "niah_multiquery": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.25,
+          "rows": 10
+        },
+        "vt": {
+          "cap_rate": 0.4,
+          "empty_rate": 0.0,
+          "eos_rate": 0.6,
+          "official_score": 0.82,
+          "rows": 10
+        }
+      },
+      "rows": 20,
+      "task_equal_cap_rate": 0.7,
+      "task_equal_empty_rate": 0.0,
+      "task_equal_eos_rate": 0.3,
+      "task_equal_official_score": 0.5349999999999999
+    },
+    "tailspline": {
+      "by_task": {
+        "niah_multiquery": {
+          "cap_rate": 1.0,
+          "empty_rate": 0.0,
+          "eos_rate": 0.0,
+          "official_score": 0.225,
+          "rows": 10
+        },
+        "vt": {
+          "cap_rate": 0.3,
+          "empty_rate": 0.0,
+          "eos_rate": 0.7,
+          "official_score": 0.64,
+          "rows": 10
+        }
+      },
+      "rows": 20,
+      "task_equal_cap_rate": 0.65,
+      "task_equal_empty_rate": 0.0,
+      "task_equal_eos_rate": 0.35,
+      "task_equal_official_score": 0.4325
+    }
+  },
+  "deltas": {
+    "mrpro_minus_official_yarn": -0.022499999999999964,
+    "tailspline_minus_mrpro": -0.07999999999999996,
+    "tailspline_minus_official_yarn": -0.10249999999999992
+  },
+  "metric": "RULER official score, task-equal macro",
+  "model": "kakaocorp/kanana-1.5-8b-instruct-2505",
+  "paired_prompts": 20,
+  "rows_per_task": 10,
+  "scores_by_task": {
+    "niah_multiquery": {
+      "mrpro": 0.325,
+      "official_yarn": 0.25,
+      "tailspline": 0.225
+    },
+    "vt": {
+      "mrpro": 0.7,
+      "official_yarn": 0.82,
+      "tailspline": 0.64
+    }
+  },
+  "source_sha256": {
+    "mrpro": "e2b3bfa3ed7dac6e214f9059266662e9a8fbc8a372e8cde383ba7527088cb0f0",
+    "official_yarn": "df26a809cd924237c7d4c0772f4516179699c746dff9dc1945805e2200025792",
+    "tailspline": "9e7b0e92dfa03f0bcf5053ed0f0b4fd63c370d2bbdd65f989a8d8a764a100733"
+  },
+  "status": "KANANA_64K_THREE_ARM_PILOT_COMPLETE_V1",
+  "target_length": 65536,
+  "task_equal_scores": {
+    "mrpro": 0.5125,
+    "official_yarn": 0.5349999999999999,
+    "tailspline": 0.4325
+  },
+  "tasks": [
+    "niah_multiquery",
+    "vt"
+  ]
+}
