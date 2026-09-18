@@ -30,7 +30,7 @@ run_parity() {
     --reconciliation-report "$RECONCILIATION_REPORT" \
     --static-table-json "$table" --table-label "$label" \
     --out "$OUT_ROOT/parity_canonical/$name" \
-    > "$OUT_ROOT/logs/parity_$name.log" 2>&1
+    > "$OUT_ROOT/logs/parity_canonical_$name.log" 2>&1
 }
 
 run_arm() {
