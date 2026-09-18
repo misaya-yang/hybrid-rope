@@ -20,8 +20,11 @@ Read one task route, not the whole history.
 - The OpenReview edit form was filled with the final abstract and previewed;
   submission/save was left to the author. Do not infer that the final submission
   occurred from the local PDF or the filled form.
-- The author is awaiting Pro's answer to [three final-week questions](research/revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md).
-  They are advisory questions, not an approved experiment queue.
+- Pro's answer to the [three final-week questions](research/revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md)
+  has been reviewed. The author approved only the corrected fresh-64 T-C
+  distance-by-structured-context confirmation tracked by the
+  [experiment owner](../experiments/tc_distance_competition_20260918/README.md).
+  It does not reopen the frozen title/abstract or authorize other queues.
 
 ## NON_NEGOTIABLE_CONSTRAINTS
 

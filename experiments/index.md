@@ -2,7 +2,13 @@
 
 研究结论与优先级见[当前研究索引](../docs/research/next_stage_20260912/index.md)，论文主张追溯见[证据索引](../paper-2027/research/evidence/index.md)。本页只回答三件事：正式结果在哪里、代码从哪里复用、哪些目录只是历史或准备状态。
 
-2026-09-18当天不再启动新GPU实验。完成状态只由下列结果owner和紧凑报告确定；旧launcher、队列文档或服务器目录不代表任务仍在运行。
+2026-09-18作者新增授权了一项[修正后的T-C距离×结构化竞争确认实验](tc_distance_competition_20260918/README.md)，且仅限该owner冻结的fresh-64两臂比较。其他新GPU实验仍未授权。完成状态只由结果owner和紧凑报告确定；旧launcher、队列文档或服务器目录不代表任务仍在运行。
+
+## 当前授权执行
+
+| 科学问题 | 唯一状态入口 |
+|---|---|
+| 等位移T-C差异是否随依赖距离与结构化KV竞争发生可预测交互 | [Stage 1审计、scorer对账与fresh-64 Stage 2 owner](tc_distance_competition_20260918/README.md) |
 
 新实验的准备／执行／报告方法见[实验工作流程](../docs/research/protocols/EXPERIMENT_WORKFLOW.md)。查全部实验家族时用[目录分层表](DIRECTORY_MAP.md)，而不是依次打开每个历史README。
 

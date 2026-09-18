@@ -1,0 +1,470 @@
+{
+  "arm_rows": {
+    "dose_control_c": 750,
+    "tailspline": 750
+  },
+  "audit_correct_contract": "exactly one prompt candidate value occurs in the response and it is gold",
+  "by_length_task_arm": {
+    "16384": {
+      "niah_multikey_1": {
+        "dose_control_c": {
+          "audit_accuracy": 0.96,
+          "audit_correct": 48,
+          "classification_counts": {
+            "ambiguous": 1,
+            "correct": 48,
+            "wrong_binding": 1
+          },
+          "official_accuracy": 0.98,
+          "official_correct": 49,
+          "official_minus_audit_correct": 1,
+          "reconciliation_counts": {
+            "agreement": 49,
+            "official_correct_audit_ambiguous": 1
+          },
+          "rows": 50
+        },
+        "tailspline": {
+          "audit_accuracy": 0.98,
+          "audit_correct": 49,
+          "classification_counts": {
+            "ambiguous": 1,
+            "correct": 49
+          },
+          "official_accuracy": 1.0,
+          "official_correct": 50,
+          "official_minus_audit_correct": 1,
+          "reconciliation_counts": {
+            "agreement": 49,
+            "official_correct_audit_ambiguous": 1
+          },
+          "rows": 50
+        }
+      },
+      "niah_multikey_2": {
+        "dose_control_c": {
+          "audit_accuracy": 0.98,
+          "audit_correct": 49,
+          "classification_counts": {
+            "correct": 49,
+            "wrong_binding": 1
+          },
+          "official_accuracy": 0.98,
+          "official_correct": 49,
+          "official_minus_audit_correct": 0,
+          "reconciliation_counts": {
+            "agreement": 50
+          },
+          "rows": 50
+        },
+        "tailspline": {
+          "audit_accuracy": 0.98,
+          "audit_correct": 49,
+          "classification_counts": {
+            "correct": 49,
+            "wrong_binding": 1
+          },
+          "official_accuracy": 0.98,
+          "official_correct": 49,
+          "official_minus_audit_correct": 0,
+          "reconciliation_counts": {
+            "agreement": 50
+          },
+          "rows": 50
+        }
+      },
+      "niah_multikey_3": {
+        "dose_control_c": {
+          "audit_accuracy": 0.92,
+          "audit_correct": 46,
+          "classification_counts": {
+            "correct": 46,
+            "other": 1,
+            "wrong_binding": 3
+          },
+          "official_accuracy": 0.92,
+          "official_correct": 46,
+          "official_minus_audit_correct": 0,
+          "reconciliation_counts": {
+            "agreement": 50
+          },
+          "rows": 50
+        },
+        "tailspline": {
+          "audit_accuracy": 0.92,
+          "audit_correct": 46,
+          "classification_counts": {
+            "correct": 46,
+            "other": 2,
+            "wrong_binding": 2
+          },
+          "official_accuracy": 0.92,
+          "official_correct": 46,
+          "official_minus_audit_correct": 0,
+          "reconciliation_counts": {
+            "agreement": 50
+          },
+          "rows": 50
+        }
+      }
+    },
+    "32768": {
+      "niah_multikey_1": {
+        "dose_control_c": {
+          "audit_accuracy": 0.815,
+          "audit_correct": 163,
+          "classification_counts": {
+            "ambiguous": 13,
+            "correct": 163,
+            "wrong_binding": 24
+          },
+          "official_accuracy": 0.88,
+          "official_correct": 176,
+          "official_minus_audit_correct": 13,
+          "reconciliation_counts": {
+            "agreement": 187,
+            "official_correct_audit_ambiguous": 13
+          },
+          "rows": 200
+        },
+        "tailspline": {
+          "audit_accuracy": 0.82,
+          "audit_correct": 164,
+          "classification_counts": {
+            "ambiguous": 5,
+            "correct": 164,
+            "wrong_binding": 31
+          },
+          "official_accuracy": 0.845,
+          "official_correct": 169,
+          "official_minus_audit_correct": 5,
+          "reconciliation_counts": {
+            "agreement": 195,
+            "official_correct_audit_ambiguous": 5
+          },
+          "rows": 200
+        }
+      },
+      "niah_multikey_2": {
+        "dose_control_c": {
+          "audit_accuracy": 0.365,
+          "audit_correct": 73,
+          "classification_counts": {
+            "correct": 73,
+            "other": 21,
+            "wrong_binding": 106
+          },
+          "official_accuracy": 0.365,
+          "official_correct": 73,
+          "official_minus_audit_correct": 0,
+          "reconciliation_counts": {
+            "agreement": 200
+          },
+          "rows": 200
+        },
+        "tailspline": {
+          "audit_accuracy": 0.47,
+          "audit_correct": 94,
+          "classification_counts": {
+            "correct": 94,
+            "other": 21,
+            "wrong_binding": 85
+          },
+          "official_accuracy": 0.47,
+          "official_correct": 94,
+          "official_minus_audit_correct": 0,
+          "reconciliation_counts": {
+            "agreement": 200
+          },
+          "rows": 200
+        }
+      },
+      "niah_multikey_3": {
+        "dose_control_c": {
+          "audit_accuracy": 0.085,
+          "audit_correct": 17,
+          "classification_counts": {
+            "correct": 17,
+            "other": 135,
+            "wrong_binding": 48
+          },
+          "official_accuracy": 0.095,
+          "official_correct": 19,
+          "official_minus_audit_correct": 2,
+          "reconciliation_counts": {
+            "agreement": 198,
+            "official_correct_audit_other": 2
+          },
+          "rows": 200
+        },
+        "tailspline": {
+          "audit_accuracy": 0.235,
+          "audit_correct": 47,
+          "classification_counts": {
+            "correct": 47,
+            "other": 93,
+            "wrong_binding": 60
+          },
+          "official_accuracy": 0.24,
+          "official_correct": 48,
+          "official_minus_audit_correct": 1,
+          "reconciliation_counts": {
+            "agreement": 199,
+            "official_correct_audit_other": 1
+          },
+          "rows": 200
+        }
+      }
+    }
+  },
+  "contrasts": {
+    "16384": {
+      "niah_multikey_1": {
+        "audit_t_minus_c": 0.020000000000000018,
+        "difference_in_t_minus_c_official_minus_audit": 0.0,
+        "official_t_minus_c": 0.020000000000000018
+      },
+      "niah_multikey_2": {
+        "audit_t_minus_c": 0.0,
+        "difference_in_t_minus_c_official_minus_audit": 0.0,
+        "official_t_minus_c": 0.0
+      },
+      "niah_multikey_3": {
+        "audit_t_minus_c": 0.0,
+        "difference_in_t_minus_c_official_minus_audit": 0.0,
+        "official_t_minus_c": 0.0
+      }
+    },
+    "32768": {
+      "niah_multikey_1": {
+        "audit_t_minus_c": 0.0050000000000000044,
+        "difference_in_t_minus_c_official_minus_audit": -0.040000000000000036,
+        "official_t_minus_c": -0.03500000000000003
+      },
+      "niah_multikey_2": {
+        "audit_t_minus_c": 0.10499999999999998,
+        "difference_in_t_minus_c_official_minus_audit": 0.0,
+        "official_t_minus_c": 0.10499999999999998
+      },
+      "niah_multikey_3": {
+        "audit_t_minus_c": 0.14999999999999997,
+        "difference_in_t_minus_c_official_minus_audit": -0.0049999999999999906,
+        "official_t_minus_c": 0.145
+      }
+    }
+  },
+  "interpretation": "Official-only correct rows contain the gold substring but fail the stricter behavior classification; scorer disagreement is retained rather than forced away.",
+  "mismatch_rows": [
+    {
+      "arm": "tailspline",
+      "audit_class": "ambiguous",
+      "length": 16384,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_16384_0001",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 16384,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_16384_0001",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0004",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0006",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "tailspline",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0044",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0044",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0050",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "tailspline",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0060",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0066",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "tailspline",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0076",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0076",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0116",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0117",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0137",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "tailspline",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0150",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0150",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0186",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "tailspline",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0187",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0187",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "ambiguous",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_ambiguous",
+      "row_id": "clean_niah_multikey_1_32768_0190",
+      "task": "niah_multikey_1"
+    },
+    {
+      "arm": "tailspline",
+      "audit_class": "other",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_other",
+      "row_id": "clean_niah_multikey_3_32768_0111",
+      "task": "niah_multikey_3"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "other",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_other",
+      "row_id": "clean_niah_multikey_3_32768_0111",
+      "task": "niah_multikey_3"
+    },
+    {
+      "arm": "dose_control_c",
+      "audit_class": "other",
+      "length": 32768,
+      "official_score": 1.0,
+      "reconciliation": "official_correct_audit_other",
+      "row_id": "clean_niah_multikey_3_32768_0157",
+      "task": "niah_multikey_3"
+    }
+  ],
+  "official_scorer_contract": "NVIDIA RULER substring matching: a one-reference multikey row is correct whenever the gold value occurs anywhere in the response",
+  "source_rows": 750,
+  "stage1_report_status": "TC_EXISTING_MULTIKEY_BEHAVIOR_AUDIT_COMPLETE_V2",
+  "status": "TC_STAGE1_OFFICIAL_RECONCILIATION_COMPLETE_V1"
+}

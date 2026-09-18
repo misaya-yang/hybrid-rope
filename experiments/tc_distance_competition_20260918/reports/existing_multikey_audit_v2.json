@@ -1,0 +1,558 @@
+{
+  "ambiguous_source_rows": [],
+  "by_length": {
+    "16384": {
+      "both_correct": 141,
+      "both_incorrect": 4,
+      "confirmed_wrong_binding_damages": 1,
+      "confirmed_wrong_binding_repairs": 3,
+      "control_classes": {
+        "ambiguous": 1,
+        "correct": 143,
+        "other": 1,
+        "wrong_binding": 5
+      },
+      "control_unique_correct": 2,
+      "distance_anchor_coverage": 0.88,
+      "mean_candidate_count": 385.64666666666665,
+      "mean_dependency_distance": 8556.666666666666,
+      "net_confirmed_wrong_binding_correction": 2,
+      "net_correction_rate_all_rows": 0.013333333333333334,
+      "rows": 150,
+      "tailspline_classes": {
+        "ambiguous": 1,
+        "correct": 144,
+        "other": 2,
+        "wrong_binding": 3
+      },
+      "tailspline_unique_correct": 3,
+      "transition_matrix_control_to_tailspline": {
+        "ambiguous": {
+          "ambiguous": 1,
+          "correct": 0,
+          "empty": 0,
+          "other": 0,
+          "wrong_binding": 0
+        },
+        "correct": {
+          "ambiguous": 0,
+          "correct": 141,
+          "empty": 0,
+          "other": 1,
+          "wrong_binding": 1
+        },
+        "empty": {
+          "ambiguous": 0,
+          "correct": 0,
+          "empty": 0,
+          "other": 0,
+          "wrong_binding": 0
+        },
+        "other": {
+          "ambiguous": 0,
+          "correct": 0,
+          "empty": 0,
+          "other": 1,
+          "wrong_binding": 0
+        },
+        "wrong_binding": {
+          "ambiguous": 0,
+          "correct": 3,
+          "empty": 0,
+          "other": 0,
+          "wrong_binding": 2
+        }
+      }
+    },
+    "32768": {
+      "both_correct": 224,
+      "both_incorrect": 266,
+      "confirmed_wrong_binding_damages": 25,
+      "confirmed_wrong_binding_repairs": 39,
+      "control_classes": {
+        "ambiguous": 13,
+        "correct": 253,
+        "other": 156,
+        "wrong_binding": 178
+      },
+      "control_unique_correct": 29,
+      "distance_anchor_coverage": 0.8583333333333333,
+      "mean_candidate_count": 791.59,
+      "mean_dependency_distance": 16664.312621359222,
+      "net_confirmed_wrong_binding_correction": 14,
+      "net_correction_rate_all_rows": 0.023333333333333334,
+      "rows": 600,
+      "tailspline_classes": {
+        "ambiguous": 5,
+        "correct": 305,
+        "other": 114,
+        "wrong_binding": 176
+      },
+      "tailspline_unique_correct": 81,
+      "transition_matrix_control_to_tailspline": {
+        "ambiguous": {
+          "ambiguous": 4,
+          "correct": 7,
+          "empty": 0,
+          "other": 0,
+          "wrong_binding": 2
+        },
+        "correct": {
+          "ambiguous": 0,
+          "correct": 224,
+          "empty": 0,
+          "other": 4,
+          "wrong_binding": 25
+        },
+        "empty": {
+          "ambiguous": 0,
+          "correct": 0,
+          "empty": 0,
+          "other": 0,
+          "wrong_binding": 0
+        },
+        "other": {
+          "ambiguous": 0,
+          "correct": 35,
+          "empty": 0,
+          "other": 77,
+          "wrong_binding": 44
+        },
+        "wrong_binding": {
+          "ambiguous": 1,
+          "correct": 39,
+          "empty": 0,
+          "other": 33,
+          "wrong_binding": 105
+        }
+      }
+    }
+  },
+  "by_length_task": {
+    "16384": {
+      "niah_multikey_1": {
+        "both_correct": 48,
+        "both_incorrect": 1,
+        "confirmed_wrong_binding_damages": 0,
+        "confirmed_wrong_binding_repairs": 1,
+        "control_classes": {
+          "ambiguous": 1,
+          "correct": 48,
+          "wrong_binding": 1
+        },
+        "control_unique_correct": 0,
+        "distance_anchor_coverage": 1.0,
+        "mean_candidate_count": 4.0,
+        "mean_dependency_distance": 9058.86,
+        "net_confirmed_wrong_binding_correction": 1,
+        "net_correction_rate_all_rows": 0.02,
+        "rows": 50,
+        "tailspline_classes": {
+          "ambiguous": 1,
+          "correct": 49
+        },
+        "tailspline_unique_correct": 1,
+        "transition_matrix_control_to_tailspline": {
+          "ambiguous": {
+            "ambiguous": 1,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "correct": {
+            "ambiguous": 0,
+            "correct": 48,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "empty": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "other": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "wrong_binding": {
+            "ambiguous": 0,
+            "correct": 1,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          }
+        }
+      },
+      "niah_multikey_2": {
+        "both_correct": 48,
+        "both_incorrect": 0,
+        "confirmed_wrong_binding_damages": 1,
+        "confirmed_wrong_binding_repairs": 1,
+        "control_classes": {
+          "correct": 49,
+          "wrong_binding": 1
+        },
+        "control_unique_correct": 1,
+        "distance_anchor_coverage": 1.0,
+        "mean_candidate_count": 889.94,
+        "mean_dependency_distance": 8046.2,
+        "net_confirmed_wrong_binding_correction": 0,
+        "net_correction_rate_all_rows": 0.0,
+        "rows": 50,
+        "tailspline_classes": {
+          "correct": 49,
+          "wrong_binding": 1
+        },
+        "tailspline_unique_correct": 1,
+        "transition_matrix_control_to_tailspline": {
+          "ambiguous": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "correct": {
+            "ambiguous": 0,
+            "correct": 48,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 1
+          },
+          "empty": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "other": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "wrong_binding": {
+            "ambiguous": 0,
+            "correct": 1,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          }
+        }
+      },
+      "niah_multikey_3": {
+        "both_correct": 45,
+        "both_incorrect": 3,
+        "confirmed_wrong_binding_damages": 0,
+        "confirmed_wrong_binding_repairs": 1,
+        "control_classes": {
+          "correct": 46,
+          "other": 1,
+          "wrong_binding": 3
+        },
+        "control_unique_correct": 1,
+        "distance_anchor_coverage": 0.64,
+        "mean_candidate_count": 263.0,
+        "mean_dependency_distance": 8569.59375,
+        "net_confirmed_wrong_binding_correction": 1,
+        "net_correction_rate_all_rows": 0.02,
+        "rows": 50,
+        "tailspline_classes": {
+          "correct": 46,
+          "other": 2,
+          "wrong_binding": 2
+        },
+        "tailspline_unique_correct": 1,
+        "transition_matrix_control_to_tailspline": {
+          "ambiguous": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "correct": {
+            "ambiguous": 0,
+            "correct": 45,
+            "empty": 0,
+            "other": 1,
+            "wrong_binding": 0
+          },
+          "empty": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "other": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 1,
+            "wrong_binding": 0
+          },
+          "wrong_binding": {
+            "ambiguous": 0,
+            "correct": 1,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 2
+          }
+        }
+      }
+    },
+    "32768": {
+      "niah_multikey_1": {
+        "both_correct": 153,
+        "both_incorrect": 26,
+        "confirmed_wrong_binding_damages": 10,
+        "confirmed_wrong_binding_repairs": 4,
+        "control_classes": {
+          "ambiguous": 13,
+          "correct": 163,
+          "wrong_binding": 24
+        },
+        "control_unique_correct": 10,
+        "distance_anchor_coverage": 1.0,
+        "mean_candidate_count": 4.0,
+        "mean_dependency_distance": 17344.87,
+        "net_confirmed_wrong_binding_correction": -6,
+        "net_correction_rate_all_rows": -0.03,
+        "rows": 200,
+        "tailspline_classes": {
+          "ambiguous": 5,
+          "correct": 164,
+          "wrong_binding": 31
+        },
+        "tailspline_unique_correct": 11,
+        "transition_matrix_control_to_tailspline": {
+          "ambiguous": {
+            "ambiguous": 4,
+            "correct": 7,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 2
+          },
+          "correct": {
+            "ambiguous": 0,
+            "correct": 153,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 10
+          },
+          "empty": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "other": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "wrong_binding": {
+            "ambiguous": 1,
+            "correct": 4,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 19
+          }
+        }
+      },
+      "niah_multikey_2": {
+        "both_correct": 59,
+        "both_incorrect": 92,
+        "confirmed_wrong_binding_damages": 12,
+        "confirmed_wrong_binding_repairs": 25,
+        "control_classes": {
+          "correct": 73,
+          "other": 21,
+          "wrong_binding": 106
+        },
+        "control_unique_correct": 14,
+        "distance_anchor_coverage": 1.0,
+        "mean_candidate_count": 1814.27,
+        "mean_dependency_distance": 16569.27,
+        "net_confirmed_wrong_binding_correction": 13,
+        "net_correction_rate_all_rows": 0.065,
+        "rows": 200,
+        "tailspline_classes": {
+          "correct": 94,
+          "other": 21,
+          "wrong_binding": 85
+        },
+        "tailspline_unique_correct": 35,
+        "transition_matrix_control_to_tailspline": {
+          "ambiguous": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "correct": {
+            "ambiguous": 0,
+            "correct": 59,
+            "empty": 0,
+            "other": 2,
+            "wrong_binding": 12
+          },
+          "empty": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "other": {
+            "ambiguous": 0,
+            "correct": 10,
+            "empty": 0,
+            "other": 5,
+            "wrong_binding": 6
+          },
+          "wrong_binding": {
+            "ambiguous": 0,
+            "correct": 25,
+            "empty": 0,
+            "other": 14,
+            "wrong_binding": 67
+          }
+        }
+      },
+      "niah_multikey_3": {
+        "both_correct": 12,
+        "both_incorrect": 148,
+        "confirmed_wrong_binding_damages": 3,
+        "confirmed_wrong_binding_repairs": 10,
+        "control_classes": {
+          "correct": 17,
+          "other": 135,
+          "wrong_binding": 48
+        },
+        "control_unique_correct": 5,
+        "distance_anchor_coverage": 0.575,
+        "mean_candidate_count": 556.5,
+        "mean_dependency_distance": 15646.02608695652,
+        "net_confirmed_wrong_binding_correction": 7,
+        "net_correction_rate_all_rows": 0.035,
+        "rows": 200,
+        "tailspline_classes": {
+          "correct": 47,
+          "other": 93,
+          "wrong_binding": 60
+        },
+        "tailspline_unique_correct": 35,
+        "transition_matrix_control_to_tailspline": {
+          "ambiguous": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "correct": {
+            "ambiguous": 0,
+            "correct": 12,
+            "empty": 0,
+            "other": 2,
+            "wrong_binding": 3
+          },
+          "empty": {
+            "ambiguous": 0,
+            "correct": 0,
+            "empty": 0,
+            "other": 0,
+            "wrong_binding": 0
+          },
+          "other": {
+            "ambiguous": 0,
+            "correct": 25,
+            "empty": 0,
+            "other": 72,
+            "wrong_binding": 38
+          },
+          "wrong_binding": {
+            "ambiguous": 0,
+            "correct": 10,
+            "empty": 0,
+            "other": 19,
+            "wrong_binding": 19
+          }
+        }
+      }
+    }
+  },
+  "classification_contract": {
+    "ambiguous": "multiple distinct prompt candidate values are mentioned",
+    "correct": "exactly one prompt candidate value is mentioned and it is the gold value",
+    "denominator": "all source-qualified paired multikey rows",
+    "duplicate_candidate_values": "retained because a gold match remains correct and any mentioned non-gold prompt value remains a confirmed wrong binding",
+    "empty": "empty decoded output",
+    "other": "no prompt candidate value is mentioned in a non-empty output",
+    "wrong_binding": "exactly one prompt candidate value is mentioned and it belongs to another key"
+  },
+  "distance_anchor_coverage": 0.8626666666666667,
+  "duplicate_candidate_value_rows_retained": [
+    "clean_niah_multikey_2_16384_0035",
+    "clean_niah_multikey_2_32768_0004",
+    "clean_niah_multikey_2_32768_0026",
+    "clean_niah_multikey_2_32768_0030",
+    "clean_niah_multikey_2_32768_0031",
+    "clean_niah_multikey_2_32768_0033",
+    "clean_niah_multikey_2_32768_0039",
+    "clean_niah_multikey_2_32768_0056",
+    "clean_niah_multikey_2_32768_0057",
+    "clean_niah_multikey_2_32768_0058",
+    "clean_niah_multikey_2_32768_0067",
+    "clean_niah_multikey_2_32768_0068",
+    "clean_niah_multikey_2_32768_0072",
+    "clean_niah_multikey_2_32768_0090",
+    "clean_niah_multikey_2_32768_0092",
+    "clean_niah_multikey_2_32768_0093",
+    "clean_niah_multikey_2_32768_0100",
+    "clean_niah_multikey_2_32768_0110",
+    "clean_niah_multikey_2_32768_0111",
+    "clean_niah_multikey_2_32768_0121",
+    "clean_niah_multikey_2_32768_0132",
+    "clean_niah_multikey_2_32768_0143",
+    "clean_niah_multikey_2_32768_0145",
+    "clean_niah_multikey_2_32768_0147",
+    "clean_niah_multikey_2_32768_0149",
+    "clean_niah_multikey_2_32768_0154",
+    "clean_niah_multikey_2_32768_0155",
+    "clean_niah_multikey_2_32768_0159",
+    "clean_niah_multikey_2_32768_0172",
+    "clean_niah_multikey_2_32768_0173",
+    "clean_niah_multikey_2_32768_0184",
+    "clean_niah_multikey_2_32768_0185",
+    "clean_niah_multikey_2_32768_0187"
+  ],
+  "gpu_distance_competition_gate": {
+    "aggregate_32k_net_positive": true,
+    "mapping_coverage_at_least_99pct": true,
+    "multikey2_32k_nonnegative": true,
+    "multikey2_or_3_32k_positive": true,
+    "multikey3_32k_nonnegative": true
+  },
+  "gpu_stage_qualified": true,
+  "mapping_coverage": 1.0,
+  "missing_output_rows": [],
+  "rows_expected": 750,
+  "rows_qualified": 750,
+  "status": "TC_EXISTING_MULTIKEY_BEHAVIOR_AUDIT_COMPLETE_V2"
+}

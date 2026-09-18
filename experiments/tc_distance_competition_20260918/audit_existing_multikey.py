@@ -68,12 +68,15 @@ def parse_prompt(row: dict, tokenizer) -> dict:
     gold = references[0] if len(references) == 1 else None
     mapped_gold = mapping.get(target) if target is not None else None
     values = list(mapping.values())
+    value_counts = Counter(values)
+    duplicate_candidate_values = sorted(
+        value for value, count in value_counts.items() if count > 1
+    )
     source_ambiguous = (
         target is None
         or target in duplicate_keys
         or gold is None
         or mapped_gold != gold
-        or len(values) != len(set(values))
     )
     evidence_index = None
     if not source_ambiguous:
@@ -90,6 +93,7 @@ def parse_prompt(row: dict, tokenizer) -> dict:
         "gold": gold,
         "candidate_values": sorted(set(values)),
         "candidate_count": len(values),
+        "duplicate_candidate_values": duplicate_candidate_values,
         "source_ambiguous": source_ambiguous,
         "evidence_index": evidence_index,
         "query_index": len(prompt_ids),
@@ -161,6 +165,7 @@ def main() -> None:
     paired = {}
     panel_seen = set()
     ambiguous_sources = []
+    duplicate_candidate_value_rows = []
     missing_outputs = []
     for panel_path in args.panel:
         for source in read_jsonl(panel_path):
@@ -179,6 +184,8 @@ def main() -> None:
             if parsed["source_ambiguous"]:
                 ambiguous_sources.append(row_id)
                 continue
+            if parsed["duplicate_candidate_values"]:
+                duplicate_candidate_value_rows.append(row_id)
             length = int(source["length_cap"])
             paired[row_id] = {
                 "row_id": row_id,
@@ -222,12 +229,13 @@ def main() -> None:
     }
     qualified = all(gate.values())
     report = {
-        "status": "TC_EXISTING_MULTIKEY_BEHAVIOR_AUDIT_COMPLETE_V1",
+        "status": "TC_EXISTING_MULTIKEY_BEHAVIOR_AUDIT_COMPLETE_V2",
         "rows_expected": len(expected),
         "rows_qualified": len(paired),
         "mapping_coverage": coverage,
         "distance_anchor_coverage": distance_coverage,
         "ambiguous_source_rows": ambiguous_sources,
+        "duplicate_candidate_value_rows_retained": duplicate_candidate_value_rows,
         "missing_output_rows": missing_outputs,
         "by_length": by_length,
         "by_length_task": by_length_task,
@@ -240,6 +248,7 @@ def main() -> None:
             "other": "no prompt candidate value is mentioned in a non-empty output",
             "empty": "empty decoded output",
             "denominator": "all source-qualified paired multikey rows",
+            "duplicate_candidate_values": "retained because a gold match remains correct and any mentioned non-gold prompt value remains a confirmed wrong binding",
         },
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
