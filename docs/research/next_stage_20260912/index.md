@@ -2,7 +2,7 @@
 
 研究对象是RoPE内部配置`z`：固定实际频率范围与旋转预算后，内部节点仍可改变位置结构、模型使用与任务质量。TailSpline承担冻结扩展，Cosh提供冻结／学习／适配证据，NCP研究原生窗口内的固定支持配置干预。
 
-2026-09-18当天已采用实验和改稿已收束，标题／摘要封板，正文9页、全文35页。Pro对[三个问题](../../../paper-2027/research/revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md)的答复已由作者审阅；当前只授权[修正后的T-C距离×结构化竞争确认实验](../../../experiments/tc_distance_competition_20260918/README.md)。Stage 1完整分母与官方scorer对账已经完成，fresh-64在模型执行前冻结；不自动扩展其他GPU队列。
+2026-09-18当天已采用实验和改稿已收束，标题／摘要封板，正文9页、全文35页。Pro对[三个问题](../../../paper-2027/research/revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md)的答复已由作者审阅；获批的[修正T-C距离×结构化竞争确认实验](../../../experiments/tc_distance_competition_20260918/README.md)已经完成。Stage 1完整分母与官方scorer对账成立；fresh-64主交互为`+3.125pp`，95%区间`[-4.6875,+10.9375]pp`，并受near天花板／far地板限制，按预注册判为未解决，不改变当前稿件主张。当前没有其他授权GPU队列。
 
 ## 按问题选择入口
 

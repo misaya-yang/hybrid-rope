@@ -21,10 +21,12 @@ Read one task route, not the whole history.
   submission/save was left to the author. Do not infer that the final submission
   occurred from the local PDF or the filled form.
 - Pro's answer to the [three final-week questions](research/revision_20260918/PRO_FINAL_WEEK_QUESTIONS.md)
-  has been reviewed. The author approved only the corrected fresh-64 T-C
-  distance-by-structured-context confirmation tracked by the
-  [experiment owner](../experiments/tc_distance_competition_20260918/README.md).
-  It does not reopen the frozen title/abstract or authorize other queues.
+  has been reviewed. The author-approved corrected fresh-64 T-C
+  distance-by-structured-context confirmation is complete: its `+3.125pp`
+  interaction has a paired 95% interval `[-4.6875,+10.9375]pp` and ceiling/floor
+  cells, so the [experiment owner](../experiments/tc_distance_competition_20260918/README.md)
+  records it as unresolved. It does not change the manuscript, reopen the
+  frozen title/abstract, or authorize other queues.
 
 ## NON_NEGOTIABLE_CONSTRAINTS
 

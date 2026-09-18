@@ -110,3 +110,32 @@ because they already start at zero and preserves every declared relative gap.
 The primary interaction remains the strict behavior-classifier DiD; official
 RULER substring score is secondary, wrong-binding transitions are secondary,
 and all uncertainty resamples the 64 base samples rather than 512 generations.
+
+### Confirmatory V2 result
+
+Both table-specific parity checks passed with exact generated tokens and zero
+first-step logit difference after canonical origin normalization:
+[TailSpline receipt](reports/parity_tailspline_pass_v2.json) and
+[control receipt](reports/parity_control_pass_v2.json).  Both formal arms then
+completed 256/256 rows with matching token, position and table identities.  The
+portable paired report is
+[`reports/distance_competition_confirm_v2.json`](reports/distance_competition_confirm_v2.json).
+
+| Cell | TailSpline | Control C | T-C |
+|---|---:|---:|---:|
+| near, neutral | 93.75% | 92.19% | +1.56pp |
+| far, neutral | 0.00% | 0.00% | 0.00pp |
+| near, structured KV | 100.00% | 100.00% | 0.00pp |
+| far, structured KV | 1.56% | 0.00% | +1.56pp |
+
+The preregistered interaction is `+3.125pp`, with paired-base bootstrap 95%
+interval `[-4.6875,+10.9375]pp`; the official RULER interaction is identical.
+Far/structured has one confirmed wrong-binding repair and no damage, while the
+other cells have none.  Thus the point direction and the sole confirmed repair
+are consistent with the hypothesis, but the interval crosses zero and the near
+and far cells sit near ceiling and floor respectively.  The confirmation is
+therefore **unresolved**, not a mechanism confirmation and not a precise null.
+
+Per the frozen decision rule, this result does not justify a new main-text
+claim or further distance/competition tuning.  Stage 1 remains a possible
+appendix behavior audit; the current manuscript conclusions remain unchanged.

@@ -1,0 +1,130 @@
+{
+  "audit_distance_effect_by_context": {
+    "neutral": -0.015625,
+    "structured_kv": 0.015625
+  },
+  "base_samples": 64,
+  "cells": {
+    "far_neutral": {
+      "audit_delta_t_minus_c": 0.0,
+      "confirmed_wrong_binding_damages": 0,
+      "confirmed_wrong_binding_repairs": 0,
+      "control_audit_accuracy": 0.0,
+      "control_cap": 64,
+      "control_classes": {
+        "other": 64
+      },
+      "control_eos": 0,
+      "control_official_accuracy": 0.0,
+      "official_delta_t_minus_c": 0.0,
+      "rows": 64,
+      "tailspline_audit_accuracy": 0.0,
+      "tailspline_cap": 64,
+      "tailspline_classes": {
+        "other": 64
+      },
+      "tailspline_eos": 0,
+      "tailspline_official_accuracy": 0.0
+    },
+    "far_structured_kv": {
+      "audit_delta_t_minus_c": 0.015625,
+      "confirmed_wrong_binding_damages": 0,
+      "confirmed_wrong_binding_repairs": 1,
+      "control_audit_accuracy": 0.0,
+      "control_cap": 0,
+      "control_classes": {
+        "other": 2,
+        "wrong_binding": 62
+      },
+      "control_eos": 64,
+      "control_official_accuracy": 0.0,
+      "official_delta_t_minus_c": 0.015625,
+      "rows": 64,
+      "tailspline_audit_accuracy": 0.015625,
+      "tailspline_cap": 2,
+      "tailspline_classes": {
+        "correct": 1,
+        "other": 3,
+        "wrong_binding": 60
+      },
+      "tailspline_eos": 62,
+      "tailspline_official_accuracy": 0.015625
+    },
+    "near_neutral": {
+      "audit_delta_t_minus_c": 0.015625,
+      "confirmed_wrong_binding_damages": 0,
+      "confirmed_wrong_binding_repairs": 0,
+      "control_audit_accuracy": 0.921875,
+      "control_cap": 39,
+      "control_classes": {
+        "correct": 59,
+        "other": 5
+      },
+      "control_eos": 25,
+      "control_official_accuracy": 0.921875,
+      "official_delta_t_minus_c": 0.015625,
+      "rows": 64,
+      "tailspline_audit_accuracy": 0.9375,
+      "tailspline_cap": 51,
+      "tailspline_classes": {
+        "correct": 60,
+        "other": 4
+      },
+      "tailspline_eos": 13,
+      "tailspline_official_accuracy": 0.9375
+    },
+    "near_structured_kv": {
+      "audit_delta_t_minus_c": 0.0,
+      "confirmed_wrong_binding_damages": 0,
+      "confirmed_wrong_binding_repairs": 0,
+      "control_audit_accuracy": 1.0,
+      "control_cap": 0,
+      "control_classes": {
+        "correct": 64
+      },
+      "control_eos": 64,
+      "control_official_accuracy": 1.0,
+      "official_delta_t_minus_c": 0.0,
+      "rows": 64,
+      "tailspline_audit_accuracy": 1.0,
+      "tailspline_cap": 0,
+      "tailspline_classes": {
+        "correct": 64
+      },
+      "tailspline_eos": 64,
+      "tailspline_official_accuracy": 1.0
+    }
+  },
+  "interpretation_rule": {
+    "interval_crosses_zero": "interaction remains unresolved at 64 base samples",
+    "nonpositive_primary_interaction": "does not support the preregistered interaction",
+    "positive_primary_interaction": "supports the preregistered distance-by-structured-context behavior prediction",
+    "wrong_binding_secondary": "confirmed wrong-binding transitions are secondary and cannot replace the primary interaction"
+  },
+  "primary_inference_unit": "base_sample",
+  "primary_interaction": {
+    "definition": "[(T-C)_far,structured_kv-(T-C)_near,structured_kv]-[(T-C)_far,neutral-(T-C)_near,neutral]",
+    "draws": 20000,
+    "metric": "strict behavior-audit correct classification",
+    "paired_base_bootstrap_interval95": [
+      -0.046875,
+      0.109375
+    ],
+    "seed": 2026091802,
+    "value": 0.03125
+  },
+  "rows_per_arm": 256,
+  "secondary_official_interaction": {
+    "metric": "official RULER substring score",
+    "paired_base_bootstrap_interval95": [
+      -0.046875,
+      0.109375
+    ],
+    "value": 0.03125
+  },
+  "status": "TC_DISTANCE_COMPETITION_CONFIRM_COMPLETE_V2",
+  "table_hashes": {
+    "dose_control_c": "fcb3d9f92275e66368a84d10ce593fbcc0e1305da0f6fc7eb9461030c0bef2ea",
+    "tailspline": "ba54de7e686001e8161a1c640bb46e4b91a9b5509f128d51311bcc4a19d03552"
+  }
+}
