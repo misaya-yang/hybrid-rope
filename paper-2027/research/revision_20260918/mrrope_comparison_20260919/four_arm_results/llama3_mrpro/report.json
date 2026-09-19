@@ -1,0 +1,60 @@
+{
+  "status": "COMPLETE",
+  "model_execution": true,
+  "rows": 130,
+  "tasks": {
+    "niah_single_1": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_single_2": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_single_3": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_multikey_1": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_multikey_2": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_multikey_3": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_multivalue": {
+      "n": 10,
+      "score": 0.0
+    },
+    "niah_multiquery": {
+      "n": 10,
+      "score": 0.0
+    },
+    "vt": {
+      "n": 10,
+      "score": 0.0
+    },
+    "cwe": {
+      "n": 10,
+      "score": 0.0
+    },
+    "fwe": {
+      "n": 10,
+      "score": 6.67
+    },
+    "qa_1": {
+      "n": 10,
+      "score": 0.0
+    },
+    "qa_2": {
+      "n": 10,
+      "score": 0.0
+    }
+  },
+  "full13_task_equal_score": 0.5130769230769231
+}

@@ -33,6 +33,7 @@
 
 ## 后续与历史材料
 
+- [与MrRoPE的同尺度全文比较](mrrope_comparison_20260919/README.md)：两份完整PDF、Astra／Sol独立意见及主代理取舍；只读评价校准，不是新一轮改稿。
 - [给Pro的三个问题](PRO_FINAL_WEEK_QUESTIONS.md)：理论—行为连接、一周内最有价值证据、正文核心认识；等待回复，不是执行队列。
 - [理论准备与采用分析](../revision_20260918_preparation/README.md)，[Pro原文](../external-reviews/pro-theory-20260918/README.md)。
 - [十篇前辈审稿经验](../../../docs/research/reviews/TEN_PAPER_REVIEW_LESSONS_20260916.md)：只处理本稿实际适用的问题。

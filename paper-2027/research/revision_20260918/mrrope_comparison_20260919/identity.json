@@ -1,0 +1,33 @@
+{
+  "paper_A": {
+    "sha256": "ad4edd4e3e347c7c20212ecbb4ed2fa4f7b617f0be2f0bb007501a205533c3fc",
+    "pdfinfo": "Title:           \nSubject:         \nKeywords:        \nAuthor:          \nCreator:         LaTeX with hyperref\nProducer:        pdfTeX-1.40.27\nCreationDate:    Sat Feb 28 04:24:42 2026 EST\nModDate:         Sat Feb 28 04:24:42 2026 EST\nCustom Metadata: yes\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           16\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       5869158 bytes\nOptimized:       yes\nPDF version:     1.5\n",
+    "local_source_at_review": "/Users/yang/Downloads/PDF文档/5551_MrRoPE_Mixed_radix_Rotary.pdf",
+    "review_pdf": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/paper_A.pdf"
+  },
+  "paper_B": {
+    "sha256": "bf9965314eaaf663c65759abfc546123cd0119b5323a82d3ceb37bab75d8eab5",
+    "pdfinfo": "Title:           \nSubject:         \nKeywords:        \nAuthor:          \nCreator:         LaTeX with hyperref\nProducer:        pdfTeX-1.40.27\nCreationDate:    Fri Sep 18 07:19:04 2026 EDT\nModDate:         Fri Sep 18 07:19:04 2026 EDT\nCustom Metadata: yes\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           35\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       683461 bytes\nOptimized:       no\nPDF version:     1.7\n",
+    "local_source_at_review": "/Users/yang/projects/hybrid-rope/paper-2027/main.pdf",
+    "review_pdf": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/paper_B.pdf"
+  },
+  "review_protocol": {
+    "type": "paired full-PDF scientific comparison, not a revision regression",
+    "reviewers": [
+      "gpt-6-astra high",
+      "gpt-5.6-sol high"
+    ],
+    "context": "independent fresh contexts, identical prompt, PDFs only",
+    "withheld": [
+      "author expectations",
+      "previous scores",
+      "previous reviews",
+      "external publication decisions",
+      "integrator findings"
+    ],
+    "caveat": "Published/under-review headers and citations in the PDFs remained visible; not fully identity-blinded.",
+    "raw_outputs_verified": false,
+    "manuscript_edited": false,
+    "experiments_run": false
+  }
+}

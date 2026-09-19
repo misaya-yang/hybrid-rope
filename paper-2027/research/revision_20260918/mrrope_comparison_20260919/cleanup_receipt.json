@@ -1,0 +1,204 @@
+{
+  "endpoint": "connect.westd.seetacloud.com:14600",
+  "time": "2026-09-19T13:32:55+0800",
+  "preserved": [
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/code_ruler_newtasks_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/code_ruler_newtasks_01"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_01"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_02",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_02"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_03",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_03"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_04",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_04"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_05",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_05"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_06",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_06"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_holdout_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_holdout_01"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_holdout_02",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_holdout_02"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_newtasks_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_newtasks_01"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/prepared_ruler_newtasks_02",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/prepared_ruler_newtasks_02"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/run_ruler_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/run_ruler_01"
+    },
+    {
+      "from": "/root/autodl-tmp/olmo_fast_screen_20260908/run_ruler_newtasks_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/olmo_fast_screen_20260908/run_ruler_newtasks_01"
+    },
+    {
+      "from": "/root/autodl-tmp/position_observability_20260908/primary_ruler_01",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/position_observability_20260908/primary_ruler_01"
+    },
+    {
+      "from": "/root/autodl-tmp/position_observability_20260908/primary_ruler_02",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/position_observability_20260908/primary_ruler_02"
+    },
+    {
+      "from": "/root/autodl-tmp/position_observability_20260908/primary_ruler_03",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/position_observability_20260908/primary_ruler_03"
+    },
+    {
+      "from": "/root/autodl-tmp/position_observability_20260908/support_ruler_02",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/position_observability_20260908/support_ruler_02"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/ruler_sampling_stability",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/ruler_sampling_stability"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_16k_ruler50_clean",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_llama_s4_16k_ruler50_clean"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200_clean",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_llama_s4_32k_ruler200_clean"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_olmo_s4_16k_ruler200_clean",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_olmo_s4_16k_ruler200_clean"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_qwen25_s4_128k_ruler10_clean",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_qwen25_s4_128k_ruler10_clean"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/llama3_70b_s4_32k_direct_reuse/ruler",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/llama3_70b_s4_32k_direct_reuse/ruler"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/llama3_70b_s4_32k_direct_reuse/ruler_ppl",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/llama3_70b_s4_32k_direct_reuse/ruler_ppl"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/olmo_native_halfturn_phase/assets/ruler",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/olmo_native_halfturn_phase/assets/ruler"
+    },
+    {
+      "from": "/root/autodl-tmp/today_rope_plan_20260914/tailspline_llama_s16_128k_gate",
+      "to": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_llama_s16_128k_gate"
+    }
+  ],
+  "deleted": [
+    "/root/autodl-tmp/InfiniteBench",
+    "/root/autodl-tmp/band_mini_20260913",
+    "/root/autodl-tmp/benchmarks",
+    "/root/autodl-tmp/bm_transfer_20260908",
+    "/root/autodl-tmp/bm_transfer_qwen7b_20260908",
+    "/root/autodl-tmp/claude_round11_olmo_20260905",
+    "/root/autodl-tmp/claude_round12_20260906",
+    "/root/autodl-tmp/cross_audit_20260907",
+    "/root/autodl-tmp/cross_model_mix075_20260914",
+    "/root/autodl-tmp/deepseek-v4-mini-300M-init",
+    "/root/autodl-tmp/evq_recovery_20260910",
+    "/root/autodl-tmp/ffn_review_execution_20260904",
+    "/root/autodl-tmp/fineweb_edu",
+    "/root/autodl-tmp/fixed_rope_three_interfaces_20260913",
+    "/root/autodl-tmp/fixed_support_joint_151m_20260912",
+    "/root/autodl-tmp/fixed_table_interval_20260913",
+    "/root/autodl-tmp/gpt_neox_tokenizer_pinned",
+    "/root/autodl-tmp/hybrid-rope-target-free-real-data-v2",
+    "/root/autodl-tmp/hybrid-rope-target-free-real-data-v3",
+    "/root/autodl-tmp/hybrid-rope-target-free-real-data",
+    "/root/autodl-tmp/hybrid-rope",
+    "/root/autodl-tmp/iclr2027_three_track_sprint_20260915",
+    "/root/autodl-tmp/iclr_exact_range_multiseed",
+    "/root/autodl-tmp/infinitebench_longbook256_pool",
+    "/root/autodl-tmp/llama3_60dir_20260911",
+    "/root/autodl-tmp/llama3_60m_20260911",
+    "/root/autodl-tmp/llama3_mrrope_s16_20260911",
+    "/root/autodl-tmp/llama3_planb_20260911",
+    "/root/autodl-tmp/llama_minimal_band_s2_20260913",
+    "/root/autodl-tmp/llama_minimal_band_s4_20260913",
+    "/root/autodl-tmp/llama_s4_band16_34_to_olmo_20260913",
+    "/root/autodl-tmp/longtext",
+    "/root/autodl-tmp/mistral_download_20260917",
+    "/root/autodl-tmp/model_conditioned_range_20260913",
+    "/root/autodl-tmp/models",
+    "/root/autodl-tmp/mrrope_baselines",
+    "/root/autodl-tmp/nltk_data",
+    "/root/autodl-tmp/nongeometric_screen_20260909",
+    "/root/autodl-tmp/olmo_fast_screen_20260908",
+    "/root/autodl-tmp/olmo_minimal_band_s4_20260913",
+    "/root/autodl-tmp/pg19_raw",
+    "/root/autodl-tmp/phase1_20260910",
+    "/root/autodl-tmp/position_observability_20260908",
+    "/root/autodl-tmp/proofpile256_qwen_pool",
+    "/root/autodl-tmp/qwen15_minimal_band_s2_20260913",
+    "/root/autodl-tmp/qwen7b_metadata",
+    "/root/autodl-tmp/qwen_pg19_nll",
+    "/root/autodl-tmp/rope_decision_20260911",
+    "/root/autodl-tmp/rope_pro_block_calibration_20260910",
+    "/root/autodl-tmp/rope_unification_20260910",
+    "/root/autodl-tmp/sparse_memory_20260908",
+    "/root/autodl-tmp/today_rope_plan_20260914",
+    "/root/autodl-tmp/native_windows_full_queue.json",
+    "/root/autodl-tmp/band_evidence_20260913.csv",
+    "/root/autodl-tmp/native_windows_queue.json",
+    "/root/autodl-tmp/band_evidence_20260913.json",
+    "/root/autodl-tmp/qwen15_redownload.log",
+    "/root/autodl-tmp/bnb_install.exit",
+    "/root/autodl-tmp/bnb_install.log",
+    "/root/autodl-tmp/native_windows_full_chain_01.log",
+    "/root/autodl-tmp/deepseek-v4-mini-download.log",
+    "/root/autodl-tmp/download_model.py",
+    "/root/autodl-tmp/download_qwen7b.log",
+    "/root/autodl-tmp/download_qwen7b.py",
+    "/root/autodl-tmp/native_windows_full_chain_01.py",
+    "/root/autodl-tmp/full_model_response_20260910.py",
+    "/root/autodl-tmp/hfd.sh",
+    "/root/autodl-tmp/native_windows_chain_01.py",
+    "/root/autodl-tmp/llama-3-70b-Instruct-bnb-4bit.download.log",
+    "/root/autodl-tmp/native_windows_full.py",
+    "/root/autodl-tmp/llama-3-70b-Instruct-bnb-4bit.download.pid",
+    "/root/autodl-tmp/llama-3-70b-Instruct-bnb-4bit.download.status",
+    "/root/autodl-tmp/prepare_deepseek_v4_mini.sh",
+    "/root/autodl-tmp/native_windows_chain_01.log",
+    "/root/autodl-tmp/qwen35_08_metadata.json",
+    "/root/autodl-tmp/rotary_budget_prepare.py",
+    "/root/models/.glm4_download",
+    "/root/models/Yarn-Mistral-7b-128k"
+  ],
+  "before": {
+    "total": 88046829568,
+    "used": 84052103168,
+    "free": 3994726400
+  },
+  "after": {
+    "total": 88046829568,
+    "used": 1608294400,
+    "free": 86438535168
+  }
+}

@@ -12769,6 +12769,416 @@
       "category": "data-or-receipt"
     },
     {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/CPU_TABLE_AND_CHECKPOINT_PLAN.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/FOUR_ARM_REPORT.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/FOUR_ARM_RUN.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/OFFICIAL_SINGLE_ARM.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/README.md",
+      "area": "paper-2027",
+      "category": "navigation"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/RULER_PROTOCOL_AUDIT.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/astra_review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/audit_four_arm_results.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/cleanup_receipt.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/cpu_table_audit.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/cpu_table_audit/conference_supplement_table.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/cpu_table_audit/github_table.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/cpu_table_audit/project_table.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/cpu_table_audit/report.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/download_llama31.py",
+      "area": "paper-2027",
+      "category": "source"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/fa2_readiness.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_queue.py",
+      "area": "paper-2027",
+      "category": "source"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/audit.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/comparison.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_mrpro/generations.jsonl",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_mrpro/protocol.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_mrpro/report.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_mrpro/runtime.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_tailspline/generations.jsonl",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_tailspline/protocol.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_tailspline/report.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama31_tailspline/runtime.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_mrpro/generations.jsonl",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_mrpro/protocol.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_mrpro/report.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_mrpro/runtime.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_tailspline/generations.jsonl",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_tailspline/protocol.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_tailspline/report.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/llama3_tailspline/runtime.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/per_task.csv",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_results/queue_status.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/four_arm_start_receipt.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/inputs_readiness.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrator_pre_reviews.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/EMAIL_DRAFT.txt",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/MRROPE_REPRODUCTION_AUDIT.pdf",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/MRROPE_REPRODUCTION_EVIDENCE.zip",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/README.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/draft_receipt.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/MRROPE_REPRODUCTION_AUDIT.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/README.txt",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/SHA256SUMS.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/evalr.sh",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/model_loader.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/nvidia_config_tasks.sh",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/nvidia_constants.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/nvidia_ruler_README.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/ruler.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/author_sources/supplement_LlamaMrRoPE.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama3/generations.jsonl",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama3/protocol.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama3/report.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama31/generations.jsonl",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama31/protocol.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama31/report.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/llama31_published_weight_metadata.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/per_task.csv",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/integrity_concern/packet/rescore.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/model_download_status.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/model_readiness.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/model_source_identity.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/official_single_arm.py",
+      "area": "paper-2027",
+      "category": "source"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/paper_A.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/paper_B.pdf",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/review_prompt.txt",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/evalr.sh",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/github_LlamaYaRNRadix.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/identity.json",
+      "area": "paper-2027",
+      "category": "data-or-receipt"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/model_loader.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/mrrope_supplement.zip",
+      "area": "paper-2027",
+      "category": "manuscript"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/nvidia_constants.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/ruler.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/supplement_LlamaMrRoPE.py",
+      "area": "paper-2027",
+      "category": "code"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/single_arm_preparation.json",
+      "area": "paper-2027",
+      "category": "data"
+    },
+    {
+      "path": "paper-2027/research/revision_20260918/mrrope_comparison_20260919/sol_review.md",
+      "area": "paper-2027",
+      "category": "document"
+    },
+    {
       "path": "paper-2027/research/revision_20260918/portable_review_artifacts.json",
       "area": "paper-2027",
       "category": "data-or-receipt"
@@ -17241,6 +17651,11 @@
     ".agents/skills/hybrid-rope-paper-editing/SKILL.md",
     ".agents/skills/hybrid-rope-regression-review/SKILL.md",
     ".agents/skills/hybrid-rope-experiment-workflow/SKILL.md",
-    "paper-2027/research/external-reviews/pro-theory-20260918/README.md"
+    "paper-2027/research/external-reviews/pro-theory-20260918/README.md",
+    "paper-2027/research/revision_20260918/mrrope_comparison_20260919/README.md",
+    "paper-2027/research/revision_20260918/mrrope_comparison_20260919/RULER_PROTOCOL_AUDIT.md",
+    "paper-2027/research/revision_20260918/mrrope_comparison_20260919/CPU_TABLE_AND_CHECKPOINT_PLAN.md",
+    "paper-2027/research/revision_20260918/mrrope_comparison_20260919/OFFICIAL_SINGLE_ARM.md",
+    "paper-2027/research/revision_20260918/mrrope_comparison_20260919/FOUR_ARM_RUN.md"
   ]
 }

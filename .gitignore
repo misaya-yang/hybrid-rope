@@ -147,3 +147,21 @@ paper-2027/main.xdv
 
 # No stray PDFs at repo root — PDFs live under paper/ or internal/<month>/
 /*.pdf
+
+# Confidential integrity-report material stays local and is never redistributed.
+# A filed research-integrity report concerns a third party and was submitted under
+# a confidentiality request; it is not evidence about this project's own work and
+# must not be published from this repository. The local copy remains the record.
+**/integrity_concern/
+
+# Third-party protocol sources stay local.
+# These are copies of the MrRoPE OpenReview supplement and other externally
+# authored scripts, kept only to document protocol checks; do not redistribute.
+paper-2027/research/revision_20260918/mrrope_comparison_20260919/ruler_protocol_sources/
+
+# Third-party comparison PDFs stay local.
+# paper_A.pdf is the MrRoPE author PDF (not our copyright) and paper_B.pdf is a
+# dated snapshot of our own draft; both are cross-machine inputs, not repo content.
+# A fresh clone must re-obtain them from the sources named in the comparison README.
+paper-2027/research/revision_20260918/mrrope_comparison_20260919/paper_A.pdf
+paper-2027/research/revision_20260918/mrrope_comparison_20260919/paper_B.pdf

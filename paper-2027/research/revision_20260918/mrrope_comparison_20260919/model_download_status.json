@@ -1,0 +1,79 @@
+{
+  "status": "COMPLETE",
+  "source": "ModelScope LLM-Research/Meta-Llama-3.1-8B-Instruct",
+  "destination": "/root/autodl-tmp/models/Llama-3.1-8B-Instruct",
+  "files": [
+    {
+      "Path": "configuration.json",
+      "Size": 48,
+      "Revision": "ee7565b21b3ac64f3b8fae80081cfde648f95db9"
+    },
+    {
+      "Path": "generation_config.json",
+      "Size": 184,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "special_tokens_map.json",
+      "Size": 296,
+      "Revision": "86283db58aba4be4ffa058c48e36fa3eb53e3dfd"
+    },
+    {
+      "Path": "config.json",
+      "Size": 855,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "USE_POLICY.md",
+      "Size": 4691,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "LICENSE",
+      "Size": 7627,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "model.safetensors.index.json",
+      "Size": 23950,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "README.md",
+      "Size": 44044,
+      "Revision": "359efdbb8af05b788a4ad4185215c6b8caa9052c"
+    },
+    {
+      "Path": "tokenizer_config.json",
+      "Size": 55351,
+      "Revision": "d02f94ee4a1a317d00309c1a9019f89428034720"
+    },
+    {
+      "Path": "tokenizer.json",
+      "Size": 9085657,
+      "Revision": "86283db58aba4be4ffa058c48e36fa3eb53e3dfd"
+    },
+    {
+      "Path": "model-00004-of-00004.safetensors",
+      "Size": 1168138808,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "model-00003-of-00004.safetensors",
+      "Size": 4915916176,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "model-00001-of-00004.safetensors",
+      "Size": 4976698672,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    },
+    {
+      "Path": "model-00002-of-00004.safetensors",
+      "Size": 4999802720,
+      "Revision": "043efdca396f2b6f4b5714d76d70df7840856ed7"
+    }
+  ],
+  "total_bytes": 16069779079,
+  "config_native_length": 131072
+}

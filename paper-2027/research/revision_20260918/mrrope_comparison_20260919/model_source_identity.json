@@ -1,0 +1,44 @@
+{
+  "scope": "Published repository metadata comparison only; no weight files rehashed",
+  "hf_repository": "meta-llama/Llama-3.1-8B-Instruct",
+  "hf_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+  "modelscope_repository": "LLM-Research/Meta-Llama-3.1-8B-Instruct",
+  "files": [
+    {
+      "file": "model-00001-of-00004.safetensors",
+      "hf_size": 4976698672,
+      "mirror_size": 4976698672,
+      "hf_sha256": "2b1879f356aed350030bb40eb45ad362c89d9891096f79a3ab323d3ba5607668",
+      "mirror_sha256": "2b1879f356aed350030bb40eb45ad362c89d9891096f79a3ab323d3ba5607668",
+      "same_size": true,
+      "same_published_sha256": true
+    },
+    {
+      "file": "model-00002-of-00004.safetensors",
+      "hf_size": 4999802720,
+      "mirror_size": 4999802720,
+      "hf_sha256": "09d433f650646834a83c580877bd60c6d1f88f7755305c12576b5c7058f9af15",
+      "mirror_sha256": "09d433f650646834a83c580877bd60c6d1f88f7755305c12576b5c7058f9af15",
+      "same_size": true,
+      "same_published_sha256": true
+    },
+    {
+      "file": "model-00003-of-00004.safetensors",
+      "hf_size": 4915916176,
+      "mirror_size": 4915916176,
+      "hf_sha256": "fc1cdddd6bfa91128d6e94ee73d0ce62bfcdb7af29e978ddcab30c66ae9ea7fa",
+      "mirror_sha256": "fc1cdddd6bfa91128d6e94ee73d0ce62bfcdb7af29e978ddcab30c66ae9ea7fa",
+      "same_size": true,
+      "same_published_sha256": true
+    },
+    {
+      "file": "model-00004-of-00004.safetensors",
+      "hf_size": 1168138808,
+      "mirror_size": 1168138808,
+      "hf_sha256": "92ecfe1a2414458b4821ac8c13cf8cb70aed66b5eea8dc5ad9eeb4ff309d6d7b",
+      "mirror_sha256": "92ecfe1a2414458b4821ac8c13cf8cb70aed66b5eea8dc5ad9eeb4ff309d6d7b",
+      "same_size": true,
+      "same_published_sha256": true
+    }
+  ]
+}

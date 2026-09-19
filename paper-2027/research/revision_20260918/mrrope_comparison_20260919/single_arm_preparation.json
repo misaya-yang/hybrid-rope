@@ -1,0 +1,42 @@
+{
+  "status": "FOUR_ARM_RUNNING",
+  "date": "2026-09-19",
+  "endpoint": "connect.westd.seetacloud.com:42853",
+  "remote_code": "/root/autodl-tmp/mrrope_official_20260919/code",
+  "local_cpu": {
+    "torch": "2.8.0",
+    "transformers": "4.57.6",
+    "passed": true
+  },
+  "remote_cpu": {
+    "torch": "2.8.0+cu128",
+    "transformers": "5.15.1",
+    "passed": true
+  },
+  "checks": [
+    "official rotary replacement",
+    "64/64 FP32 frequencies and gain",
+    "BF16 cos/sin at 131071",
+    "random small Llama full vs cached forward",
+    "official tokenization/generate/stop/decode call path",
+    "official score equivalence and incomplete coverage"
+  ],
+  "pretrained_model_execution": true,
+  "gpu_execution": true,
+  "model_download": true,
+  "dataset_download": false,
+  "dataset_metadata_verified": {
+    "revision": "bb8903217d901fb534cc1ca615bd3245f3c1c39a",
+    "all_13_split_files_present": true
+  },
+  "pending": [
+    "Complete all four 130-row arms and compare paired outputs"
+  ],
+  "model_download_complete": true,
+  "samples_per_task": 10,
+  "rows": 130,
+  "dataset_mode": "existing gate prompt IDs",
+  "cleanup_complete": true,
+  "llama3_download_complete": true,
+  "flash_attention_2": "2.8.3.post1"
+}

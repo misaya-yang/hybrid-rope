@@ -1,0 +1,15 @@
+{
+  "status": "DOWNLOAD_COMPLETE_HEADER_INDEX_CHECKS_PASSED",
+  "model_execution": false,
+  "checkpoint": "/root/autodl-tmp/models/Llama-3.1-8B-Instruct",
+  "shards": 4,
+  "tensor_count": 291,
+  "parameter_count": 8030261248,
+  "dtypes": {
+    "BF16": 291
+  },
+  "native_context": 131072,
+  "source": "ModelScope public mirror, published shard hashes matched Meta HF metadata",
+  "full_weight_rehash": false,
+  "data_disk_free_bytes": 70368653312
+}

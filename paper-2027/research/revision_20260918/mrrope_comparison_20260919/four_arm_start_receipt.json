@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-09-19T06:22:34.060100+00:00",
+  "endpoint": "connect.westd.seetacloud.com:42853",
+  "queue": {
+    "status": "RUNNING",
+    "active": "llama31_mrpro",
+    "pid": 3177,
+    "completed": [],
+    "order": [
+      "llama31_mrpro",
+      "llama31_tailspline",
+      "llama3_mrpro",
+      "llama3_tailspline"
+    ],
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/autodl-tmp/mrrope_official_20260919/code/official_single_arm.py",
+      "--execute",
+      "--family",
+      "llama31",
+      "--method",
+      "mrpro",
+      "--attention",
+      "flash_attention_2",
+      "--samples",
+      "10",
+      "--model",
+      "/root/autodl-tmp/models/Llama-3.1-8B-Instruct",
+      "--output",
+      "/root/autodl-tmp/mrrope_official_20260919/results/four_arm_fa2/llama31_mrpro",
+      "--resume"
+    ]
+  },
+  "observed_rows_first_arm": 7,
+  "last_sample_seconds": 19.614892960060388,
+  "attention": "flash_attention_2",
+  "llama3_download_status": "COMPLETE",
+  "full_experiment_complete": false
+}

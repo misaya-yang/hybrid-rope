@@ -1,0 +1,38 @@
+{
+  "status": "INPUT_AND_TOKENIZER_READY",
+  "pretrained_model_execution": false,
+  "inputs": "/root/autodl-tmp/mrrope_official_20260919/preserved_ruler/today_rope_plan_20260914/tailspline_llama_s16_128k_gate/assets/full13/inputs.jsonl",
+  "rows": 130,
+  "counts": {
+    "niah_single_1": 10,
+    "niah_single_2": 10,
+    "niah_single_3": 10,
+    "niah_multikey_1": 10,
+    "niah_multikey_2": 10,
+    "niah_multikey_3": 10,
+    "niah_multivalue": 10,
+    "niah_multiquery": 10,
+    "vt": 10,
+    "cwe": 10,
+    "fwe": 10,
+    "qa_1": 10,
+    "qa_2": 10
+  },
+  "length_range": [
+    118900,
+    130905
+  ],
+  "max_token_id": 128009,
+  "tokenizer_size": 128256,
+  "eos_token_id": 128009,
+  "newline_token_id": 198,
+  "config_native_length": 131072,
+  "rope_scaling": {
+    "factor": 8.0,
+    "low_freq_factor": 1.0,
+    "high_freq_factor": 4.0,
+    "original_max_position_embeddings": 8192,
+    "rope_type": "llama3",
+    "rope_theta": 500000.0
+  }
+}

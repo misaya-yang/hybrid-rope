@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "scope": "Offline raw prediction rescoring and recorded identity audit; no model rerun",
+  "paired_keys_verified": [
+    "task",
+    "source_index",
+    "source_order_index",
+    "row_id",
+    "prompt_sha256",
+    "input_ids_sha256",
+    "input_tokens",
+    "references",
+    "generate_kwargs",
+    "seed"
+  ],
+  "same_method_tables_equal_across_checkpoints": true,
+  "shared_gain": 1.2772588722239782,
+  "input_tokens_min": 118900,
+  "input_tokens_max": 130905,
+  "arms": {
+    "llama31_mrpro": {
+      "rows": 130,
+      "unique_rows": 130,
+      "tasks": 13,
+      "report_macro_percent": 54.15384615384615,
+      "unrounded_macro_percent": 54.15384615384615,
+      "sum_generation_seconds": 2587.4247429901734,
+      "output_tokens": 2018,
+      "stop_eos_or_newline_rows": 101,
+      "at_output_budget_rows": 30
+    },
+    "llama31_tailspline": {
+      "rows": 130,
+      "unique_rows": 130,
+      "tasks": 13,
+      "report_macro_percent": 49.53846153846154,
+      "unrounded_macro_percent": 49.53846153846154,
+      "sum_generation_seconds": 2582.7502846838906,
+      "output_tokens": 1966,
+      "stop_eos_or_newline_rows": 103,
+      "at_output_budget_rows": 29
+    },
+    "llama3_mrpro": {
+      "rows": 130,
+      "unique_rows": 130,
+      "tasks": 13,
+      "report_macro_percent": 0.5130769230769231,
+      "unrounded_macro_percent": 0.5128205128205128,
+      "sum_generation_seconds": 2590.1437577498145,
+      "output_tokens": 2071,
+      "stop_eos_or_newline_rows": 87,
+      "at_output_budget_rows": 44
+    },
+    "llama3_tailspline": {
+      "rows": 130,
+      "unique_rows": 130,
+      "tasks": 13,
+      "report_macro_percent": 18.59,
+      "unrounded_macro_percent": 18.58974358974359,
+      "sum_generation_seconds": 2571.3768349727616,
+      "output_tokens": 1638,
+      "stop_eos_or_newline_rows": 110,
+      "at_output_budget_rows": 21
+    }
+  },
+  "source_sha256": {
+    "comparison.json": "fd12fb1dac11be42a9e2d1ea418114bb4ea64cc0c5a44d742262da3e3bebe5df",
+    "llama31_mrpro/generations.jsonl": "4c6062ae6a4afd6291cdeee29748ed09d7af81fa3b53f69178539027b0e3697c",
+    "llama31_mrpro/protocol.json": "5ea5895f0c202b7de09e41432a48f782c0a590c8963358dcfd7e1401be2bb1f6",
+    "llama31_mrpro/report.json": "cfdf543a3c85dcd1958482c29facc54176e388a483654dbd22422202e6dcb728",
+    "llama31_mrpro/runtime.json": "2723125cad34b15c3391c18a9f50c4b2909d0694db39996771ee357a54240876",
+    "llama31_tailspline/generations.jsonl": "84d63468969668b091cf232b674af47b003bafcc052ec5b02c6183d54804209b",
+    "llama31_tailspline/protocol.json": "b3bae98bbf43491d780668e0e8b845d14b3843fa30d02ebe6ed31d415d74a272",
+    "llama31_tailspline/report.json": "b24ebbf90eccc6de386bb43043ad769aa2fe3d9a6360e20b8cd1630f1e278a89",
+    "llama31_tailspline/runtime.json": "6d8ece25636693f42e6c513976f076e0facc77e5fc794f1e4280d6cac7d6334b",
+    "llama3_mrpro/generations.jsonl": "16df274b4855889e1835aaa24fafcab1e339c570680d98a0c03e99e403fb22d3",
+    "llama3_mrpro/protocol.json": "f644973ac8faae118501cd013641050ec18c8cfa8cf2aa2ff12afc4f2054ed77",
+    "llama3_mrpro/report.json": "8e829d0ed7374d04f33c442a8bf2de825e25ce51c59c8cb8acad3df6794b607c",
+    "llama3_mrpro/runtime.json": "2723125cad34b15c3391c18a9f50c4b2909d0694db39996771ee357a54240876",
+    "llama3_tailspline/generations.jsonl": "e7b9d5088ca8e98d9d27c99682b5f2e7ee5cd82d1bc1ad2089bb202aef0f1ff6",
+    "llama3_tailspline/protocol.json": "881b713d3d48ad89ef9321009da02e59fef7a4acea623e7d0226c52247aa7489",
+    "llama3_tailspline/report.json": "acb6fa64cd9ff73d6c7f831c30b30d72c30c974216e387568c1c6dc0120fb71b",
+    "llama3_tailspline/runtime.json": "6d8ece25636693f42e6c513976f076e0facc77e5fc794f1e4280d6cac7d6334b",
+    "queue_status.json": "10cf22114d893adae24050061d252e521cb57187ae2e6b54d91a1521df539f95"
+  }
+}
